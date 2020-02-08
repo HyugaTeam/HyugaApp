@@ -11,7 +11,7 @@ class Home extends StatelessWidget{
     return Scaffold(
     appBar: AppBar(
       title: Text(
-        "SugiPla",
+        "Hyuga",
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.white,
