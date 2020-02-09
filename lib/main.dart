@@ -115,7 +115,10 @@ class Home extends StatelessWidget {
                 ))),
         Container(
             child: Align(
-                alignment: Alignment(0, -0.80),
+                alignment: Alignment(0, -0.70),
+                child: ButtonTheme(
+                    minWidth: 250,
+                    height: 60,
                 child: RaisedButton.icon(
                     onPressed: () {
                       whereDrop(context);
@@ -123,15 +126,19 @@ class Home extends StatelessWidget {
                     icon: Icon(Icons.arrow_drop_down_circle),
                     label: Text(
                       "Where",
-                      style: TextStyle(
+                      style: TextStyle(fontSize: 30,
                           color: Colors.black),
                     ),
                     color: Colors.white)
             )
+            )
         ),
         Container(
             child: Align(
-                alignment: Alignment(0, -0.60),
+                alignment: Alignment(0, -0.45),
+                child: ButtonTheme(
+                    minWidth: 250,
+                    height: 60,
                 child: RaisedButton.icon(
                     onPressed: () {
                       whatDropCeva(context);
@@ -140,15 +147,19 @@ class Home extends StatelessWidget {
                         Icons.arrow_drop_down_circle),
                     label: Text(
                       "What",
-                      style: TextStyle(
+                      style: TextStyle(fontSize: 30,
                           color: Colors.black),
                     ),
                     color: Colors.white)
             )
+            )
         ),
         Container(
             child: Align(
-                alignment: Alignment(0, -0.40),
+                alignment: Alignment(0, -0.20),
+                child: ButtonTheme(
+                    minWidth: 250,
+                    height: 60,
                 child: RaisedButton.icon(
                     onPressed: () {
                       howManyDrop(context);
@@ -158,14 +169,19 @@ class Home extends StatelessWidget {
                     label: Text(
                       "How many",
                       style: TextStyle(
+                        fontSize: 30,
                           color: Colors.black),
                     ),
                     color: Colors.white)
             )
+            )
         ),
         Container(
             child: Align(
-                alignment: Alignment(0, -0.20),
+                alignment: Alignment(0, 0.05),
+                child: ButtonTheme(
+                    minWidth: 250,
+                    height: 60,
                 child: RaisedButton.icon(
                     onPressed: () {
                       ambianceDrop(context);
@@ -175,14 +191,18 @@ class Home extends StatelessWidget {
                     label: Text(
                       "Ambiance",
                       style: TextStyle(
+                        fontSize: 30,
                           color: Colors.black),
                     ),
                     color: Colors.white)
-            )
+            ))
         ),
         Container(
             child: Align(
-                alignment: Alignment(0, 0),
+                alignment: Alignment(0, 0.30),
+                child: ButtonTheme(
+                    minWidth: 250,
+                    height: 60,
                 child: RaisedButton.icon(
                     onPressed: () {
                       areaDrop(context);
@@ -191,12 +211,12 @@ class Home extends StatelessWidget {
                         Icons.arrow_drop_down_circle),
                     label: Text(
                       "Area",
-                      style: TextStyle(
+                      style: TextStyle(fontSize: 30,
                           color: Colors.black),
                     ),
                     color: Colors.white)
             )
-        )
+        ))
       ]),
     );
   }
