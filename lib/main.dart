@@ -5,8 +5,24 @@ void main() => runApp(MaterialApp(home: Home()));
 class Home extends StatelessWidget {
 
   int i = 0;
+// TODO marit butoane
+  whereDrop(BuildContext context) {
+    return showDialog(context: context, builder: (context) {
+      return Container(
+          child: Align(
+              alignment: Alignment(0,-0.53),
+              child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                      "Cafè\n\nRestaurant\n\nPub",
+                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
+              )
+          )
+      );
+    });
+  }
 
-  abc(BuildContext context) {
+  whatDropCeva(BuildContext context) {
     return showDialog(context: context, builder: (context) {
       return Container(
         child: Align(
@@ -22,6 +38,54 @@ class Home extends StatelessWidget {
     });
   }
 
+  howManyDrop(BuildContext context) {
+    return showDialog(context: context, builder: (context) {
+      return Container(
+          child: Align(
+              alignment: Alignment(0,-0.175),
+              child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                      "1-10", //TODO implementam un scaler
+                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
+              )
+          )
+      );
+    });
+  }
+
+  ambianceDrop(BuildContext context) {
+    return showDialog(context: context, builder: (context) {
+      return Container(
+          child: Align(
+              alignment: Alignment(0,0.08),
+              child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                      "Intimate\n\nCalm\n\nSocial-friendly",
+                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
+              )
+          )
+      );
+    });
+  }
+
+  areaDrop(BuildContext context) {
+    return showDialog(context: context, builder: (context) {
+      return Container(
+          child: Align(
+              alignment: Alignment(0,0.2),
+              child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                      "Select Area", //TODO implemtan o harta
+                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
+              )
+          )
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +96,8 @@ class Home extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
                 fontSize: 23,
-                decorationThickness: 1)),
+                decorationThickness: 1)
+        ),
         centerTitle: true,
         backgroundColor: Colors.grey[100],
       ),
@@ -44,38 +109,94 @@ class Home extends StatelessWidget {
                   'HYUGA',
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold),
                 ))),
         Container(
             child: Align(
                 alignment: Alignment(0, -0.80),
                 child: RaisedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      whereDrop(context);
+                    },
                     icon: Icon(Icons.arrow_drop_down_circle),
                     label: Text(
                       "Where",
-                      //style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.black),
                     ),
-                    color: Colors.white))),
+                    color: Colors.white)
+            )
+        ),
         Container(
             child: Align(
                 alignment: Alignment(0, -0.60),
                 child: RaisedButton.icon(
-
                     onPressed: () {
-                      abc(context);
-//                    i++;
-//                      new Container(child: Text(
-//                          'Nietzsche ' + i.toString(),
-//                      style: TextStyle(color: Colors.red)
-//                      ));
+                      whatDropCeva(context);
                     },
-                    icon: Icon(Icons.arrow_drop_down_circle),
+                    icon: Icon(
+                        Icons.arrow_drop_down_circle),
                     label: Text(
                       "What",
-                      //style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: Colors.black),
                     ),
-                    color: Colors.white)))
+                    color: Colors.white)
+            )
+        ),
+        Container(
+            child: Align(
+                alignment: Alignment(0, -0.40),
+                child: RaisedButton.icon(
+                    onPressed: () {
+                      howManyDrop(context);
+                    },
+                    icon: Icon(
+                        Icons.arrow_drop_down_circle),
+                    label: Text(
+                      "How many",
+                      style: TextStyle(
+                          color: Colors.black),
+                    ),
+                    color: Colors.white)
+            )
+        ),
+        Container(
+            child: Align(
+                alignment: Alignment(0, -0.20),
+                child: RaisedButton.icon(
+                    onPressed: () {
+                      ambianceDrop(context);
+                    },
+                    icon: Icon(
+                        Icons.arrow_drop_down_circle),
+                    label: Text(
+                      "Ambiance",
+                      style: TextStyle(
+                          color: Colors.black),
+                    ),
+                    color: Colors.white)
+            )
+        ),
+        Container(
+            child: Align(
+                alignment: Alignment(0, 0),
+                child: RaisedButton.icon(
+                    onPressed: () {
+                      areaDrop(context);
+                    },
+                    icon: Icon(
+                        Icons.arrow_drop_down_circle),
+                    label: Text(
+                      "Area",
+                      style: TextStyle(
+                          color: Colors.black),
+                    ),
+                    color: Colors.white)
+            )
+        )
       ]),
     );
   }
