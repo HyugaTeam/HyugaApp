@@ -1,93 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:hyuga_app/widgets/MainMenu_Button.dart';
+import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
-void main() => runApp(MaterialApp(home: Home()));
+void main() => runApp(MaterialApp(
+  theme: ThemeData(
+    backgroundColor: Colors.white
+  ),
+  home: Home()));
 
 class Home extends StatelessWidget {
-
-  int i = 0;
-// TODO marit butoane
-  whereDrop(BuildContext context) {
-    return showDialog(context: context, builder: (context) {
-      return Container(
-          child: Align(
-              alignment: Alignment(0,-0.53),
-              child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                      "Cafè\n\nRestaurant\n\nPub",
-                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
-              )
-          )
-      );
-    });
-  }
-
-  whatDropCeva(BuildContext context) {
-    return showDialog(context: context, builder: (context) {
-      return Container(
-        child: Align(
-          alignment: Alignment(0,-0.3),
-          child: RaisedButton(
-            onPressed: () {},
-             child: Text(
-                 "Coffee\n\nTea\n\nLemonade\n\nSmoothie",
-             style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
-          )
-        )
-      );
-    });
-  }
-
-  howManyDrop(BuildContext context) {
-    return showDialog(context: context, builder: (context) {
-      return Container(
-          child: Align(
-              alignment: Alignment(0,-0.175),
-              child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                      "1-10", //TODO implementam un scaler
-                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
-              )
-          )
-      );
-    });
-  }
-
-  ambianceDrop(BuildContext context) {
-    return showDialog(context: context, builder: (context) {
-      return Container(
-          child: Align(
-              alignment: Alignment(0,0.08),
-              child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                      "Intimate\n\nCalm\n\nSocial-friendly",
-                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
-              )
-          )
-      );
-    });
-  }
 
   areaDrop(BuildContext context) {
     return showDialog(context: context, builder: (context) {
       return Container(
+          margin: EdgeInsets.symmetric(),
           child: Align(
-              alignment: Alignment(0,0.2),
+              alignment: Alignment(0,0.8),
               child: RaisedButton(
                   onPressed: () {},
                   child: Text(
-                      "Select Area", //TODO implemtan o harta
+                      "Select Area", //TODO implementan o harta
                       style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
               )
           )
       );
     });
   }
-
-
   @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -100,202 +40,84 @@ class Home extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.grey[100],
+        elevation: 8,  /// Slightly increased the 'elevation' value from the appBar and the 'body'
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          iconSize: 20,
+          color: Colors.black,
+          onPressed: () {},
+        ),
+         ///actions: <Widget>[],    ///Un-comment in case we want to add further Widgets on the appBar
       ),
-      body: Stack(children: [
-        Container(
-            child: Align(
-                alignment: Alignment(0, 0.9),
-                child: Text(
-                  'HYUGA',
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold),
-                ))),
-        Container(
-            child: Align(
-                alignment: Alignment(0, -0.70),
-                child: ButtonTheme(
-                    minWidth: 250,
-                    height: 60,
-                child: RaisedButton.icon(
-                    onPressed: () {
-                      whereDrop(context);
-                    },
-                    icon: Icon(Icons.arrow_drop_down_circle),
-                    label: Text(
-                      "Where",
-                      style: TextStyle(fontSize: 30,
-                          color: Colors.black),
-                    ),
-                    color: Colors.white)
-            )
-            )
+      body: Stack(
+      children: <Widget>[
+        ChangingText(
+          label: 'samdas',
         ),
         Container(
-            child: Align(
-                alignment: Alignment(0, -0.45),
-                child: ButtonTheme(
-                    minWidth: 250,
-                    height: 60,
-                child: RaisedButton.icon(
-                    onPressed: () {
-                      whatDropCeva(context);
-                    },
-                    icon: Icon(
-                        Icons.arrow_drop_down_circle),
-                    label: Text(
-                      "What",
-                      style: TextStyle(fontSize: 30,
-                          color: Colors.black),
-                    ),
-                    color: Colors.white)
-            )
-            )
+          constraints: BoxConstraints(
+            maxHeight: 650,
+            maxWidth: 400,
+            ),
+          alignment: Alignment(0,0),
+          //color: Colors.red,
+          child: Column( /// Replaced 'Stack' with 'Column' for the Buttons
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      MainMenuButton(  /// 'Where' Button
+                        name: "Where?",
+                        options: g.whereList,
+                        ),
+                      MainMenuButton(  /// 'What' Button
+                        name: "What?",  
+                        options: g.whatList[0],
+                        ),
+                      MainMenuButton(  /// 'How Many' Button
+                        name: "How many?",
+                        options: g.howManyList,
+                      ),
+                      MainMenuButton(  /// 'Ambiance' Button
+                        name: "Ambiance",
+                        options: g.ambianceList
+                      ),
+                      Container(   /// "AREA" BUTTON
+                          child: Align(
+                              alignment: Alignment(0, 0.30),
+                              child: ButtonTheme(
+                                  minWidth: 230,
+                                  height: 60,
+                              child: RaisedButton.icon(
+                                  elevation: 4,
+                                  onPressed: () {
+                                    areaDrop(context);
+                                  },
+                                  icon: Icon(
+                                      Icons.arrow_drop_down_circle),
+                                  label: Text(
+                                    "Area",
+                                    style: TextStyle(fontSize: 30,
+                                        color: Colors.black),
+                                  ),
+                                  color: Colors.white)
+                          )
+                      )),
+                      ],
+                ),
         ),
-        Container(
-            child: Align(
-                alignment: Alignment(0, -0.20),
-                child: ButtonTheme(
-                    minWidth: 250,
-                    height: 60,
-                child: RaisedButton.icon(
-                    onPressed: () {
-                      howManyDrop(context);
-                    },
-                    icon: Icon(
-                        Icons.arrow_drop_down_circle),
-                    label: Text(
-                      "How many",
-                      style: TextStyle(
-                        fontSize: 30,
-                          color: Colors.black),
-                    ),
-                    color: Colors.white)
-            )
-            )
-        ),
-        Container(
-            child: Align(
-                alignment: Alignment(0, 0.05),
-                child: ButtonTheme(
-                    minWidth: 250,
-                    height: 60,
-                child: RaisedButton.icon(
-                    onPressed: () {
-                      ambianceDrop(context);
-                    },
-                    icon: Icon(
-                        Icons.arrow_drop_down_circle),
-                    label: Text(
-                      "Ambiance",
-                      style: TextStyle(
-                        fontSize: 30,
-                          color: Colors.black),
-                    ),
-                    color: Colors.white)
-            ))
-        ),
-        Container(
-            child: Align(
-                alignment: Alignment(0, 0.30),
-                child: ButtonTheme(
-                    minWidth: 250,
-                    height: 60,
-                child: RaisedButton.icon(
-                    onPressed: () {
-                      areaDrop(context);
-                    },
-                    icon: Icon(
-                        Icons.arrow_drop_down_circle),
-                    label: Text(
-                      "Area",
-                      style: TextStyle(fontSize: 30,
-                          color: Colors.black),
-                    ),
-                    color: Colors.white)
-            )
-        ))
+        Container(   ///  'HYUGA' TITLE
+           padding: EdgeInsets.all(10),
+           child: Align(
+               alignment: Alignment(0, 1),
+               child: Text(
+                 "HYUGA",
+                 textAlign: TextAlign.center,
+                 overflow: TextOverflow.ellipsis,
+                 style: TextStyle(
+                     fontSize: 25.0,
+                     fontWeight: FontWeight.bold),
+               ))),
       ]),
+      
     );
   }
 }
-
-
-//class MyStatefulWidget extends StatefulWidget {
-//  MyStatefulWidget({Key key}) : super(key: key);
-//
-//  @override
-//  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-//}
-//
-//class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-//  String dropdownValue = 'Where';
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return DropdownButton<String>(
-//      value: dropdownValue,
-//      icon: Icon(Icons.arrow_downward),
-//      iconSize: 24,
-//      elevation: 16,
-//      style: TextStyle(color: Colors.black),
-//      underline: Container(
-//        height: 2,
-//        color: Colors.black,
-//      ),
-//      onChanged: (String newValue) {
-//        setState(() {
-//          dropdownValue = newValue;
-//        });
-//      },
-//      items: <String>['Where', 'Coffee Shop', 'Restaurant', 'Pub']
-//          .map<DropdownMenuItem<String>>((String value) {
-//        return DropdownMenuItem<String>(
-//          value: value,
-//          child: Text(value),
-//        );
-//      }).toList(),
-//    );
-//  }
-//}
-
-//class MyStatefulWidget_1 extends StatefulWidget {
-//  MyStatefulWidget_1({Key key}) : super(key: key);
-//
-//  @override
-//  _MyStatefulWidgetState_1 createState() => _MyStatefulWidgetState_1();
-//}
-//
-//class _MyStatefulWidgetState_1 extends State<MyStatefulWidget_1> {
-//  String dropdownValue = 'Cuisine';
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return DropdownButton<String>(
-//      value: dropdownValue,
-//      icon: Icon(Icons.arrow_downward),
-//      iconSize: 24,
-//      elevation: 16,
-//      style: TextStyle(color: Colors.black),
-//      underline: Container(
-//        height: 2,
-//        color: Colors.black,
-//      ),
-//      onChanged: (String newValue) {
-//        setState(() {
-//          dropdownValue = newValue;
-//        });
-//      },
-//      items: <String>['Cuisine', 'Mediterranian', 'American', 'Asian', 'Indian']
-//          .map<DropdownMenuItem<String>>((String value) {
-//        return DropdownMenuItem<String>(
-//          value: value,
-//          child: Text(value),
-//        );
-//      }).toList(),
-//    );
-//  }
-//}
-
