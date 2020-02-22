@@ -1,15 +1,19 @@
-int selectedWhere ;
+int selectedWhere = 0;
 int selectedWhat ;
 int selectedHowMany;
 int selectedAmbiance;
+int selectedArea;
 Map<String,int> selectedOptions = {'Where?':selectedWhere, 'What?':selectedWhat, 
                        'How many?':selectedHowMany, 'Ambiance':selectedAmbiance};
-
-final List<String> whereList = ["Cafè","Restaurant","Pub"]; /// Where-to-go list
-final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie"], /// What list
+ /// Where-to-go list
+final List<String> whereList = ["Cafè","Restaurant","Pub"];
+ /// What list
+final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie"],
                 ["Burger","Pizza","Local","Asian","Vegan","Oriental"],
                 ["Beer","Craft Beer","Cocktail","Wine","Shot"]]; 
-final List<String> howManyList = ['Forever Alone','Me and my date','3-5','6-8','8+']; /// How Many List
-final List<String> ambianceList = ["Intimate","Calm","Social-friendly"]; ///ambiance list
-
-  ///TODO Add a widget for the selected Area
+ /// How Many List
+final List<String> howManyList = ['Forever Alone','Me and my date','3-5','6-8','8+'];
+ ///Ambiance list
+final List<String> ambianceList = ["Intimate","Calm","Social-friendly"];
+ ///Area list
+final List<String> areaList = ["A 15 minute walk", "Anywhere"];

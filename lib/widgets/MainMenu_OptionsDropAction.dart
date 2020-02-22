@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 /// Use g.'name of variable' to access a global variable (they are declared in a separate file)
 
 class OptionsDropButton extends StatefulWidget {
@@ -8,11 +9,12 @@ class OptionsDropButton extends StatefulWidget {
   final String question;
   final List<String> options;
   final Offset sizeOfButton;
-  OptionsDropButton({this.options, this.sizeOfButton, this.question});
+  final GlobalKey<MainMenuButtonState> keyForText;
+  OptionsDropButton({Key key,this.options, this.sizeOfButton, this.question,this.keyForText}) : super(key: key);
   _OptionsDropButtonState createState() => _OptionsDropButtonState(
     question: this.question,
     options: this.options,
-    sizeOfButton: this.sizeOfButton,
+    sizeOfButton: this.sizeOfButton
     );
 }
 
@@ -34,7 +36,8 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
                 switch (question) {
                   case 'Where?':
                     g.selectedWhere = index;
-                    
+                    print("smth");
+                    widget.keyForText.currentState.changeText("smth");
                     //print(g.selectedWhere);
                     break;
                   case 'What?':
@@ -45,6 +48,9 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
                     break;
                   case 'Ambiance':
                     g.selectedAmbiance = index;
+                    break;
+                  case 'Area':
+                    g.selectedArea = index;
                     break;
                   default:
                 }

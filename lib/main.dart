@@ -51,9 +51,6 @@ class Home extends StatelessWidget {
       ),
       body: Stack(
       children: <Widget>[
-        ChangingText(
-          label: 'samdas',
-        ),
         Container(
           constraints: BoxConstraints(
             maxHeight: 650,
@@ -80,7 +77,11 @@ class Home extends StatelessWidget {
                         name: "Ambiance",
                         options: g.ambianceList
                       ),
-                      Container(   /// "AREA" BUTTON
+                      MainMenuButton(
+                        name: "Area",
+                        options: g.areaList
+                      )
+                      /*Container(   /// "AREA" BUTTON
                           child: Align(
                               alignment: Alignment(0, 0.30),
                               child: ButtonTheme(
@@ -100,7 +101,7 @@ class Home extends StatelessWidget {
                                   ),
                                   color: Colors.white)
                           )
-                      )),
+                      )),*/
                       ],
                 ),
         ),
