@@ -4,12 +4,17 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 void main() => runApp(MaterialApp(
   theme: ThemeData(
-    backgroundColor: Colors.white
+    backgroundColor: Colors.white,
   ),
   home: Home()));
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
 
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   areaDrop(BuildContext context) {
     return showDialog(context: context, builder: (context) {
       return Container(
@@ -26,6 +31,7 @@ class Home extends StatelessWidget {
       );
     });
   }
+
   @override
   
   Widget build(BuildContext context) {

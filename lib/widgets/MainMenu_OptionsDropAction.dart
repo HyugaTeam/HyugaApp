@@ -10,7 +10,7 @@ class OptionsDropButton extends StatefulWidget {
   final List<String> options;
   final Offset sizeOfButton;
   final GlobalKey<MainMenuButtonState> keyForText;
-  OptionsDropButton({Key key,this.options, this.sizeOfButton, this.question,this.keyForText}) : super(key: key);
+  OptionsDropButton({Key key,this.options, this.sizeOfButton, this.question,this.keyForText}): super(key: key);
   _OptionsDropButtonState createState() => _OptionsDropButtonState(
     question: this.question,
     options: this.options,
@@ -28,17 +28,16 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(  /// A widget for listing the options
+          shrinkWrap: false,
           physics: NeverScrollableScrollPhysics(), /// Doesn't allow the List to be scrollable
           itemCount: options.length,
           itemBuilder: (BuildContext context, int index){
             return RaisedButton(
+              hoverColor: Colors.grey[500],
               onPressed: (){
                 switch (question) {
                   case 'Where?':
                     g.selectedWhere = index;
-                    print("smth");
-                    widget.keyForText.currentState.changeText("smth");
-                    //print(g.selectedWhere);
                     break;
                   case 'What?':
                     g.selectedWhat = index;
