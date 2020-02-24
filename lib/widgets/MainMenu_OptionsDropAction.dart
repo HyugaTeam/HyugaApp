@@ -53,7 +53,7 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
                     break;
                   default:
                 }
-                Navigator.pop(context);
+                Navigator.of(context).pop(index);
               },
               child: Text(
                     options[index],

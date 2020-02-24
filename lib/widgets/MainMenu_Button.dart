@@ -9,7 +9,6 @@ class MainMenuButton extends StatefulWidget {
   @override
   final String name;
   final List<String> options;
-  final _key = GlobalKey<MainMenuButtonState>();
   MainMenuButton({this.name,this.options});
   MainMenuButtonState createState() => MainMenuButtonState(
     name: this.name,
@@ -20,6 +19,7 @@ class MainMenuButton extends StatefulWidget {
 
 class MainMenuButtonState extends State<MainMenuButton>{
   @override
+
   /// Used for getting the button's coordinates
   var _key = GlobalKey<MainMenuButtonState>(); 
   String name;  
@@ -29,14 +29,18 @@ class MainMenuButtonState extends State<MainMenuButton>{
 
   /// Method which updates the Text displayed on the button whenever
   /// the user changes it
-  void changeText(){
+  void changeText(index){
     setState((){
-      buttonText = options[g.selectedOptions[name]];
+      //buttonText = 'okBoomer';
+      if(name == 'What?')
+        buttonText = g.whatList[g.selectedWhere][index];
+      else
+        buttonText = options[index];
     });
   }
 
   ///Method which opens a dialog whenever the button is pressed
-  Future createDialog(BuildContext context) async{
+  Future<int> createDialog(BuildContext context) {
       return showDialog(context: context, builder: (context){
           return Padding(
             padding: EdgeInsets.only(
@@ -67,10 +71,9 @@ class MainMenuButtonState extends State<MainMenuButton>{
   MainMenuButtonState({this.name,this.options,this.buttonText});
 
   Widget build(BuildContext context){
-    return Row(
+    return Row( /// This Row Widget is inactive !(bcs it only has the Container)
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        //Spacer(),
         Container(
         key : _key,
         child: ButtonTheme(
@@ -79,8 +82,8 @@ class MainMenuButtonState extends State<MainMenuButton>{
             child: RaisedButton.icon(
                 elevation: 5,
                 onPressed: () {
-                  createDialog(context).then((okboomer){
-                    changeText();
+                  createDialog(context).then((index){
+                    changeText(index);
                   });
                 },
                 icon: Icon(Icons.arrow_drop_down_circle),
@@ -92,63 +95,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                 color: Colors.white)
         )
     ),
-        /* Container(
-      constraints: BoxConstraints(maxWidth: 200,maxHeight: 100),
-      padding: EdgeInsets.only(
-        left: 20
-      ),
-      //color: Colors.blue,
-      child: Text(
-        buttonText,
-        maxLines: 2,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey
-        ),
-      )
-    ) */
       ],
     );
   }
 }
-
-/*class ChangingText extends StatefulWidget {
-  @override
-  final String label;
-  ChangingText({this.label});
-  _ChangingTextState createState() => _ChangingTextState(
-    label: this.label
-    );
-}
-
-class _ChangingTextState extends State<ChangingText> {
-
-  @override
-  String label;
-  _ChangingTextState({this.label});
-  void changeSmth (String str){
-    setState((){
-      label = str;
-    });
-  }
-  
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(maxWidth: 200,maxHeight: 100),
-      padding: EdgeInsets.only(
-        left: 20
-      ),
-      //color: Colors.blue,
-      child: Text(
-        label,
-        maxLines: 2,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey
-        ),
-      )
-    );
-  }
-}*/
