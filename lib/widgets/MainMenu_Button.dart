@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/widgets/MainMenu_OptionsDropAction.dart';
@@ -39,27 +37,6 @@ class MainMenuButtonState extends State<MainMenuButton>{
     });
   }
 
-  ///Method which opens a dialog whenever the button is pressed
-  Future<int> createDialog(BuildContext context) {
-      return showDialog(context: context, builder: (context){
-          return Padding(
-            padding: EdgeInsets.only(
-              top: _getPosition().dy,
-              left: 70,  /// Manually adjusted value
-              right: 70,  /// ---""----
-              //bottom: MediaQuery.of(context).size.height-_getPosition().dy
-            ),
-            child: OptionsDropButton(
-                options: name == 'What?' ? g.whatList[g.selectedWhere] : options,
-                question: name,
-                sizeOfButton: _getPosition(),
-                keyForText: _key
-            )
-          );
-        },
-        );
-  }
-
   /// Method which returns the button's coordinates in the page
   _getPosition(){
    final RenderBox renderBoxButton = _key.currentContext.findRenderObject();
@@ -68,6 +45,30 @@ class MainMenuButtonState extends State<MainMenuButton>{
    return coordinatesButton;
  }
 
+  ///Method which opens a dialog whenever the button is pressed
+  Future<int> createDialog(BuildContext context) {
+      return showDialog(context: context, builder: (context){
+          return SizedBox(
+            child: Container(
+              //color: Colors.blue,
+              padding: EdgeInsets.only(
+                top: _getPosition().dy - 50,
+                left: _getPosition().dx,
+                right: _getPosition().dx,
+                //bottom: _getPosition().dy
+              ),
+              child: OptionsDropButton(
+                  options: name == 'What?' ? g.whatList[g.selectedWhere] : options,
+                  question: name,
+                  sizeOfButton: _getPosition(),
+                  button: this.widget,
+              )
+            )
+          );
+        },
+        );
+  }
+
   MainMenuButtonState({this.name,this.options,this.buttonText});
 
   Widget build(BuildContext context){
@@ -75,26 +76,32 @@ class MainMenuButtonState extends State<MainMenuButton>{
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Container(
-        key : _key,
-        child: ButtonTheme(
-            minWidth: 230,
-            height: 50,
-            child: RaisedButton.icon(
-                elevation: 5,
-                onPressed: () {
-                  createDialog(context).then((index){
-                    changeText(index);
-                  });
-                },
-                icon: Icon(Icons.arrow_drop_down_circle),
-                label: Text(
-                  buttonText,
-                  style: TextStyle(fontSize: 30,
-                      color: Colors.black),
-                ),
-                color: Colors.white)
-        )
-    ),
+          key : _key,
+          child: ButtonTheme(
+              //buttonColor: Colors.blueGrey,
+              minWidth: 290,
+              height: 50,
+              child: RaisedButton.icon(
+                  splashColor: Colors.blueGrey,
+                  color: Colors.white,
+                  elevation: 5,
+                  onPressed: () {
+                    createDialog(context).then((index){
+                      index!= null? changeText(index): null ;
+                    });
+                  },
+                  icon: Icon(Icons.arrow_drop_down_circle),
+                  label: Text(
+                    buttonText,
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.black,
+                        fontFamily: 'Roboto'
+                        ),
+                  ),
+                )
+          )
+        ),
       ],
     );
   }
