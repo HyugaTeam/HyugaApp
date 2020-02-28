@@ -3,10 +3,17 @@ import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 void main() => runApp(MaterialApp(
-  theme: ThemeData(
-    backgroundColor: Colors.white,
-  ),
-  home: Home()));
+    initialRoute: '/',
+    routes: {
+      '/': (context) => Home(),
+      '/second': (context) => SecondPage()
+    },
+    theme: ThemeData(
+      backgroundColor: Colors.white,
+    ),
+    //home: Home()
+    )
+  );
 
 class Home extends StatefulWidget {
 
@@ -59,10 +66,8 @@ class _HomeState extends State<Home> {
         Container(
           constraints: BoxConstraints(
             maxHeight: 650,
-            maxWidth: 400,
             ),
           alignment: Alignment(0,0),
-          //color: Colors.red,
           child: Column( /// Replaced 'Stack' with 'Column' for the Buttons
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -82,33 +87,52 @@ class _HomeState extends State<Home> {
                         name: "Ambiance",
                         options: g.ambianceList
                       ),
-                      MainMenuButton(
+                      MainMenuButton( /// 'Area' Button
                         name: "Area",
                         options: g.areaList
-                      )
-                      /*Container(   /// "AREA" BUTTON
-                          child: Align(
-                              alignment: Alignment(0, 0.30),
-                              child: ButtonTheme(
-                                  minWidth: 230,
-                                  height: 60,
-                              child: RaisedButton.icon(
-                                  elevation: 4,
-                                  onPressed: () {
-                                    areaDrop(context);
-                                  },
-                                  icon: Icon(
-                                      Icons.arrow_drop_down_circle),
-                                  label: Text(
-                                    "Area",
-                                    style: TextStyle(fontSize: 30,
-                                        color: Colors.black),
-                                  ),
-                                  color: Colors.white)
+                      ),
+                      Container( /// The 'Search' Button
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(50)
+                        ),
+                        constraints: BoxConstraints(
+                          minHeight: 40,
+                          maxWidth: 120
+                        ),
+                        padding: EdgeInsets.symmetric(            
+                        ),
+                        child: Center(
+                          child: ButtonTheme(
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: <Widget>[Expanded(
+                              child: IconButton(
+
+                                splashColor: Colors.white,
+                                icon: Icon(
+                                  Icons.search,
+                                  color: Colors.white
+                                ),
+                              onPressed: (){
+                                // return showDialog(context: context, builder: (context){
+                                //       return Container(
+                                //         color: Colors.grey,
+                                //         child: Text('hello there!'),
+                                //       );
+                                //     }
+                                //   );
+                                Navigator.pushNamed(context, '/second');
+                                }
+                              ),
+                            )],
                           )
-                      )),*/
-                      ],
+                        )
+                      ),
+                    ),
+                  ],
                 ),
+                 
         ),
         Container(   ///  'HYUGA' TITLE
            padding: EdgeInsets.all(10),
@@ -121,9 +145,62 @@ class _HomeState extends State<Home> {
                  style: TextStyle(
                      fontSize: 25.0,
                      fontWeight: FontWeight.bold),
-               ))),
+               )
+            )
+        ),
       ]),
       
+    );
+  }
+}
+
+class SecondPage extends StatefulWidget {
+  @override
+  _SecondPageState createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              padding: EdgeInsets.all(100),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey
+              ),
+              child: Text('hello'),
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Message')
+            )
+          ],
+        ),
+      ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        
+        backgroundColor: Colors.blueGrey,
+        title: Text(
+          "Hello again"
+        ),
+      ),
+      body: Center(
+        child: Container(
+          child: RaisedButton(
+            onPressed:(){ 
+              Navigator.pop(context);
+              },
+            child: Text(
+              'push me'
+              ),
+            ),
+         ),
+      )
     );
   }
 }

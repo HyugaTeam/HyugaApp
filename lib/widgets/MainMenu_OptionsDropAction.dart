@@ -9,12 +9,13 @@ class OptionsDropButton extends StatefulWidget {
   final String question;
   final List<String> options;
   final Offset sizeOfButton;
-  final GlobalKey<MainMenuButtonState> keyForText;
-  OptionsDropButton({Key key,this.options, this.sizeOfButton, this.question,this.keyForText}): super(key: key);
+  final MainMenuButton button;
+  OptionsDropButton({this.options, this.sizeOfButton, this.question,this.button});
   _OptionsDropButtonState createState() => _OptionsDropButtonState(
     question: this.question,
     options: this.options,
-    sizeOfButton: this.sizeOfButton
+    sizeOfButton: this.sizeOfButton,
+    button: this.button
     );
 }
 
@@ -23,17 +24,23 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
   List<String> options;
   Offset sizeOfButton;
   String question;
+  MainMenuButton button;
 
-  _OptionsDropButtonState({this.options, this.sizeOfButton, this.question});
+  _OptionsDropButtonState({this.options, this.sizeOfButton, this.question, this.button});
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(  /// A widget for listing the options
-          shrinkWrap: false,
+    return Column(
+      children: <Widget>[
+        AbsorbPointer(
+          child: button,
+        ),
+        ListView.builder(  /// A widget for listing the options
+          shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(), /// Doesn't allow the List to be scrollable
           itemCount: options.length,
           itemBuilder: (BuildContext context, int index){
-            return RaisedButton(
-              hoverColor: Colors.grey[500],
+            return RaisedButton(  
+              padding: EdgeInsets.symmetric(vertical: 12,horizontal: 5),
               onPressed: (){
                 switch (question) {
                   case 'Where?':
@@ -58,13 +65,16 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
               child: Text(
                     options[index],
                     style: TextStyle(
+                        fontFamily: 'OpenSans',
                         fontSize: 20,
-                        fontWeight: FontWeight.bold
+                        //fontWeight: FontWeight.bold
                     ),
                   ),
               );
             },
-        );
+        )
+      ],
+    );
   }
 }
 
