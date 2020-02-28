@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hyuga_app/screens/welcome_screen.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/widgets/Second_Page.dart';
+
 
 void main() => runApp(MaterialApp(
     initialRoute: '/',
     routes: {
+      'welcome/' : (context) => WelcomeScreen(),
       '/': (context) => Home(),
       '/second': (context) => SecondPage()
     },
@@ -39,9 +43,41 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // void showWelcomeScreen() async{
+  //   return await Future.delayed(
+  //     Duration(seconds: 1, milliseconds: 5),
+  //     () {
+  //       Navigator.pushNamed(context,'/');
+  //     }
+  //   );
+    
+  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              padding: EdgeInsets.all(100),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey
+              ),
+              child: Text('hello'),
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Message')
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text("Hello!",
             style: TextStyle(
@@ -115,14 +151,11 @@ class _HomeState extends State<Home> {
                                   color: Colors.white
                                 ),
                               onPressed: (){
-                                // return showDialog(context: context, builder: (context){
-                                //       return Container(
-                                //         color: Colors.grey,
-                                //         child: Text('hello there!'),
-                                //       );
-                                //     }
-                                //   );
-                                Navigator.pushNamed(context, '/second');
+                                Future.delayed(
+                                  Duration(seconds: 2), 
+                                  ()  { Navigator.pushNamed(context, '/second');  }
+                                );         
+                               
                                 }
                               ),
                             )],
@@ -150,57 +183,6 @@ class _HomeState extends State<Home> {
         ),
       ]),
       
-    );
-  }
-}
-
-class SecondPage extends StatefulWidget {
-  @override
-  _SecondPageState createState() => _SecondPageState();
-}
-
-class _SecondPageState extends State<SecondPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              padding: EdgeInsets.all(100),
-              decoration: BoxDecoration(
-                color: Colors.blueGrey
-              ),
-              child: Text('hello'),
-            ),
-            ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Message')
-            )
-          ],
-        ),
-      ),
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        
-        backgroundColor: Colors.blueGrey,
-        title: Text(
-          "Hello again"
-        ),
-      ),
-      body: Center(
-        child: Container(
-          child: RaisedButton(
-            onPressed:(){ 
-              Navigator.pop(context);
-              },
-            child: Text(
-              'push me'
-              ),
-            ),
-         ),
-      )
     );
   }
 }
