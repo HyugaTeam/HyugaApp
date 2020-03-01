@@ -13,7 +13,7 @@ final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie"],
                 ["Beer","Craft Beer","Cocktail","Wine","Shot"]]; 
  /// How Many List
 final List<String> howManyList = ['Forever Alone','Me and my date','3-5','6-8','8+'];
- ///Ambiance list
+ /// Ambiance list
 final List<String> ambianceList = ["Intimate","Calm","Social-friendly"];
- ///Area list
+ /// Area list
 final List<String> areaList = ["A 15 minute walk", "Anywhere"];
