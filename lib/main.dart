@@ -14,6 +14,7 @@ void main() => runApp(MaterialApp(
     },
     theme: ThemeData(
       backgroundColor: Colors.white,
+      accentColor: Colors.black,
     ),
     //home: Home()
     )
@@ -82,12 +83,12 @@ class _HomeState extends State<Home> {
         title: Text("Hello!",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
                 fontSize: 23,
                 decorationThickness: 1)
         ),
         centerTitle: true,
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Theme.of(context).backgroundColor,
         elevation: 8,  /// Slightly increased the 'elevation' value from the appBar and the 'body'
         leading: IconButton(
           icon: Icon(Icons.menu),
@@ -151,11 +152,11 @@ class _HomeState extends State<Home> {
                                   color: Colors.white
                                 ),
                               onPressed: (){
-                                Future.delayed(
+                                /*Future.delayed(
                                   Duration(seconds: 2), 
                                   ()  { Navigator.pushNamed(context, '/second');  }
-                                );         
-                               
+                                );*/     
+                               Navigator.pushNamed(context, '/second');
                                 }
                               ),
                             )],
