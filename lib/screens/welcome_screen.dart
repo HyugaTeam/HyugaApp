@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hyuga_app/screens/authenticate/authenticate.dart';
 
-class WelcomeScreen extends StatelessWidget {
+
+/// Wrapper for the Authentification Screen and the MainMenu Screen
+class Wrapper extends StatelessWidget {
   @override
-  
-  void showNextScreen() async{
-    return await Future.delayed(
-      Duration(seconds: 2),
-      (){
-        //Navigator.pushNamed(context, '/');
-      }
-    );
-  }
-
-  WelcomeScreen(){
-    showNextScreen();
-  }
-  
   Widget build(BuildContext context) {
-    return Scaffold(
-        extendBody: true,
-        body: Center(
-          child: Text('Hyuga')
-        ),
-    );
+    return Authenticate();
   }
 }
+
+

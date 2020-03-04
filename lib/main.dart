@@ -6,9 +6,9 @@ import 'package:hyuga_app/widgets/Second_Page.dart';
 
 
 void main() => runApp(MaterialApp(
-    initialRoute: '/',
+    initialRoute: 'welcome/',
     routes: {
-      'welcome/' : (context) => WelcomeScreen(),
+      'welcome/' : (context) => Wrapper(),
       '/': (context) => Home(),
       '/second': (context) => SecondPage()
     },
