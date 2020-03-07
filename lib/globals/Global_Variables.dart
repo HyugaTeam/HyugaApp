@@ -8,9 +8,9 @@ Map<String,int> selectedOptions = {'Where?':selectedWhere, 'What?':selectedWhat,
  /// Where-to-go list
 final List<String> whereList = ["Cafè","Restaurant","Pub"];
  /// What list
-final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie"],
+final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie","Board Games"],
                 ["Burger","Pizza","Local","Asian","Vegan","Oriental"],
-                ["Beer","Craft Beer","Cocktail","Wine","Shot"]]; 
+                ["Beer","Cocktail","Wine","Shot"]]; 
  /// How Many List
 final List<String> howManyList = ['Forever Alone','Me and my date','3-5','6-8','8+'];
  /// Ambiance list

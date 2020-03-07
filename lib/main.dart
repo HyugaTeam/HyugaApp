@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/welcome_screen.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -44,20 +46,55 @@ class _HomeState extends State<Home> {
     });
   }
 
-  // void showWelcomeScreen() async{
-  //   return await Future.delayed(
-  //     Duration(seconds: 1, milliseconds: 5),
-  //     () {
-  //       Navigator.pushNamed(context,'/');
-  //     }
-  //   );
-    
-  // }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
+  
+  List<Local> toLocal(var localsMap){
+      List<Local> placesList = [];
+      for(int i = 0; i < localsMap.length; i++){
+        Local newLocal = Local(
+          name: localsMap[i]['name'],
+          imageUrl: localsMap[i]['imageUrl'],
+          description: localsMap[i]['description']
+        );
+        placesList.add(newLocal);
+      }
+      return placesList;
+  }
+
+  //gets data from the specific collection
+  Future<QuerySnapshot> getData(String collectionName){
+    collectionName = collectionName.toLowerCase();
+    return Firestore.instance
+    .collection('_$collectionName').orderBy('score',descending: true)
+    .getDocuments();
+  }
+
+  void queryForLocals() async{
+
+    QuerySnapshot queriedSnapshot = await getData(g.whatList[g.selectedWhere][g.selectedWhat]);
+    List<String> listOfQueriedDocuments = [];  // a list of the ID's from the query
+    
+    for(int i = 0 ; i < queriedSnapshot.documents.length ; i++){
+      listOfQueriedDocuments.add(queriedSnapshot.documents[i].documentID);
+    }// creates a list of IDs from the collection queried
+
+    /// Adding 
+    var localsMap = [];
+    for(int i = 0 ; i < listOfQueriedDocuments.length; i++){
+        var db = await Firestore.instance
+                .collection('locals_bucharest')
+                .document(listOfQueriedDocuments[i])
+                .get();
+        localsMap.add(db.data);
+    }
+    print(localsMap);
+    List<Local> placesList = toLocal(localsMap);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,19 +182,15 @@ class _HomeState extends State<Home> {
                               direction: Axis.horizontal,
                               children: <Widget>[Expanded(
                               child: IconButton(
-
                                 splashColor: Colors.white,
                                 icon: Icon(
                                   Icons.search,
                                   color: Colors.white
                                 ),
-                              onPressed: (){
-                                /*Future.delayed(
-                                  Duration(seconds: 2), 
-                                  ()  { Navigator.pushNamed(context, '/second');  }
-                                );*/     
-                               Navigator.pushNamed(context, '/second');
-                                }
+                              onPressed: () async{
+                              queryForLocals();
+                              Navigator.pushNamed(context, '/second');
+                              }
                               ),
                             )],
                           )

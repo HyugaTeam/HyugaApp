@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hyuga_app/models/locals/local.dart';
+
 
 class SecondPage extends StatefulWidget {
   @override
@@ -9,6 +12,10 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> {
 
+  @override
+  void initState(
+    
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +48,9 @@ class _SecondPageState extends State<SecondPage> {
                 padding: EdgeInsets.symmetric(vertical: 12,horizontal: 5),
                 child:  MaterialButton(
                 onPressed:(){
+                  
                   //Navigator.pop(context);
-                  //TODO Implement the new page
+                  //TODO Implement the THIRD page
                 },
                 //padding: EdgeInsets.all(10),
                 child: /*Container(

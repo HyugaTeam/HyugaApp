@@ -1,16 +1,17 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class Local{
   final int id;
   final String name; // Imported from the database
   final String imageUrl; // Imported from the database
- 
+  final String description; 
+
   Local({
     this.id,
     this.name,
-    this.imageUrl
+    this.imageUrl,
+    this.description
   });
 }
 

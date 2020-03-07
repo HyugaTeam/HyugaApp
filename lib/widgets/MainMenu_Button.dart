@@ -23,6 +23,8 @@ class MainMenuButtonState extends State<MainMenuButton>{
   String name;  
   List<String> options;
   String buttonText;
+  Color buttonColor = Colors.white;
+  Color textColor = Colors.black;
   @override
 
   /// Method which updates the Text displayed on the button whenever
@@ -30,10 +32,17 @@ class MainMenuButtonState extends State<MainMenuButton>{
   void changeText(index){
     setState((){
       //buttonText = 'okBoomer';
-      if(name == 'What?')
+      
+      if(name == 'What?'){
         buttonText = g.whatList[g.selectedWhere][index];
-      else
+        buttonColor = Colors.blueGrey;
+        textColor = Colors.white;
+      }
+      else{
         buttonText = options[index];
+        buttonColor = Colors.blueGrey;
+        textColor = Colors.white;
+      }
     });
   }
 
@@ -78,12 +87,11 @@ class MainMenuButtonState extends State<MainMenuButton>{
         Container(
           key : _key,
           child: ButtonTheme(
-              //buttonColor: Colors.blueGrey,
               minWidth: 290,
               height: 50,
               child: RaisedButton.icon(
                   splashColor: Colors.blueGrey,
-                  color: Colors.white,
+                  color: buttonColor, //changes when the selected option first changes
                   elevation: 5,
                   onPressed: () {
                     createDialog(context).then((index){
@@ -95,7 +103,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                     buttonText,
                     style: TextStyle(
                         fontSize: 30,
-                        color: Colors.black,
+                        color: textColor,
                         fontFamily: 'Roboto'
                         ),
                   ),

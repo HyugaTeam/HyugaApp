@@ -4,11 +4,17 @@ import 'package:hyuga_app/models/locals/user.dart';
 //A class which handles the sign-in process
 class AuthService{
 
-  final  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // create user object based on FirebaseUser
   User _ourUserFromFirebaseUser(FirebaseUser user){
-    return user != null ? new User(uid: user.uid) : null;
+    return user != null ? User(uid: user.uid) : null;
+  }
+
+  //auth change user stream
+  Stream<User> get user{
+    return _auth.onAuthStateChanged
+      .map(_ourUserFromFirebaseUser);
   }
 
   // sign in anonimously
