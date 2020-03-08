@@ -9,11 +9,12 @@ Map<String,int> selectedOptions = {'Where?':selectedWhere, 'What?':selectedWhat,
 final List<String> whereList = ["Cafè","Restaurant","Pub"];
  /// What list
 final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie","Board Games"],
-                ["Burger","Pizza","Local","Asian","Vegan","Oriental"],
+                ["Burger","Italian","Local","Asian","Vegan","Oriental"],
                 ["Beer","Cocktail","Wine","Shot"]]; 
  /// How Many List
-final List<String> howManyList = ['Forever Alone','Me and my date','3-5','6-8','8+'];
+final List<String> howManyList = 
+                  ['Forever Alone','Me and my date','3-4','5-8','8+'];
  /// Ambiance list
-final List<String> ambianceList = ["Intimate","Calm","Social-friendly"];
+final List<String> ambianceList = ["Intimate","Anything","Social-friendly"];
  /// Area list
 final List<String> areaList = ["A 15 minute walk", "Anywhere"];
