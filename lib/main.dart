@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/welcome_screen.dart';

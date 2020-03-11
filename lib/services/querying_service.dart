@@ -11,7 +11,8 @@ class QueryService{
         Local newLocal = Local(
           name: localsMap[i]['name'],
           imageUrl: localsMap[i]['imageUrl'],
-          description: localsMap[i]['description']
+          description: localsMap[i]['description'],
+          location: localsMap[i]['location']
         );
         placesList.add(newLocal);
       }
@@ -54,6 +55,7 @@ class QueryService{
     if(selectedAmbiance != null)
       return Firestore.instance.collection('locals_bucharest')
           .where('ambiance',isEqualTo: selectedAmbiance)
+          //.where('score.lemonade',isGreaterThan: null)///////////////
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
           .getDocuments();
     else

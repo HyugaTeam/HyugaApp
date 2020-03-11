@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Local{
@@ -6,12 +7,14 @@ class Local{
   final String name; // Imported from the database
   final String imageUrl; // Imported from the database
   final String description; 
+  final GeoPoint location;
 
   Local({
     this.id,
     this.name,
     this.imageUrl,
-    this.description
+    this.description,
+    this.location
   });
 }
 
