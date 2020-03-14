@@ -1,23 +1,24 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Local{
-  final int id;
+  final int score; // Dynamic (depends on the score of the category)
+  final String id; // Imported from the database
   final String name; // Imported from the database
-  final String imageUrl; // Imported from the database
-  final String description; 
-  final GeoPoint location;
+  final Image image; // Imported from the database
+  final String description; // Imported from the database
+  final GeoPoint location; // Imported from the database
 
   Local({
+    this.score, 
     this.id,
     this.name,
-    this.imageUrl,
+    this.image,
     this.description,
     this.location
   });
 }
-
+/*
 class Restaurant extends Local{
   @override
   final int id;
@@ -107,4 +108,4 @@ Pub oktoberfest = Pub(
 List<Restaurant> restaurantsList = [hanulLuiManuc,caruCuBere,hanuBerarilor];
 List<Cafe> cafesList = [bernschutz,secondCup,cameraDinFata];
 List<Pub> pubsList = [oktoberfest,silverChurch,kulturhaus];
-var localsList = [cafesList,restaurantsList,pubsList];
+var localsList = [cafesList,restaurantsList,pubsList];*/

@@ -9,6 +9,8 @@ import 'package:hyuga_app/widgets/Second_Page.dart';
 
 
 void main() => runApp(MaterialApp(
+  debugShowCheckedModeBanner: false,
+  debugShowMaterialGrid: false,
     initialRoute: 'welcome/',
     routes: {
       'welcome/' : (context) => Wrapper(),
@@ -28,6 +30,12 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+
+/*bool checkOptions(){
+  if(g.selectedAmbiance==null || g.selectedWhat==null || 
+     g.selectedArea==null || g.selected)
+     
+}*/
 
 class _HomeState extends State<Home> {
   areaDrop(BuildContext context) {
@@ -78,7 +86,7 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 8,  /// Slightly increased the 'elevation' value from the appBar and the 'body'
+        elevation: 0,  /// Slightly increased the 'elevation' value from the appBar and the 'body'
         leading: IconButton(
           icon: Icon(Icons.menu),
           iconSize: 20,
@@ -87,87 +95,103 @@ class _HomeState extends State<Home> {
         ),
          ///actions: <Widget>[],    ///Un-comment in case we want to add further Widgets on the appBar
       ),
-      body: Stack(
-      children: <Widget>[
-        Container(
-          constraints: BoxConstraints(
-            maxHeight: 650,
-            ),
-          alignment: Alignment(0,0),
-          child: Column( /// Replaced 'Stack' with 'Column' for the Buttons
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      MainMenuButton(  /// 'Where' Button
-                        name: "Where?",
-                        options: g.whereList,
+      body: Builder(
+        builder: (context) => Stack( // used a builder for the context
+        children: <Widget>[
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: 650,
+              ),
+            alignment: Alignment(0,0),
+            child: Column( /// Replaced 'Stack' with 'Column' for the Buttons
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        MainMenuButton(  /// 'Where' Button
+                          name: "Where?",
+                          options: g.whereList,
+                          ),
+                        MainMenuButton(  /// 'What' Button
+                          name: "What?",  
+                          options: g.whatList[0],
+                          ),
+                        MainMenuButton(  /// 'How Many' Button
+                          name: "How many?",
+                          options: g.howManyList,
                         ),
-                      MainMenuButton(  /// 'What' Button
-                        name: "What?",  
-                        options: g.whatList[0],
+                        MainMenuButton(  /// 'Ambiance' Button
+                          name: "Ambiance",
+                          options: g.ambianceList
                         ),
-                      MainMenuButton(  /// 'How Many' Button
-                        name: "How many?",
-                        options: g.howManyList,
-                      ),
-                      MainMenuButton(  /// 'Ambiance' Button
-                        name: "Ambiance",
-                        options: g.ambianceList
-                      ),
-                      MainMenuButton( /// 'Area' Button
-                        name: "Area",
-                        options: g.areaList
-                      ),
-                      Container( /// The 'Search' Button
-                        decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(50)
+                        MainMenuButton( /// 'Area' Button
+                          name: "Area",
+                          options: g.areaList
                         ),
-                        constraints: BoxConstraints(
-                          minHeight: 40,
-                          maxWidth: 120
-                        ),
-                        padding: EdgeInsets.symmetric(            
-                        ),
-                        child: Center(
-                          child: ButtonTheme(
-                            child: Flex(
-                              direction: Axis.horizontal,
-                              children: <Widget>[Expanded(
-                              child: IconButton(
-                                splashColor: Colors.white,
-                                icon: Icon(
-                                  Icons.search,
-                                  color: Colors.white
+                        Container( /// The 'Search' Button
+                          decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius: BorderRadius.circular(50)
+                          ),
+                          constraints: BoxConstraints(
+                            minHeight: 40,
+                            maxWidth: 120
+                          ),
+                          padding: EdgeInsets.symmetric(            
+                          ),
+                          child: Center(
+                            child: ButtonTheme(
+                              child: Flex(
+                                direction: Axis.horizontal,
+                                children: <Widget>[Expanded(
+                                child: IconButton(
+                                  splashColor: Colors.white,
+                                  icon: Icon(
+                                    Icons.search,
+                                    color: Colors.white
+                                  ),
+                                onPressed: () async{
+                                //if(checkOptions())
+                                //try
+                               // {
+                                  g.placesList=[];
+                                  await QueryService().queryForLocals();
+                                  print(g.placesList);
+                                  Navigator.pushNamed(context, '/second');
+                               // }
+                                //else
+                                //catch(error)
+                                //{
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(content: 
+                                      Text('Make sure you select an option for each field')
+                                    )
+                                  );
+                               // }
+                                }
                                 ),
-                              onPressed: () async{
-                              QueryService().queryForLocals();
-                              Navigator.pushNamed(context, '/second');
-                              }
-                              ),
-                            )],
+                              )],
+                            )
                           )
-                        )
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                 
-        ),
-        Container(   ///  'HYUGA' TITLE
-           padding: EdgeInsets.all(10),
-           child: Align(
-               alignment: Alignment(0, 1),
-               child: Text(
-                 "HYUGA",
-                 textAlign: TextAlign.center,
-                 overflow: TextOverflow.ellipsis,
-                 style: TextStyle(
-                     fontSize: 25.0,
-                     fontWeight: FontWeight.bold),
-               )
-            )
-        ),
-      ]),
+                    ],
+                  ),
+          ),
+          Container(   ///  'HYUGA' TITLE
+             padding: EdgeInsets.all(10),
+             child: Align(
+                 alignment: Alignment(0, 1),
+                 child: Text(
+                   "HYUGA",
+                   textAlign: TextAlign.center,
+                   overflow: TextOverflow.ellipsis,
+                   style: TextStyle(
+                       fontSize: 25.0,
+                       fontWeight: FontWeight.bold),
+                 )
+              )
+          ),
+        ]),
+      ),
       
     );
   }

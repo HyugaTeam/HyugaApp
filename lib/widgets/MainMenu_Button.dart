@@ -93,12 +93,12 @@ class MainMenuButtonState extends State<MainMenuButton>{
                   splashColor: Colors.blueGrey,
                   color: buttonColor, //changes when the selected option first changes
                   elevation: 5,
+
                   onPressed: () {
                     createDialog(context).then((index){
-                      index!= null? changeText(index): null ;
+                      index!= null? changeText(index):null;
                     });
                   },
-                  icon: Icon(Icons.arrow_drop_down_circle),
                   label: Text(
                     buttonText,
                     style: TextStyle(
@@ -107,6 +107,10 @@ class MainMenuButtonState extends State<MainMenuButton>{
                         fontFamily: 'Roboto'
                         ),
                   ),
+                  icon: Icon(
+                    Icons.arrow_drop_down, //changed
+                    size: 65, //added
+                    color: Colors.orange[600]), //added
                 )
           )
         ),
