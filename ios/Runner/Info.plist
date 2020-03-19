@@ -41,5 +41,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<!--add for location permissions-->
+	<key>io.flutter.embedded_views_preview</key>  
+	<value>YES</value>
+	<key>NSLocationWhenInUsageDescription</key>
+	<value>I need location permission when in use.</value>
+	
 </dict>
 </plist>

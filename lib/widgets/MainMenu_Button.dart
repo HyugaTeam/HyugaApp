@@ -85,6 +85,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Container(
+          height: 50,
           key : _key,
           child: ButtonTheme(
               minWidth: 290,
@@ -93,9 +94,16 @@ class MainMenuButtonState extends State<MainMenuButton>{
                   splashColor: Colors.blueGrey,
                   color: buttonColor, //changes when the selected option first changes
                   elevation: 5,
-
                   onPressed: () {
-                    createDialog(context).then((index){
+                    if(buttonText=='What?' && g.selectedWhere==null)
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          'Please select the desired location',
+                          textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: Colors.orange[600],
+                      ));
+                    else createDialog(context).then((index){
                       index!= null? changeText(index):null;
                     });
                   },
@@ -109,8 +117,9 @@ class MainMenuButtonState extends State<MainMenuButton>{
                   ),
                   icon: Icon(
                     Icons.arrow_drop_down, //changed
-                    size: 65, //added
-                    color: Colors.orange[600]), //added
+                    size: 52, //added
+                    color: Colors.orange[600],
+                  ), //added
                 )
           )
         ),

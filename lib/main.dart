@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/welcome_screen.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/Second_Page.dart';
+import 'package:hyuga_app/widgets/Third_Page.dart';
 
 
 void main() => runApp(MaterialApp(
@@ -15,8 +14,10 @@ void main() => runApp(MaterialApp(
     routes: {
       'welcome/' : (context) => Wrapper(),
       '/': (context) => Home(),
-      '/second': (context) => SecondPage()
+      '/second': (context) => SecondPage(),
+      //'/third': (context) => ThirdPageGenerator.generateRoute(settings)
     },
+    onGenerateRoute: ThirdPageGenerator.generateRoute,
     theme: ThemeData(
       backgroundColor: Colors.white,
       accentColor: Colors.black,
@@ -138,39 +139,40 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.symmetric(            
                           ),
                           child: Center(
-                            child: ButtonTheme(
-                              child: Flex(
-                                direction: Axis.horizontal,
-                                children: <Widget>[Expanded(
-                                child: IconButton(
-                                  splashColor: Colors.white,
-                                  icon: Icon(
-                                    Icons.search,
-                                    color: Colors.white
-                                  ),
-                                onPressed: () async{
-                                //if(checkOptions())
-                                //try
-                               // {
-                                  g.placesList=[];
-                                  await QueryService().queryForLocals();
-                                  print(g.placesList);
-                                  Navigator.pushNamed(context, '/second');
-                               // }
-                                //else
-                                //catch(error)
-                                //{
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(content: 
-                                      Text('Make sure you select an option for each field')
-                                    )
-                                  );
-                               // }
-                                }
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              children: <Widget>[Expanded(
+                              child: IconButton(
+                                splashColor: Colors.white,
+                                icon: Icon(
+                                  Icons.search,
+                                  color: Colors.white
                                 ),
-                              )],
+                              onPressed: () async{
+                              //if(checkOptions())
+                              try
+                              {
+                                g.placesList=[];
+                                await QueryService().queryForLocals();
+                                print(g.placesList);
+                                Navigator.pushNamed(context, '/second');
+                              }
+                              catch(error)
+                              {
+                                Scaffold.of(context).showSnackBar(
+                                  SnackBar(content: 
+                                    Text(
+                                      'Make sure you select an option for each field',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: Colors.orange[600],
+                                  )
+                                );
+                              }
+                              }
+                              ),
+                            )],
                             )
-                          )
                         ),
                       ),
                     ],
@@ -181,10 +183,11 @@ class _HomeState extends State<Home> {
              child: Align(
                  alignment: Alignment(0, 1),
                  child: Text(
-                   "HYUGA",
+                   "Hyuga",
                    textAlign: TextAlign.center,
                    overflow: TextOverflow.ellipsis,
                    style: TextStyle(
+                       fontFamily: 'Comfortaa',
                        fontSize: 25.0,
                        fontWeight: FontWeight.bold),
                  )

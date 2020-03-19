@@ -1,6 +1,6 @@
 import 'package:hyuga_app/models/locals/local.dart';
 
-int selectedWhere = 0;
+int selectedWhere;
 int selectedWhat;
 int selectedHowMany;
 int selectedAmbiance;
@@ -14,12 +14,12 @@ Map<String,int> selectedOptions = {'Where?':selectedWhere, 'What?':selectedWhat,
 final List<String> whereList = ["Cafè","Restaurant","Pub"];
  /// What list
 final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie","Board Games"],
-                ["Burger","Italian","Local","Asian","Vegan","Oriental"],
+                ["Burger","Italian","Local","Asian","Oriental","Sushi"],
                 ["Beer","Cocktail","Wine"]]; 
  /// How Many List
 final List<String> howManyList = 
-                  ['Forever Alone','Me and my date','3-4','5-8','8+'];
+                  ['Forever Alone','Me & my date','3-4','5-8','8+'];
  /// Ambiance list
 final List<String> ambianceList = ["Intimate","Anything","Social-friendly"];
  /// Area list
-final List<String> areaList = ["A 15 minute walk", "Anywhere"];
+final List<String> areaList = ["15 minute walk", "Anywhere"];

@@ -148,6 +148,7 @@ class QueryService{
             g.whatList[g.selectedWhere][g.selectedWhat]))
             .document(db.documentID).get()).data['score'],
           image: img,
+          cost: db.data['cost'],
           name: db.data['name'],
           location: db.data['location']
           )
@@ -155,4 +156,5 @@ class QueryService{
     }
     g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
+  ///TODO QUERY URI IN FUNCTIE DE DISTANTA
 }

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/models/locals/local.dart';
 
 class SecondPage extends StatefulWidget {
   @override
@@ -27,10 +28,8 @@ class _SecondPageState extends State<SecondPage> {
       var image = Image.memory(imageFile,fit: BoxFit.fill,);
       return image;
   }*/
-  @override
-  void initState(
-    
-  );
+  Color buttonColor = Colors.blueGrey;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,55 +65,68 @@ class _SecondPageState extends State<SecondPage> {
                         //color: Theme.of(context).backgroundColor,
                         //color: Colors.grey[300]
                       ),
-                      padding: EdgeInsets.only(
-                        //top:30,
-                      ),
-                      child:  MaterialButton(
-                      onPressed:(){
-                        //Navigator.pop(context);
-                        //TODO Implement the THIRD page
-                      },
-                      child: Column(
-                          children: <Widget>[
-                            Container( // The Main Image
-                              color: Colors.blue,
-                              width: 400,
-                              height: 200,
-                              child: g.placesList[index].image,
-                              ), //profileImage
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey,
-                                /*gradient: LinearGradient(
-                                  colors: [Colors.grey[300],Colors.blueGrey]
-                                )*/
-                              ),
-                              padding: EdgeInsets.only(
-                                top: 8,
-                                bottom: 8,
-                                left: 20
-                              ),
-                              child: Text(
-                                  g.placesList[index].name != null ? g.placesList[index].name: 'null' + '${g.placesList[index].description}',
-                                  style: TextStyle(
-                                    shadows: [Shadow(
-                                      blurRadius: 5,
-                                      color: Colors.black, 
-                                      offset: Offset(1,1)
-                                      ),
-                                    ],
-                                    fontSize: 20,
-                                    letterSpacing: 1,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    //backgroundColor: Colors.blueGrey,
-                                    fontFamily: 'Roboto'
+                      child:  Stack(
+                        children: <Widget>[
+                          Material(
+                            child: InkWell(
+                              onTap: (){print('////////////');},
+                              splashColor: Colors.orange[600],
+                              child: Container(
+                                width: 400,
+                                height:200 
+                              )
+                            )
+                          ),
+                          MaterialButton(
+                          //color: Colors.blueGrey,
+                          textTheme: ButtonTextTheme.primary,
+                          onPressed:(){
+                            Navigator.pushNamed(
+                              context, 
+                              '/third',
+                              arguments: g.placesList[index]
+                            );
+                            //TODO Implement the THIRD page
+                          },
+                          child: Column(
+                              children: <Widget>[
+                                Container( // The Main Image
+                                  color: Colors.blue,
+                                  width: 400,
+                                  height: 200,
+                                  child: g.placesList[index].image,
                                   ),
+                                Container( // Text's container
+                                  decoration: BoxDecoration(
+                                    color: buttonColor,
+                                  ),
+                                  padding: EdgeInsets.only(
+                                    top: 8,
+                                    bottom: 8,
+                                    left: 20
+                                  ),
+                                  child: Text( // 'Name' text
+                                      g.placesList[index].name != null ? g.placesList[index].name: 'null' + '${g.placesList[index].description}',
+                                      style: TextStyle(
+                                        shadows: [Shadow(
+                                          blurRadius: 2,
+                                          color: Colors.black, 
+                                          offset: Offset(0.7,0.7)
+                                          ),
+                                        ],
+                                        fontSize: 20,
+                                        letterSpacing: 0.4,
+                                        fontWeight: FontWeight.values[4],
+                                        color: Colors.white,
+                                        fontFamily: 'Roboto'
+                                      ),
+                                    ),
+                                  alignment: Alignment(-1, -1),
                                 ),
-                              alignment: Alignment(-1, -1),
-                            ),
-                          ],
-                          )
+                              ],
+                              )
+                        ),
+                        ],
                       )
                     ),
                     SizedBox(

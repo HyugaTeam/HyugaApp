@@ -8,8 +8,10 @@ class Local{
   final Image image; // Imported from the database
   final String description; // Imported from the database
   final GeoPoint location; // Imported from the database
+  final int cost; // Imported from the database
 
   Local({
+    this.cost,
     this.score, 
     this.id,
     this.name,

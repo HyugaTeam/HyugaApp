@@ -12,33 +12,47 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 10,
-        title: Text(
-          'Hello !',
-          style: TextStyle(
-            color: Theme.of(context).accentColor
-          ),
-        ),
+    return Theme(
+      data: ThemeData(
+        primaryColor: Colors.blueGrey,
+        highlightColor: Colors.orange[600]
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical:20,horizontal:50),
-        child: RaisedButton(
-          child: Text('Sign in as guest'),
-          onPressed: () async{
-              dynamic signInResult = await _authService.signInAnon(); // it either returns a user
-              if(signInResult == null)
-                print('sign-in failed');
-              else {
-                Navigator.pushNamed(context, '/');
-                print(signInResult.uid);
-              }
-          }
+        child: Scaffold(
+        
+        backgroundColor: Colors.blueGrey,
+        
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                'Hello!',
+                style: TextStyle(
+                  fontFamily: 'Comfortaa',
+                  fontSize: 30
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical:20,horizontal:50),
+                child: FloatingActionButton(
+                  
+                  child: Text("Let's go!"),
+                  onPressed: () async{
+                      dynamic signInResult = await _authService.signInAnon(); // it either returns a user
+                      if(signInResult == null)
+                        print('sign-in failed');
+                      else {
+                        Navigator.pushNamed(context, '/');
+                        print(signInResult.uid);
+                      }
+                  }
+                )
+              ),
+              Spacer()
+            ],
+          ),
         )
-      )
+      ),
     );
   }
 }
