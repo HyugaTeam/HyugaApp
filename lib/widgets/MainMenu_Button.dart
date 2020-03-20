@@ -16,17 +16,17 @@ class MainMenuButton extends StatefulWidget {
 }
 
 class MainMenuButtonState extends State<MainMenuButton>{
-  @override
 
+  @override
   /// Used for getting the button's coordinates
-  var _key = GlobalKey<MainMenuButtonState>(); 
+  var _key = GlobalKey<MainMenuButtonState>();
   String name;  
   List<String> options;
   String buttonText;
   Color buttonColor = Colors.white;
   Color textColor = Colors.black;
-  @override
 
+  @override
   /// Method which updates the Text displayed on the button whenever
   /// the user changes it
   void changeText(index){

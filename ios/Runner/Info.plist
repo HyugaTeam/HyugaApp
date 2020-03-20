@@ -43,10 +43,10 @@
 	<false/>
 
 	<!--add for location permissions-->
-	<key>io.flutter.embedded_views_preview</key>  
-	<value>YES</value>
-	<key>NSLocationWhenInUsageDescription</key>
-	<value>I need location permission when in use.</value>
+    	<key>io.flutter.embedded_views_preview</key>
+    	<string>YES</string>
+    	<key>NSLocationWhenInUsageDescription</key>
+    	<string>I need location permission when in use.</string>
 	
 </dict>
 </plist>
