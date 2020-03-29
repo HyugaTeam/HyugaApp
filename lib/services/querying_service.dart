@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:latlong/latlong.dart';
 
 class QueryService{
   // Converts a map of Firebase Locals to OUR Locals
@@ -107,8 +109,9 @@ class QueryService{
   // Handles the whole process of querying
   Future queryForLocals() async{
 
-    Position location = await getLocation();
-    print(location);
+    Position userLocation = await getLocation();
+    Position localLocation;
+    print(userLocation);
 
     QuerySnapshot queriedSnapshotByWhat = await getDataByWhat(g.whatList[g.selectedWhere][g.selectedWhat]);
     List<String> listOfQueriedDocuments = [];  // a list of the ID's from the query
@@ -138,7 +141,23 @@ class QueryService{
                 .collection('locals_bucharest')
                 .document(listOfQueriedDocuments[i])
                 .get();
-        //print(g.placesList);
+
+        ///TODO QUERY URI IN FUNCTIE DE DISTANTA
+        if(userLocation!=null && g.selectedArea==0){
+            localLocation = Position(
+              latitude: db.data['location'].latitude,
+              longitude: db.data['location'].longitude
+            );
+            Distance distance = Distance();
+            double fromAtoB = distance.as(
+              LengthUnit.Meter,
+              LatLng(localLocation.latitude, localLocation.longitude),
+              LatLng(userLocation.latitude, userLocation.longitude)
+              );
+            //if(fromAtoB > 1000)
+             // return;
+            print(fromAtoB);
+        }
         Image img = await getImage(db.documentID);
         g.placesList.add(Local(
           description: db.data['description'],
@@ -150,11 +169,10 @@ class QueryService{
           image: img,
           cost: db.data['cost'],
           name: db.data['name'],
-          location: db.data['location']
+          location: db.data['location'],
           )
         );
     }
     g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
-  ///TODO QUERY URI IN FUNCTIE DE DISTANTA
 }

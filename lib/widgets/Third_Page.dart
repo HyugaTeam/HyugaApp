@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 
+
+// The generator of the third page
 class ThirdPageGenerator{
 
   static Route<dynamic> generateRoute(RouteSettings settings){
@@ -22,8 +24,6 @@ class ThirdPage extends StatefulWidget {
 
   final Local local;
   var size;
-
-  
   
   ThirdPage({this.local}){
     size = local.image;
@@ -84,7 +84,18 @@ class _ThirdPageState extends State<ThirdPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      extendBodyBehindAppBar: true,
+      /*appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.orange[600]
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),*/
+
+      body: Stack(
+        children: <Widget>[
+          Container(
         child: ListView(
 
           children:[
@@ -223,113 +234,10 @@ class _ThirdPageState extends State<ThirdPage> {
           ],)
           ]
         )
+      ),
+      
+        ],
       )
     );
   }
 }
-
-/*
-Container(
-        child: ListView(
-          children:[
-            Column(
-          children: <Widget>[
-            Stack(
-              children: [ 
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.0,0.7],
-                      colors: [Colors.transparent,Colors.black]
-                    )
-                    ),
-                    child: widget.local.image
-                ),
-                
-              ]
-            ),
-            Container( // Name
-              alignment: Alignment(-0.8, 1),
-              padding: EdgeInsets.only(top:20,bottom:10),
-              child: Text(
-                widget.local.name,
-                style: TextStyle(
-                  fontFamily: 'Comfortaa',
-                  fontSize: 19,
-                  fontWeight: FontWeight.values[5]
-                ),
-              )
-            ),
-            Container( // Thin line
-              padding: EdgeInsets.only(top:10),
-              height: 2,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.white,Colors.orange[600],Colors.white]
-                )
-              ),
-            ),
-            Container( // Description
-              alignment: Alignment(-0.8, 0),
-              padding: EdgeInsets.only(top:20,bottom: 15,left:10,right:5),
-              child: Text(
-                widget.local.description,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontStyle: FontStyle.italic
-                ),
-              )
-            ),
-            Container( // Google Map
-              height: 150,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(localLatitude,localLongitude),
-                  zoom: 15
-                  ),
-                  myLocationEnabled: true,
-                  //trafficEnabled: true,
-                  markers: {
-                    Marker(
-                      markerId: MarkerId('0'),
-                      position: LatLng(localLatitude,localLongitude)
-                    )
-                  },
-                  //TODO: Add a 'Return to location' button
-              ),
-            ),
-            /*Container(
-              child: ListView(
-                children: <Widget>[
-                  /*Image(
-                    //image: null,
-                  )*/
-                ],
-              )
-            )*/
-            /*Container( // Uber Button
-                  width: 100,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: RaisedButton(
-                    child: Text('Uber',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1
-                    ),),
-                    color: Colors.transparent,
-                    onPressed: (){
-                    },
-                  ),
-                )*/
-          ],)
-          ]
-        )
-      )
-*/

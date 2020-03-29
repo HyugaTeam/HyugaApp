@@ -17,7 +17,6 @@ class MainMenuButton extends StatefulWidget {
 
 class MainMenuButtonState extends State<MainMenuButton>{
 
-  @override
   /// Used for getting the button's coordinates
   var _key = GlobalKey<MainMenuButtonState>();
   String name;  
@@ -25,6 +24,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
   String buttonText;
   Color buttonColor = Colors.white;
   Color textColor = Colors.black;
+  var whatKey = GlobalKey<MainMenuButtonState>();
 
   @override
   /// Method which updates the Text displayed on the button whenever
@@ -43,7 +43,14 @@ class MainMenuButtonState extends State<MainMenuButton>{
         buttonColor = Colors.blueGrey;
         textColor = Colors.white;
       }
+      if(name == 'Where?'){
+        
+      }
     });
+  }
+  @override
+  void initState(){
+    
   }
 
   /// Method which returns the button's coordinates in the page
@@ -56,7 +63,9 @@ class MainMenuButtonState extends State<MainMenuButton>{
 
   ///Method which opens a dialog whenever the button is pressed
   Future<int> createDialog(BuildContext context) {
-      return showDialog(context: context, builder: (context){
+      return showDialog(
+        context: context, 
+        builder: (context){
           return SizedBox(
             child: Container(
               //color: Colors.blue,

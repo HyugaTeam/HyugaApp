@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/screens/welcome_screen.dart';
+import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/widgets/LoadingScreen.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/Second_Page.dart';
@@ -14,6 +15,7 @@ void main() => runApp(MaterialApp(
     routes: {
       'welcome/' : (context) => Wrapper(),
       '/': (context) => Home(),
+      '/loading': (context) => LoadingScreen(),
       '/second': (context) => SecondPage(),
       //'/third': (context) => ThirdPageGenerator.generateRoute(settings)
     },
@@ -32,11 +34,13 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-/*bool checkOptions(){
+ bool checkOptions(){
   if(g.selectedAmbiance==null || g.selectedWhat==null || 
-     g.selectedArea==null || g.selected)
-     
-}*/
+     g.selectedArea==null || g.selectedHowMany==null || 
+     g.selectedWhere==null)
+      return false;
+  return true;
+}
 
 class _HomeState extends State<Home> {
   areaDrop(BuildContext context) {
@@ -56,9 +60,14 @@ class _HomeState extends State<Home> {
     });
   }
 
+  navigateToLoadingScreen(){
+    return ;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEdgeDragWidth: 0,
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -87,12 +96,14 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 0,  /// Slightly increased the 'elevation' value from the appBar and the 'body'
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.menu),
           iconSize: 20,
           color: Colors.black,
-          onPressed: () {},
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
         ),
          ///actions: <Widget>[],    ///Un-comment in case we want to add further Widgets on the appBar
       ),
@@ -128,53 +139,48 @@ class _HomeState extends State<Home> {
                           options: g.areaList
                         ),
                         Container( /// The 'Search' Button
-                          decoration: BoxDecoration(
-                            color: Colors.blueGrey,
-                            borderRadius: BorderRadius.circular(50)
-                          ),
-                          constraints: BoxConstraints(
-                            minHeight: 40,
-                            maxWidth: 120
-                          ),
                           padding: EdgeInsets.symmetric(            
                           ),
                           child: Center(
-                            child: Flex(
-                              direction: Axis.horizontal,
-                              children: <Widget>[Expanded(
-                              child: IconButton(
-                                splashColor: Colors.white,
-                                icon: Icon(
-                                  Icons.search,
-                                  color: Colors.white
-                                ),
-                              onPressed: () async{
-                              //if(checkOptions())
-                              try
-                              {
-                                g.placesList=[];
-                                await QueryService().queryForLocals();
-                                print(g.placesList);
-                                Navigator.pushNamed(context, '/second');
-                              }
-                              catch(error)
-                              {
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: 
-                                    Text(
-                                      'Make sure you select an option for each field',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    backgroundColor: Colors.orange[600],
-                                  )
-                                );
-                              }
-                              }
+                            child: MaterialButton(
+                              highlightColor: Colors.transparent,
+                              color: Colors.blueGrey,
+                              splashColor: Colors.orange[600],
+                              minWidth: 120,
+                              height: 44,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
                               ),
-                            )],
+                              child: Icon(
+                                Icons.search,
+                                color: Colors.white
+                              ),
+                            onPressed: () async{
+                            if(checkOptions())
+                            {
+                              g.placesList=[];
+                              Navigator.pushNamed(context, '/loading');
+                              QueryService().queryForLocals().then((data){
+                                 Navigator.pushReplacementNamed(context, '/second');
+                              });
+                              print(g.placesList);
+                            }
+                            else
+                            {
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Make sure you select an option for each field',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  backgroundColor: Colors.orange[600],
+                                )
+                              );
+                            }
+                            }
                             )
+                          ),
                         ),
-                      ),
                     ],
                   ),
           ),
@@ -189,7 +195,8 @@ class _HomeState extends State<Home> {
                    style: TextStyle(
                        fontFamily: 'Comfortaa',
                        fontSize: 25.0,
-                       fontWeight: FontWeight.bold),
+                       fontWeight: FontWeight.bold
+                       ),
                  )
               )
           ),

@@ -34,15 +34,27 @@ class _SignInState extends State<SignIn> {
               ),
               Container(
                 padding: EdgeInsets.symmetric(vertical:20,horizontal:50),
-                child: FloatingActionButton(
-                  
-                  child: Text("Let's go!"),
+                child: MaterialButton(
+                  splashColor: Colors.orange[100],
+                  color: Colors.orange[600],
+                  minWidth: 120,
+                  height: 35,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Text(
+                    "Let's go!",
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
                   onPressed: () async{
                       dynamic signInResult = await _authService.signInAnon(); // it either returns a user
                       if(signInResult == null)
                         print('sign-in failed');
                       else {
-                        Navigator.pushNamed(context, '/');
+                        Navigator.popAndPushNamed(context, '/');
                         print(signInResult.uid);
                       }
                   }

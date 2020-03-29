@@ -17,7 +17,7 @@ class Local{
     this.name,
     this.image,
     this.description,
-    this.location
+    this.location,
   });
 }
 /*
