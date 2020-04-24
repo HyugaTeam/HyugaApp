@@ -1,11 +1,8 @@
 - Sa se schimbe what-ul cand schimbi where ul.
 - Distanta de la utilizator la local(pe a doua pagina)
-- Butonul de search sa fie mai responsive
 
 De la tudor:
 
-butonul de lets go
-deselectare what
 la asian nu apar pozele 2
 ink-ul de la poza de search
 dureaza o eternitate pana se loaduiesc pozele
@@ -13,7 +10,7 @@ merge execrabil google maps-ul
 
 facem interfata pe meniul 2 mai buna
 facem interfata pe minul 3 mai buna
-facem un meniu de drag in dreapta sau il scotem de tot
+facem un meniu de drag in dreapta sau il scoatem de tot
 sa pun descrieri mai lungi
 implementam distanta
 buton arrow meniu 3 in stanga sus

@@ -1,10 +1,5 @@
-import 'dart:typed_data';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
-import 'package:hyuga_app/models/locals/local.dart';
-import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/LoadingScreen.dart';
 
 class SecondPage extends StatefulWidget {
   @override
@@ -75,7 +70,6 @@ class _SecondPageState extends State<SecondPage> {
                                 '/third',
                                 arguments: g.placesList[index]
                               );
-                              //TODO Implement the THIRD page
                             },
                             child: Column(
                                 children: <Widget>[

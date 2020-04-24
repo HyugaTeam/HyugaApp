@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingScreen.dart';
+import 'package:hyuga_app/widgets/MainMenuButton.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/Second_Page.dart';
@@ -25,15 +26,16 @@ void main() => runApp(MaterialApp(
       accentColor: Colors.black,
     ),
     //home: Home()
-    )
-  );
+  )
+);
 
-class Home extends StatefulWidget {
-
+class Home extends StatefulWidget{
   @override
   _HomeState createState() => _HomeState();
 }
 
+
+ // method called upon initiating the searching process
  bool checkOptions(){
   if(g.selectedAmbiance==null || g.selectedWhat==null || 
      g.selectedArea==null || g.selectedHowMany==null || 
@@ -42,27 +44,88 @@ class Home extends StatefulWidget {
   return true;
 }
 
+
 class _HomeState extends State<Home> {
-  areaDrop(BuildContext context) {
-    return showDialog(context: context, builder: (context) {
-      return Container(
-          margin: EdgeInsets.symmetric(),
-          child: Align(
-              alignment: Alignment(0,0.8),
-              child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                      "Select Area", //TODO implementan o harta
-                      style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold))
-              )
-          )
-      );
+
+  List<MainMenuButton> listOfButtons = [
+    MainMenuButton(  /// 'Where' Button
+                          name: "Where?",
+                          options: g.whereList,
+                          buttonText: "Where?",
+                          
+                          ),
+    MainMenuButton(  /// 'What' Button
+                          name: "What?",  
+                          options: g.whatList[0],
+                          buttonText:"What?"
+                          ),
+    MainMenuButton(  /// 'How Many' Button
+                          name: "How many?",
+                          options: g.howManyList,
+                          buttonText: "How many?"
+                        ),
+    MainMenuButton(  /// 'Ambiance' Button
+                          name: "Ambiance",
+                          options: g.ambianceList,
+                          buttonText: "Ambiance",
+                        ),
+    MainMenuButton( /// 'Area' Button
+                          name: "Area",
+                          options: g.areaList,
+                          buttonText: "Area",
+                        ),
+  ];
+  // List<MainMenuButton2> listOfButtons = [
+  //   MainMenuButton2(  /// 'Where' Button
+  //                         name: "Where?",
+  //                         options: g.whereList,
+  //                         buttonText: "Where?",
+  //                         ),
+  //   MainMenuButton2(  /// 'What' Button
+  //                         name: "What?",  
+  //                         options: g.whatList[0],
+  //                         buttonText:"What?"
+  //                         ),                 
+  //   MainMenuButton2(  /// 'How Many' Button
+  //                         name: "How many?",
+  //                         options: g.howManyList,
+  //                         buttonText: "How many?"
+  //                       ),
+  //   MainMenuButton2(  /// 'Ambiance' Button
+  //                         name: "Ambiance",
+  //                         options: g.ambianceList,
+  //                         buttonText: "Ambiance",
+  //                       ),
+  //   MainMenuButton2( /// 'Area' Button
+  //                         name: "Area",
+  //                         options: g.areaList,
+  //                         buttonText: "Area",
+  //                       ),
+  // ];
+  
+
+  void changeText(int index){
+    setState((){
+      // This if-statement handles the particularity of "What"'s button dropdown criteria
+      if(listOfButtons[index].name == 'What?'){
+        listOfButtons[index].buttonText = g.whatList[g.selectedWhere][index];
+        //listOfButtons[index].buttonColor = Colors.blueGrey;
+        //listOfButtons[index].textColor = Colors.white;
+      }
+      else{
+        listOfButtons[index].buttonText = listOfButtons[index].options[index];
+        //listOfButtons[index].buttonColor = Colors.blueGrey;
+        //listOfButtons[index].textColor = Colors.white;
+      }
+      if(listOfButtons[index].name == 'Where?' && g.selectedWhat!=null){
+        listOfButtons[1].buttonText = 'What?';
+        //listOfButtons[1].buttonColor = Colors.white;
+        //listOfButtons[1].textColor = Colors.black;
+        g.selectedWhat = null;
+      }
     });
   }
 
-  navigateToLoadingScreen(){
-    return ;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +165,8 @@ class _HomeState extends State<Home> {
           iconSize: 20,
           color: Colors.black,
           onPressed: () {
-            Scaffold.of(context).openDrawer();
+            //print("safnasfjasdgjbngbhnjaerghjaergtnj");
+            //Scaffold.of(context).openDrawer();
           },
         ),
          ///actions: <Widget>[],    ///Un-comment in case we want to add further Widgets on the appBar
@@ -118,26 +182,11 @@ class _HomeState extends State<Home> {
             child: Column( /// Replaced 'Stack' with 'Column' for the Buttons
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        MainMenuButton(  /// 'Where' Button
-                          name: "Where?",
-                          options: g.whereList,
-                          ),
-                        MainMenuButton(  /// 'What' Button
-                          name: "What?",  
-                          options: g.whatList[0],
-                          ),
-                        MainMenuButton(  /// 'How Many' Button
-                          name: "How many?",
-                          options: g.howManyList,
-                        ),
-                        MainMenuButton(  /// 'Ambiance' Button
-                          name: "Ambiance",
-                          options: g.ambianceList
-                        ),
-                        MainMenuButton( /// 'Area' Button
-                          name: "Area",
-                          options: g.areaList
-                        ),
+                        listOfButtons[0],
+                        listOfButtons[1],
+                        listOfButtons[2],
+                        listOfButtons[3],
+                        listOfButtons[4],
                         Container( /// The 'Search' Button
                           padding: EdgeInsets.symmetric(            
                           ),

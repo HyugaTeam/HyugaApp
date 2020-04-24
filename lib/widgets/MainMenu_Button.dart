@@ -4,14 +4,18 @@ import 'package:hyuga_app/widgets/MainMenu_OptionsDropAction.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 class MainMenuButton extends StatefulWidget {
-  @override
+
   final String name;
+  String buttonText;
   final List<String> options;
-  MainMenuButton({this.name,this.options});
+  //final Function(int) changeText;
+
+  MainMenuButton({this.name,this.options,this.buttonText});
   MainMenuButtonState createState() => MainMenuButtonState(
     name: this.name,
     options: this.options,
-    buttonText: this.name
+    buttonText: this.buttonText,
+    //changeText: this.changeText
   );
 }
 
@@ -24,15 +28,20 @@ class MainMenuButtonState extends State<MainMenuButton>{
   String buttonText;
   Color buttonColor = Colors.white;
   Color textColor = Colors.black;
-  var whatKey = GlobalKey<MainMenuButtonState>();
+  //Function(int) changeText;
 
-  @override
-  /// Method which updates the Text displayed on the button whenever
-  /// the user changes it
+  void initState(){
+    super.initState();
+    if(name=="What?" ){
+      print("adasdasdasdasdasdasdasdasd");
+    }
+  }
+
+
+  // / Method which updates the Text displayed on the button whenever
+  // / the user changes it
   void changeText(index){
     setState((){
-      //buttonText = 'okBoomer';
-      
       if(name == 'What?'){
         buttonText = g.whatList[g.selectedWhere][index];
         buttonColor = Colors.blueGrey;
@@ -43,22 +52,18 @@ class MainMenuButtonState extends State<MainMenuButton>{
         buttonColor = Colors.blueGrey;
         textColor = Colors.white;
       }
-      if(name == 'Where?'){
-        
+      if(name == 'Where?' && g.selectedWhat!=null){
+        //print(whatKey.currentWidget.toString());
       }
     });
-  }
-  @override
-  void initState(){
-    
   }
 
   /// Method which returns the button's coordinates in the page
   _getPosition(){
-   final RenderBox renderBoxButton = _key.currentContext.findRenderObject();
-   final coordinatesButton = renderBoxButton.localToGlobal(Offset.zero);
-   //print("POSITION of $renderBoxButton: $coordinatesButton");
-   return coordinatesButton;
+    RenderBox renderBoxButton;
+    renderBoxButton = _key.currentContext.findRenderObject();
+    final coordinatesButton = renderBoxButton.localToGlobal(Offset.zero);
+    return coordinatesButton;
  }
 
   ///Method which opens a dialog whenever the button is pressed
@@ -68,9 +73,8 @@ class MainMenuButtonState extends State<MainMenuButton>{
         builder: (context){
           return SizedBox(
             child: Container(
-              //color: Colors.blue,
               padding: EdgeInsets.only(
-                top: _getPosition().dy - 50,
+                top: _getPosition().dy - 30,
                 left: _getPosition().dx,
                 right: _getPosition().dx,
                 //bottom: _getPosition().dy
@@ -95,11 +99,15 @@ class MainMenuButtonState extends State<MainMenuButton>{
       children: <Widget>[
         Container(
           height: 50,
-          key : _key,
+          key: _key,
+          //key: name != "What?" ? _key : whatKey,
           child: ButtonTheme(
               minWidth: 290,
               height: 50,
               child: RaisedButton.icon(
+                  animationDuration: Duration(
+                    milliseconds: 100
+                  ),
                   splashColor: Colors.blueGrey,
                   color: buttonColor, //changes when the selected option first changes
                   elevation: 5,

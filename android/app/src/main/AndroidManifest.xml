@@ -10,8 +10,8 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="hyuga_app"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Hyuga"
+        android:icon="@mipmap/hyuga">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDNdhCM43QwuN5t98P282RENyCUQ7H9erw"/> 
         <activity

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +8,8 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:latlong/latlong.dart';
 
 class QueryService{
-  // Converts a map of Firebase Locals to OUR Locals
+  
+  // Method that converts a map of Firebase Locals to OUR Locals
   List<Local> toLocal(var localsMap){
       List<Local> placesList = [];
       for(int i = 0; i < localsMap.length; i++){
@@ -24,6 +24,7 @@ class QueryService{
       }
       return placesList;
   }
+  
   //Used when getting the 'score' field
   String getCollectionName(String collectionName){
     if(collectionName == 'Board Games')
@@ -88,7 +89,7 @@ class QueryService{
 
   Future<Image> getImage(String fileName) async {
       Uint8List imageFile;
-      int maxSize = 6*1024*1024;
+      int maxSize = 10*1024*1024;
       String pathName = 'photos/europe/bucharest/$fileName';
       print(pathName);
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
@@ -142,7 +143,7 @@ class QueryService{
                 .document(listOfQueriedDocuments[i])
                 .get();
 
-        ///TODO QUERY URI IN FUNCTIE DE DISTANTA
+        
         if(userLocation!=null && g.selectedArea==0){
             localLocation = Position(
               latitude: db.data['location'].latitude,
