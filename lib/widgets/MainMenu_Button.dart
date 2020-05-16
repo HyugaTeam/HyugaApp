@@ -8,9 +8,9 @@ class MainMenuButton extends StatefulWidget {
   final String name;
   String buttonText;
   final List<String> options;
-  //final Function(int) changeText;
+  final Function(int) changeText;
 
-  MainMenuButton({this.name,this.options,this.buttonText});
+  MainMenuButton({this.name,this.options,this.buttonText,this.changeText}) ;
   MainMenuButtonState createState() => MainMenuButtonState(
     name: this.name,
     options: this.options,
@@ -112,14 +112,22 @@ class MainMenuButtonState extends State<MainMenuButton>{
                   color: buttonColor, //changes when the selected option first changes
                   elevation: 5,
                   onPressed: () {
-                    if(buttonText=='What?' && g.selectedWhere==null)
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          'Please select the desired location',
-                          textAlign: TextAlign.center,
-                          ),
-                          backgroundColor: Colors.orange[600],
-                      ));
+                    if(buttonText=='What?' && g.selectedWhere==null){
+                      if(g.isSnackBarActive == false){
+                        g.isSnackBarActive = true;
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Please select the desired location first',
+                            textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Colors.orange[600],
+                          )
+                        ).closed.then((SnackBarClosedReason reason){
+                          g.isSnackBarActive = false;
+                      }
+                      );
+                     }
+                    }
                     else createDialog(context).then((index){
                       index!= null? changeText(index):null;
                     });

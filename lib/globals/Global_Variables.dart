@@ -6,6 +6,9 @@ int selectedHowMany;
 int selectedAmbiance;
 int selectedArea;
 
+/// Used around the app to check for an eventual active SnackBar
+bool isSnackBarActive = false;
+
 List<Local> placesList = [];
 
 Map<String,int> selectedOptions = {'Where?':selectedWhere, 'What?':selectedWhat, 
