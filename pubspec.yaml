@@ -33,7 +33,8 @@ dependencies:
   provider: ^4.0.5
   rxdart: ^0.24.0
   google_sign_in: ^4.4.4
-  #flutter_facebook_login: ^3.0.0
+  flutter_facebook_login: ^3.0.0
+  http: ^0.12.1
 
 # Commented
 # dependency_overrides:

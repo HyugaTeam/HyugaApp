@@ -10,6 +10,7 @@ import 'package:hyuga_app/widgets/Second_Page.dart';
 import 'package:hyuga_app/widgets/Third_Page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:hyuga_app/widgets/drawer.dart';
 
 void main() async{
   
@@ -159,36 +160,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Theme.of(context).backgroundColor,
       key: _drawerKey,
       //drawerEdgeDragWidth: 0,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              padding: EdgeInsets.all(100),
-              decoration: BoxDecoration(color: Colors.blueGrey),
-              child: Text('hello'),
-            ),
-            ListTile(leading: Icon(Icons.place), title: Text('My places')),
-            ListTile(leading: Icon(Icons.code),title: Text('My code')),
-            Container( // sign-out button
-              padding: EdgeInsets.symmetric(horizontal: 80),
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: Colors.orange[600],
-                splashColor: Colors.deepOrangeAccent,
-                child: Text("Log out"),
-                onPressed: () async{
-                  await AuthService().signOut();
-                  if(AuthService().user == null)
-                    print("Daskhfjghfjsdf");
-                },
-              ),
-            )
-          ],
-        ),
-      ),
+      drawer: ProfileDrawer(),
       appBar: AppBar(
         title: Text("Hello!",
             style: TextStyle(
@@ -204,6 +176,7 @@ class _HomeState extends State<Home> {
           iconSize: 20,
           color: Colors.black,
           onPressed: () {
+            print(authService.user.toString());
             _drawerKey.currentState.openDrawer();
           },
         ),

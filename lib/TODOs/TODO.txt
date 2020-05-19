@@ -8,7 +8,6 @@
 -preturi
 -google maps
 -incarcare mai rapida restarurante + "load more"
--logare cu facebook
 -profilul restaurantului
 -qr code pt user
 -scanare qr code
@@ -24,3 +23,23 @@ facem interfata pe minul 3 mai buna
 facem un meniu de drag in dreapta sau il scoatem de tot
 sa pun descrieri mai lungi
 buton arrow meniu 3 in stanga sus
+
+Pentru contul de restaurant:
+-sa poata edita orice
+
+Inainte de release:
+
+-adaugat un release key pentru Facebook Login
+-de configurat Facebook Login pentru IOS
+-de optimizat splash screen ul
+
+Colors:
+FB8C00
+
+
+Commands:
+
+keytool -exportcert -alias androiddebugkey -keystore "C:\Users\Florian\.android\debug.keystore" | "F:\Downloads\openssl-0.9.8k_X64\bin\openssl" sha1 -binary | "F:\Downloads\openssl-0.9.8k_X64\bin\openssl" base64
+keytool -exportcert -alias YOUR_RELEASE_KEY_ALIAS -keystore YOUR_RELEASE_KEY_PATH | openssl sha1 -binary | openssl base64
+
+kzUmjA91eqkhh3ZR2oL73kPkMoE=
