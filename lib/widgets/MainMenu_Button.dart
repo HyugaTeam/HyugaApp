@@ -4,55 +4,77 @@ import 'package:hyuga_app/widgets/MainMenu_OptionsDropAction.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 class MainMenuButton extends StatefulWidget {
-  @override
+
   final String name;
+  String buttonText;
   final List<String> options;
-  MainMenuButton({this.name,this.options});
+  final Function(int) changeText;
+
+  MainMenuButton({this.name,this.options,this.buttonText,this.changeText}) ;
   MainMenuButtonState createState() => MainMenuButtonState(
     name: this.name,
     options: this.options,
-    buttonText: this.name
+    buttonText: this.buttonText,
+    //changeText: this.changeText
   );
 }
 
 class MainMenuButtonState extends State<MainMenuButton>{
-  @override
 
   /// Used for getting the button's coordinates
-  var _key = GlobalKey<MainMenuButtonState>(); 
+  var _key = GlobalKey<MainMenuButtonState>();
   String name;  
   List<String> options;
   String buttonText;
-  @override
+  Color buttonColor = Colors.white;
+  Color textColor = Colors.black;
+  //Function(int) changeText;
 
-  /// Method which updates the Text displayed on the button whenever
-  /// the user changes it
+  void initState(){
+    super.initState();
+    if(name=="What?" ){
+      print("adasdasdasdasdasdasdasdasd");
+    }
+  }
+
+
+  // / Method which updates the Text displayed on the button whenever
+  // / the user changes it
   void changeText(index){
     setState((){
-      //buttonText = 'okBoomer';
-      if(name == 'What?')
+      if(name == 'What?'){
         buttonText = g.whatList[g.selectedWhere][index];
-      else
+        buttonColor = Colors.blueGrey;
+        textColor = Colors.white;
+      }
+      else{
         buttonText = options[index];
+        buttonColor = Colors.blueGrey;
+        textColor = Colors.white;
+      }
+      if(name == 'Where?' && g.selectedWhat!=null){
+        //print(whatKey.currentWidget.toString());
+      }
     });
   }
 
   /// Method which returns the button's coordinates in the page
   _getPosition(){
-   final RenderBox renderBoxButton = _key.currentContext.findRenderObject();
-   final coordinatesButton = renderBoxButton.localToGlobal(Offset.zero);
-   //print("POSITION of $renderBoxButton: $coordinatesButton");
-   return coordinatesButton;
+    RenderBox renderBoxButton;
+    renderBoxButton = _key.currentContext.findRenderObject();
+    final coordinatesButton = renderBoxButton.localToGlobal(Offset.zero);
+    return coordinatesButton;
  }
 
   ///Method which opens a dialog whenever the button is pressed
   Future<int> createDialog(BuildContext context) {
-      return showDialog(context: context, builder: (context){
+      return showDialog(
+        context: context, 
+        builder: (context){
           return SizedBox(
             child: Container(
-              //color: Colors.blue,
               padding: EdgeInsets.only(
-                top: _getPosition().dy - 50,
+                top: _getPosition().dy - 30,
                 left: _getPosition().dx,
                 right: _getPosition().dx,
                 //bottom: _getPosition().dy
@@ -76,29 +98,53 @@ class MainMenuButtonState extends State<MainMenuButton>{
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Container(
-          key : _key,
+          height: 50,
+          key: _key,
+          //key: name != "What?" ? _key : whatKey,
           child: ButtonTheme(
-              //buttonColor: Colors.blueGrey,
               minWidth: 290,
               height: 50,
               child: RaisedButton.icon(
+                  animationDuration: Duration(
+                    milliseconds: 100
+                  ),
                   splashColor: Colors.blueGrey,
-                  color: Colors.white,
+                  color: buttonColor, //changes when the selected option first changes
                   elevation: 5,
                   onPressed: () {
-                    createDialog(context).then((index){
-                      index!= null? changeText(index): null ;
+                    if(buttonText=='What?' && g.selectedWhere==null){
+                      if(g.isSnackBarActive == false){
+                        g.isSnackBarActive = true;
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Please select the desired location first',
+                            textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Colors.orange[600],
+                          )
+                        ).closed.then((SnackBarClosedReason reason){
+                          g.isSnackBarActive = false;
+                      }
+                      );
+                     }
+                    }
+                    else createDialog(context).then((index){
+                      index!= null? changeText(index):null;
                     });
                   },
-                  icon: Icon(Icons.arrow_drop_down_circle),
                   label: Text(
                     buttonText,
                     style: TextStyle(
                         fontSize: 30,
-                        color: Colors.black,
+                        color: textColor,
                         fontFamily: 'Roboto'
                         ),
                   ),
+                  icon: Icon(
+                    Icons.arrow_drop_down, //changed
+                    size: 52, //added
+                    color: Colors.orange[600],
+                  ), //added
                 )
           )
         ),

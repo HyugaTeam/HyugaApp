@@ -9,7 +9,8 @@ class OptionsDropButton extends StatefulWidget {
   final String question;
   final List<String> options;
   final Offset sizeOfButton;
-  final MainMenuButton button;
+  //final MainMenuButton button;
+  final button;
   OptionsDropButton({this.options, this.sizeOfButton, this.question,this.button});
   _OptionsDropButtonState createState() => _OptionsDropButtonState(
     question: this.question,
