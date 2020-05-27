@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/widgets/drawer.dart';
 
 class SecondPage extends StatefulWidget {
   @override
@@ -30,6 +31,7 @@ class _SecondPageState extends State<SecondPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: ProfileDrawer(),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
             //color: Colors.grey[300],
@@ -39,7 +41,8 @@ class _SecondPageState extends State<SecondPage> {
               left: 8,
               right: 8
             ),
-            child: ListView.builder(  
+            child: ListView.builder( 
+              physics: const AlwaysScrollableScrollPhysics(), 
               itemCount: g.placesList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Column(

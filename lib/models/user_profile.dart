@@ -1,3 +1,6 @@
+
+//// ------------------------------NOT USED------------------------------------
+
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -20,11 +23,11 @@ class _UserProfileState extends State<UserProfile> {
         ()=> _profile = state 
         )
     );
-    authService.loading.listen(
-      (state) => setState(
-        ()=> _profile = state
-        )
-    );
+    // authService.loading.listen(
+    //   (state) => setState(
+    //     ()=> _profile = state
+    //     )
+    // );
   }
 
 

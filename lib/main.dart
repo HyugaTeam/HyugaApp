@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/user.dart';
+import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingScreen.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/widgets/ManagerQRScan_Page.dart';
 import 'package:hyuga_app/widgets/Second_Page.dart';
 import 'package:hyuga_app/widgets/Third_Page.dart';
 import 'package:provider/provider.dart';
@@ -14,14 +15,12 @@ import 'package:hyuga_app/widgets/drawer.dart';
 
 void main() async{
   
-  
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(StreamProvider<User>.value( 
       value: AuthService().user,
       child: MaterialApp(
-
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
         initialRoute: 'welcome/',
@@ -70,6 +69,7 @@ bool checkOptions() {
 class _HomeState extends State<Home> {
 
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
+  ProfileDrawer _drawer = ProfileDrawer();
 
   List<MainMenuButton> listOfButtons = [
     MainMenuButton(
@@ -157,17 +157,27 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      floatingActionButton:  
+        authService.currentUser.isManager == true ? 
+          FloatingActionButton(
+            backgroundColor: Colors.orange,
+            child: Icon(Icons.photo_camera),
+            onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
+            },
+          ) :
+          Container(),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _drawerKey,
-      //drawerEdgeDragWidth: 0,
-      drawer: ProfileDrawer(),
+      drawer: _drawer,
       appBar: AppBar(
-        title: Text("Hello!",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).accentColor,
-                fontSize: 23,
-                decorationThickness: 1)),
+        title: Text(
+          "Hello!",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).accentColor,
+            fontSize: 23,
+            decorationThickness: 1)),
         centerTitle: true,
         backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0,
@@ -175,8 +185,7 @@ class _HomeState extends State<Home> {
           icon: Icon(Icons.menu),
           iconSize: 20,
           color: Colors.black,
-          onPressed: () {
-            print(authService.user.toString());
+          onPressed: () async {
             _drawerKey.currentState.openDrawer();
           },
         ),
@@ -235,7 +244,7 @@ class _HomeState extends State<Home> {
                                   g.isSnackBarActive = false;
                                 });
                               }
-                              }
+                            }
                           }
                       )
                     ),
