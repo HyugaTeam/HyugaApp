@@ -21,6 +21,7 @@ void main() async{
   runApp(StreamProvider<User>.value( 
       value: AuthService().user,
       child: MaterialApp(
+
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
         initialRoute: 'welcome/',
