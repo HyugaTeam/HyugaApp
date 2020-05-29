@@ -21,7 +21,6 @@ void main() async{
   runApp(StreamProvider<User>.value( 
       value: AuthService().user,
       child: MaterialApp(
-
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
         initialRoute: 'welcome/',
@@ -51,8 +50,6 @@ void main() async{
 }
 class Home extends StatefulWidget {
   @override
-
-  
 
   _HomeState createState() => _HomeState();
 }
@@ -105,33 +102,6 @@ class _HomeState extends State<Home> {
       buttonText: "Area",
     ),
   ];
-  // List<MainMenuButton2> listOfButtons = [
-  //   MainMenuButton2(  /// 'Where' Button
-  //                         name: "Where?",
-  //                         options: g.whereList,
-  //                         buttonText: "Where?",
-  //                         ),
-  //   MainMenuButton2(  /// 'What' Button
-  //                         name: "What?",
-  //                         options: g.whatList[0],
-  //                         buttonText:"What?"
-  //                         ),
-  //   MainMenuButton2(  /// 'How Many' Button
-  //                         name: "How many?",
-  //                         options: g.howManyList,
-  //                         buttonText: "How many?"
-  //                       ),
-  //   MainMenuButton2(  /// 'Ambiance' Button
-  //                         name: "Ambiance",
-  //                         options: g.ambianceList,
-  //                         buttonText: "Ambiance",
-  //                       ),
-  //   MainMenuButton2( /// 'Area' Button
-  //                         name: "Area",
-  //                         options: g.areaList,
-  //                         buttonText: "Area",
-  //                       ),
-  // ];
 
   void changeText(int index) {
     setState(() {
@@ -154,20 +124,27 @@ class _HomeState extends State<Home> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      floatingActionButton:  
-        authService.currentUser.isManager == true ? 
-          FloatingActionButton(
-            backgroundColor: Colors.orange,
-            child: Icon(Icons.photo_camera),
-            onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
-            },
-          ) :
-          Container(),
+      floatingActionButton: StreamBuilder<User>(
+        stream: authService.user,
+        builder: (context, snapshot) {
+          if(snapshot.hasData)
+            if(authService.currentUser.isManager == true)
+              return FloatingActionButton(
+                backgroundColor: Colors.orange,
+                child: Icon(Icons.photo_camera),
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
+                },
+              );
+          return Container(); // just an empty container
+        }
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _drawerKey,
       drawer: _drawer,
@@ -276,3 +253,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+

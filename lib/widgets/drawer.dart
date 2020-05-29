@@ -77,7 +77,9 @@ class ProfileDrawer extends StatelessWidget {
                       children: <Widget>[
                         ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
                           title: Text('My places'), 
-                          onTap: (){}
+                          onTap: (){
+                            
+                          }
                         ),
                         ListTile(
                           leading: FaIcon(FontAwesomeIcons.qrcode, color: Colors.blueGrey), 

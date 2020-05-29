@@ -169,6 +169,8 @@ class AuthService{
     try{
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       //FirebaseUser user = result.user;
+      if(result.user != null)
+        updateUserData(result.user);
       return result;
     }
     //on AuthException 
