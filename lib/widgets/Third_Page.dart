@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 // The generator of the third page
@@ -84,6 +86,7 @@ class _ThirdPageState extends State<ThirdPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: ProfileDrawer(),
       extendBodyBehindAppBar: true,
       /*appBar: AppBar(
         iconTheme: IconThemeData(
@@ -92,7 +95,6 @@ class _ThirdPageState extends State<ThirdPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),*/
-
       body: Stack(
         children: <Widget>[
           Container(
@@ -188,10 +190,13 @@ class _ThirdPageState extends State<ThirdPage> {
                         builder:(context,snapshot){
                           if(!snapshot.hasData){
                             // data didn't load
-                            return Container(
-                              height: 100,
-                              color: Colors.blueGrey,
-                              
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[200],
+                              highlightColor: Colors.white,
+                              child: Container(
+                                height: 100,
+                                color: Colors.blueGrey,
+                              ),
                             ); 
                           }
                           else {

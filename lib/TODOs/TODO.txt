@@ -11,7 +11,7 @@
 -profilul restaurantului
 -qr code pt user
 -scanare qr code
--site
+
 
 De la tudor:
 
@@ -35,7 +35,6 @@ Inainte de release:
 
 Colors:
 FB8C00
-
 
 Commands:
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/user.dart';
+import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingScreen.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/widgets/ManagerQRScan_Page.dart';
 import 'package:hyuga_app/widgets/Second_Page.dart';
 import 'package:hyuga_app/widgets/Third_Page.dart';
 import 'package:provider/provider.dart';
@@ -14,14 +15,12 @@ import 'package:hyuga_app/widgets/drawer.dart';
 
 void main() async{
   
-  
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(StreamProvider<User>.value( 
       value: AuthService().user,
       child: MaterialApp(
-
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
         initialRoute: 'welcome/',
@@ -52,8 +51,6 @@ void main() async{
 class Home extends StatefulWidget {
   @override
 
-  
-
   _HomeState createState() => _HomeState();
 }
 
@@ -70,6 +67,7 @@ bool checkOptions() {
 class _HomeState extends State<Home> {
 
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
+  ProfileDrawer _drawer = ProfileDrawer();
 
   List<MainMenuButton> listOfButtons = [
     MainMenuButton(
@@ -104,33 +102,6 @@ class _HomeState extends State<Home> {
       buttonText: "Area",
     ),
   ];
-  // List<MainMenuButton2> listOfButtons = [
-  //   MainMenuButton2(  /// 'Where' Button
-  //                         name: "Where?",
-  //                         options: g.whereList,
-  //                         buttonText: "Where?",
-  //                         ),
-  //   MainMenuButton2(  /// 'What' Button
-  //                         name: "What?",
-  //                         options: g.whatList[0],
-  //                         buttonText:"What?"
-  //                         ),
-  //   MainMenuButton2(  /// 'How Many' Button
-  //                         name: "How many?",
-  //                         options: g.howManyList,
-  //                         buttonText: "How many?"
-  //                       ),
-  //   MainMenuButton2(  /// 'Ambiance' Button
-  //                         name: "Ambiance",
-  //                         options: g.ambianceList,
-  //                         buttonText: "Ambiance",
-  //                       ),
-  //   MainMenuButton2( /// 'Area' Button
-  //                         name: "Area",
-  //                         options: g.areaList,
-  //                         buttonText: "Area",
-  //                       ),
-  // ];
 
   void changeText(int index) {
     setState(() {
@@ -153,21 +124,38 @@ class _HomeState extends State<Home> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
+      floatingActionButton: StreamBuilder<User>(
+        stream: authService.user,
+        builder: (context, snapshot) {
+          if(snapshot.hasData)
+            if(authService.currentUser.isManager == true)
+              return FloatingActionButton(
+                backgroundColor: Colors.orange,
+                child: Icon(Icons.photo_camera),
+                onPressed: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
+                },
+              );
+          return Container(); // just an empty container
+        }
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _drawerKey,
-      //drawerEdgeDragWidth: 0,
-      drawer: ProfileDrawer(),
+      drawer: _drawer,
       appBar: AppBar(
-        title: Text("Hello!",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).accentColor,
-                fontSize: 23,
-                decorationThickness: 1)),
+        title: Text(
+          "Hello!",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).accentColor,
+            fontSize: 23,
+            decorationThickness: 1)),
         centerTitle: true,
         backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0,
@@ -175,8 +163,7 @@ class _HomeState extends State<Home> {
           icon: Icon(Icons.menu),
           iconSize: 20,
           color: Colors.black,
-          onPressed: () {
-            print(authService.user.toString());
+          onPressed: () async {
             _drawerKey.currentState.openDrawer();
           },
         ),
@@ -235,7 +222,7 @@ class _HomeState extends State<Home> {
                                   g.isSnackBarActive = false;
                                 });
                               }
-                              }
+                            }
                           }
                       )
                     ),
@@ -266,3 +253,4 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
