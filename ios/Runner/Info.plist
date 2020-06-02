@@ -48,8 +48,8 @@
 	<!--add for location permissions-->
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
-	<key>NSLocationWhenInUsageDescription</key>
-	<string>Hyuga requires permission for your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Hyuga requires permission for your location</string>
 	
 </dict>
 </plist>
