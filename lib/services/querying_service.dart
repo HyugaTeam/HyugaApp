@@ -5,10 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/services/auth_service.dart';
 import 'package:latlong/latlong.dart';
 
+// Class resposible for the whole querying service for locals
+// This class acts as a singleton
 class QueryService{
   
+  
+  static final Firestore _db = Firestore.instance;
+  static final FirebaseStorage storage = FirebaseStorage.instance;
+  static final StorageReference = storage.ref();
+
+
   // Method that converts a map of Firebase Locals to OUR Locals
   List<Local> toLocal(var localsMap){
       List<Local> placesList = [];
@@ -66,13 +75,13 @@ class QueryService{
     }
     
     if(selectedAmbiance != null)
-      return Firestore.instance.collection('locals_bucharest')
+      return _db.collection('locals_bucharest')
           .where('ambiance',isEqualTo: selectedAmbiance)
           //.where('score.lemonade',isGreaterThan: null)///////////////
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
           .getDocuments();
     else
-      return Firestore.instance.collection('locals_bucharest')
+      return _db.collection('locals_bucharest')
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
           .getDocuments();
   }
@@ -82,7 +91,7 @@ class QueryService{
     if (collectionName == 'Board Games')
       collectionName = 'board_games';
     else collectionName = collectionName.toLowerCase();
-    return Firestore.instance
+    return _db
     .collection('_$collectionName').orderBy('score',descending: true)
     .getDocuments();
   }
@@ -92,7 +101,7 @@ class QueryService{
       int maxSize = 10*1024*1024;
       String pathName = 'photos/europe/bucharest/$fileName';
       print(pathName);
-      var storageRef = FirebaseStorage.instance.ref().child(pathName);
+      var storageRef = storage.ref().child(pathName);
       imageFile = await storageRef.child('$fileName'+'_profile.jpg').getData(maxSize);
       return Image.memory(
         imageFile,
@@ -101,7 +110,7 @@ class QueryService{
   }
 
   // Gets the User's location
-  Future<Position>getLocation() async{
+  Future<Position>getUserLocation() async{
     Position position = await Geolocator() 
             .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     return position;
@@ -110,7 +119,8 @@ class QueryService{
   // Handles the whole process of querying
   Future queryForLocals() async{
 
-    Position userLocation = await getLocation();
+    Position userLocation ;
+    getUserLocation().then((value)=>userLocation = value);
     Position localLocation;
     print(userLocation);
 
@@ -138,7 +148,7 @@ class QueryService{
     queriedDocumentsByAmbAndHM.intersection(queriedDocumentsByWhat).toList();
     //listOfQueriedDocuments.sort((x,y)=>x.)
     for(int i = 0 ; i < listOfQueriedDocuments.length; i++){
-        var db = await Firestore.instance
+        var db = await _db
                 .collection('locals_bucharest')
                 .document(listOfQueriedDocuments[i])
                 .get();
@@ -176,4 +186,49 @@ class QueryService{
     }
     g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
+
+  Future<List<DocumentSnapshot>> fetch() async{
+
+    String selectedAmbiance;
+    int selectedHowMany;
+    switch (g.selectedAmbiance) {
+      case 0:
+        selectedAmbiance = 'c';
+        break;
+      case 2:
+        selectedAmbiance = 'sf';
+        break;
+      default: selectedAmbiance = 'csf';
+    }
+
+    switch (g.selectedHowMany) {
+      case 0:
+        selectedHowMany = 1;
+        break;
+      case 1:
+        selectedHowMany = 2;
+        break;
+      case 2:
+        selectedHowMany = 4;
+        break;
+      case 3:
+        selectedHowMany = 6;
+        break;
+      default: selectedHowMany = 9;
+    }
+    QuerySnapshot locals;
+    print(authService.currentUser.uid);
+    locals = await _db.collection('locals_bucharest')
+    //.where('ambiance',arrayContains: selectedAmbiance)
+    .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
+    .where('profile',arrayContains: 'coffee')
+    .orderBy('profile')
+    .getDocuments();
+    print("END" + locals.toString());
+    return locals.documents;  
+
+  }
+
 }
+
+QueryService queryingService = new QueryService();
