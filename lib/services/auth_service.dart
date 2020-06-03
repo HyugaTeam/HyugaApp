@@ -19,6 +19,7 @@ class AuthService{
   Stream<Map<String,dynamic>> profile; // custom user data from Firestore
   //PublishSubject loading = PublishSubject();
   User currentUser; /// used for the manager property
+  
   AuthService(){
     user.listen(
       (value){
