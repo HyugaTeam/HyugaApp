@@ -143,6 +143,7 @@ class AuthService{
 
     }
     catch(error){
+      print(error);
       //handleAuthError(error);
       return(error);
     }
