@@ -8,7 +8,11 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:latlong/latlong.dart';
 
 class QueryService{
+
+  static final Firestore _db = Firestore.instance;
+  static final FirebaseStorage storage = FirebaseStorage.instance;
   
+
   // Method that converts a map of Firebase Locals to OUR Locals
   List<Local> toLocal(var localsMap){
       List<Local> placesList = [];
@@ -176,4 +180,38 @@ class QueryService{
     }
     g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
+
+  Future fetch(){
+    String selectedAmbiance;
+    int selectedHowMany;
+    
+    switch (g.selectedAmbiance) {
+      case 0:
+        selectedAmbiance = 'c';
+        break;
+      case 2:
+        selectedAmbiance = 'sf';
+        break;
+      default: selectedAmbiance = null;
+    }
+
+    switch (g.selectedHowMany) {
+      case 0:
+        selectedHowMany = 1;
+        break;
+      case 1:
+        selectedHowMany = 2;
+        break;
+      case 2:
+        selectedHowMany = 4;
+        break;
+      case 3:
+        selectedHowMany = 6;
+        break;
+      default: selectedHowMany = 9;
+    }
+  }
+
 }
+
+QueryService queryService = QueryService();

@@ -17,6 +17,7 @@ void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  
 
   runApp(StreamProvider<User>.value( 
       value: AuthService().user,
@@ -130,11 +131,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      floatingActionButton: StreamBuilder<User>(
-        stream: authService.user,
+      floatingActionButton: StreamBuilder(
+        stream: authService.loading.stream,
         builder: (context, snapshot) {
           if(snapshot.hasData)
-            if(authService.currentUser.isManager == true)
+            if(snapshot.data == false && authService.currentUser.isManager == true)
               return FloatingActionButton(
                 backgroundColor: Colors.orange,
                 child: Icon(Icons.photo_camera),

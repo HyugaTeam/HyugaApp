@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hyuga-app",
+  "private_key_id": "8621494f4359866a829af8f708272d40dd0153b2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCyUzqMK7tkr3or\nDQAeIvCQ4fOaQ5wKl4mzkrkbB8/tS23UlD0YlK3gXl81VmXNU3I4XRgfpDSBr+aC\nFDgwe7x4DO/zpdmijtXtvF+q20sjMqc9JqLmF8CHEb/gcwTXvSXB0WRCPaHbu3yp\n4lTDIkxZ9yiwFVFY5DKVjgGh+PP3dTrPzd6281E2nNSNBpsFuRp/3U7LcXgzxZLr\nZMMqvoKwpxJLdmF8HJLj3xQET5GX9aF6KkJk3firBh5BM8HJPCfeL8gmz5ftqIBL\nVsGoiri29nM34mW4xn8+yOqLYQRDRp/0UwCOpfHoLFTEFQahC58zTAWzP3VEh2zG\nveeFXpBNAgMBAAECggEADzoEGcvyKFrDd8GYbPpWyEhC4L09Kbpey7KPk7tLCdwS\n+L/fp6WqYyorvwYtkya47g8k7C69PQWkDR9k3N7z7NxN8OQMfVDs+2vGT3SCKfM9\nTH9sEXGdwurFE4k+tJ02CCK1COLyWyzbLDZjPnZDRrtQAhkP5SM3HoYNpaL4UfzQ\nFoTxZ0igjNjj9Io8xvgvY6GjdLPSBGaWe7Db71QTQsslVkVpWoGv6C9o27U+DKGT\nyTEu2QxwrsuczyWNc/++udrIpZX12IkF1BVxj1ekkoJrF9wXQZjZZLyVde1ccTso\na2eSZGSEou6ww4HVyZZMYUfMFGlgRbNR5O8ph4zkgQKBgQDZLN1OkmqOqw7k2XPa\ndqPSEpBK8y3+PjKmVVR4CJQ6XbhLXwBEQW+FBlIBP/dglmhOJ1lMLALIGl0m4Sp+\nZ0ev3vl9OiVX7E/kwZVMYsFuXQBh+MPgLZSnmzxAHOVNJ+VdS1A+WuUFdWjuTeU0\nZ81FW1xz21hPQtxW4GETe3usVQKBgQDSNF4tIstgB7y+mGQHr5xnLWQc/XF3BXdY\nFCwf8JMy91QldqypZtHoRGvnn0jsTMbylEgVxuMpdqmIipB2uzK+MOpr2GrHfC7H\nOLmyiZ6ofd98jmPqHB3ChdCi/0fSQOklFPlYEiI54JY3VVAmm4ENMNwcWwnihrgY\nog9PzBvMGQKBgQC3+yoAxkk/U+rqNM3Q5XEjJlbXJ+xu1oJSJzfH+HyadYsLTxAK\nwuSW7SPLq0UGrmTu0Kb1wNMacjs4FMjLDPPOKjdxvzCjq66DPPweGguEU4Vfej92\nSycEVp5UMiaPlpzYzFTOfnJGjZC3UYY7PzTG7P8Fp2zIuPuxHaUfvBypgQKBgQDE\nYJwi+sCZRGE2hlPdQliRo7xFwRjBot+t75qRdEVwddOs9EO2NxKfNVzBlPOhntC2\nS4VUouwSDoOvxhPUeGqdeEFo41RObVueTwZdH2iT7JRfXv9E9WNwGWei/27vpCir\ntf6EItzKyWBM7WzlxJ05342jCAIiGM3gZXZ8jCjj8QKBgQClpoe/ilOAoJFVUiNt\nsn1mU8MehidkaGZrfx7e69CEY44oNLZQsMINo3iQsT0cAPwSA2nxFBrbY4qh8nEe\nbgfoUNZlN/ow+3d/Y6LLSbANMcDOR8fKUfI+w2eoAmER5sLsRCuOKkPXLj/RrQUy\nMj74sdf5E28fmgU4pvMSwlPNsw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "hyuga-app@appspot.gserviceaccount.com",
+  "client_id": "113164270674297406627",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hyuga-app%40appspot.gserviceaccount.com"
+}

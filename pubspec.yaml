@@ -38,6 +38,7 @@ dependencies:
   http: ^0.12.1
   qr_flutter: ^3.2.0
   barcode_scan: ^3.0.1
+  cloud_functions: ^0.5.0
   
 
 # Commented

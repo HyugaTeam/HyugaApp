@@ -3,62 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:hyuga_app/models/user.dart';
+import 'package:hyuga_app/widgets/LevelProgressBar.dart';
 
-// class ManagerQRScan extends StatefulWidget {
-//   @override
-//   _QRScanState createState() => _QRScanState();
-// }
-
-// class _QRScanState extends State<ManagerQRScan> {
-
-//   GlobalKey _qrKey = GlobalKey();
-//   String uid = "";
-//   User scannedUser;
-
-//   //QRViewController controller;
-
-//   @override
-//   void dispose(){
-//      // controller?.dispose();
-//       super.dispose();
-//   }
-
-
-//   Future _scanQR() async{
-//     try{
-//       String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) => scanResult.rawContent);
-//       setState(() {
-//         uid = qrResult;
-//       });
-//       print(uid);
-//     } on PlatformException
-//     catch(error){
-//       if(error.code == BarcodeScanner.cameraAccessDenied)
-//         print("Camera access is denied");
-//     }
-//   }
-
-//   _QRScanState(){
-//     _scanQR().then((value) => null);
-//   }
-
-  
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         child: Column(
-//           children: <Widget>[
-//             FutureBuilder(
-//               future: _scanQR(),
-//               builder: null
-//             ),
-//           ],
-//         )
-//       )
-//     );
-//   }
-// }
 
 class ManagerQRScan extends StatelessWidget {
   @override
@@ -67,27 +13,18 @@ class ManagerQRScan extends StatelessWidget {
   String uid = "";
   User scannedUser;
   final Firestore _db = Firestore.instance;
-  //QRViewController controller;
-
+  
 
   Future _scanQR() async{
     try{
       String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) => scanResult.rawContent);
+      //if(qrResult == )
       DocumentReference ref = _db.collection('users').document(qrResult); // a reference to the scanned user's profile
       var refData = await ref.get();
-      int valueToBeAdded = 1;
-    
-      // if(refData.data['points'] != null)
-      //   switch (refData.data['points']) {
-      //     case :
-            
-      //       break;
-      //     default:
-      //   }
-
-      ref.setData(({
-        'points' : refData.data['points'] + valueToBeAdded 
-      }),
+      if(refData != null)
+        ref.setData(({
+          'score' : refData.data['score'] + 100
+        }),
       merge:  true);
 
       if(ref != null)
@@ -110,14 +47,17 @@ class ManagerQRScan extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // child: Column(
-        //   children: <Widget>[
-        //     FutureBuilder(
-        //       future: _scanQR(),
-        //       builder: null
-        //     ),
-        //   ],
-        // )
+        child: Column(
+          children: <Widget>[
+            Text(uid),
+            
+            //LevelProgressBar(),
+            // FutureBuilder(
+            //   future: _scanQR(),
+            //   builder: null
+            // ),
+          ],
+        )
       )
     );
   }

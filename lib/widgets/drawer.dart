@@ -1,72 +1,153 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/AdminPanel_Page.dart';
+import 'package:hyuga_app/widgets/FavoriteLocals_Page.dart';
 import 'package:hyuga_app/widgets/UserQRCode_Page.dart';
 
+// class ProgressColorAnimation extends Animation{
+//   @override
+//   void addStatusListener(){
+
+//   }
+// }
+
 class ProfileDrawer extends StatelessWidget {
+
+
+  // double _progress;
+  //  ProfileDrawer(){
+  //    try{
+  //     _progress = authService.currentUser.score.toDouble() / (authService.currentUser.getLevel()*500);
+  //    }
+  //    catch(error){
+  //      print(error);
+  //    }
+  //  }
+  
   @override
   Widget build(BuildContext context) {
+    
+    String _progress;
+    try{
+      if(authService.currentUser.score >=2500)
+        _progress = '2500 / ' + (authService.currentUser.getLevel()*500).toString();
+      else
+        _progress = authService.currentUser.score.toString() + ' / ' + (authService.currentUser.getLevel()*500).toString();
+    }
+    catch(error){
+      _progress = '';
+    }
+    
+
     return Drawer(
-        child: StreamBuilder<User>( 
+        child: StreamBuilder( 
           stream: authService.user,
           builder: (context, snapshot) {
-            if(snapshot.hasData && !snapshot.data.isAnonymous)
-              return Column(  // The StreamBuilder returns this path if the user is logged in and NOT anonymous
+            if(snapshot.hasData && !authService.currentUser.isAnonymous)
+              return Column(  // The StreamBuilder returns this path if the user is LOGGED IN and NOT ANONYMOUS
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   DrawerHeader(
                     padding: EdgeInsets.only(left: 15, bottom: 15),
                     decoration: BoxDecoration(color: Colors.blueGrey),
-                    child: Container(
+                    child: Container( 
                       width: MediaQuery.of(context).size.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[ 
-                          Container(
-                            width: 50,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: Image.network(
-                                snapshot.data.photoURL,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column( // Column containing the ProfilePicture and DisplayName
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[ 
+                              Container(
                                 width: 50,
-                                // frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
-                                //   return Padding(
-                                //     padding: EdgeInsets.all(8.0),
-                                //     child: child,
-                                //   );
-                                // },
-                                // loadingBuilder: (context, child, loadingProgress){
-                                //   if(loadingProgress == null)
-                                //     return child;
-                                //   return CircularProgressIndicator(
-                                //     value: loadingProgress.expectedTotalBytes != null
-                                //         ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                //         : null,
-                                //   );
-                                //   //return child;
-                                // },
-                                errorBuilder: (context, error, stacktrace){
-                                  return Image.asset(
-                                    'assets/images/empty-profile.png',
-                                    width:50
-                                  );
-                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Image.network(
+                                    authService.currentUser.photoURL,
+                                    width: 50,
+                                    // frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+                                    //   return child;
+                                    // },
+                                    // loadingBuilder: (context, child, loadingProgress){
+                                    //   if(loadingProgress == null)
+                                    //     return child;
+                                    //   return CircularProgressIndicator(
+                                    //     value: loadingProgress.expectedTotalBytes != null
+                                    //         ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                                    //         : null,
+                                    //   );
+                                    //   //return child;
+                                    // },
+                                    errorBuilder: (context, error, stacktrace){
+                                      print(authService.currentUser.photoURL);
+                                      return Image.asset(
+                                        'assets/images/empty-profile.png',
+                                        width:50
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(height: 20,),
+                              Text(// Shows either the user's display name, or the email used for registration
+                                authService.currentUser.displayName != null? authService.currentUser.displayName : authService.currentUser.email,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                fontWeight: FontWeight.bold
+                                )
+                              )
+                            ]
                           ),
-                          SizedBox(height: 20,),
-                          Text(
-                          snapshot.data.displayName,
-                          style: TextStyle(
-                            fontSize: 20,
-                          fontWeight: FontWeight.bold
+                          Container(
+                            padding: EdgeInsets.only(right: 15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  "Level " + authService.currentUser.getLevel().toString(),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.orange[600],
+                                    shadows: [Shadow(
+                                      color: Colors.black,
+                                      blurRadius: 1.5,
+                                      offset: Offset(1,1)
+                                    )]
+                                  ),
+                                ),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container( // User's progress indicator for level
+                                      padding: EdgeInsets.only(top: 10),
+                                      width: 120,
+                                      height: 25,
+                                      child: LinearProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(Colors.orange[600]),
+                                        //valueColor: C,
+                                        value: authService.currentUser.score.toDouble() / (authService.currentUser.getLevel()*500)
+                                        ),
+                                    ),
+                                    Container( // Text (some sort of ratio) with User's score / necessary score for the next level
+                                      alignment: Alignment.center,
+                                      margin: EdgeInsets.only(top:12),
+                                      //padding: EdgeInsets.only(top: 10),
+                                      width: 100,
+                                      height: 20,
+                                      child: Text(
+                                        _progress
+                                      ),
+                                    )
+                                  ]
+                                )
+                                
+                              ],
+                            ),
                           )
-                            )
-                        ]
+                        ],
                       ),
                     ),
                   ),
@@ -78,7 +159,7 @@ class ProfileDrawer extends StatelessWidget {
                         ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
                           title: Text('My places'), 
                           onTap: (){
-                            
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return FavoriteLocalsPage(); }));
                           }
                         ),
                         ListTile(
@@ -109,6 +190,11 @@ class ProfileDrawer extends StatelessWidget {
                               child: Text("Log out"),
                               onPressed: () async {
                                 await authService.signOut();
+                                Navigator.popUntil(context, (route){
+                                  if(route.isFirst)
+                                    return true;
+                                  return false;
+                                });
                                 if(authService.user == null)
                                   print("Daskhfjghfjsdf");
                               },
@@ -121,7 +207,7 @@ class ProfileDrawer extends StatelessWidget {
                 ],
               );
             else 
-              return Column(  // The StreamBuilder returns this path if the user is logged out or anonymous
+              return Column(  // The StreamBuilder returns this path if the user is LOGGED OUT or ANONYMOUS
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -171,8 +257,8 @@ class ProfileDrawer extends StatelessWidget {
                             splashColor: Colors.deepOrangeAccent,
                             child: Text("Log in"),
                             onPressed: () async {
-                              await AuthService().signOut();
-                              if(AuthService().user == null)
+                              await authService.signOut();
+                              if(authService.user == null)
                                 print("Daskhfjghfjsdf");
                               //Navigator.of(context).push<Route>(MaterialPageRoute(builder: (context) => SignIn() ));
                             },

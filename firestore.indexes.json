@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "locals_bucharest",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ambiance",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "capacity",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

@@ -18,11 +18,6 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    authService.profile.listen(
-      (state) => setState(
-        ()=> _profile = state 
-        )
-    );
     // authService.loading.listen(
     //   (state) => setState(
     //     ()=> _profile = state

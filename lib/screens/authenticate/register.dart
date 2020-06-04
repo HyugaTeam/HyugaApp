@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
@@ -95,12 +97,21 @@ class _RegisterState extends State<Register> {
                               print(password);
                               dynamic registerResult = await authService.registerWithEmailAndPassword(email, password);
                               //print(registerResult.toString());
-                              if(registerResult.code == 'ERROR_WEAK_PASSWORD')
-                                showErrorSnackBar(context, "The password is too weak!");
-                              if(registerResult.code == 'ERROR_INVALID_EMAIL') 
-                                showErrorSnackBar(context, "The entered email is invalid!");
-                              if(registerResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 
-                                showErrorSnackBar(context, "The entered email is already in use! Try another email or sign-in method.");
+                              if(registerResult is PlatformException){
+                                if(registerResult.code == 'ERROR_WEAK_PASSWORD')
+                                  showErrorSnackBar(context, "The password is too weak!");
+                                if(registerResult.code == 'ERROR_INVALID_EMAIL') 
+                                  showErrorSnackBar(context, "The entered email is invalid!");
+                                if(registerResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 
+                                  showErrorSnackBar(context, "The entered email is already in use! Try another email or sign-in method.");
+                              }
+                              else if(registerResult is AuthResult){ // not actually an error, but that's the name of the method
+                                showErrorSnackBar(context, 'Registered succesfully!');
+                                Navigator.pop(context);
+                              } 
+                              else{
+                                showErrorSnackBar(context, 'There was an error');
+                              }
                             }
                           },
                         ),

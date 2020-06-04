@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart'; // For exceptions library
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -16,30 +17,39 @@ class AuthService{
   final FacebookLogin _facebookLogin = FacebookLogin();
   final Firestore _db = Firestore.instance;
 
-  Stream<Map<String,dynamic>> profile; // custom user data from Firestore
-  //PublishSubject loading = PublishSubject();
-  User currentUser; /// used for the manager property
+  PublishSubject<bool> loading = PublishSubject<bool>(); // used for the async
+  User currentUser; /// used for the 'manager' property
   
   AuthService(){
+    
     user.listen(
       (value){
         currentUser = value;
-        if(currentUser != null && value != null){
+        if(currentUser != null){
+          loading.add(true);
           DocumentReference ref = _db.collection('users').reference().document(value.uid);
-          ref.get().then((value) async {
-            currentUser.isManager = value.data['manager'] == true? true : false;
+          ref.get().then((DocumentSnapshot docSnap) {
+            if(docSnap.data != null){
+              print(docSnap.data);
+              if(docSnap.data.containsKey('manager') == true)
+                currentUser.isManager = docSnap.data['manager'];
+              else 
+                currentUser.isManager = null;
+              if(docSnap.data.containsKey('score') == true)
+                currentUser.score = docSnap.data['score'];
+              else
+                currentUser.score = null;
+            }
+            loading.add(false);
           });
-        }
-      } 
+         }
+      },
     );
   }
   
 
   // create user object based on FirebaseUser
   User _ourUserFromFirebaseUser(FirebaseUser user){
-    // if(user == null)
-    //   User.isManager = false;
-    //else User.isManager = true;
     
     return user != null 
     ? User(
@@ -55,28 +65,29 @@ class AuthService{
   void handleAuthError(AuthException error){
     print(error);
   }
-  
+
   //auth change user stream
   Stream<User> get user{
+    
     return (_auth.onAuthStateChanged
       .map(_ourUserFromFirebaseUser));
-      //mergeWith([userController.stream]);
   }
-  void checkForManager(){
+
+  void addToFavorites(){
     
   }
 
   void updateUserData(FirebaseUser user) async{
+
     DocumentReference ref = _db.collection('users').reference().document(user.uid);
-    // ref.get().then((value) async {
-    //   User.isManager = value.data['manager'] == true? true : false;
-    // });
-    return ref.setData({
+    DocumentSnapshot document = await ref.get();
+    if(document.data == null)
+      ref.setData({
       'uid' : user.uid,
       'email' : user.email,
       'photoURL' : user.photoUrl,
       'displayName' : user.displayName,
-      //'last seen': DateTime.now()
+      'score' : 0
     },
     merge: true
     );
@@ -86,8 +97,6 @@ class AuthService{
   Future signInAnon() async{
     try{
       AuthResult result = await _auth.signInAnonymously();
-      //FirebaseUser user = result.user;
-      //updateUserData(user);
       return result;
     } catch(error){
       print(error);
@@ -141,7 +150,6 @@ class AuthService{
       if(user != null)
         updateUserData(user);
       //return _ourUserFromFirebaseUser(user);
-
     }
     catch(error){
       //handleAuthError(error);

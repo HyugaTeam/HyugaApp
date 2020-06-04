@@ -72,7 +72,7 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               SizedBox(height: 130),
               Text( // Hello text
-                'Hello!',
+                'Hyuga',
                 style: TextStyle(
                   fontFamily: 'Comfortaa',
                   fontSize: 40
