@@ -9,8 +9,6 @@
 -google maps
 -incarcare mai rapida restarurante + "load more"
 -profilul restaurantului
--qr code pt user
--scanare qr code
 
 
 De la tudor:

@@ -10,18 +10,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Shimmer.fromColors(
-            baseColor: Colors.blueGrey[100],
-            highlightColor: Colors.blueGrey,
-            period: Duration(seconds: 1),
-            child: Text(
-              'Loading',
-              style: TextStyle(
-                fontSize: 30
-              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Searching',
+            style: TextStyle(
+              fontSize: 30
             ),
-        )
+          ),
+          LinearProgressIndicator(
+            backgroundColor: Theme.of(context).backgroundColor
+          )
+        ],
       )
     );
   }

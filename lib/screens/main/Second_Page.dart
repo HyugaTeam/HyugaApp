@@ -3,6 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/drawer.dart';
 
+
+
+
 class SecondPage extends StatefulWidget {
   @override
   _SecondPageState createState() => _SecondPageState();
@@ -10,7 +13,7 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> {
   
-  ScrollController _scrollViewController;
+  final ScrollController _scrollController = ScrollController();
 
   /*Image getImage(int index){
 
@@ -32,8 +35,13 @@ class _SecondPageState extends State<SecondPage> {
 
   @override 
   void initState(){
+    _scrollController.addListener(() {
+      // if we scroll all the way to the bottom of the ListView, it will fetch new data.
+      // if(_scrollController.position.maxScrollExtent == _scrollController.offset){
+      //   locals.loadMore();
+      // }
+    });
     super.initState();
-    _scrollViewController = new ScrollController();
   }
 
   void addToFavorites(int index){
