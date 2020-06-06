@@ -167,14 +167,16 @@ class _HomeState extends State<Home> {
                           child: Icon(Icons.search, color: Colors.white),
                           onPressed: () async {
                             if (checkOptions()) {
-                              g.placesList = [];
-                              Navigator.pushNamed(context, '/loading');
-                              QueryService().queryForLocals().then((data) {
-                                Navigator.pushReplacementNamed(
-                                    context, '/second');
-                              });
-                              print(g.placesList);
-                            } else {
+                              Navigator.pushNamed(context, '/second');
+                              // g.placesList = [];
+                              // Navigator.pushNamed(context, '/loading');
+                              // QueryService().queryForLocals().then((data) {
+                              //   Navigator.pushReplacementNamed(
+                              //       context, '/second');
+                              // });
+                              // print(g.placesList);
+                            } 
+                            else {
                               if(g.isSnackBarActive == false){
                                 g.isSnackBarActive = true;
                                 Scaffold.of(context).showSnackBar(SnackBar(

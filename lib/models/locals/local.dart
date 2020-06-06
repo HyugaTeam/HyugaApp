@@ -9,6 +9,7 @@ class Local{
   final String description; // Imported from the database
   final GeoPoint location; // Imported from the database
   final int cost; // Imported from the database
+  final int capacity;
 
   Local({
     this.cost,
@@ -18,6 +19,7 @@ class Local{
     this.image,
     this.description,
     this.location,
+    this.capacity
   });
 }
 /*

@@ -7,6 +7,7 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:latlong/latlong.dart';
+import 'package:shimmer/shimmer.dart';
 
 // Class resposible for the whole querying service for locals
 // This class acts as a singleton
@@ -15,7 +16,7 @@ class QueryService{
 
   static final Firestore _db = Firestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
-  static final StorageReference = storage.ref();
+  static final StorageReference storageRef = storage.ref();
 
 
   // Method that converts a map of Firebase Locals to OUR Locals
@@ -110,7 +111,7 @@ class QueryService{
         fit: BoxFit.fill,
       );
   }
-
+  
   // Gets the User's location
   //Future<Position>getLocation() async{
   Future<Position>getUserLocation() async{
@@ -189,8 +190,28 @@ class QueryService{
     g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
  
+  Local _docSnapToLocal(DocumentSnapshot doc){
 
-  Future<List<DocumentSnapshot>> fetch() async{
+    var profileImage = Image.network('https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/photos%2Feurope%2Fbucharest%2Facuarela_bistro%2Facuarela_bistro_profile.jpg?alt=media&token=cee42f66-d71d-4493-8e9a-b4ed509110b9',
+    frameBuilder: (context,child,index,loaded)=>Shimmer(
+      gradient: LinearGradient(colors: [Colors.grey, Colors.white]),
+      child: Container(),
+      ),
+    errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
+    );
+    return Local(
+      cost: doc.data['cost'],
+      score: doc.data['score'],
+      id: doc.documentID,
+      image: profileImage,
+      name: doc.documentID,
+      location:doc.data['location'],
+      description: doc.data['description'],
+      capacity: doc.data['capacity']
+    );
+  }
+
+  Future fetch() async{
 
     String selectedAmbiance;
     int selectedHowMany;
@@ -221,24 +242,21 @@ class QueryService{
     }
     QuerySnapshot locals;
     print(g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase());
+
     if(selectedAmbiance != null)
       locals = await _db.collection('locals_bucharest')
       .where('ambiance', isEqualTo: selectedAmbiance)
-      //.where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
-      .where('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', isEqualTo: true)
-      .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}',descending: true)
-      .orderBy('capacity')
+      .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
       .getDocuments();
     else
-      locals = await _db.collectionGroup('profile')
-      .where(FieldPath.documentId, isEqualTo: 'coffee')
-      //.where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
-      // .where('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', isGreaterThan: 0)
-      // .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}',descending: true)
-      .getDocuments();
+     locals = await _db.collection('locals_bucharest')
+     .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
+     .getDocuments();
     print(locals.documents.length);
     locals.documents.forEach((element) {print("\nsaddas"+ element.data.toString());});
-    return locals.documents;  
+    return (locals.documents
+    .where((element) => element.data['capacity'] >= g.selectedHowMany)
+    .map(_docSnapToLocal)).toList();  
 
   }
 }
