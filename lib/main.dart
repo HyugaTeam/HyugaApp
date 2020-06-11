@@ -4,7 +4,7 @@ import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/screens/main/home.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/widgets/LoadingScreen.dart';
+import 'package:hyuga_app/screens/LoadingScreen.dart';
 import 'package:hyuga_app/screens/main/Second_Page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -14,30 +14,31 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   
-
+  
   runApp(StreamProvider<User>.value( 
-      value: AuthService().user,
+      value: authService.user,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
-        initialRoute: 'welcome/',
+        initialRoute: 'wrapper/',
         routes: {
-          'welcome/': (context) => Wrapper(),
+          'wrapper/': (context) => Wrapper(),
 
           '/': (context) => Home(),
 
-          '/loading': (context) => LoadingScreen(),
+          'loading/wrapper/': (context) => LoadingScreen(),
 
           '/second': (context) => SecondPage(),
 
           //'/third': (context) => ThirdPageGenerator.generateRoute(settings)
-        },
-
+        }, 
+        // Route generator (designed for the Third Page only)
         onGenerateRoute: ThirdPageGenerator.generateRoute,
 
         theme: ThemeData(
+          highlightColor: Colors.orange[600],
           backgroundColor: Colors.white,
-          accentColor: Colors.black,
+          accentColor: Colors.blueGrey,
           fontFamily: 'Comfortaa'
         ),
         //home: Home()

@@ -8,6 +8,7 @@ int selectedArea;
 
 /// Used around the app to check for an eventual active SnackBar
 bool isSnackBarActive = false;
+bool isStarting = true;
 
 List<Local> placesList = [];
 

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/screens/authenticate/sign_in.dart';
+import 'package:hyuga_app/models/user.dart';
+import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:provider/provider.dart';
 
-class Authenticate extends StatefulWidget {
-  @override
-  _AuthenticateState createState() => _AuthenticateState();
-}
+class LoadingScreen extends StatelessWidget {
 
-class _AuthenticateState extends State<Authenticate> {
+  
   @override
   Widget build(BuildContext context) {
-    
+    //final user = Provider.of<User>(context);
     // if(g.isStarting){
     //   g.isStarting = false;
     //   return FutureBuilder(
@@ -22,18 +21,18 @@ class _AuthenticateState extends State<Authenticate> {
     //             body: Center(
     //               child: CircularProgressIndicator()
     //             ),
-    //           ),
+    //           ),.
     //         );
     //       else
     //         return Container(
-    //           child: SignIn(),
+    //           child: Wrapper(),
     //         );
     //     }
     //   );
     // }
     // else
       return Container(
-          child: SignIn(),
+          child: Wrapper(),
           /// will add more options
       );
   }

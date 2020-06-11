@@ -5,7 +5,7 @@ class Local{
   final int score; // Dynamic (depends on the score of the category)
   final String id; // Imported from the database
   final String name; // Imported from the database
-  final Image image; // Imported from the database
+  final Future<Image> image; // Imported from the database
   final String description; // Imported from the database
   final GeoPoint location; // Imported from the database
   final int cost; // Imported from the database

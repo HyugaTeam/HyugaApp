@@ -35,14 +35,14 @@ class QueryService{
       return placesList;
   }
   
-  //Used when getting the 'score' field
+  // Old method, no longed in use
   String getCollectionName(String collectionName){
     if(collectionName == 'Board Games')
       collectionName = '_board_games';
     else collectionName = '_${collectionName.toLowerCase()}';
     return collectionName;
   }
-  // Queries by the 'HowMany' and 'Ambiance' fields
+  // Old method, no longer in use
   Future <QuerySnapshot> getDataByHowManyAndAmbiance() {
     
     String selectedAmbiance;
@@ -87,7 +87,7 @@ class QueryService{
           .getDocuments();
   }
   
-  //Queries data from the specific collection (by 'What' criteria)
+  //Old method, no longer in use
   Future<QuerySnapshot> getDataByWhat(String collectionName){
     if (collectionName == 'Board Games')
       collectionName = 'board_games';
@@ -109,6 +109,17 @@ class QueryService{
       return Image.memory(
         imageFile,
         fit: BoxFit.fill,
+        frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            child: child,
+            opacity: frame == null ? 0 : 1,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        }
       );
   }
   
@@ -119,7 +130,7 @@ class QueryService{
             .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     return position;
   }
-  // Handles the whole process of querying
+  // Old method, no longer in user
   Future queryForLocals() async{
 
     Position userLocation = await getUserLocation();
@@ -180,7 +191,7 @@ class QueryService{
           .collection(getCollectionName(
             g.whatList[g.selectedWhere][g.selectedWhat]))
             .document(db.documentID).get()).data['score'],
-          image: img,
+          //image: img,
           cost: db.data['cost'],
           name: db.data['name'],
           location: db.data['location'],
@@ -192,25 +203,28 @@ class QueryService{
  
   Local _docSnapToLocal(DocumentSnapshot doc){
 
-    var profileImage = Image.network('https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/photos%2Feurope%2Fbucharest%2Facuarela_bistro%2Facuarela_bistro_profile.jpg?alt=media&token=cee42f66-d71d-4493-8e9a-b4ed509110b9',
-    frameBuilder: (context,child,index,loaded)=>Shimmer(
-      gradient: LinearGradient(colors: [Colors.grey, Colors.white]),
-      child: Container(),
-      ),
-    errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
-    );
+    // var profileImage = Image.network(
+    //   'https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/photos%2Feurope%2Fbucharest%2Facuarela_bistro%2Facuarela_bistro_profile.jpg?alt=media&token=cee42f66-d71d-4493-8e9a-b4ed509110b9',
+    //   frameBuilder: (context,child,index,loaded) => Shimmer(
+    //   gradient: LinearGradient(colors: [Colors.grey, Colors.white]),
+    //   child: Container(),
+    // ),
+    // errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
+    // );
+    var profileImage = getImage(doc.documentID);
     return Local(
       cost: doc.data['cost'],
       score: doc.data['score'],
       id: doc.documentID,
       image: profileImage,
-      name: doc.documentID,
+      name: doc.data['name'],
       location:doc.data['location'],
       description: doc.data['description'],
       capacity: doc.data['capacity']
     );
   }
 
+  // Handles the whole process of querying
   Future fetch() async{
 
     String selectedAmbiance;

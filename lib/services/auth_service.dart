@@ -21,7 +21,6 @@ class AuthService{
   User currentUser; /// used for the 'manager' property
   
   AuthService(){
-    
     user.listen(
       (value){
         currentUser = value;
@@ -68,7 +67,7 @@ class AuthService{
 
   //auth change user stream
   Stream<User> get user{
-    
+    //print(_auth.onAuthStateChanged.first.whenComplete(() => print("first\n")).toString() + " din stream");
     return (_auth.onAuthStateChanged
       .map(_ourUserFromFirebaseUser));
   }

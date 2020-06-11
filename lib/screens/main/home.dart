@@ -130,74 +130,68 @@ class _HomeState extends State<Home> {
       ),
       body: Builder(
         builder: (context) => Stack(// used a builder for the context
-            children: <Widget>[
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: 650,
-            ),
-            alignment: Alignment(0, 0),
-            child: Column(
-              /// Replaced 'Stack' with 'Column' for the Buttons
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: (){
-                    
-                    queryingService.fetch();
-                  },
-                ),
-                listOfButtons[0],
-                listOfButtons[1],
-                listOfButtons[2],
-                listOfButtons[3],
-                listOfButtons[4],
-                Container(
-                  /// The 'Search' Button
-                  padding: EdgeInsets.symmetric(),
-                  child: Center(
+          children: <Widget>[
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: 650,
+              ),
+              alignment: Alignment(0, 0),
+              child: Column(
+                /// Replaced 'Stack' with 'Column' for the Buttons
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  listOfButtons[0],
+                  listOfButtons[1],
+                  listOfButtons[2],
+                  listOfButtons[3],
+                  listOfButtons[4],
+                  Container(
+                    /// The 'Search' Button
+                    padding: EdgeInsets.symmetric(),
+                    child: Center(
                       child: MaterialButton(
-                          highlightColor: Colors.transparent,
-                          color: Colors.blueGrey,
-                          splashColor: Colors.orange[600],
-                          minWidth: 120,
-                          height: 44,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Icon(Icons.search, color: Colors.white),
-                          onPressed: () async {
-                            if (checkOptions()) {
-                              Navigator.pushNamed(context, '/second');
-                              // g.placesList = [];
-                              // Navigator.pushNamed(context, '/loading');
-                              // QueryService().queryForLocals().then((data) {
-                              //   Navigator.pushReplacementNamed(
-                              //       context, '/second');
-                              // });
-                              // print(g.placesList);
-                            } 
-                            else {
-                              if(g.isSnackBarActive == false){
-                                g.isSnackBarActive = true;
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                    'Make sure you select an option for each field',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  backgroundColor: Colors.orange[600],
-                                )).closed.then((SnackBarClosedReason reason){
-                                  g.isSnackBarActive = false;
-                                });
-                              }
+                        highlightColor: Colors.transparent,
+                        color: Colors.blueGrey,
+                        splashColor: Colors.orange[600],
+                        minWidth: 120,
+                        height: 44,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Icon(Icons.search, color: Colors.white),
+                        onPressed: () async {
+                          if (checkOptions()) {
+                            Navigator.pushNamed(context, '/second');
+                            // g.placesList = [];
+                            // Navigator.pushNamed(context, '/loading');
+                            // QueryService().queryForLocals().then((data) {
+                            //   Navigator.pushReplacementNamed(
+                            //       context, '/second');
+                            // });
+                            // print(g.placesList);
+                          } 
+                          else {
+                            if(g.isSnackBarActive == false){
+                              g.isSnackBarActive = true;
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  'Make sure you select an option for each field',
+                                  textAlign: TextAlign.center,
+                                ),
+                                backgroundColor: Colors.orange[600],
+                              )).closed.then((SnackBarClosedReason reason){
+                                g.isSnackBarActive = false;
+                              });
                             }
                           }
+                        }
                       )
                     ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Container(
+            Container(
               ///  'HYUGA' TITLE
               padding: EdgeInsets.all(10),
               child: Align(
