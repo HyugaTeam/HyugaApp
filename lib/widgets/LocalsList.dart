@@ -90,15 +90,17 @@ class _LocalsState extends State<Locals> {
                                       return Container(
                                         width: 400,
                                         height: 200,
-                                        child: Shimmer.fromColors(child: Container(), 
-                                        baseColor: Colors.white, 
-                                        highlightColor: Colors.grey),
+                                        child: Shimmer.fromColors(
+                                          child: Container(), 
+                                          baseColor: Colors.white, 
+                                          highlightColor: Colors.grey
+                                        ),
                                       );
                                     else
                                       return Container(
                                         color: Colors.transparent,
                                         child: img.data
-                                        );
+                                      );
                                   }
                                 ),
                               ),

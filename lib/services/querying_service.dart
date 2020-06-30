@@ -2,11 +2,11 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:latlong/latlong.dart';
+import 'package:location/location.dart';
 import 'package:shimmer/shimmer.dart';
 
 // Class resposible for the whole querying service for locals
@@ -35,7 +35,7 @@ class QueryService{
       return placesList;
   }
   
-  // Old method, no longed in use
+  // Old method, no longer in use
   String getCollectionName(String collectionName){
     if(collectionName == 'Board Games')
       collectionName = '_board_games';
@@ -98,6 +98,7 @@ class QueryService{
     .getDocuments();
   }
   
+  // Obtains the images from Firebase Storage
   Future<Image> getImage(String fileName) async {
       Uint8List imageFile;
       int maxSize = 10*1024*1024;
@@ -125,80 +126,101 @@ class QueryService{
   
   // Gets the User's location
   //Future<Position>getLocation() async{
-  Future<Position>getUserLocation() async{
-    Position position = await Geolocator() 
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  Future<LocationData> getUserLocation() async{
+    
+    Location location = new Location();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData position;
+
+    // _serviceEnabled = await location.serviceEnabled();
+    // if (!_serviceEnabled) {
+    //   _serviceEnabled = await location.requestService();
+    //   if (!_serviceEnabled) {
+    //     return null;
+    //   }
+    // }
+
+    // _permissionGranted = await location.hasPermission();
+    // if (_permissionGranted == PermissionStatus.denied) {
+    //   _permissionGranted = await location.requestPermission();
+    //   if (_permissionGranted != PermissionStatus.granted) {
+    //     return null;
+    //   }
+    // }
+    print("START---------------");
+    position = await location.getLocation();
     return position;
   }
   // Old method, no longer in user
   Future queryForLocals() async{
 
-    Position userLocation = await getUserLocation();
-   // Position userLocation ;
-    getUserLocation().then((value)=>userLocation = value);
-    Position localLocation;
-    print(userLocation);
+    // Position userLocation = await getUserLocation();
+    // Position userLocation ;
+    // getUserLocation().then((value)=>userLocation = value);
+    // Position localLocation;
+    // print(userLocation);
 
-    QuerySnapshot queriedSnapshotByWhat = await getDataByWhat(g.whatList[g.selectedWhere][g.selectedWhat]);
-    List<String> listOfQueriedDocuments = [];  // a list of the ID's from the query
+    // QuerySnapshot queriedSnapshotByWhat = await getDataByWhat(g.whatList[g.selectedWhere][g.selectedWhat]);
+    // List<String> listOfQueriedDocuments = [];  // a list of the ID's from the query
     
-    for(int i = 0 ; i < queriedSnapshotByWhat.documents.length ; i++){
-      listOfQueriedDocuments.add(queriedSnapshotByWhat
-                                .documents[i].documentID);
-    }// creates a list of IDs from the collection queried by 'What'
-    Set<String> queriedDocumentsByWhat = listOfQueriedDocuments.toSet();
+    // for(int i = 0 ; i < queriedSnapshotByWhat.documents.length ; i++){
+    //   listOfQueriedDocuments.add(queriedSnapshotByWhat
+    //                             .documents[i].documentID);
+    // }// creates a list of IDs from the collection queried by 'What'
+    // Set<String> queriedDocumentsByWhat = listOfQueriedDocuments.toSet();
     
-    // A snapshot of the documents ('Ambiance' and 'How Many')
-    QuerySnapshot queriedSnapshotByAmbAndHM = await getDataByHowManyAndAmbiance();
-    listOfQueriedDocuments.clear();
-    for(int i = 0 ; i < queriedSnapshotByAmbAndHM.documents.length ; i++){
-      listOfQueriedDocuments.add(queriedSnapshotByAmbAndHM
-                                .documents[i].documentID);
-    }// creates a list of IDs from the collection queried by 'Amb and HM'
-    Set<String> queriedDocumentsByAmbAndHM = listOfQueriedDocuments.toSet();
+    // // A snapshot of the documents ('Ambiance' and 'How Many')
+    // QuerySnapshot queriedSnapshotByAmbAndHM = await getDataByHowManyAndAmbiance();
+    // listOfQueriedDocuments.clear();
+    // for(int i = 0 ; i < queriedSnapshotByAmbAndHM.documents.length ; i++){
+    //   listOfQueriedDocuments.add(queriedSnapshotByAmbAndHM
+    //                             .documents[i].documentID);
+    // }// creates a list of IDs from the collection queried by 'Amb and HM'
+    // Set<String> queriedDocumentsByAmbAndHM = listOfQueriedDocuments.toSet();
     
-    listOfQueriedDocuments.clear();
-    listOfQueriedDocuments = 
-    queriedDocumentsByAmbAndHM.intersection(queriedDocumentsByWhat).toList();
-    //listOfQueriedDocuments.sort((x,y)=>x.)
-    for(int i = 0 ; i < listOfQueriedDocuments.length; i++){
+    // listOfQueriedDocuments.clear();
+    // listOfQueriedDocuments = 
+    // queriedDocumentsByAmbAndHM.intersection(queriedDocumentsByWhat).toList();
+    // //listOfQueriedDocuments.sort((x,y)=>x.)
+    // for(int i = 0 ; i < listOfQueriedDocuments.length; i++){
         
-        var db = await _db
-                .collection('locals_bucharest')
-                .document(listOfQueriedDocuments[i])
-                .get();
+    //     var db = await _db
+    //             .collection('locals_bucharest')
+    //             .document(listOfQueriedDocuments[i])
+    //             .get();
         
-        if(userLocation!=null && g.selectedArea==0){
-            localLocation = Position(
-              latitude: db.data['location'].latitude,
-              longitude: db.data['location'].longitude
-            );
-            Distance distance = Distance();
-            double fromAtoB = distance.as(
-              LengthUnit.Meter,
-              LatLng(localLocation.latitude, localLocation.longitude),
-              LatLng(userLocation.latitude, userLocation.longitude)
-              );
-            //if(fromAtoB > 1000)
-             // return;
-            print(fromAtoB);
-        }
-        Image img = await getImage(db.documentID);
-        g.placesList.add(Local(
-          description: db.data['description'],
-          id: db.documentID,
-          score: (await Firestore.instance
-          .collection(getCollectionName(
-            g.whatList[g.selectedWhere][g.selectedWhat]))
-            .document(db.documentID).get()).data['score'],
-          //image: img,
-          cost: db.data['cost'],
-          name: db.data['name'],
-          location: db.data['location'],
-          )
-        );
-    }
-    g.placesList.sort((y,x)=>x.score.compareTo(y.score));
+    //     if(userLocation!=null && g.selectedArea==0){
+    //         localLocation = Position(
+    //           latitude: db.data['location'].latitude,
+    //           longitude: db.data['location'].longitude
+    //         );
+    //         Distance distance = Distance();
+    //         double fromAtoB = distance.as(
+    //           LengthUnit.Meter,
+    //           LatLng(localLocation.latitude, localLocation.longitude),
+    //           LatLng(userLocation.latitude, userLocation.longitude)
+    //           );
+    //         //if(fromAtoB > 1000)
+    //          // return;
+    //         print(fromAtoB);
+    //     }
+    //     Image img = await getImage(db.documentID);
+    //     g.placesList.add(Local(
+    //       description: db.data['description'],
+    //       id: db.documentID,
+    //       score: (await Firestore.instance
+    //       .collection(getCollectionName(
+    //         g.whatList[g.selectedWhere][g.selectedWhat]))
+    //         .document(db.documentID).get()).data['score'],
+    //       //image: img,
+    //       cost: db.data['cost'],
+    //       name: db.data['name'],
+    //       location: db.data['location'],
+    //       )
+    //     );
+    // }
+    // g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
  
   Local _docSnapToLocal(DocumentSnapshot doc){
@@ -226,6 +248,12 @@ class QueryService{
 
   // Handles the whole process of querying
   Future fetch() async{
+    
+    //Position userLocation = await getUserLocation();
+    LocationData userLocation;
+    if(g.selectedArea == 0)
+      userLocation = await getUserLocation();
+    print("DONE-----------");
 
     String selectedAmbiance;
     int selectedHowMany;
@@ -257,21 +285,49 @@ class QueryService{
     QuerySnapshot locals;
     print(g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase());
 
-    if(selectedAmbiance != null)
+    if(selectedAmbiance != null)  // query by 'ambiance' if selected
       locals = await _db.collection('locals_bucharest')
       .where('ambiance', isEqualTo: selectedAmbiance)
       .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
       .getDocuments();
-    else
-     locals = await _db.collection('locals_bucharest')
+    else // ignore 'ambiance' field if not selected
+     locals = await _db.collection('locals_bucharest') 
      .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
      .getDocuments();
+    
     print(locals.documents.length);
-    locals.documents.forEach((element) {print("\nsaddas"+ element.data.toString());});
+    locals.documents.forEach( (element) {
+      print("\nsaddas"+ element.data.toString());
+      
+        
+    });
     return (locals.documents
-    .where((element) => element.data['capacity'] >= g.selectedHowMany)
+    .where((element){
+      bool result = true;
+      if(userLocation != null && g.selectedArea == 0) { // Filters the result by the 1km radius criteria
+        LocationData localLocation ;
+        localLocation = LocationData.fromMap({
+          'latitude': element.data['location'].latitude,
+          'longitude': element.data['location'].longitude
+          }
+        );
+        Distance distance = Distance();
+        double fromAtoB = distance.as(
+          LengthUnit.Meter,
+          LatLng(localLocation.latitude, localLocation.longitude),
+          LatLng(userLocation.latitude, userLocation.longitude)
+          );
+        if(fromAtoB > 1000)
+          result = false;
+        print(fromAtoB);
+      }
+      if(element.data['capacity'] < selectedHowMany)
+        result = false;
+      return result;
+    })
     .map(_docSnapToLocal)).toList();  
 
+    
   }
 }
 

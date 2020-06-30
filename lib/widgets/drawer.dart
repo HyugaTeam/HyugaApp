@@ -71,16 +71,16 @@ class ProfileDrawer extends StatelessWidget {
                                     // frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
                                     //   return child;
                                     // },
-                                    // loadingBuilder: (context, child, loadingProgress){
-                                    //   if(loadingProgress == null)
-                                    //     return child;
-                                    //   return CircularProgressIndicator(
-                                    //     value: loadingProgress.expectedTotalBytes != null
-                                    //         ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                    //         : null,
-                                    //   );
-                                    //   //return child;
-                                    // },
+                                    loadingBuilder: (context, child, loadingProgress){
+                                      if(loadingProgress == null)
+                                        return child;
+                                      return CircularProgressIndicator(
+                                        value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                                            : null,
+                                      );
+                                      //return child;
+                                    },
                                     errorBuilder: (context, error, stacktrace){
                                       print(authService.currentUser.photoURL);
                                       return Image.asset(
@@ -169,15 +169,15 @@ class ProfileDrawer extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(); }));
                           }
                         ),
-                        authService.currentUser.isManager == true ? 
-                        ListTile(
-                          leading: FaIcon(FontAwesomeIcons.chartLine, color: Colors.blueGrey),
-                          title: Text('Admin Panel'),
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AdminPanel(); }));
-                          },
-                        ) 
-                        : Container(), 
+                        // authService.currentUser.isManager == true ? 
+                        // ListTile(
+                        //   leading: FaIcon(FontAwesomeIcons.chartLine, color: Colors.blueGrey),
+                        //   title: Text('Admin Panel'),
+                        //   onTap: (){
+                        //     Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AdminPanel(); }));
+                        //   },
+                        // ) 
+                        // : Container(), 
                         ListTile(
                             title: Container( // sign-out button
                             padding: EdgeInsets.symmetric(horizontal: 80),

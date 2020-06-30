@@ -1,12 +1,11 @@
 import 'dart:typed_data';
-
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:hyuga_app/services/uber_service.dart';
 
 
 // The generator of the third page
@@ -226,18 +225,38 @@ class _ThirdPageState extends State<ThirdPage> {
                   Container( // Google Map
                     height: 150,
                     child: GoogleMap(
+                      onTap: (latlng){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Scaffold(
+                          body: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(localLatitude,localLongitude),
+                              zoom: 15
+                            ),
+                            myLocationEnabled: true,
+                            //trafficEnabled: true,
+                            markers: {
+                              Marker(
+                                markerId: MarkerId('0'),
+                                position: LatLng(localLatitude,localLongitude)
+                              ),
+                            },
+                          ),
+                        )));
+                      },
+                      scrollGesturesEnabled: false,
+                      zoomGesturesEnabled: false,
                       initialCameraPosition: CameraPosition(
                         target: LatLng(localLatitude,localLongitude),
                         zoom: 15
-                        ),
-                        myLocationEnabled: true,
-                        //trafficEnabled: true,
-                        markers: {
-                          Marker(
-                            markerId: MarkerId('0'),
-                            position: LatLng(localLatitude,localLongitude)
-                          )
-                        },
+                      ),
+                      myLocationEnabled: true,
+                      //trafficEnabled: true,
+                      markers: {
+                        Marker(
+                          markerId: MarkerId('0'),
+                          position: LatLng(localLatitude,localLongitude)
+                        )
+                      },
                         //TODO: Add a 'Return to location' button
                     ),
                   ),
@@ -245,41 +264,48 @@ class _ThirdPageState extends State<ThirdPage> {
                   Container(
                     padding: EdgeInsets.only(top:30),
                     child: FutureBuilder(
-                          future: _getImages(),
-                          builder:(context,snapshot){
-                            if(!snapshot.hasData){
-                              // data didn't load
-                              return Shimmer.fromColors(
-                                baseColor: Colors.grey[200],
-                                highlightColor: Colors.white,
-                                child: Container(
-                                  height: 100,
-                                  color: Colors.blueGrey,
-                                ),
-                              ); 
-                            }
-                            else {
-                              // data is loaded
-                              return ListView.builder(
-                                controller: ScrollController(
-                                  keepScrollOffset: false
-                                ),
-                                shrinkWrap: true,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context,index){
-                                  print(snapshot.data.length);
-                                  return Column(
-                                    children: <Widget>[
-                                      Image.memory(snapshot.data[index]),
-                                      index == snapshot.data.length-1 ? Container() : Container(height: 20)
-                                    ],
-                                  );
-                                  
-                                },
+                      future: _getImages(),
+                      builder:(context,snapshot){
+                        if(!snapshot.hasData){
+                          // data didn't load
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[200],
+                            highlightColor: Colors.white,
+                            child: Container(
+                              height: 100,
+                              color: Colors.blueGrey,
+                            ),
+                          ); 
+                        }
+                        else {
+                          // data is loaded
+                          return ListView.separated(
+                            separatorBuilder: (context,index){
+                              if(index == 0){
+                                return ListTile(
+                                  title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
+                                );
+                              }
+                            },
+                            controller: ScrollController(
+                              keepScrollOffset: false
+                            ),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context,index){
+                              //print(snapshot.data.length);
+                              return Column(
+                                children: <Widget>[
+                                  Image.memory(snapshot.data[index]),
+                                  index == snapshot.data.length-1 ? Container() : Container(height: 20)
+                                ],
                               );
-                            }
-                          }
-                        )
+                              
+                            },
+                          );
+                        }
+                      }
+                    )
                   )
                   /*Container( // Uber Button
                         width: 100,

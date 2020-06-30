@@ -31,7 +31,7 @@ class _SignInState extends State<SignIn> {
       }
     }
     if(signInResult.code == 'ERROR_INVALID_CREDENTIAL')
-      showErrorSnackBar( "The selected credential is invalid!");
+      showErrorSnackBar( "Bad credentials! The selected sign-up option is invalid!");
     if(signInResult.code == 'ERROR_USER_DISABLED') 
       showErrorSnackBar( "The entered email is invalid!");
     if(signInResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 

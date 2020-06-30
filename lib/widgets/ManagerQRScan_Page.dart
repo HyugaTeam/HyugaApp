@@ -9,28 +9,36 @@ import 'package:hyuga_app/widgets/LevelProgressBar.dart';
 class ManagerQRScan extends StatelessWidget {
   @override
 
-  GlobalKey _qrKey = GlobalKey();
-  String uid = "";
-  User scannedUser;
   final Firestore _db = Firestore.instance;
+  DocumentSnapshot scannedUser;
+  String uid = "";
+  TextEditingController textController;
+  double receiptValue;
+
+  Future incrementUserScore(String uid) async{
+    DocumentReference ref = _db.collection('users').document(uid); // a reference to the scanned user's profile
+      scannedUser = await ref.get();
+      if(scannedUser != null){
+        print(scannedUser.data);
+        ref.setData(({
+          'score' : scannedUser.data['score'] + 100
+        }),
+      merge:  true);
+      }
+  }
+
   
 
   Future _scanQR() async{
     try{
       String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) => scanResult.rawContent);
-      //if(qrResult == )
       DocumentReference ref = _db.collection('users').document(qrResult); // a reference to the scanned user's profile
       var refData = await ref.get();
-      if(refData != null)
-        ref.setData(({
-          'score' : refData.data['score'] + 100
-        }),
-      merge:  true);
-
-      if(ref != null)
-        scannedUser = null;
-      uid = qrResult;
       print(uid);
+      if(qrResult == null && refData != null)
+        return null;
+      else
+        return refData;
     } on PlatformException
     catch(error){
       if(error.code == BarcodeScanner.cameraAccessDenied)
@@ -38,27 +46,98 @@ class ManagerQRScan extends StatelessWidget {
     }
   }
 
-  ManagerQRScan(){
-    _scanQR().then((value) => null);
-  }
 
-  
+  ManagerQRScan(){
+    textController.addListener(() { 
+      receiptValue = double.parse(textController.value.text);
+    });
+  }  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Text(uid),
-            
-            //LevelProgressBar(),
-            // FutureBuilder(
-            //   future: _scanQR(),
-            //   builder: null
-            // ),
-          ],
-        )
-      )
+    return FutureBuilder(
+      future: _scanQR(),
+      builder:(context,scanResult) {
+        print(scanResult);
+        if(!scanResult.hasData)
+          return Scaffold(
+            body: Container(
+              child: Column(
+                children: <Widget>[
+                  Center(child: Text("")),
+                  //LevelProgressBar(),
+                  // FutureBuilder(
+                  //   future: _scanQR(),
+                  //   builder: null
+                  // ),
+                ],
+              )
+            )
+          );
+        else if(scanResult.data.data!= null){
+          print("valid code///////");
+          uid = scanResult.data.documentID;
+          return Scaffold(
+            body: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // Center(
+                  //   child: Text(
+                  //     scanResult.data.data['displayName']
+                  //   )
+                  // ),
+                  AlertDialog(
+                    title: Text("Valoare bon:", style: TextStyle(fontWeight: FontWeight.bold)),
+                    content: Text("Introduceti valoarea bonului:"),
+                    actionsPadding: EdgeInsets.only(right: 20),
+                    actions: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Container(
+                                height: 100,
+                                width: 200,
+                                child: TextField(
+                                  controller: textController,
+                                  keyboardType: TextInputType.number,
+                                  onSubmitted: (String str){
+
+                                  },
+                                ),
+                              ),
+                              Text(
+                                "Lei"
+                              ),
+                            ],
+                          ),
+                          RaisedButton(
+                            child: Text(
+                              "GATA",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold
+                              )
+                            ),
+                            onPressed: (){
+
+                            }
+                          )
+                        ],
+                      ),
+                      
+                    ],
+                  )
+                ],
+              )
+            )
+          );
+        }
+        else return Scaffold(
+          body: Center(child: Text("Invalid code", style:  TextStyle( fontSize: 20))),
+        );
+      
+      }
     );
   }
 }

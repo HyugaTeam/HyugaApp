@@ -7,25 +7,43 @@ import 'package:hyuga_app/screens/manager/EditorPage.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/ManagerQRScan_Page.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:provider/provider.dart';
 
 class AdminPanel extends StatelessWidget {
 
-  ManagedLocal _managedLocal;
-  Future<bool> _getLocalData() async{
-    User managerUser = authService.currentUser;
-    QuerySnapshot localDocument = await Firestore.instance.collection('users').document(authService.currentUser.uid).collection('managed_locals').getDocuments();
-    _managedLocal = ManagedLocal(
-      name: localDocument.documents.first.data['name']
+  
+  Future<ManagedLocal> _getLocalData() async{
+    ManagedLocal _managedLocal;
+    String localDocumentID = (await Firestore.instance
+    .collection('users').document(authService.currentUser.uid)
+    .collection('managed_locals')
+    .getDocuments())
+    .documents.first.documentID;
+    print("start");
+    DocumentSnapshot localDocument = await Firestore.instance
+    .collection('locals_bucharest')
+    .document(localDocumentID)
+    .get();
+    print(localDocument.data);
+    _managedLocal = ManagedLocal( 
+      id: localDocumentID,
+      name: localDocument.data['name'],
+      description: localDocument.data['description'],
+      cost: localDocument.data['cost'],
+      capacity: localDocument.data['capacity'],
+      ambiance: localDocument.data['ambiance'],
+      profile: localDocument.data['profile']
     );
-    return true;
+    print("finished");
+    return _managedLocal;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(Duration(milliseconds: 100)).then((value) => true),
-      builder: (context, finished) {
-        if(!finished.hasData)
+      future: _getLocalData(),
+      builder: (context, _managedLocal) {
+        if(!_managedLocal.hasData)
           return Scaffold(body: Center(child: CircularProgressIndicator(),));
         else 
           return DefaultTabController(
@@ -55,8 +73,14 @@ class AdminPanel extends StatelessWidget {
               ),
               body: TabBarView(
                 children: [
-                  AnalysisPage(),
-                  EditorPage()
+                  Provider(
+                    create: (context) => _managedLocal,
+                    child: AnalysisPage()
+                  ),
+                  Provider(
+                    create: (context) => _managedLocal,
+                    child: EditorPage()
+                  ),
                 ]
               )
             ),

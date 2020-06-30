@@ -10,6 +10,7 @@ class Local{
   final GeoPoint location; // Imported from the database
   final int cost; // Imported from the database
   final int capacity;
+  final Map<String,dynamic> discounts;
 
   Local({
     this.cost,
@@ -19,7 +20,8 @@ class Local{
     this.image,
     this.description,
     this.location,
-    this.capacity
+    this.capacity,
+    this.discounts
   });
 }
 /*
