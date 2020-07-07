@@ -5,6 +5,7 @@ import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/ManagerQRScan_Page.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:rxdart/rxdart.dart';
 
 
 class Home extends StatefulWidget {
@@ -23,8 +24,29 @@ bool checkOptions() {
   return true;
 }
 
+class HomeButtonsController{
+  
+  static int lastValue;
+  static PublishSubject _whereButton = PublishSubject<int>();
+  
+  HomeButtonsController(){
+    _whereButton.listen((value) { 
+      lastValue = value;
+    });
+  }
+  /// The stream which emits a new value whenever the 'Where' field is reselected.
+  /// It emits and 'int' corresponding to the selected index.
+  static Stream<int> get whereButton => _whereButton.stream;
+
+  /// Call this method whenever you want to notify the listeners about a 'Where' index modification
+  static void addWhereValue(int value){
+    _whereButton.add(value);
+  }
+}
+
 class _HomeState extends State<Home> {
 
+  HomeButtonsController buttonsController;
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   ProfileDrawer _drawer = ProfileDrawer();
 
@@ -34,6 +56,7 @@ class _HomeState extends State<Home> {
       name: "Where?",
       options: g.whereList,
       buttonText: "Where?",
+      key: UniqueKey(),
       //changeText: (index)=>changeText(index),
     ),
     MainMenuButton(
@@ -41,24 +64,30 @@ class _HomeState extends State<Home> {
         /// 'What' Button
         name: "What?",
         options: g.whatList[0],
-        buttonText: "What?"),
+        buttonText: "What?",
+        key: UniqueKey(),
+      ),
     MainMenuButton(
 
         /// 'How Many' Button
         name: "How many?",
         options: g.howManyList,
-        buttonText: "How many?"),
+        buttonText: "How many?",
+        key: UniqueKey(),
+    ),
     MainMenuButton(
       /// 'Ambiance' Button
       name: "Ambiance",
       options: g.ambianceList,
       buttonText: "Ambiance",
+      key: UniqueKey(),
     ),
     MainMenuButton(
       /// 'Area' Button
       name: "Area",
       options: g.areaList,
       buttonText: "Area",
+      key: UniqueKey(),
     ),
   ];
 

@@ -439,7 +439,7 @@ class _EditorPageState extends State<EditorPage> {
                 ],
               ),
             ),
-            ListTile(
+            ListTile(  // Tipul localului
               contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
               title: Text(
                 "Tipul localului",
@@ -471,7 +471,7 @@ class _EditorPageState extends State<EditorPage> {
                           borderRadius: BorderRadius.circular(25)
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Text(

@@ -1,10 +1,15 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
 import 'package:shimmer/shimmer.dart';
+import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/services/uber_service.dart';
 
 
@@ -24,6 +29,7 @@ class ThirdPageGenerator{
 }
 
 
+
 class ThirdPage extends StatefulWidget {
 
   final Local local;
@@ -40,15 +46,20 @@ class ThirdPage extends StatefulWidget {
 
 class _ThirdPageState extends State<ThirdPage> {
 
+  
+  DateTime today;
   double titleOpacity = 0.0;
   ScrollController _scrollController = ScrollController(
     keepScrollOffset: true,
     initialScrollOffset: 0
   );
   final double localLongitude,localLatitude;
-  _ThirdPageState({this.localLongitude,this.localLatitude});
-
   List<Uint8List> listOfImages;
+
+  _ThirdPageState({this.localLongitude,this.localLatitude}){
+    today = DateTime.now().toLocal();
+  }
+
 
   //Queries for the other images
   Future<List<Uint8List>> _getImages() async{
@@ -57,12 +68,13 @@ class _ThirdPageState extends State<ThirdPage> {
       int maxSize = 6*1024*1024;
       String fileName = widget.local.id;
       String pathName = 'photos/europe/bucharest/$fileName';
+      
 
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
       List<Uint8List> listOfImages = [];
       int pictureIndex = 1;
       try{
-
+        
         do{
           //print('///////////////////'+'$fileName'+'_$pictureIndex.jpg');
           await storageRef.child('$fileName'+'_$pictureIndex.jpg')
@@ -88,7 +100,10 @@ class _ThirdPageState extends State<ThirdPage> {
       }
   }
 
-  
+  double getDiscountForUser(double maxDiscount){
+    List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscount)['per_level'];
+    return userDiscounts[authService.currentUser.getLevel()].toDouble();
+  }
 
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
@@ -176,19 +191,40 @@ class _ThirdPageState extends State<ThirdPage> {
             children: [
               Column(
                 children: <Widget>[
-                  Container( // Name
-                    alignment: Alignment(-0.8, 1),
-                    padding: EdgeInsets.only(
-                      bottom:10
-                    ),
-                    child: Text(
-                      widget.local.name==null? 'wrong':widget.local.name,
-                      style: TextStyle(
-                        fontFamily: 'Comfortaa',
-                        fontSize: 21,
-                        fontWeight: FontWeight.values[5]
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container( // Name
+                        alignment: Alignment(-0.8, 1),
+                        padding: EdgeInsets.only(
+                          left: 20,
+                          bottom:10
+                        ),
+                        child: Text(
+                          widget.local.name==null? 'wrong':widget.local.name,
+                          style: TextStyle(
+                            fontFamily: 'Comfortaa',
+                            fontSize: 21,
+                            fontWeight: FontWeight.values[5]
+                          ),
+                        )
                       ),
-                    )
+                      Container(
+                        padding: EdgeInsets.only(left: 30,top: 8),
+                        constraints: BoxConstraints(
+                          maxWidth: 100,
+                          maxHeight: 50
+                        ),
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: widget.local.cost,
+                            itemBuilder: (context, costIndex){
+                              return FaIcon(FontAwesomeIcons.dollarSign, color: Colors.orange[600],);
+                            },
+                          ),
+                      )                      
+                    ],
                   ),
                   Container( // Thin line
                     padding: EdgeInsets.only(top:10),
@@ -284,8 +320,84 @@ class _ThirdPageState extends State<ThirdPage> {
                               if(index == 0){
                                 return ListTile(
                                   title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  subtitle: Container(
+                                    height: 120,
+                                    child: ListView.builder(
+                                      itemExtent: 128, /// Added to add some space between the tiles
+                                      padding: EdgeInsets.all(10),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: widget.local.discounts != null ?  
+                                                  (widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null? 
+                                                    widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length : 0): 
+                                                  0,
+                                      /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
+                                      /// the current weekday. If not, the field will be empty
+                                      itemBuilder: (BuildContext context, int index){
+                                        return Column(
+                                          children: <Widget>[
+                                            GestureDetector(
+                                              onTap: (){
+                                                if(g.isSnackBarActive == false){
+                                                  g.isSnackBarActive = true;
+                                                  Scaffold.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        "Scan your code in your preferred time interval and receive the discount.",
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                      backgroundColor: Colors.orange[600],
+                                                    )).closed.then((SnackBarClosedReason reason){
+                                                    g.isSnackBarActive = false;
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                height: 30,
+                                                width: 120,
+                                                decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black45, 
+                                                      offset: Offset(1.5,1),
+                                                      blurRadius: 2,
+                                                      spreadRadius: 0.2
+                                                    )
+                                                  ],
+                                                  color: Colors.orange[600],
+                                                  borderRadius: BorderRadius.circular(25)
+                                                ),
+                                                child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                                                        [index].substring(0,5) 
+                                                        + ' - ' + 
+                                                        widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                                                        [index].substring(6,11),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontFamily: 'Roboto'
+                                                        ),
+                                                      )  // A concatenation of the string representing the time interval
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: Text(
+                                                
+                                                getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14))).toString() + '%',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: 'Roboto'
+                                                )
+                                                )
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    ),
+                                  )
                                 );
                               }
+                              else return Container();
                             },
                             controller: ScrollController(
                               keepScrollOffset: false

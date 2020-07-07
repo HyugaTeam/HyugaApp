@@ -29,23 +29,34 @@ class _SecondPageState extends State<SecondPage> {
      
   }
   void myScroll() async {
-  _scrollBottomBarController.addListener(() {
-    if (_scrollBottomBarController.position.userScrollDirection ==
-        ScrollDirection.reverse) {
-      if (!isScrollingDown) {
-        isScrollingDown = true;
-        _showAppbar = false;
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+          _showAppbar = false;
+        }
       }
-    }
-    if (_scrollBottomBarController.position.userScrollDirection ==
-        ScrollDirection.forward) {
-      if (isScrollingDown) {
-        isScrollingDown = false;
-        _showAppbar = true;
+      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+          _showAppbar = true;
+        }
       }
-    }
-  });
-}
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    myScroll();
+  }
+
+  @override
+  void dispose() { 
+    _scrollBottomBarController.removeListener(() {});
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
