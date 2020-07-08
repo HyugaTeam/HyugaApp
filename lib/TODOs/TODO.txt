@@ -4,20 +4,13 @@
 
 07.05.2020:
 
--distanta
--preturi
--google maps
--incarcare mai rapida restarurante + "load more"
 -profilul restaurantului
-
+-terminat scanare plus retinere in baza de date
+-implementat reducerile personalizate
+-refferal (mai incolo)
 
 De la tudor:
 
-la asian nu apar pozele 2
-ink-ul de la poza de search
-
-facem interfata pe meniul 2 mai buna
-facem interfata pe minul 3 mai buna
 facem un meniu de drag in dreapta sau il scoatem de tot
 sa pun descrieri mai lungi
 buton arrow meniu 3 in stanga sus

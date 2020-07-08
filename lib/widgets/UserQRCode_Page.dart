@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shimmer/shimmer.dart';
 
 // The page containing the user's QR code
 class UserQRCode extends StatelessWidget {

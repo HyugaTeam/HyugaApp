@@ -4,10 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
-import 'package:hyuga_app/services/auth_service.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
-import 'package:shimmer/shimmer.dart';
 
 // Class resposible for the whole querying service for locals
 // This class acts as a singleton
@@ -17,7 +15,20 @@ class QueryService{
   static final Firestore _db = Firestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final StorageReference storageRef = storage.ref();
+  static LocationData _userLocation ;
+  
+  // A getter for the user's location
+  LocationData get userLocation{
+    return _userLocation;
+  }
 
+  QueryService(){
+    getUserLocation().then((value) => _userLocation = value);
+
+    Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
+      _userLocation = instantUserLocation;
+    });
+  }
 
   // Method that converts a map of Firebase Locals to OUR Locals
   List<Local> toLocal(var localsMap){
@@ -124,7 +135,7 @@ class QueryService{
       );
   }
   
-  // Gets the User's location
+  // Asks for permission and gets the User's location 
   //Future<Position>getLocation() async{
   Future<LocationData> getUserLocation() async{
     
@@ -133,21 +144,21 @@ class QueryService{
     PermissionStatus _permissionGranted;
     LocationData position;
 
-    // _serviceEnabled = await location.serviceEnabled();
-    // if (!_serviceEnabled) {
-    //   _serviceEnabled = await location.requestService();
-    //   if (!_serviceEnabled) {
-    //     return null;
-    //   }
-    // }
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return null;
+      }
+    }
 
-    // _permissionGranted = await location.hasPermission();
-    // if (_permissionGranted == PermissionStatus.denied) {
-    //   _permissionGranted = await location.requestPermission();
-    //   if (_permissionGranted != PermissionStatus.granted) {
-    //     return null;
-    //   }
-    // }
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return null;
+      }
+    }
     print("START---------------");
     position = await location.getLocation();
     return position;
@@ -223,6 +234,24 @@ class QueryService{
     // g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
  
+  double getLocalLocation(GeoPoint location){
+    if(location == null)
+      print("LOCATION IS NULL");
+    LocationData localLocation ;
+        localLocation = LocationData.fromMap({
+          'latitude': location.latitude,
+          'longitude': location.longitude
+          }
+        );
+        Distance distance = Distance();
+        double fromAtoB = distance.as(
+          LengthUnit.Kilometer,
+          LatLng(localLocation.latitude, localLocation.longitude),
+          LatLng(_userLocation.latitude, _userLocation.longitude)
+          );
+    return fromAtoB;
+  }
+
   Local _docSnapToLocal(DocumentSnapshot doc){
 
     // var profileImage = Image.network(
@@ -234,6 +263,7 @@ class QueryService{
     // errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
     // );
     var profileImage = getImage(doc.documentID);
+
     return Local(
       cost: doc.data['cost'],
       score: doc.data['score'],
@@ -242,18 +272,18 @@ class QueryService{
       name: doc.data['name'],
       location:doc.data['location'],
       description: doc.data['description'],
-      capacity: doc.data['capacity']
+      capacity: doc.data['capacity'],
+      discounts: doc.data['discounts']
     );
   }
 
   // Handles the whole process of querying
   Future fetch() async{
     
-    //Position userLocation = await getUserLocation();
-    LocationData userLocation;
-    if(g.selectedArea == 0)
-      userLocation = await getUserLocation();
-    print("DONE-----------");
+    if(g.selectedArea == 0){
+      _userLocation = await getUserLocation();
+      print("DONE-----------");
+    }
 
     String selectedAmbiance;
     int selectedHowMany;
@@ -304,7 +334,7 @@ class QueryService{
     return (locals.documents
     .where((element){
       bool result = true;
-      if(userLocation != null && g.selectedArea == 0) { // Filters the result by the 1km radius criteria
+      if(_userLocation != null && g.selectedArea == 0) { // Filters the result by the 1km radius criteria
         LocationData localLocation ;
         localLocation = LocationData.fromMap({
           'latitude': element.data['location'].latitude,
@@ -315,7 +345,7 @@ class QueryService{
         double fromAtoB = distance.as(
           LengthUnit.Meter,
           LatLng(localLocation.latitude, localLocation.longitude),
-          LatLng(userLocation.latitude, userLocation.longitude)
+          LatLng(_userLocation.latitude, _userLocation.longitude)
           );
         if(fromAtoB > 1000)
           result = false;

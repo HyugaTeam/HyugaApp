@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hyuga_app/screens/drawer/ScannedLocals_page.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
-import 'package:hyuga_app/screens/drawer/FavoriteLocals_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/UserQRCode_Page.dart';
 
@@ -157,9 +157,9 @@ class ProfileDrawer extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       children: <Widget>[
                         ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
-                          title: Text('My places'), 
+                          title: Text('Scan History'), 
                           onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return FavoriteLocalsPage(); }));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
                           }
                         ),
                         ListTile(

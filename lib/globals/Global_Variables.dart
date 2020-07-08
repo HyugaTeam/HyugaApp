@@ -27,3 +27,37 @@ final List<String> howManyList =
 final List<String> ambianceList = ["Intimate","Anything","Social-friendly"];
  /// Area list
 final List<String> areaList = ["15 minute walk", "Anywhere"];
+
+final List<Map<String, Object>> discounts = [
+    {
+      'maxim' : 15,
+      'per_level' : [10, 10, 12.5, 14, 14.5, 15]
+    },
+    {
+      'maxim' : 20,
+      'per_level' : [12.5, 12.5, 15, 16.5, 18, 20]
+    },
+    {
+      'maxim' : 25,
+      'per_level' : [15, 15, 17.5, 20, 22.5, 25]
+    },
+    {
+      'maxim' : 30,
+      'per_level': [15, 15, 20, 22.5, 25, 30]
+    },
+    { 'maxim' : 35,
+      'per_level' : [17.5, 17.5, 25, 30, 32.5, 35]
+    },
+    {
+      'maxim' : 40,
+      'per_level' : [25, 25, 30, 32.5, 35, 40]
+    },
+    {
+      'maxim' : 45,
+      'per_level' : [30, 30, 35, 37.5, 40, 45]
+    },
+    {
+      'maxim' : 50,
+      'per_level' : [40, 40, 45, 50, 50, 50]
+    },
+];

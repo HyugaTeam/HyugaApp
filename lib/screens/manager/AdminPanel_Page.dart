@@ -60,7 +60,12 @@ class AdminPanel extends StatelessWidget {
                   highlightColor: Colors.white30,
                   color: Theme.of(context).highlightColor,
                   onPressed: () async {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>
+                    Provider(
+                      create: (context) => _managedLocal,
+                      child: ManagerQRScan()
+                    ),
+                    ));
                   },
                 ),],
                 backgroundColor: Theme.of(context).accentColor,

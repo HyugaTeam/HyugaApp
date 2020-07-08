@@ -10,17 +10,21 @@ class User{
 
   User({this.uid,this.email,this.photoURL, this.displayName, this.isAnonymous});
   
+
+  // Can only return a number in the range [0,5]
   int getLevel(){
     if(score != null){
-      if(score < 500) // level 1
+      if(score < 1) // level 0
+        return 0;
+      else if(score < 3) // level 1
         return 1;
-      else if(score < 1000)
+      else if(score < 8) // level 2
         return 2;
-      else if(score < 1500)
+      else if(score < 23) // level 3
         return 3;
-      else if(score < 2000)
+      else if(score < 48) // level 4
         return 4;
-      else return 5;
+      else return 5; // level 5
     }
   }
 
