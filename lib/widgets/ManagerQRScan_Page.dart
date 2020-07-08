@@ -46,7 +46,7 @@ class ManagerQRScan extends StatelessWidget {
         return null;
       else
         return refData;
-    } on PlatformException
+    } //on PlatformException
     catch(error){
       if(error.code == BarcodeScanner.cameraAccessDenied)
         print("Camera access is denied");

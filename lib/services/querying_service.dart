@@ -17,7 +17,7 @@ class QueryService{
   static final StorageReference storageRef = storage.ref();
   static LocationData _userLocation ;
   
-  // A getter for the user's location
+  /// A getter for the user's location
   LocationData get userLocation{
     return _userLocation;
   }
@@ -136,7 +136,6 @@ class QueryService{
   }
   
   // Asks for permission and gets the User's location 
-  //Future<Position>getLocation() async{
   Future<LocationData> getUserLocation() async{
     
     Location location = new Location();

@@ -199,34 +199,37 @@ class _SignInState extends State<SignIn> {
                               handleAuthError(context, signInResult);
                           },
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Don't have an account?"),
-                            Container(
-                              // constraints: BoxConstraints(
-                              //   minWidth: 40,
-                              //   maxWidth: 50,
-                              //   minHeight: 20,
-                              //   maxHeight: 20 
-                              // ),
-                              padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                              child: InkWell(   /// "Register with Email" button
-                                child: Text(
-                                  "Register",
-                                  style: TextStyle(
-                                    color: Colors.orange[600]
+                        Container(
+                          width: double.maxFinite,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Don't have an account?"),
+                              Container(
+                                // constraints: BoxConstraints(
+                                //   minWidth: 40,
+                                //   maxWidth: 50,
+                                //   minHeight: 20,
+                                //   maxHeight: 20 
+                                // ),
+                                padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
+                                child: InkWell(   /// "Register with Email" button
+                                  child: Text(
+                                    "Register",
+                                    style: TextStyle(
+                                      color: Colors.orange[600]
+                                    ),
                                   ),
+                                  //splashColor: Colors.transparent,
+                                  //focusColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: (){
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>Register()));
+                                  },
                                 ),
-                                //splashColor: Colors.transparent,
-                                //focusColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: (){
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>Register()));
-                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         )
                       ],
                     )

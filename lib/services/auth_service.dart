@@ -18,6 +18,7 @@ class AuthService{
   final Firestore _db = Firestore.instance;
 
   PublishSubject<bool> loading = PublishSubject<bool>(); // used for the async
+  bool isLoading;
   User currentUser; /// used for the 'manager' property
   
   AuthService(){
@@ -26,6 +27,7 @@ class AuthService{
         currentUser = value;
         if(currentUser != null){
           loading.add(true);
+          isLoading = true;
           DocumentReference ref = _db.collection('users').reference().document(value.uid);
           ref.get().then((DocumentSnapshot docSnap) {
             if(docSnap.data != null){
@@ -40,6 +42,7 @@ class AuthService{
                 currentUser.score = null;
             }
             loading.add(false);
+            isLoading = false;
           });
          }
       },

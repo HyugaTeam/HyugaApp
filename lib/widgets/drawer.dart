@@ -24,6 +24,12 @@ class ProfileDrawer extends StatelessWidget {
   //      print(error);
   //    }
   //  }
+  String username ; 
+  ProfileDrawer(){
+    username = authService.currentUser.displayName != null? 
+              authService.currentUser.displayName : 
+              authService.currentUser.email.substring(0,authService.currentUser.email.indexOf('@'));
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -66,7 +72,7 @@ class ProfileDrawer extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
                                   child: Image.network(
-                                    authService.currentUser.photoURL,
+                                    authService.currentUser.photoURL != null? authService.currentUser.photoURL : '',
                                     width: 50,
                                     // frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
                                     //   return child;
@@ -93,9 +99,9 @@ class ProfileDrawer extends StatelessWidget {
                               ),
                               SizedBox(height: 20,),
                               Text(// Shows either the user's display name, or the email used for registration
-                                authService.currentUser.displayName != null? authService.currentUser.displayName : authService.currentUser.email,
+                                username,
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: username.length <16? 20 : 14,
                                 fontWeight: FontWeight.bold
                                 )
                               )
@@ -128,8 +134,8 @@ class ProfileDrawer extends StatelessWidget {
                                       child: LinearProgressIndicator(
                                         valueColor: AlwaysStoppedAnimation(Colors.orange[600]),
                                         //valueColor: C,
-                                        value: authService.currentUser.score.toDouble() / (authService.currentUser.getLevel()*500)
-                                        ),
+                                        value: authService.currentUser.score.toDouble() 
+                                      ),
                                     ),
                                     Container( // Text (some sort of ratio) with User's score / necessary score for the next level
                                       alignment: Alignment.center,

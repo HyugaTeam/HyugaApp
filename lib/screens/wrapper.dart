@@ -42,12 +42,17 @@ class Wrapper extends StatelessWidget {
         return StreamBuilder(
           stream: authService.loading,
           builder: (context, snapshot) {
-            if(!snapshot.hasData || (snapshot.hasData && snapshot.data == true))
+            if(!snapshot.hasData && authService.isLoading == null)
               return Scaffold(body: Center(child: CircularProgressIndicator(),),);
-            else if(snapshot.data == false && authService.currentUser.isManager == true)
+            else if(authService.currentUser.isManager == true)
               return AdminPanel();
-            else
-              return Home();
+            else return Home();
+            // if(!snapshot.hasData || (snapshot.hasData && snapshot.data == true))
+            //   return Scaffold(body: Center(child: CircularProgressIndicator(),),);
+            // else if(snapshot.data == false && authService.currentUser.isManager == true)
+            //   return AdminPanel();
+            // else
+            //   return Home();
           }
         ); 
       else

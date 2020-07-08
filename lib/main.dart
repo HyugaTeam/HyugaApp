@@ -14,7 +14,7 @@ void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  queryingService.getUserLocation();
+  queryingService.getUserLocation().then((value) => print(value));
   
   runApp(StreamProvider<User>.value( 
       value: authService.user,
