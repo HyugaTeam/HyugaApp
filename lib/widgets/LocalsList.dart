@@ -1,8 +1,5 @@
 import 'dart:math';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
@@ -102,6 +99,8 @@ class _LocalsState extends State<Locals> {
               physics: const AlwaysScrollableScrollPhysics(), 
               itemCount: locals.data.length,
               itemBuilder: (BuildContext context, int index) {
+                // PlaceListProfile place = PlaceListProfile('asda', locals.data[index].name, 'Strada Bistritei', 0);
+                // return place;
                 return Column(
                   children: <Widget>[
                     Container(

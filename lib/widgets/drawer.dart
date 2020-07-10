@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/screens/drawer/ScannedLocals_page.dart';
+import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/UserQRCode_Page.dart';
@@ -26,9 +26,10 @@ class ProfileDrawer extends StatelessWidget {
   //  }
   String username ; 
   ProfileDrawer(){
-    username = authService.currentUser.displayName != null? 
-              authService.currentUser.displayName : 
-              authService.currentUser.email.substring(0,authService.currentUser.email.indexOf('@'));
+    if(authService.currentUser.displayName != null)
+      username = authService.currentUser.displayName;
+    else if(authService.currentUser.email != null)
+     username = authService.currentUser.email.substring(0,authService.currentUser.email.indexOf('@'));
   }
   
   @override
@@ -124,31 +125,31 @@ class ProfileDrawer extends StatelessWidget {
                                     )]
                                   ),
                                 ),
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container( // User's progress indicator for level
-                                      padding: EdgeInsets.only(top: 10),
-                                      width: 120,
-                                      height: 25,
-                                      child: LinearProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation(Colors.orange[600]),
-                                        //valueColor: C,
-                                        value: authService.currentUser.score.toDouble() 
-                                      ),
-                                    ),
-                                    Container( // Text (some sort of ratio) with User's score / necessary score for the next level
-                                      alignment: Alignment.center,
-                                      margin: EdgeInsets.only(top:12),
-                                      //padding: EdgeInsets.only(top: 10),
-                                      width: 100,
-                                      height: 20,
-                                      child: Text(
-                                        _progress
-                                      ),
-                                    )
-                                  ]
-                                )
+                                // Stack(
+                                //   alignment: Alignment.center,
+                                //   children: [
+                                //     Container( // User's progress indicator for level
+                                //       padding: EdgeInsets.only(top: 10),
+                                //       width: 120,
+                                //       height: 25,
+                                //       child: LinearProgressIndicator(
+                                //         valueColor: AlwaysStoppedAnimation(Colors.orange[600]),
+                                //         //valueColor: C,
+                                //         value: authService.currentUser.score.toDouble() 
+                                //       ),
+                                //     ),
+                                //     Container( // Text (some sort of ratio) with User's score / necessary score for the next level
+                                //       alignment: Alignment.center,
+                                //       margin: EdgeInsets.only(top:12),
+                                //       //padding: EdgeInsets.only(top: 10),
+                                //       width: 100,
+                                //       height: 20,
+                                //       child: Text(
+                                //         _progress
+                                //       ),
+                                //     )
+                                //   ]
+                                // )
                                 
                               ],
                             ),

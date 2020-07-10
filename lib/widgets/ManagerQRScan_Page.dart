@@ -12,15 +12,34 @@ import 'package:hyuga_app/widgets/LevelProgressBar.dart';
 import 'package:provider/provider.dart';
 
 
-class ManagerQRScan extends StatelessWidget {
+class ManagerQRScan extends StatefulWidget {
+  ManagerQRScan(){
+    // textController.addListener(() { 
+    //   receiptValue = double.parse(textController.value.text);
+    // });
+  }  
+
+  @override
+  _ManagerQRScanState createState() => _ManagerQRScanState();
+}
+
+class _ManagerQRScanState extends State<ManagerQRScan> {
   @override
 
   ManagedLocal managedLocal;
   final Firestore _db = Firestore.instance;
   DocumentSnapshot scannedUser;
   String uid = "";
-  TextEditingController textController;
   double receiptValue;
+  TextEditingController textController = new TextEditingController();
+
+  _ManagerQRScanState(){
+    textController.addListener(() {
+      receiptValue = double.parse(textController.value.text);
+    });
+  }
+
+  
 
   Future incrementUserScore(String uid) async{
     DocumentReference ref = _db.collection('users').document(uid); // a reference to the scanned user's profile
@@ -34,9 +53,7 @@ class ManagerQRScan extends StatelessWidget {
       }
   }
 
-  
-
-  Future _scanQR() async{
+  Future<DocumentSnapshot> _scanQR() async{
     try{
       String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) => scanResult.rawContent);
       DocumentReference ref = _db.collection('users').document(qrResult); // a reference to the scanned user's profile
@@ -52,7 +69,7 @@ class ManagerQRScan extends StatelessWidget {
         print("Camera access is denied");
     }
   }
-  
+
   int getLevel(int score){
     if(score != null){
       if(score < 1) // level 0
@@ -96,23 +113,19 @@ class ManagerQRScan extends StatelessWidget {
           'date': DateTime.now().toUtc(),
           'applied_discount': 20,
           'max_discount': 10,
-          'score' : scannedUser.data['score'] + 1,
-          'total' : receiptValue
+          'score' : userData.data['score'] + 1,
+          'total' : receiptValue,
+          'place_name' : managedLocal.name
       },
       merge: true
     ).then((value) => ok = true);
+    incrementUserScore(userData.documentID);
     return ok;
   }
 
   void addScannedCodeToDatabase(userData){
 
   }
-
-  ManagerQRScan(){
-    // textController.addListener(() { 
-    //   receiptValue = double.parse(textController.value.text);
-    // });
-  }  
 
   @override
   Widget build(BuildContext context) {
@@ -126,16 +139,7 @@ class ManagerQRScan extends StatelessWidget {
         if(!scanResult.hasData)
           return Scaffold(
             body: Container(
-              child: Column(
-                children: <Widget>[
-                  Center(child: Text("")),
-                  //LevelProgressBar(),
-                  // FutureBuilder(
-                  //   future: _scanQR(),
-                  //   builder: null
-                  // ),
-                ],
-              )
+              child: Center(child: Text("Ceva a mers gresit, incearca sa scanezi din nou!"))
             )
           );
         else if(scanResult.data.data!= null){
@@ -172,7 +176,7 @@ class ManagerQRScan extends StatelessWidget {
                                   controller: textController,
                                   keyboardType: TextInputType.number,
                                   onSubmitted: (String str){
-                                    receiptValue = double.parse(str);
+                                    setState((){receiptValue = double.parse(str);});
                                   },
                                 ),
                               ),
@@ -189,7 +193,7 @@ class ManagerQRScan extends StatelessWidget {
                               )
                             ),
                             onPressed: () {
-                              tryToSendDataToUser(scanResult);
+                              tryToSendDataToUser(scanResult.data);
                               showDialog(context: context, builder: (context){
                                   return FutureBuilder(
                                     future: Future<bool>.delayed(Duration(milliseconds: 1500)).then((value) { Navigator.pop(context); }),

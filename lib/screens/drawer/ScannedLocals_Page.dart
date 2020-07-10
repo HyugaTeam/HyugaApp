@@ -23,7 +23,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
     QuerySnapshot scanHistory = await Firestore.instance.collection('users')
     .document(authService.currentUser.uid).collection('scan_history')
     .getDocuments();
-    Timestamp x;
 
     return scanHistory.documents.map((doc)=>doc.data).toList();
   }

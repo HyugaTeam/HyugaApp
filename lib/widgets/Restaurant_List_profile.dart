@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class RestaurantListProfile extends StatelessWidget {
+class PlaceListProfile extends StatelessWidget {
   final String _image;
   final String _name;
   final String _street;
   final int _price;
 
-  RestaurantListProfile(this._image, this._name, this._street, this._price);
+  PlaceListProfile(this._image, this._name, this._street, this._price);
 
   @override
   Widget build(BuildContext context) {

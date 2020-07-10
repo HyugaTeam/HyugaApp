@@ -6,8 +6,11 @@
 
 -profilul restaurantului
 -terminat scanare plus retinere in baza de date
--implementat reducerile personalizate
 -refferal (mai incolo)
+
+Post-release:
+
+-adaugat bara de progres(pentru scanari)
 
 De la tudor:
 

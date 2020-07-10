@@ -63,7 +63,6 @@ class _SignInState extends State<SignIn> {
         highlightColor: Colors.orange[600]
       ),
       child: Scaffold(
-        
         resizeToAvoidBottomPadding: false,
         //backgroundColor: Colors.white,
         body: Builder(
@@ -72,7 +71,7 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               SizedBox(height: 130),
               Text( // Hello text
-                'Hyuga',
+                'hyuga',
                 style: TextStyle(
                   fontFamily: 'Comfortaa',
                   fontSize: 40
