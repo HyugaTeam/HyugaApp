@@ -1,3 +1,4 @@
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -67,21 +68,27 @@ class _SignInState extends State<SignIn> {
         //backgroundColor: Colors.white,
         body: Builder(
           builder: (context) => Center(
-          child: Column(
+          child: ListView(
+            
+            padding: EdgeInsets.symmetric(horizontal: 20),
             children: <Widget>[
               SizedBox(height: 130),
-              Text( // Hello text
-                'hyuga',
-                style: TextStyle(
-                  fontFamily: 'Comfortaa',
-                  fontSize: 40
+              Center(
+                child: Text( // Hello text
+                  'hyuga',
+                  style: TextStyle(
+                    fontFamily: 'Comfortaa',
+                    fontSize: 40
+                  ),
                 ),
               ),
-              Text(
-                "Let's log in!",
+              Center(
+                child: Text(
+                  "Let's log in!",
+                ),
               ),
               Container(  // sign-in anonymously button
-                padding: EdgeInsets.symmetric(vertical:20,horizontal:50),
+                padding: EdgeInsets.symmetric(vertical:20,horizontal:100),
                 child: MaterialButton(
                   splashColor: Colors.orange[100],
                   color: Colors.orange[600],
@@ -112,7 +119,7 @@ class _SignInState extends State<SignIn> {
               //   value: Text("Continue with email"),
               //   onChanged: (Widget widget) => setState(() => ),
               // ),
-              MaterialButton(  /// continue with email button
+              MaterialButton(  /// The 'Continue with email' button
                 shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.zero,
                   side: BorderSide(
@@ -138,7 +145,7 @@ class _SignInState extends State<SignIn> {
                   });
                 },
                 ),
-              Visibility(
+              Visibility( // The dialog shown under the 'Continue with email' button
                 maintainState: true,
                 maintainAnimation: true,
                 visible: formVisibility,
@@ -292,6 +299,33 @@ class _SignInState extends State<SignIn> {
                     handleAuthError(context, signInResult);  
                 },
               ),
+              SizedBox(height: 20,),
+              g.isIOS ?  // checks if the platform on which the app is ran is IOS
+              MaterialButton(   /// Continue with AppleID button
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                  side: BorderSide(
+                    width: 1,
+                    color: Colors.black26
+                  )
+                ),
+                minWidth: 360,
+                height: 50,
+                child: Container(
+                  width: 300,
+                  child: Row(
+                    children: <Widget>[
+                      FaIcon(FontAwesomeIcons.apple, color: Colors.blueGrey,),
+                      Container(width: 80,),
+                      Text("Continue with Apple"),
+                    ],
+                  ),
+                ),
+                onPressed: (){
+                  //TODO: Implement AppleID Sign In
+                  authService.signInWithApple();
+                },
+              ): Container(),
               ],
             ),
           ),

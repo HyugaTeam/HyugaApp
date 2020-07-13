@@ -72,19 +72,20 @@ class _ThirdPageState extends State<ThirdPage> {
 
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
       List<Uint8List> listOfImages = [];
-      int pictureIndex = 1;
+      //int pictureIndex = 1;
       try{
         
-        do{
+        //do{
           //print('///////////////////'+'$fileName'+'_$pictureIndex.jpg');
-          await storageRef.child('$fileName'+'_$pictureIndex.jpg')
+          //await storageRef.child('$fileName'+'_$pictureIndex.jpg')
+          await storageRef.child('$fileName'+'_1.jpg')
           .getData(maxSize).then((data){
             imageFile = data;
             }
           );
           listOfImages.add(imageFile);
-          pictureIndex++;
-        }while(pictureIndex<2);
+          //pictureIndex++;
+        //}while(pictureIndex<2);
 
         await storageRef.child('$fileName'+'_m.jpg')
           .getData(maxSize).then((data){
@@ -305,10 +306,11 @@ class _ThirdPageState extends State<ThirdPage> {
                         if(!snapshot.hasData){
                           // data didn't load
                           return Shimmer.fromColors(
-                            baseColor: Colors.grey[200],
+                            period: Duration(milliseconds: 1500),
+                            baseColor: Colors.grey[300],
                             highlightColor: Colors.white,
                             child: Container(
-                              height: 100,
+                              height: 200,
                               color: Colors.blueGrey,
                             ),
                           ); 

@@ -5,7 +5,7 @@ import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/manager/AnalysisPage.dart';
 import 'package:hyuga_app/screens/manager/EditorPage.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/widgets/ManagerQRScan_Page.dart';
+import 'package:hyuga_app/screens/manager/ManagerQRScan_Page.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:provider/provider.dart';
 

@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class Local{
   final int cost; // Imported from the database
   final int capacity;
   final Map<String,dynamic> discounts;
+  final Future<List<Uint8List>> images; // The Local images from Firebase Storage 
 
   Local({
     this.cost,
@@ -21,7 +23,8 @@ class Local{
     this.description,
     this.location,
     this.capacity,
-    this.discounts
+    this.discounts,
+    this.images
   });
 }
 /*

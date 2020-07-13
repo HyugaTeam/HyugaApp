@@ -74,8 +74,9 @@ class _LocalsState extends State<Locals> {
     // });
     //(context as Element).reassemble();
     return Future((context as Element).reassemble);
+    
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -110,17 +111,9 @@ class _LocalsState extends State<Locals> {
                       ),
                       child:  Stack(
                         children: <Widget>[
-                          MaterialButton(
-                          //color: Colors.blueGrey,
-                          textTheme: ButtonTextTheme.primary,
-                          // onPressed:(){
-                          //   Navigator.pushNamed(
-                          //     context, 
-                          //     '/third',
-                          //     arguments: g.placesList[index]
-                          //   );
-                          // },
-                          onPressed: (){},
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                          //onPressed: (){},
                           child: Column(
                             children: <Widget>[
                               Container(

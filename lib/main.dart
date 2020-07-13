@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
@@ -9,12 +11,14 @@ import 'package:hyuga_app/screens/main/Second_Page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   queryingService.getUserLocation().then((value) => print(value));
+  g.isIOS = Platform.isIOS == true? true : false;
   
   runApp(StreamProvider<User>.value( 
       value: authService.user,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart'; // For exceptions library
@@ -148,7 +149,7 @@ class AuthService{
         idToken: googleAuth.idToken, 
         accessToken: googleAuth.accessToken
       );
-      FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
       if(user != null)
         updateUserData(user);
       //return _ourUserFromFirebaseUser(user);
@@ -158,6 +159,35 @@ class AuthService{
       return(error);
     }
   }
+
+  // sign in with Apple
+
+  Future signInWithApple({List<Scope> scopes = const []}) async{
+    //1. perform the sign-in request
+    final AuthorizationResult result = await AppleSignIn.performRequests(
+      [AppleIdRequest(requestedScopes: scopes)]
+    );
+    switch(result.status){
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential;
+        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+        final credential = oAuthProvider.getCredential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken),
+          accessToken: String.fromCharCodes(appleIdCredential.authorizationCode)
+        );
+        final user = (await _auth.signInWithCredential(credential)).user;
+        if(user != null)
+          updateUserData(user);
+      break;
+      case AuthorizationStatus.error:
+        print(result.status);
+      break;
+      case AuthorizationStatus.cancelled:
+        print(result.status);
+      break;
+    }
+  }
+
   // sign in by email & password
 
   Future signInWithEmailAndPassword(String email, String password) async{

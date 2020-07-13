@@ -9,6 +9,7 @@ int selectedArea;
 /// Used around the app to check for an eventual active SnackBar
 bool isSnackBarActive = false;
 bool isStarting = true;
+bool isIOS = false; // Added for the AppleID Sign In method (only available on IOS)
 
 List<Local> placesList = [];
 

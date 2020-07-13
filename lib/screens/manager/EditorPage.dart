@@ -20,9 +20,38 @@ class _EditorPageState extends State<EditorPage> {
 
   bool areThereChanges = false; // adds an UI interaction whenever a field is changed
   ManagedLocal temporaryChanges;
+  Map<String,dynamic> changesMap;
   File _unsavedProfileImage;
   String _unsavedProfileImagePath = "";
   String _unsavedTimeInterval = "";
+
+  /// A method which builds the TextController for 'Name' & 'DeTscription' fields
+  TextEditingController buildTextController(String field){
+    TextEditingController textController;
+    if(field == 'name'){
+      textController = new TextEditingController(
+        text: temporaryChanges != null? (temporaryChanges.name != null? temporaryChanges.name : ''): ''
+      );
+      textController.addListener(() {
+        setState(() {
+          areThereChanges = true;
+          temporaryChanges.name = textController.value.text;
+        });
+      });
+    }
+    if(field == 'description'){
+      textController = new TextEditingController(
+        text: temporaryChanges != null? (temporaryChanges.description != null? temporaryChanges.description : ''): ''
+      );
+      textController.addListener(() {
+        setState(() {
+          areThereChanges = true;
+          temporaryChanges.description = textController.value.text;
+        });
+      });
+    }
+    return textController;
+  }
 
   void saveChanges(){
 
@@ -77,13 +106,7 @@ class _EditorPageState extends State<EditorPage> {
                   style: TextStyle(
                   ),
                   maxLength: 200,
-                  controller: TextEditingController(
-                    text: temporaryChanges.name == null ? 
-                      "" : 
-                        temporaryChanges.name == null ? 
-                        "" : 
-                        temporaryChanges.name 
-                  ),
+                  controller: buildTextController('name'),
                   onSubmitted: (String changedName) => setState((){
                     print(areThereChanges);
                     //floatingButtonColor = Colors.orange[600];
@@ -107,19 +130,12 @@ class _EditorPageState extends State<EditorPage> {
               ),
               subtitle: Container(
                 child: TextField(
-                  minLines: 1,
-                  maxLines: 2,
+                  // minLines: 1,
+                  // maxLines: 2,
                   // style: TextStyle(
                   // ),
                   maxLength: 400,
-                  controller: TextEditingController(
-                    text: temporaryChanges == null ? 
-                      "" : 
-                      temporaryChanges.description == null ? 
-                        "" : 
-                        temporaryChanges.description
-                  ),
-                  
+                  controller: buildTextController('description'),
                   onSubmitted: (String changedDescription) => setState((){
                     print(areThereChanges);
                     areThereChanges = true;
@@ -439,73 +455,73 @@ class _EditorPageState extends State<EditorPage> {
                 ],
               ),
             ),
-            ListTile(  // Tipul localului
-              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-              title: Text(
-                "Tipul localului",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              subtitle: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Wrap(
-                    runSpacing: 7,
-                    spacing: 10,
-                    //textDirection: ,
-                    children: temporaryListOfProfiles.map((e) => 
-                      Container(
-                        height: 30,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black45, 
-                              offset: Offset(1.5,1),
-                              blurRadius: 2,
-                              spreadRadius: 0.2
-                            )
-                          ],
-                          color: Colors.orange[600],
-                          borderRadius: BorderRadius.circular(25)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              e[0].toString() + ": " + e[1].toString(),
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            SizedBox( // The 'X' icon
-                              width: 20,
-                              height: 40,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                iconSize: 20,
-                                focusColor: Colors.black,
-                                //splashColor: Colors.black,
-                                highlightColor: Colors.black,
-                                icon: Icon(Icons.close), 
-                                onPressed: (){
-                                  setState(() {
-                                    temporaryChanges.profile.remove(e[0]);
-                                  });
-                                }
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ).toList(),
-                  ),
-                )
-              ),
-            ),
+            // ListTile(  // Tipul localului
+            //   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+            //   title: Text(
+            //     "Tipul localului",
+            //     style: TextStyle(
+            //       fontWeight: FontWeight.bold
+            //     ),
+            //   ),
+            //   subtitle: Container(
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(top: 8.0),
+            //       child: Wrap(
+            //         runSpacing: 7,
+            //         spacing: 10,
+            //         //textDirection: ,
+            //         children: temporaryListOfProfiles.map((e) => 
+            //           Container(
+            //             height: 30,
+            //             width: 120,
+            //             decoration: BoxDecoration(
+            //               boxShadow: [
+            //                 BoxShadow(
+            //                   color: Colors.black45, 
+            //                   offset: Offset(1.5,1),
+            //                   blurRadius: 2,
+            //                   spreadRadius: 0.2
+            //                 )
+            //               ],
+            //               color: Colors.orange[600],
+            //               borderRadius: BorderRadius.circular(25)
+            //             ),
+            //             child: Row(
+            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //               crossAxisAlignment: CrossAxisAlignment.center,
+            //               children: <Widget>[
+            //                 Text(
+            //                   e[0].toString() + ": " + e[1].toString(),
+            //                   style: TextStyle(
+            //                     fontSize: 10,
+            //                     fontWeight: FontWeight.bold
+            //                   ),
+            //                 ),
+            //                 SizedBox( // The 'X' icon
+            //                   width: 20,
+            //                   height: 40,
+            //                   child: IconButton(
+            //                     padding: EdgeInsets.zero,
+            //                     iconSize: 20,
+            //                     focusColor: Colors.black,
+            //                     //splashColor: Colors.black,
+            //                     highlightColor: Colors.black,
+            //                     icon: Icon(Icons.close), 
+            //                     onPressed: (){
+            //                       setState(() {
+            //                         temporaryChanges.profile.remove(e[0]);
+            //                       });
+            //                     }
+            //                   ),
+            //                 )
+            //               ],
+            //             ),
+            //           )
+            //         ).toList(),
+            //       ),
+            //     )
+            //   ),
+            // ),
             SizedBox(
               height: 100
             )

@@ -134,6 +134,43 @@ class QueryService{
         }
       );
   }
+  Future<List<Uint8List>> _getImages(String documentID) async{
+
+      Uint8List imageFile;
+      int maxSize = 6*1024*1024;
+      String fileName = documentID;
+      String pathName = 'photos/europe/bucharest/$fileName';
+      
+
+      var storageRef = FirebaseStorage.instance.ref().child(pathName);
+      List<Uint8List> listOfImages = [];
+      int pictureIndex = 1;
+      try{
+        
+        do{
+          //print('///////////////////'+'$fileName'+'_$pictureIndex.jpg');
+          await storageRef.child('$fileName'+'_$pictureIndex.jpg')
+          .getData(maxSize).then((data){
+            imageFile = data;
+            }
+          );
+          listOfImages.add(imageFile);
+          pictureIndex++;
+        }while(pictureIndex<2);
+
+        await storageRef.child('$fileName'+'_m.jpg')
+          .getData(maxSize).then((data){
+            imageFile = data;
+            }
+          );
+          listOfImages.add(imageFile);
+        return listOfImages;
+      }
+      catch(error){
+      //print('///////////////////////////////$error');
+        return null;
+      }
+  }
   
   // Asks for permission and gets the User's location 
   Future<LocationData> getUserLocation() async{
@@ -262,6 +299,7 @@ class QueryService{
     // errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
     // );
     var profileImage = getImage(doc.documentID);
+    var images = _getImages(doc.documentID);
 
     return Local(
       cost: doc.data['cost'],
@@ -272,7 +310,8 @@ class QueryService{
       location:doc.data['location'],
       description: doc.data['description'],
       capacity: doc.data['capacity'],
-      discounts: doc.data['discounts']
+      discounts: doc.data['discounts'],
+      images: images
     );
   }
 
