@@ -155,6 +155,7 @@ class AuthService{
       //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
+      print(error);
       //handleAuthError(error);
       return(error);
     }

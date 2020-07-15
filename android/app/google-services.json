@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "1009284415459-h9vrjehhobehn3k7ncnmcoof1d77ntd5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hyuga.hyuga_app",
+            "certificate_hash": "2e8bd6fb6fe7024a39613243f6acc41329b3925c"
+          }
+        },
+        {
+          "client_id": "1009284415459-cs30dcj5jvfqi4c2hjr2un0afvq8n6pt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hyuga.hyuga_app",
+            "certificate_hash": "758a37d821dbf09a970d7253176fe8ac8683cf77"
+          }
+        },
+        {
+          "client_id": "1009284415459-n14hnfvji5m35snlfsti4kd5rmju5sp9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hyuga.hyuga_app",
+            "certificate_hash": "9335268c0f757aa921877651da82fbde43e43281"
+          }
+        },
+        {
           "client_id": "1009284415459-09kh8km2dk0ersqbtmeg3g7op8f971ao.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +54,13 @@
             {
               "client_id": "1009284415459-09kh8km2dk0ersqbtmeg3g7op8f971ao.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1009284415459-gv4oq804bhads0mmefi4lc2emhs57teo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ro.hyuga.hyugaApp"
+              }
             }
           ]
         }
