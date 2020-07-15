@@ -222,7 +222,7 @@ class _HomeState extends State<Home> {
             ),
             Container(
               ///  'HYUGA' TITLE
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(25),
               child: Align(
                 alignment: Alignment(0, 1),
                 child: Text(

@@ -24,7 +24,7 @@ class ProfileDrawer extends StatelessWidget {
   //      print(error);
   //    }
   //  }
-  String username ; 
+  String username = "" ;
   ProfileDrawer(){
     if(authService.currentUser.displayName != null)
       username = authService.currentUser.displayName;

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:latlong/latlong.dart';
@@ -174,7 +175,7 @@ class QueryService{
   
   // Asks for permission and gets the User's location 
   Future<LocationData> getUserLocation() async{
-    
+
     Location location = new Location();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -195,9 +196,16 @@ class QueryService{
         return null;
       }
     }
-    print("START---------------");
-    position = await location.getLocation();
+
+
+    try {
+      position = await location.getLocation();
+    }
+    catch(error){
+      print(error);
+    }
     return position;
+
   }
   // Old method, no longer in user
   Future queryForLocals() async{
@@ -288,6 +296,16 @@ class QueryService{
     return fromAtoB;
   }
 
+  Future getLocationAddress(GeoPoint location) async {
+    final coordinates = Coordinates(location.latitude,location.longitude);
+    var addresses = await Geocoder.local.findAddressesFromCoordinates(
+        coordinates);
+    var firstAddress = addresses.first;
+    print(firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(',')));
+    var street = firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(','));
+    return firstAddress;
+  }
+
   Local _docSnapToLocal(DocumentSnapshot doc){
 
     // var profileImage = Image.network(
@@ -298,6 +316,14 @@ class QueryService{
     // ),
     // errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
     // );
+    Future<Address> address;
+//    try{
+//      address = getLocationAddress(doc.data['location']);
+//    }
+//    catch(err){
+//      address = Address(addressLine: '');
+//    }
+
     var profileImage = getImage(doc.documentID);
     var images = _getImages(doc.documentID);
 
@@ -311,7 +337,8 @@ class QueryService{
       description: doc.data['description'],
       capacity: doc.data['capacity'],
       discounts: doc.data['discounts'],
-      images: images
+      images: images,
+      address: address
     );
   }
 
@@ -393,9 +420,7 @@ class QueryService{
         result = false;
       return result;
     })
-    .map(_docSnapToLocal)).toList();  
-
-    
+    .map(_docSnapToLocal)).toList();
   }
 }
 

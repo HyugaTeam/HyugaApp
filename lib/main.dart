@@ -17,7 +17,9 @@ void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  queryingService.getUserLocation().then((value) => print(value));
+  print("LOCATIA INCEPE");
+  queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
+
   g.isIOS = Platform.isIOS == true? true : false;
   
   runApp(StreamProvider<User>.value( 

@@ -88,7 +88,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               Container(  // sign-in anonymously button
-                padding: EdgeInsets.symmetric(vertical:20,horizontal:100),
+                padding: EdgeInsets.symmetric(vertical:20,horizontal:95),
                 child: MaterialButton(
                   splashColor: Colors.orange[100],
                   color: Colors.orange[600],
@@ -132,9 +132,9 @@ class _SignInState extends State<SignIn> {
                 child: Container(
                   width: 300,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       FaIcon(FontAwesomeIcons.solidEnvelope, color:  Colors.blueGrey,),
-                      Container(width: 80,),
                       Text("Continue with email"),
                     ],
                   ),
@@ -155,7 +155,6 @@ class _SignInState extends State<SignIn> {
                 child: Container(
                   margin: EdgeInsets.symmetric(
                     vertical: 10,
-                    horizontal: 20
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -208,7 +207,7 @@ class _SignInState extends State<SignIn> {
                         Container(
                           width: double.maxFinite,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Text("Don't have an account?"),
                               Container(
@@ -218,7 +217,7 @@ class _SignInState extends State<SignIn> {
                                 //   minHeight: 20,
                                 //   maxHeight: 20 
                                 // ),
-                                padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
+                                //padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
                                 child: InkWell(   /// "Register with Email" button
                                   child: Text(
                                     "Register",
@@ -258,10 +257,10 @@ class _SignInState extends State<SignIn> {
                 child: Container(
                   width: 300,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       FaIcon(FontAwesomeIcons.google,color: Colors.blueGrey,),
-                      Container(width: 80,),
+                      //Container(width: 80,),
                       Text("Continue with Google"),
                     ],
                   ),
@@ -286,9 +285,10 @@ class _SignInState extends State<SignIn> {
                 child: Container(
                   width: 300,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       FaIcon(FontAwesomeIcons.facebook, color: Colors.blueGrey,),
-                      Container(width: 80,),
+                      //Container(width: 80,),
                       Text("Continue with Facebook"),
                     ],
                   ),
@@ -314,15 +314,15 @@ class _SignInState extends State<SignIn> {
                 child: Container(
                   width: 300,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       FaIcon(FontAwesomeIcons.apple, color: Colors.blueGrey,),
-                      Container(width: 80,),
+                      //Container(width: 80,),
                       Text("Continue with Apple"),
                     ],
                   ),
                 ),
                 onPressed: (){
-                  //TODO: Implement AppleID Sign In
                   authService.signInWithApple();
                 },
               ): Container(),
