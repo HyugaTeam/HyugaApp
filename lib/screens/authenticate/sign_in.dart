@@ -43,6 +43,9 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+
+    g.resetSearchParameters(); /// Eventually called when the user logs out and the Home page no longer corresponds to the previous parameters
+
     return Theme(
       data: ThemeData(
         textTheme: TextTheme(

@@ -6,6 +6,10 @@ int selectedHowMany;
 int selectedAmbiance;
 int selectedArea;
 
+void resetSearchParameters(){
+  selectedWhere = selectedWhat = selectedHowMany = selectedAmbiance = selectedArea = null;
+}
+
 /// Used around the app to check for an eventual active SnackBar
 bool isSnackBarActive = false;
 bool isStarting = true;
