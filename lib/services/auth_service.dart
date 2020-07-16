@@ -163,10 +163,10 @@ class AuthService{
 
   // sign in with Apple
 
-  Future signInWithApple({List<Scope> scopes = const []}) async{
+  Future signInWithApple() async{
     //1. perform the sign-in request
     final AuthorizationResult result = await AppleSignIn.performRequests(
-      [AppleIdRequest(requestedScopes: scopes)]
+      [AppleIdRequest(requestedScopes: [Scope.email,Scope.fullName])]
     );
     switch(result.status){
       case AuthorizationStatus.authorized:

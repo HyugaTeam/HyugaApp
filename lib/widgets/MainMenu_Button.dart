@@ -120,6 +120,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
           buttonText = name;
           buttonColor = Colors.white;
           textColor = Colors.black;
+          g.selectedWhat = null;
         }
           return Row( /// This Row Widget is inactive !(bcs it only has the Container)
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
