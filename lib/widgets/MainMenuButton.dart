@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'MainMenu_OptionsDropAction.dart';
 
+
+
+// THIS CLASS IS NOT USED
 class MainMenuButton2 extends StatelessWidget {
 
   String buttonText;

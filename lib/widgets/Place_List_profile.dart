@@ -74,7 +74,8 @@ class PlaceListProfile extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: <Widget>[
           Positioned(
-            bottom: 20.0,
+            bottom: 7,
+            //bottom: 20.0,
             child: Container(
               height: 120.0,
               width: 355.0,
@@ -84,7 +85,7 @@ class PlaceListProfile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: EdgeInsets.only(left: 15, right: 15,  top: 10, bottom: 5 ),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -92,10 +93,12 @@ class PlaceListProfile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.all(7.0),
+                      Container(
+                          width: 270,
+                          padding: EdgeInsets.only(top:7.0,bottom: 7.0, left: 7.0),
                           child: Text(
                             name,
+                            maxLines: 2,
                             style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 color: Colors.white,
@@ -105,7 +108,7 @@ class PlaceListProfile extends StatelessWidget {
                                     color: Colors.black,
                                   )
                                 ],
-                                fontSize: 18.0,
+                                fontSize: 15.0,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1.2
                             ),),
@@ -158,8 +161,8 @@ class PlaceListProfile extends StatelessWidget {
                             alignment: Alignment.bottomCenter,
                             //padding: EdgeInsets.only(left: 30,top: 8),
                             constraints: BoxConstraints(
-                                maxWidth: 30,
-                                maxHeight: 15
+                                maxWidth: 40,
+                                maxHeight: 20
                             ),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
@@ -179,61 +182,69 @@ class PlaceListProfile extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black54,
-                    offset: Offset(2.0, 2.0),
-                    blurRadius: 5.0),
-                BoxShadow(
-                    color: Colors.black54,
-                    offset: Offset(-2.0, 2.0),
-                    blurRadius: 4.0),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: _InkWrapper(
-                  splashColor: Colors.orange[600].withOpacity(0.65),
-                  highlightColor: Colors.black.withOpacity(0.1),
-                  child: Container(
-                    width: 325,
-                    height: 220,
-                    child: FutureBuilder(
-                        future: image,
-                        builder: (context, img) {
-                          if (!img.hasData)
-                            return Container(
-                              width: 400,
-                              height: 200,
-                              child: Shimmer.fromColors(
-                                  child: Container(),
-                                  baseColor: Colors.white,
-                                  highlightColor: Colors.grey
-                              ),
-                            );
-                          else
-                            return Container(
-                                color: Colors.transparent,
-                                child: img.data
-                            );
-                        }
-                    ),
-                  ),
+          Column(
+            children: <Widget>[
+              Container( // The spacer between the Places
+                width: 400,
+                height: 20,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black54,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 5.0),
+                    BoxShadow(
+                        color: Colors.black54,
+                        offset: Offset(-2.0, 2.0),
+                        blurRadius: 4.0),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: _InkWrapper(
+                      splashColor: Colors.orange[600].withOpacity(0.65),
+                      highlightColor: Colors.black.withOpacity(0.1),
+                      child: Container(
+                        width: 325,
+                        height: 220,
+                        child: FutureBuilder(
+                            future: image,
+                            builder: (context, img) {
+                              if (!img.hasData)
+                                return Container(
+                                  width: 400,
+                                  height: 200,
+                                  child: Shimmer.fromColors(
+                                      child: Container(),
+                                      baseColor: Colors.white,
+                                      highlightColor: Colors.grey
+                                  ),
+                                );
+                              else
+                                return Container(
+                                    color: Colors.transparent,
+                                    child: img.data
+                                );
+                            }
+                        ),
+                      ),
 //                  child: Image(
 //                    height: 220.0,
 //                    width: 325.0,
 //                    image: AssetImage(_image),
 //                    fit: BoxFit.cover, //look into this
 //                  ),
-                  onTap: onTap),
-            ),
+                      onTap: onTap),
+                ),
+              ),
+            ],
           ),
-          Positioned( // The price range icon
-              right: 0,
+          Positioned( // The maximum discount bubble
+              right: 10,
               top: 0,
               child: discount != null ? Container(
                   alignment: Alignment.center,
