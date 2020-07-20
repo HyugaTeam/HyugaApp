@@ -198,7 +198,7 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: 20),
                         RaisedButton(  /// "Sign-In" button
                           
-                          child: Text("Sign in"),
+                          child: Text("Log in"),
                           onPressed: () async{
                             print(email);
                             print(password);
