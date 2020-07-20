@@ -98,12 +98,12 @@ class _LocalsState extends State<Locals> {
               left: 5,
               right: 5
             ),
-            child: ListView.separated(
+            child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(), 
               itemCount: locals.data.length,
-              separatorBuilder: (context, separatorIndex){
-                return SizedBox(height: 15,);
-              },
+              // separatorBuilder: (context, separatorIndex){
+              //   return SizedBox(height: 15,);
+              // },
               itemBuilder: (BuildContext context, int index) {
                 Local local = locals.data[index];
                 //Address tempAddress = Address();

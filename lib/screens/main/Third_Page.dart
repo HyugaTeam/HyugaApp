@@ -197,12 +197,14 @@ class _ThirdPageState extends State<ThirdPage> {
                     children: <Widget>[
                       Container( // Name
                         alignment: Alignment(-0.8, 1),
+                        width: 300,
                         padding: EdgeInsets.only(
                           left: 20,
                           bottom:10
                         ),
                         child: Text(
                           widget.local.name==null? 'wrong':widget.local.name,
+                          maxLines: 2,
                           style: TextStyle(
                             fontFamily: 'Comfortaa',
                             fontSize: 21,
@@ -325,7 +327,7 @@ class _ThirdPageState extends State<ThirdPage> {
                                   subtitle: Container(
                                     height: 120,
                                     child: ListView.builder(
-                                      itemExtent: 128, /// Added to add some space between the tiles
+                                      itemExtent: 135, /// Added to add some space between the tiles
                                       padding: EdgeInsets.all(10),
                                       scrollDirection: Axis.horizontal,
                                       itemCount: widget.local.discounts != null ?  
@@ -335,64 +337,69 @@ class _ThirdPageState extends State<ThirdPage> {
                                       /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
                                       /// the current weekday. If not, the field will be empty
                                       itemBuilder: (BuildContext context, int index){
-                                        return Column(
-                                          children: <Widget>[
-                                            GestureDetector(
-                                              onTap: (){
-                                                if(g.isSnackBarActive == false){
-                                                  g.isSnackBarActive = true;
-                                                  Scaffold.of(context).showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        "Scan your code in your preferred time interval and receive the discount.",
-                                                        textAlign: TextAlign.center,
-                                                      ),
-                                                      backgroundColor: Colors.orange[600],
-                                                    )).closed.then((SnackBarClosedReason reason){
-                                                    g.isSnackBarActive = false;
-                                                  });
-                                                }
-                                              },
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                height: 30,
-                                                width: 120,
-                                                decoration: BoxDecoration(
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black45, 
-                                                      offset: Offset(1.5,1),
-                                                      blurRadius: 2,
-                                                      spreadRadius: 0.2
-                                                    )
-                                                  ],
-                                                  color: Colors.orange[600],
-                                                  borderRadius: BorderRadius.circular(25)
-                                                ),
-                                                child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
-                                                        [index].substring(0,5) 
-                                                        + ' - ' + 
-                                                        widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
-                                                        [index].substring(6,11),
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily: 'Roboto'
+                                        return Container(
+                                          width: 100,
+                                          height: 100,
+                                          child: Column(
+                                            children: <Widget>[
+                                              GestureDetector(
+                                                onTap: (){
+                                                  if(g.isSnackBarActive == false){
+                                                    g.isSnackBarActive = true;
+                                                    Scaffold.of(context).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          "Scan your code in your preferred time interval and receive the discount.",
+                                                          textAlign: TextAlign.center,
                                                         ),
-                                                      )  // A concatenation of the string representing the time interval
+                                                        backgroundColor: Colors.orange[600],
+                                                      )).closed.then((SnackBarClosedReason reason){
+                                                      g.isSnackBarActive = false;
+                                                    });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  height: 30,
+                                                  width: 120,
+                                                  decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black45, 
+                                                        offset: Offset(1.5,1),
+                                                        blurRadius: 2,
+                                                        spreadRadius: 0.2
+                                                      )
+                                                    ],
+                                                    color: Colors.orange[600],
+                                                    borderRadius: BorderRadius.circular(25)
+                                                  ),
+                                                  child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                                                          [index].substring(0,5) 
+                                                          + ' - ' + 
+                                                          widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                                                          [index].substring(6,11),
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontFamily: 'Roboto'
+                                                          ),
+                                                        )  // A concatenation of the string representing the time interval
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(10),
-                                              child: Text(
-                                                
-                                                getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14))).toString() + '%',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: 'Roboto'
-                                                )
-                                                )
-                                            )
-                                          ],
+                                              Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: Text(
+                                                  
+                                                  getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
+                                                  .toString() + '%',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'Roboto'
+                                                  )
+                                                  )
+                                              )
+                                            ],
+                                          ),
                                         );
                                       }
                                     ),
