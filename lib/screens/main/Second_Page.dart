@@ -79,11 +79,12 @@ class _SecondPageState extends State<SecondPage> {
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  centerTitle: true,
                   title: Text(
                     'hyuga',
                     style: TextStyle(
                       fontFamily: 'Comfortaa',
-                      fontSize: 30
+                      fontSize: 25
                     ),
                   ),
                   backgroundColor: Colors.blueGrey,

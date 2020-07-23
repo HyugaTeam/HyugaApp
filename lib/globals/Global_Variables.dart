@@ -14,6 +14,7 @@ void resetSearchParameters(){
 bool isSnackBarActive = false;
 bool isStarting = true;
 bool isIOS = false; // Added for the AppleID Sign In method (only available on IOS)
+bool isNewUser = false;
 
 List<Local> placesList = [];
 

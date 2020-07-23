@@ -32,7 +32,8 @@ class AdminPanel extends StatelessWidget {
       cost: localDocument.data['cost'],
       capacity: localDocument.data['capacity'],
       ambiance: localDocument.data['ambiance'],
-      profile: localDocument.data['profile']
+      profile: localDocument.data['profile'],
+      discounts: localDocument.data['discounts']
     );
     print("finished");
     return _managedLocal;

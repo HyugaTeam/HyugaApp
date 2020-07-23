@@ -9,6 +9,8 @@ import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/LevelProgressBar.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 
@@ -24,7 +26,6 @@ class ManagerQRScan extends StatefulWidget {
 }
 
 class _ManagerQRScanState extends State<ManagerQRScan> {
-  @override
 
   ManagedLocal managedLocal;
   final Firestore _db = Firestore.instance;
@@ -39,8 +40,14 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     });
   }
 
+  @override
+  void initState(){
+    initializeDateFormatting('ro',null);
+    print("initialized format");
+    super.initState();
+  }
   
-
+  /// Increseas the user's scan count with 1
   Future incrementUserScore(String uid) async{
     DocumentReference ref = _db.collection('users').document(uid); // a reference to the scanned user's profile
       scannedUser = await ref.get();
@@ -86,8 +93,29 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     }
   }
 
-  void getAppliedDiscount(){
-    /// TODO: implement
+  double getAppliedDiscount(){
+    Map<String, dynamic> discounts = managedLocal.discounts;
+    List todayDiscounts;
+    String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
+    /// Checks if the place has discounts in the current weekday
+    if(discounts.containsKey(currentWeekday) != true)
+      return null;
+    else {
+      todayDiscounts = discounts[currentWeekday];
+      for(int i = 0 ; i< todayDiscounts.length; i++){
+        String startHour = todayDiscounts[i].toString().substring(0,5);
+        String endHour = todayDiscounts[i].toString().substring(6,11);
+        String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
+        print(startHour+endHour);
+
+        //print(DateTime.now().toLocal().toString());
+        //print(DateTime.now().toUtc().toString());
+        if(startHour.compareTo(currentTime) <=0 
+        && endHour.compareTo(currentTime) >=0)
+          return double.parse(todayDiscounts[i].toString().substring(12));
+      }
+    }
+    return null;
   }
 
 /// TODO: FINISH SCANNING PROCESS
@@ -100,25 +128,32 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 /// ...WITH THE 'OK' FLAG SET TO 'NO'
 
 
-  Future<bool> tryToSendDataToUser(userData)async {
+  Future<bool> tryToSendDataToUser(userData,context)async {
     
     bool ok = false;
 
     DocumentReference ref = _db.collection('users').document(userData.documentID).collection('scan_history').document();
     String docName = userData.documentID;
     int usersLevel = getLevel(userData['score']);
-    
+    Stream<QuerySnapshot> scanResult = _db.collection('users').document(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
     await ref.setData(
       {
           'date': DateTime.now().toUtc(),
-          'applied_discount': 20,
-          'max_discount': 10,
+          'applied_discount': getAppliedDiscount(),
+          'retained_percentage': 5,
           'score' : userData.data['score'] + 1,
           'total' : receiptValue,
-          'place_name' : managedLocal.name
+          'place_name' : managedLocal.name,
+          'approved_by_user' : null
       },
       merge: true
-    ).then((value) => ok = true);
+    );
+    scanResult.first.then((value) {
+      if(value.documentChanges.first.document.data['approved_by_user'] == true)
+        ok = true;
+    }
+    );
+
     incrementUserScore(userData.documentID);
     return ok;
   }
@@ -136,7 +171,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       future: _scanQR(),
       builder:(context,scanResult) {
         print(scanResult);
-        if(!scanResult.hasData)
+        if(!scanResult.hasData || getAppliedDiscount() == null)
           return Scaffold(
             body: Container(
               child: Center(child: Text("Ceva a mers gresit, incearca sa scanezi din nou!"))
@@ -159,7 +194,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                     title: Wrap(
                       children: <Widget>[
                         Text("Reducerea care trebuie aplicata:", style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text("20%",style: TextStyle(fontWeight: FontWeight.bold))
+                        Text(getAppliedDiscount().toString(),style: TextStyle(fontWeight: FontWeight.bold))
                       ],
                     ),
                     content: Text("Introduceti valoarea bonului (cu reducerea deja aplicata):"),
@@ -193,7 +228,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                               )
                             ),
                             onPressed: () {
-                              tryToSendDataToUser(scanResult.data);
+                              tryToSendDataToUser(scanResult.data, context);
                               showDialog(context: context, builder: (context){
                                   return FutureBuilder(
                                     future: Future<bool>.delayed(Duration(milliseconds: 1500)).then((value) { Navigator.pop(context); }),

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:apple_sign_in/apple_sign_in.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart'; // For exceptions library
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -8,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart'; 
+import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 //A class which handles the sign-in process
 class AuthService{
@@ -84,7 +84,8 @@ class AuthService{
 
     DocumentReference ref = _db.collection('users').reference().document(user.uid);
     DocumentSnapshot document = await ref.get();
-    if(document.data == null)
+    if(document.data == null){
+      g.isNewUser = true;
       ref.setData({
       'uid' : user.uid,
       'email' : user.email,
@@ -94,6 +95,7 @@ class AuthService{
     },
     merge: true
     );
+    }
   }
 
   // sign in anonimously

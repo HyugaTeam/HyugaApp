@@ -322,7 +322,8 @@ class _ThirdPageState extends State<ThirdPage> {
                           return ListView.separated(
                             separatorBuilder: (context,index){
                               if(index == 0){
-                                return ListTile(
+                                return widget.local.discounts != null && widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null
+                                ? ListTile(
                                   title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
                                   subtitle: Container(
                                     height: 120,
@@ -404,6 +405,10 @@ class _ThirdPageState extends State<ThirdPage> {
                                       }
                                     ),
                                   )
+                                )
+                                : Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                  child: Center(child: Text("Localul nu are astazi reduceri.")),
                                 );
                               }
                               else return Container();

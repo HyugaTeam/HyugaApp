@@ -3,6 +3,7 @@ import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/authenticate/authenticate.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/widgets/SlideShow_Intro.dart';
 import 'package:provider/provider.dart';
 import 'main/home.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -46,7 +47,10 @@ class Wrapper extends StatelessWidget {
               return Scaffold(body: Center(child: CircularProgressIndicator(),),);
             else if(authService.currentUser.isManager == true)
               return AdminPanel();
-            else return Home();
+            else if(g.isNewUser)
+              return SlideShowIntro();
+            else
+              return Home();
             // if(!snapshot.hasData || (snapshot.hasData && snapshot.data == true))
             //   return Scaffold(body: Center(child: CircularProgressIndicator(),),);
             // else if(snapshot.data == false && authService.currentUser.isManager == true)

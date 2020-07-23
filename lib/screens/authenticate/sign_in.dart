@@ -52,7 +52,8 @@ class _SignInState extends State<SignIn> {
           button: TextStyle(
             fontSize: 15,
             color: Colors.blueGrey,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Comfortaa'
           )
         ),
         buttonTheme: ButtonThemeData(
@@ -102,10 +103,6 @@ class _SignInState extends State<SignIn> {
                   ),
                   child: Text(
                     "Skip for now",
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.bold
-                    ),
                   ),
                   onPressed: () async{
                       dynamic signInResult = await authService.signInAnon(); // it either returns a user
@@ -122,127 +119,130 @@ class _SignInState extends State<SignIn> {
               //   value: Text("Continue with email"),
               //   onChanged: (Widget widget) => setState(() => ),
               // ),
-              MaterialButton(  /// The 'Continue with email' button
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                  side: BorderSide(
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
                     width: 1,
+                    style: BorderStyle.solid,
                     color: Colors.black26
                   )
                 ),
-                minWidth: 360,
-                height: 50,
-                child: Container(
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FaIcon(FontAwesomeIcons.solidEnvelope, color:  Colors.blueGrey,),
-                      Text("Continue with email"),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  setState(() {
-                    formVisibility = !formVisibility;
-                  });
-                },
-                ),
-              Visibility( // The dialog shown under the 'Continue with email' button
-                maintainState: true,
-                maintainAnimation: true,
-                visible: formVisibility,
-                replacement: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                ),
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.black26
-                    )
-                  ),
-                  //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-                  child: Container(  // The form for Email+Password sign-in method
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-                  child: Form(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 20),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            hoverColor: Colors.blue
+                child: Column(
+                  children: <Widget>[
+                    MaterialButton(  /// The 'Continue with email' button
+                      shape: ContinuousRectangleBorder(
+                        side: BorderSide.none
+                      ),
+                      minWidth: 370,
+                      height: 50,
+                      child: Container(
+                        width: 300,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            FaIcon(FontAwesomeIcons.solidEnvelope, color:  Colors.blueGrey,),
+                            Text("Continue with email"),
+                          ],
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          formVisibility = !formVisibility;
+                        });
+                      },
+                      ),
+                      Visibility( // The dialog shown under the 'Continue with email' button
+                        maintainState: true,
+                        maintainAnimation: true,
+                        visible: formVisibility,
+                        replacement: Container(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: 10,
                           ),
-                          // controller: TextEditingController(
-                          //   text: "asjdasjd",
-                          // ),
-                          onChanged: (value){
-                            setState(()=> email = value);
-                          }
-                        ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            fillColor: Colors.orange[600]
-                          ),
-                          obscureText: true,
-                          onChanged: (value){
-                            setState(()=>password = value);
-                          },
-                        ),
-                        SizedBox(height: 20),
-                        RaisedButton(  /// "Sign-In" button
-                          
-                          child: Text("Log in"),
-                          onPressed: () async{
-                            print(email);
-                            print(password);
-                            dynamic signInResult = await authService.signInWithEmailAndPassword(email, password);
-                            if(signInResult.runtimeType == PlatformException) 
-                              handleAuthError(context, signInResult);
-                          },
-                        ),
-                        Container(
-                          width: double.maxFinite,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Text("Don't have an account?"),
-                              Container(
-                                // constraints: BoxConstraints(
-                                //   minWidth: 40,
-                                //   maxWidth: 50,
-                                //   minHeight: 20,
-                                //   maxHeight: 20 
-                                // ),
-                                //padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
-                                child: InkWell(   /// "Register with Email" button
-                                  child: Text(
-                                    "Register",
-                                    style: TextStyle(
-                                      color: Colors.orange[600]
-                                    ),
+                          //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                          child: Container(  // The form for Email+Password sign-in method
+                          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                          child: Form(
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 20),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Email',
+                                    hoverColor: Colors.blue
                                   ),
-                                  //splashColor: Colors.transparent,
-                                  //focusColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: (){
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>Register()));
+                                  // controller: TextEditingController(
+                                  //   text: "asjdasjd",
+                                  // ),
+                                  onChanged: (value){
+                                    setState(()=> email = value);
+                                  }
+                                ),
+                                SizedBox(height: 20),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    fillColor: Colors.orange[600]
+                                  ),
+                                  obscureText: true,
+                                  onChanged: (value){
+                                    setState(()=>password = value);
                                   },
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 20),
+                                RaisedButton(  /// "Sign-In" button
+                                  
+                                  child: Text("Log in"),
+                                  onPressed: () async{
+                                    print(email);
+                                    print(password);
+                                    dynamic signInResult = await authService.signInWithEmailAndPassword(email, password);
+                                    if(signInResult.runtimeType == PlatformException) 
+                                      handleAuthError(context, signInResult);
+                                  },
+                                ),
+                                Container(
+                                  width: double.maxFinite,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text("Don't have an account?"),
+                                      Container(
+                                        // constraints: BoxConstraints(
+                                        //   minWidth: 40,
+                                        //   maxWidth: 50,
+                                        //   minHeight: 20,
+                                        //   maxHeight: 20 
+                                        // ),
+                                        //padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
+                                        child: InkWell(   /// "Register with Email" button
+                                          child: Text(
+                                            "Register",
+                                            style: TextStyle(
+                                              color: Colors.orange[600]
+                                            ),
+                                          ),
+                                          //splashColor: Colors.transparent,
+                                          //focusColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: (){
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>Register()));
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
                           ),
-                        )
-                      ],
-                    )
-                  ),
-                ),
+                        ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               //SizedBox(height:40),

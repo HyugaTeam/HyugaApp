@@ -163,17 +163,33 @@ class ProfileDrawer extends StatelessWidget {
                       physics: NeverScrollableScrollPhysics(), // used to disable scroll
                       padding: EdgeInsets.zero,
                       children: <Widget>[
-                        ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
-                          title: Text('Scan History'), 
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
+                        /// Either shows the 'Scan History' button or nothing depending on the user's 'manager' property
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                          return authService.currentUser.isManager == null 
+                            ? ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
+                                title: Text('Scan History'), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
+                                }
+                            )
+                            : Container();
                           }
                         ),
-                        ListTile(
-                          leading: FaIcon(FontAwesomeIcons.qrcode, color: Colors.blueGrey), 
-                          title: Text('My code'), 
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(); }));
+                        /// Either shows the 'My Code' button or nothing depending on the user's 'manager' property
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                            return authService.currentUser.isManager == null 
+                              ? ListTile(
+                                leading: FaIcon(FontAwesomeIcons.qrcode, color: Colors.blueGrey), 
+                                title: Text('My code'), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(context); }));
+                                }
+                              )
+                              : Container();
                           }
                         ),
                         // authService.currentUser.isManager == true ? 
