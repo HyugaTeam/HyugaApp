@@ -101,7 +101,7 @@ class AuthService{
   // sign in anonimously
   Future signInAnon() async{
     try{
-      AuthResult result = await _auth.signInAnonymously();
+      AuthResult result = await _auth.signInAnonymously().then((value){g.isNewUser = true;});
       return result;
     } catch(error){
       print(error);
