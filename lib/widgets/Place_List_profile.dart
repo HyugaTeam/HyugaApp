@@ -45,7 +45,6 @@ class _InkWrapper extends StatelessWidget {
 
 //-------------------pana aici----------------------
 
-
 ///The rendered element in the 'Places' List on the Second Page
 class PlaceListProfile extends StatelessWidget {
   //final String _image;
@@ -59,10 +58,15 @@ class PlaceListProfile extends StatelessWidget {
   final VoidCallback onTap;
   double discount = 0; //TREBUIE UN IF PENTRU discount 0
 
-
   PlaceListProfile(
-      {this.address, this.location, this.image, this.name, this.distance, this.price, this.onTap,
-        this.discount});
+      {this.address,
+      this.location,
+      this.image,
+      this.name,
+      this.distance,
+      this.price,
+      this.onTap,
+      this.discount});
 
   @override
   Widget build(BuildContext context) {
@@ -85,34 +89,36 @@ class PlaceListProfile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Padding(
-                padding: EdgeInsets.only(left: 15, right: 15,  top: 10, bottom: 5 ),
+                padding:
+                    EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 5),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                          width: 270,
-                          padding: EdgeInsets.only(top:7.0,bottom: 7.0, left: 7.0),
-                          child: Text(
-                            name,
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontFamily: 'Comfortaa',
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(1.5, 1.5),
-                                    color: Colors.black,
-                                  )
-                                ],
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.2
-                            ),),
-                          ),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: 270,
+                              padding: EdgeInsets.only(
+                                  top: 7.0, bottom: 7.0, left: 7.0),
+                              child: Text(
+                                name,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontFamily: 'Comfortaa',
+                                    color: Colors.white,
+                                    shadows: [
+                                      Shadow(
+                                        offset: Offset(1.5, 1.5),
+                                        color: Colors.black,
+                                      )
+                                    ],
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1.2),
+                              ),
+                            ),
 //                            FutureBuilder(
 //                              future: address,
 //                              builder:(context,  address){
@@ -160,19 +166,20 @@ class PlaceListProfile extends StatelessWidget {
                           Container(
                             alignment: Alignment.bottomCenter,
                             //padding: EdgeInsets.only(left: 30,top: 8),
-                            constraints: BoxConstraints(
-                                maxWidth: 40,
-                                maxHeight: 20
-                            ),
+                            constraints:
+                                BoxConstraints(maxWidth: 40, maxHeight: 20),
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
                               itemCount: price,
                               itemBuilder: (context, costIndex) {
                                 //return FaIcon(FontAwesomeIcons.dollarSign, color: Colors.lightGreenAccent, size: 16,);
-                                return Text('\$', style: TextStyle(
-                                    color: Colors.lightGreenAccent,
-                                    fontSize: 16),);
+                                return Text(
+                                  '\$',
+                                  style: TextStyle(
+                                      color: Colors.lightGreenAccent,
+                                      fontSize: 16),
+                                );
                               },
                             ),
                           )
@@ -184,7 +191,8 @@ class PlaceListProfile extends StatelessWidget {
           ),
           Column(
             children: <Widget>[
-              Container( // The spacer between the Places
+              Container(
+                // The spacer between the Places
                 width: 400,
                 height: 20,
               ),
@@ -221,16 +229,12 @@ class PlaceListProfile extends StatelessWidget {
                                   child: Shimmer.fromColors(
                                       child: Container(),
                                       baseColor: Colors.white,
-                                      highlightColor: Colors.grey
-                                  ),
+                                      highlightColor: Colors.grey),
                                 );
                               else
                                 return Container(
-                                    color: Colors.transparent,
-                                    child: img.data
-                                );
-                            }
-                        ),
+                                    color: Colors.transparent, child: img.data);
+                            }),
                       ),
 //                  child: Image(
 //                    height: 220.0,
@@ -243,73 +247,42 @@ class PlaceListProfile extends StatelessWidget {
               ),
             ],
           ),
-          Positioned( // The maximum discount bubble
+          Positioned(
+              // The maximum discount bubble
               right: 10,
               top: 0,
-              child: discount != null ? Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.orange[600],
-                      borderRadius: BorderRadius.circular(30)
-                  ),
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.orange[600],
-                    onPressed: () {
-                      if (g.isSnackBarActive == false) {
-                        g.isSnackBarActive = true;
-                        Scaffold
-                            .of(context)
-                            .showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.orange[600],
-                              content: Text(
-                                  "The maximum discount today, check the restaurant for the exact hours"),
-                            )
-                        )
-                            .closed
-                            .then((value) => g.isSnackBarActive = false);
-                      }
-                    },
-                    child: Text(
-                      '-' + discount.toString() + '%',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-              ) : Container()
-          ),
+              child: discount != null
+                  ? Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.orange[600],
+                          borderRadius: BorderRadius.circular(30)),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.orange[600],
+                        onPressed: () {
+                          if (g.isSnackBarActive == false) {
+                            g.isSnackBarActive = true;
+                            Scaffold.of(context)
+                                .showSnackBar(SnackBar(
+                                  backgroundColor: Colors.orange[600],
+                                  content: Text(
+                                      "The maximum discount today, check the restaurant for the exact hours"),
+                                ))
+                                .closed
+                                .then((value) => g.isSnackBarActive = false);
+                          }
+                        },
+                        child: Text(
+                          '-' + discount.toString() + '%',
+                          style: TextStyle(
+                              color: Colors.white,
+                              shadows: [Shadow(offset: Offset(1.0, 1.0))],
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ))
+                  : Container()),
         ],
       ),
     );
   }
 }
-
-// child: ClipRRect(
-//               borderRadius: BorderRadius.circular(20.0),
-//               child: MaterialButton(
-//                 padding: EdgeInsets.all(0),
-//                 splashColor: Colors.orange[600],
-//                 onPressed: () => print('Pressed'),
-//                 child: InkWell(
-//                   splashColor: Colors.orange[600],
-//                   child: Image(
-//                     height: 220.0,
-//                     width: 325.0,
-//                     image: AssetImage(_image),
-//                     fit: BoxFit.cover, //look into this
-//                   ),
-//                 ),
-//               ),
-//             ),
-// child: SizedBox(
-//                   height: 220.0,
-//                   width: 325.0,
-//                   child: Ink(
-//                     decoration: BoxDecoration(
-//                       image: DecorationImage(
-//                           image: AssetImage(_image), fit: BoxFit.cover),
-//                     ),
-//                     child: InkWell(
-//                       onTap: () {},
-//                       splashColor: Colors.orange[600],
-//                     ),
-//                   )),
