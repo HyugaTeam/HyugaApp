@@ -61,96 +61,100 @@ class _EditorPageState extends State<EditorPage> {
   Future showChanges(){
     return showModalBottomSheet(context: context, builder: (context) => 
       Scaffold(
-        key: _scaffoldKey,
-        body: Container(
-          height: MediaQuery.of(context).size.height*0.8,
-          child: ListView(
-            children: <Widget>[
-              ListTile(title: Text("Schimbari:")),
-              temporaryChanges.name != unchangedData.name 
-                ? Column(
-                  children: <Widget>[
-                    Text("Nume vechi:", style: TextStyle(color: Colors.red),maxLines: 10,),
-                    Text(unchangedData.name),
-                    Text("Nume nou:", style: TextStyle(color: Colors.green),maxLines: 10,),
-                    Text(temporaryChanges.name),
-                  ],
-                )
-                : Container(),
-                temporaryChanges.description != unchangedData.description 
-                ? Column(
-                  children: <Widget>[
-                    Text("Descriere veche:", style: TextStyle(color: Colors.red),maxLines: 10,),
-                    Text(unchangedData.description),
-                    Text("Descriere noua:", style: TextStyle(color: Colors.green),maxLines: 10,),
-                    Text(temporaryChanges.description),
-                  ],
-                )
-                : Container(),
-                temporaryChanges.capacity != unchangedData.capacity 
-                ? Column(
-                  children: <Widget>[
-                    Text("Capacitate veche:", style: TextStyle(color: Colors.red),maxLines: 10,),
-                    Text(unchangedData.capacity.toString()),
-                    Text("Capacitate noua:", style: TextStyle(color: Colors.green),maxLines: 10,),
-                    Text(temporaryChanges.capacity.toString()),
-                  ],
-                )
-                : Container(),
-              RaisedButton(
-                child: Text("Salveaza"),
-                onPressed: (){
-                  showDialog(context: context, builder: (context) =>
-                    AlertDialog(
-                      title: Center(child: Text("Esti sigur?"),),
-                      actions: <Widget>[
-                        RaisedButton(
-                          child: Text("Da"),
-                          onPressed: (){
-                            Navigator.of(context).pop(true);
-                          }
-                        ),
-                        RaisedButton(
-                          child: Text("Nu"),
-                          onPressed: (){
-                            Navigator.of(context).pop(false);
-                          }
-                        ),
-                      ],
-                    )
-                  ).then((value){
-                    if(value){
-                      Navigator.of(context).pop();
-                      g.isSnackBarActive = true;
-                      _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: FutureBuilder(
-                            builder: (context,complete){
-                              if(!complete.hasData)
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text("Se salveaza..."),
-                                    CircularProgressIndicator(),
-                                  ],
-                                );
-                              else
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text("Gata!"),
-                                    FaIcon(FontAwesomeIcons.check)
-                                  ],
-                                );
+        //key: _scaffoldKey,
+        body: Builder(
+          builder:(context)=> Container(
+            height: MediaQuery.of(context).size.height*0.8,
+            child: ListView(
+              children: <Widget>[
+                ListTile(title: Text("Schimbari:")),
+                temporaryChanges.name != unchangedData.name 
+                  ? Column(
+                    children: <Widget>[
+                      Text("Nume vechi:", style: TextStyle(color: Colors.red),maxLines: 10,),
+                      Text(unchangedData.name),
+                      Text("Nume nou:", style: TextStyle(color: Colors.green),maxLines: 10,),
+                      Text(temporaryChanges.name),
+                    ],
+                  )
+                  : Container(),
+                  temporaryChanges.description != unchangedData.description 
+                  ? Column(
+                    children: <Widget>[
+                      Text("Descriere veche:", style: TextStyle(color: Colors.red),maxLines: 10,),
+                      Text(unchangedData.description),
+                      Text("Descriere noua:", style: TextStyle(color: Colors.green),maxLines: 10,),
+                      Text(temporaryChanges.description),
+                    ],
+                  )
+                  : Container(),
+                  temporaryChanges.capacity != unchangedData.capacity 
+                  ? Column(
+                    children: <Widget>[
+                      Text("Capacitate veche:", style: TextStyle(color: Colors.red),maxLines: 10,),
+                      Text(unchangedData.capacity.toString()),
+                      Text("Capacitate noua:", style: TextStyle(color: Colors.green),maxLines: 10,),
+                      Text(temporaryChanges.capacity.toString()),
+                    ],
+                  )
+                  : Container(),
+                RaisedButton(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  child: Text("Salveaza"),
+                  onPressed: (){
+                    showDialog(context: context, builder: (context) =>
+                      AlertDialog(
+                        title: Center(child: Text("Esti sigur?"),),
+                        actions: <Widget>[
+                          RaisedButton(
+                            child: Text("Da"),
+                            onPressed: (){
+                              Navigator.of(context).pop(true);
                             }
+                          ),
+                          RaisedButton(
+                            child: Text("Nu"),
+                            onPressed: (){
+                              Navigator.of(context).pop(false);
+                            }
+                          ),
+                        ],
+                      )
+                    ).then((value){
+                      if(value){
+                        Navigator.of(context).pop();
+                        g.isSnackBarActive = true;
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: FutureBuilder(
+                              future: saveChanges(temporaryChanges),
+                              builder: (context,complete){
+                                if(!complete.hasData)
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text("Se salveaza..."),
+                                      CircularProgressIndicator(),
+                                    ],
+                                  );
+                                else
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text("Gata!"),
+                                      FaIcon(FontAwesomeIcons.check)
+                                    ],
+                                  );
+                              }
+                            )
                           )
-                        )
-                      ).closed.then((reason) => g.isSnackBarActive = false);
-                    }
-                  });
-                }
-              )
-            ],
+                        ).closed.then((reason) => g.isSnackBarActive = false);
+                      }
+                    });
+                  }
+                )
+              ],
+            ),
           ),
         ),
       )
@@ -171,7 +175,8 @@ class _EditorPageState extends State<EditorPage> {
     );
     FirebaseStorage storage = FirebaseStorage.instance;
     StorageReference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');
-    photoRef.putFile(_unsavedProfileImage);
+    if(_unsavedProfileImage != null)
+      photoRef.putFile(_unsavedProfileImage);
     
   }
 
@@ -218,8 +223,7 @@ class _EditorPageState extends State<EditorPage> {
           ),
         ),
       ),
-      body: Builder(
-        builder: (context) => Container(
+      body: Container(
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal :30),
             children: <Widget>[
@@ -676,7 +680,6 @@ class _EditorPageState extends State<EditorPage> {
             ],
           ),
         ),
-      ),
     );
   }
 }
