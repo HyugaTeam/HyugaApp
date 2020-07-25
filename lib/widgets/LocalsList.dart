@@ -86,8 +86,11 @@ class _LocalsState extends State<Locals> {
       builder:(context,locals){
         if(!locals.hasData)
           return Center(child: CircularProgressIndicator(),);
-        else
-          return RefreshIndicator(
+        else if(locals.data.length == 0)
+          return Center(
+            child: Text("Sorry, there are no result.\nTry looking for something else.")
+          );
+          else return RefreshIndicator(
             displacement: 50,
             onRefresh: refresh,
             child: Container(

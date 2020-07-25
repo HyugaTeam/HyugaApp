@@ -412,7 +412,7 @@ class QueryService{
           LatLng(localLocation.latitude, localLocation.longitude),
           LatLng(_userLocation.latitude, _userLocation.longitude)
           );
-        if(fromAtoB > 1000)
+        if(fromAtoB > 3000)
           result = false;
         print(fromAtoB);
       }

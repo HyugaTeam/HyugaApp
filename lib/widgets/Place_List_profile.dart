@@ -73,12 +73,12 @@ class PlaceListProfile extends StatelessWidget {
     return Container(
       //color: Colors.blue,
       width: 400.0,
-      height: 300,
+      height: 310,
       child: Stack(
         alignment: Alignment.topCenter,
         children: <Widget>[
           Positioned(
-            bottom: 7,
+            bottom: 4,
             //bottom: 20.0,
             child: Container(
               height: 120.0,
@@ -194,7 +194,7 @@ class PlaceListProfile extends StatelessWidget {
               Container(
                 // The spacer between the Places
                 width: 400,
-                height: 20,
+                height: 35,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -253,31 +253,35 @@ class PlaceListProfile extends StatelessWidget {
               top: 0,
               child: discount != null
                   ? Container(
+                      width: 70,
+                      height: 70,
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.orange[600],
-                          borderRadius: BorderRadius.circular(30)),
-                      child: FloatingActionButton(
-                        backgroundColor: Colors.orange[600],
-                        onPressed: () {
-                          if (g.isSnackBarActive == false) {
-                            g.isSnackBarActive = true;
-                            Scaffold.of(context)
-                                .showSnackBar(SnackBar(
-                                  backgroundColor: Colors.orange[600],
-                                  content: Text(
-                                      "The maximum discount today, check the restaurant for the exact hours"),
-                                ))
-                                .closed
-                                .then((value) => g.isSnackBarActive = false);
-                          }
-                        },
-                        child: Text(
-                          '-' + discount.toString() + '%',
-                          style: TextStyle(
+                      child: Transform.scale(
+                        scale: 1.25,
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.orange[600],
+                          onPressed: () {
+                            if (g.isSnackBarActive == false) {
+                              g.isSnackBarActive = true;
+                              Scaffold.of(context)
+                                  .showSnackBar(SnackBar(
+                                    backgroundColor: Colors.orange[600],
+                                    content: Text(
+                                        "The maximum discount today, check the restaurant for the exact hours"),
+                                  ))
+                                  .closed
+                                  .then((value) => g.isSnackBarActive = false);
+                            }
+                          },
+                          child: Text(
+                            '-' + discount.toString() + '%',
+                            style: TextStyle(
+                              //fontSize: 20,
                               color: Colors.white,
                               shadows: [Shadow(offset: Offset(1.0, 1.0))],
-                              fontWeight: FontWeight.w600),
+                              fontWeight: FontWeight.w600
+                            ),
+                          ),
                         ),
                       ))
                   : Container()),
