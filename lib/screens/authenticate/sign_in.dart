@@ -102,7 +102,7 @@ class _SignInState extends State<SignIn> {
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: Text(
-                    "Skip for now",
+                    "Skip for now", style: TextStyle(fontSize: 13),
                   ),
                   onPressed: () async{
                       dynamic signInResult = await authService.signInAnon(); // it either returns a user
