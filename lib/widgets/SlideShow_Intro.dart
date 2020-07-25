@@ -64,9 +64,12 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
                     splashColor: Colors.orange[600],
-                    onPressed: () => print('Start'),
+                    onPressed: () {
+                      g.isNewUser = false;
+                      authService.loading.add(false);
+                    },
                     child: Text(
-                      'Skip',
+                      'Sari peste',
                       style: TextStyle(
                         fontFamily: 'Comfortaa',
                         color: Colors.white,
