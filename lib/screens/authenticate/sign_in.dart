@@ -262,7 +262,7 @@ class _SignInState extends State<SignIn> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      FaIcon(FontAwesomeIcons.google,color: Colors.blueGrey,),
+                      Image.asset('assets/images/google-logo-icon.png',width: 24,),
                       //Container(width: 80,),
                       Text("Continue with Google"),
                     ],
@@ -290,7 +290,7 @@ class _SignInState extends State<SignIn> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      FaIcon(FontAwesomeIcons.facebook, color: Colors.blueGrey,),
+                      FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
                       //Container(width: 80,),
                       Text("Continue with Facebook"),
                     ],
@@ -303,7 +303,13 @@ class _SignInState extends State<SignIn> {
                 },
               ),
               SizedBox(height: 20,),
-              g.isIOS ?  // checks if the platform on which the app is ran is IOS
+              //g.isIOS ?  // checks if the platform on which the app is ran is IOS
+              true == true?
+              // AppleSignInButton(
+              //   cornerRadius: 30,
+              //   style: ButtonStyle.black,
+              //   type: ButtonType.signIn,
+              // )
               MaterialButton(   /// Continue with AppleID button
                 shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.zero,
@@ -319,7 +325,7 @@ class _SignInState extends State<SignIn> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      FaIcon(FontAwesomeIcons.apple, color: Colors.blueGrey,),
+                      FaIcon(FontAwesomeIcons.apple, color: Colors.black,),
                       //Container(width: 80,),
                       Text("Continue with Apple"),
                     ],
@@ -328,7 +334,8 @@ class _SignInState extends State<SignIn> {
                 onPressed: (){
                   authService.signInWithApple();
                 },
-              ): Container(),
+              )
+              : Container(),
               ],
             ),
           ),
