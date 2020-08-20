@@ -46,7 +46,8 @@ class ThirdPage extends StatefulWidget {
 
 class _ThirdPageState extends State<ThirdPage> {
 
-  
+  Future<Image> firstImage;
+  Future <Image> secondImage;
   DateTime today;
   double titleOpacity = 0.0;
   ScrollController _scrollController = ScrollController(
@@ -60,7 +61,7 @@ class _ThirdPageState extends State<ThirdPage> {
     today = DateTime.now().toLocal();
   }
 
-
+  //Deprecated
   //Queries for the other images
   Future<List<Uint8List>> _getImages() async{
 
@@ -101,6 +102,72 @@ class _ThirdPageState extends State<ThirdPage> {
       }
   }
 
+  Future<Image> _getFirstImage() async{
+    Uint8List imageFile;
+    int maxSize = 6*1024*1024;
+    String fileName = widget.local.id;
+    String pathName = 'photos/europe/bucharest/$fileName';
+    var storageRef = FirebaseStorage.instance.ref().child(pathName);
+    try{
+      await storageRef.child('$fileName'+'_1.jpg')
+        .getData(maxSize).then((data){
+          imageFile = data;
+          }
+        );
+      return Image.memory(
+        imageFile,
+        frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) {
+            return child;
+          }
+          return AnimatedOpacity(
+            child: child,
+            opacity: frame == null ? 0 : 1,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+          );
+        }
+      );
+    }
+    catch(error){
+      print(error);
+    }
+    return null; // if nothing else happens
+  }
+
+  Future<Image> _getSecondImage() async{
+    Uint8List imageFile;
+      int maxSize = 6*1024*1024;
+      String fileName = widget.local.id;
+      String pathName = 'photos/europe/bucharest/$fileName';
+      var storageRef = FirebaseStorage.instance.ref().child(pathName);
+      try{
+        await storageRef.child('$fileName'+'_m.jpg')
+          .getData(maxSize).then((data){
+            imageFile = data;
+            }
+          );
+        return Image.memory(
+          imageFile,
+          frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+            if (wasSynchronouslyLoaded) {
+              return child;
+            }
+            return AnimatedOpacity(
+              child: child,
+              opacity: frame == null ? 0 : 1,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+            );
+          }
+        );
+      }
+      catch(error){
+        print(error);
+      }
+      return null; // if nothing else happens
+  }
+
   double getDiscountForUser(double maxDiscount){
     List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscount)['per_level'];
     return userDiscounts[authService.currentUser.getLevel()].toDouble();
@@ -109,7 +176,10 @@ class _ThirdPageState extends State<ThirdPage> {
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
   void initState(){
+    firstImage = _getFirstImage();
+    secondImage = _getSecondImage();
     _scrollController.addListener(() { 
+      
       setState(() {
         if(_scrollController.offset<197){
           titleOpacity = 0;
@@ -299,140 +369,267 @@ class _ThirdPageState extends State<ThirdPage> {
                         //TODO: Add a 'Return to location' button
                     ),
                   ),
-                  
-                  Container(
+                  Container( // First Image
                     padding: EdgeInsets.only(top:30),
                     child: FutureBuilder(
-                      future: _getImages(),
-                      builder:(context,snapshot){
-                        if(!snapshot.hasData){
-                          // data didn't load
+                      future: firstImage,
+                      builder: (context, image){
+                        if(!image.hasData){
                           return Shimmer.fromColors(
-                            period: Duration(milliseconds: 1500),
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.white,
                             child: Container(
-                              height: 200,
-                              color: Colors.blueGrey,
-                            ),
-                          ); 
-                        }
-                        else {
-                          // data is loaded
-                          return ListView.separated(
-                            separatorBuilder: (context,index){
-                              if(index == 0){
-                                return widget.local.discounts != null && widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null
-                                ? ListTile(
-                                  title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
-                                  subtitle: Container(
-                                    height: 120,
-                                    child: ListView.builder(
-                                      itemExtent: 135, /// Added to add some space between the tiles
-                                      padding: EdgeInsets.all(10),
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: widget.local.discounts != null ?  
-                                                  (widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null? 
-                                                    widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length : 0): 
-                                                  0,
-                                      /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
-                                      /// the current weekday. If not, the field will be empty
-                                      itemBuilder: (BuildContext context, int index){
-                                        return Container(
-                                          width: 100,
-                                          height: 100,
-                                          child: Column(
-                                            children: <Widget>[
-                                              GestureDetector(
-                                                onTap: (){
-                                                  if(g.isSnackBarActive == false){
-                                                    g.isSnackBarActive = true;
-                                                    Scaffold.of(context).showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          "Scan your code in your preferred time interval and receive the discount.",
-                                                          textAlign: TextAlign.center,
-                                                        ),
-                                                        backgroundColor: Colors.orange[600],
-                                                      )).closed.then((SnackBarClosedReason reason){
-                                                      g.isSnackBarActive = false;
-                                                    });
-                                                  }
-                                                },
-                                                child: Container(
-                                                  alignment: Alignment.center,
-                                                  height: 30,
-                                                  width: 120,
-                                                  decoration: BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.black45, 
-                                                        offset: Offset(1.5,1),
-                                                        blurRadius: 2,
-                                                        spreadRadius: 0.2
-                                                      )
-                                                    ],
-                                                    color: Colors.orange[600],
-                                                    borderRadius: BorderRadius.circular(25)
-                                                  ),
-                                                  child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
-                                                          [index].substring(0,5) 
-                                                          + ' - ' + 
-                                                          widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
-                                                          [index].substring(6,11),
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontFamily: 'Roboto'
-                                                          ),
-                                                        )  // A concatenation of the string representing the time interval
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Text(
-                                                  
-                                                  getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
-                                                  .toString() + '%',
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: 'Roboto'
-                                                  )
-                                                  )
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    ),
-                                  )
-                                )
-                                : Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                  child: Center(child: Text("Localul nu are astazi reduceri.")),
-                                );
-                              }
-                              else return Container();
-                            },
-                            controller: ScrollController(
-                              keepScrollOffset: false
-                            ),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context,index){
-                              //print(snapshot.data.length);
-                              return Column(
-                                children: <Widget>[
-                                  Image.memory(snapshot.data[index]),
-                                  index == snapshot.data.length-1 ? Container() : Container(height: 20)
-                                ],
-                              );
-                              
-                            },
+                              width: MediaQuery.of(context).size.width,
+                              height: 300,
+                            ), 
+                            baseColor: Colors.white, 
+                            highlightColor: Colors.orange[600]
                           );
                         }
+                        else return image.data;
                       }
+                    ),
+                  ),
+                  // The 'Discounts' Widget
+                  widget.local.discounts != null && widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null
+                    ? ListTile(
+                      title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
+                      subtitle: Container(
+                        height: 120,
+                        child: ListView.builder(
+                          itemExtent: 135, /// Added to add some space between the tiles
+                          padding: EdgeInsets.all(10),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.local.discounts != null ?  
+                                      (widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null? 
+                                        widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length : 0): 
+                                      0,
+                          /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
+                          /// the current weekday. If not, the field will be empty
+                          itemBuilder: (BuildContext context, int index){
+                            return Container(
+                              width: 100,
+                              height: 100,
+                              child: Column(
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: (){
+                                      if(g.isSnackBarActive == false){
+                                        g.isSnackBarActive = true;
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Scan your code in your preferred time interval and receive the discount.",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            backgroundColor: Colors.orange[600],
+                                          )).closed.then((SnackBarClosedReason reason){
+                                          g.isSnackBarActive = false;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 30,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black45, 
+                                            offset: Offset(1.5,1),
+                                            blurRadius: 2,
+                                            spreadRadius: 0.2
+                                          )
+                                        ],
+                                        color: Colors.orange[600],
+                                        borderRadius: BorderRadius.circular(25)
+                                      ),
+                                      child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                                              [index].substring(0,5) 
+                                              +  ' - ' + 
+                                              widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                                              [index].substring(6,11),
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: 'Roboto'
+                                              ),
+                                            )  // A concatenation of the string representing the time interval
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      
+                                      getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
+                                      .toString() + '%',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: 'Roboto'
+                                      )
+                                      )
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        ),
+                      )
                     )
-                  )
+                    : Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Center(child: Text("Localul nu are astazi reduceri.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
+                    ),
+                  Container( // Second Image
+                    padding: EdgeInsets.only(top:30),
+                    child: FutureBuilder(
+                      future: secondImage,
+                      builder: (context, image){
+                        if(!image.hasData){
+                          return Shimmer.fromColors(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 300,
+                            ), 
+                            baseColor: Colors.white, 
+                            highlightColor: Colors.orange[600]
+                          );
+                        }
+                        else return image.data;
+                      }
+                    ),
+                  ),
+                  // Container(
+                  //   padding: EdgeInsets.only(top:30),
+                  //   child: FutureBuilder(
+                  //     future: _getImages(),
+                  //     builder:(context,snapshot){
+                  //       if(!snapshot.hasData){
+                  //         // data didn't load
+                  //         return Shimmer.fromColors(
+                  //           period: Duration(milliseconds: 1500),
+                  //           baseColor: Colors.grey[300],
+                  //           highlightColor: Colors.white,
+                  //           child: Container(
+                  //             height: 200,
+                  //             color: Colors.blueGrey,
+                  //           ),
+                  //         ); 
+                  //       }
+                  //       else {
+                  //         // data is loaded
+                  //         return ListView.separated(
+                  //           physics: NeverScrollableScrollPhysics(),
+                  //           shrinkWrap: true,
+                  //           itemCount: snapshot.data.length,
+                  //           separatorBuilder: (context,index){
+                  //             if(index == 0){ // Shows the discounts carrousel
+                  //               return widget.local.discounts != null && widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null
+                  //               ? ListTile(
+                  //                 title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
+                  //                 subtitle: Container(
+                  //                   height: 120,
+                  //                   child: ListView.builder(
+                  //                     itemExtent: 135, /// Added to add some space between the tiles
+                  //                     padding: EdgeInsets.all(10),
+                  //                     scrollDirection: Axis.horizontal,
+                  //                     itemCount: widget.local.discounts != null ?  
+                  //                                 (widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null? 
+                  //                                   widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length : 0): 
+                  //                                 0,
+                  //                     /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
+                  //                     /// the current weekday. If not, the field will be empty
+                  //                     itemBuilder: (BuildContext context, int index){
+                  //                       return Container(
+                  //                         width: 100,
+                  //                         height: 100,
+                  //                         child: Column(
+                  //                           children: <Widget>[
+                  //                             GestureDetector(
+                  //                               onTap: (){
+                  //                                 if(g.isSnackBarActive == false){
+                  //                                   g.isSnackBarActive = true;
+                  //                                   Scaffold.of(context).showSnackBar(
+                  //                                     SnackBar(
+                  //                                       content: Text(
+                  //                                         "Scan your code in your preferred time interval and receive the discount.",
+                  //                                         textAlign: TextAlign.center,
+                  //                                       ),
+                  //                                       backgroundColor: Colors.orange[600],
+                  //                                     )).closed.then((SnackBarClosedReason reason){
+                  //                                     g.isSnackBarActive = false;
+                  //                                   });
+                  //                                 }
+                  //                               },
+                  //                               child: Container(
+                  //                                 alignment: Alignment.center,
+                  //                                 height: 30,
+                  //                                 width: 120,
+                  //                                 decoration: BoxDecoration(
+                  //                                   boxShadow: [
+                  //                                     BoxShadow(
+                  //                                       color: Colors.black45, 
+                  //                                       offset: Offset(1.5,1),
+                  //                                       blurRadius: 2,
+                  //                                       spreadRadius: 0.2
+                  //                                     )
+                  //                                   ],
+                  //                                   color: Colors.orange[600],
+                  //                                   borderRadius: BorderRadius.circular(25)
+                  //                                 ),
+                  //                                 child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                  //                                         [index].substring(0,5) 
+                  //                                         + ' - ' + 
+                  //                                         widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
+                  //                                         [index].substring(6,11),
+                  //                                         style: TextStyle(
+                  //                                           fontSize: 16,
+                  //                                           fontFamily: 'Roboto'
+                  //                                         ),
+                  //                                       )  // A concatenation of the string representing the time interval
+                  //                               ),
+                  //                             ),
+                  //                             Padding(
+                  //                               padding: EdgeInsets.all(10),
+                  //                               child: Text(
+                                                  
+                  //                                 getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
+                  //                                 .toString() + '%',
+                  //                                 style: TextStyle(
+                  //                                   fontSize: 20,
+                  //                                   fontFamily: 'Roboto'
+                  //                                 )
+                  //                                 )
+                  //                             )
+                  //                           ],
+                  //                         ),
+                  //                       );
+                  //                     }
+                  //                   ),
+                  //                 )
+                  //               )
+                  //               : Padding(
+                  //                 padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  //                 child: Center(child: Text("Localul nu are astazi reduceri.")),
+                  //               );
+                  //             }
+                  //             else return Container();
+                  //           },
+                  //           // controller: ScrollController(
+                  //           //   keepScrollOffset: false
+                  //           // ),
+                  //           itemBuilder: (context,index){
+                  //             //print(snapshot.data.length);
+                  //             return Column(
+                  //               children: <Widget>[
+                  //                 Image.memory(snapshot.data[index]),
+                  //                 index == snapshot.data.length-1 ? Container() : Container(height: 20)
+                  //               ],
+                  //             );
+                              
+                  //           },
+                  //         );
+                  //       }
+                  //     }
+                  //   )
+                  // )
                   /*Container( // Uber Button
                         width: 100,
                         height: 30,

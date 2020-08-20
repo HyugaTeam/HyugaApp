@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
@@ -118,21 +119,21 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      floatingActionButton: StreamBuilder(
-        stream: authService.loading.stream,
-        builder: (context, snapshot) {
-          if(snapshot.hasData)
-            if(snapshot.data == false && authService.currentUser.isManager == true)
-              return FloatingActionButton(
-                backgroundColor: Colors.orange,
-                child: Icon(Icons.photo_camera),
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
-                },
-              );
-          return Container(); // just an empty container
-        }
-      ),
+      // floatingActionButton: StreamBuilder(
+      //   stream: authService.loading.stream,
+      //   builder: (context, snapshot) {
+      //     if(snapshot.hasData)
+      //       if(snapshot.data == false && authService.currentUser.isManager == true)
+      //         return FloatingActionButton(
+      //           backgroundColor: Colors.orange,
+      //           child: Icon(Icons.photo_camera),
+      //           onPressed: (){
+      //             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
+      //           },
+      //         );
+      //     return Container(); // just an empty container
+      //   }
+      // ),
       backgroundColor: Theme.of(context).backgroundColor,
       key: _drawerKey,
       drawer: _drawer,
@@ -155,7 +156,16 @@ class _HomeState extends State<Home> {
             _drawerKey.currentState.openDrawer();
           },
         ),
-        ///actions: <Widget>[],    ///Un-comment in case we want to add further Widgets on the appBar
+        actions: <Widget>[
+          IconButton(
+            tooltip: "Vezi reducerile de astazi",
+            color: Colors.blueGrey,
+            icon: FaIcon(FontAwesomeIcons.percentage, size: 18),
+            onPressed: (){
+              Navigator.pushNamed(context, '/second');
+            },
+          )
+        ],    ///Un-comment in case we want to add further Widgets on the appBar
       ),
       body: Builder(
         builder: (context) => Stack(// used a builder for the context

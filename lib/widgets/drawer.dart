@@ -113,18 +113,19 @@ class ProfileDrawer extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
-                                Text(
-                                  "Level " + authService.currentUser.getLevel().toString(),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.orange[600],
-                                    shadows: [Shadow(
-                                      color: Colors.black,
-                                      blurRadius: 1.5,
-                                      offset: Offset(1,1)
-                                    )]
-                                  ),
-                                ),
+                                // REMOVED LEVEL TEMPORARILY
+                                // Text(
+                                //   "Level " + authService.currentUser.getLevel().toString(),
+                                //   style: TextStyle(
+                                //     fontSize: 20,
+                                //     color: Colors.orange[600],
+                                //     shadows: [Shadow(
+                                //       color: Colors.black,
+                                //       blurRadius: 1.5,
+                                //       offset: Offset(1,1)
+                                //     )]
+                                //   ),
+                                // ),
                                 // Stack(
                                 //   alignment: Alignment.center,
                                 //   children: [

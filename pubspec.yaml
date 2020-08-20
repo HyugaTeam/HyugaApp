@@ -46,6 +46,7 @@ dependencies:
   firebase_analytics: ^5.0.16
   apple_sign_in: ^0.1.0 #available only for IOS
   geocoder: ^0.2.1
+  photo_view: ^0.9.2
 
 
 

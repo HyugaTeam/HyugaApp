@@ -10,6 +10,8 @@ import 'Place_List_profile.dart';
 
 /// A class which renders the list of queried locals
 class Locals extends StatefulWidget {
+
+  final bool onlyWithDiscounts = false;
   @override
   _LocalsState createState() => _LocalsState();
 }

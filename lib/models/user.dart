@@ -26,6 +26,7 @@ class User{
         return 4;
       else return 5; // level 5
     }
+    return 0;
   }
 
 }
