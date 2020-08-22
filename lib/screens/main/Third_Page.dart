@@ -336,6 +336,15 @@ class _ThirdPageState extends State<ThirdPage> {
                     child: GoogleMap(
                       onTap: (latlng){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>Scaffold(
+                          extendBodyBehindAppBar: true,
+                          appBar: AppBar(
+                            iconTheme: IconThemeData(
+                              color: Colors.black,
+                              size: 30
+                            ),
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
                           body: GoogleMap(
                             initialCameraPosition: CameraPosition(
                               target: LatLng(localLatitude,localLongitude),

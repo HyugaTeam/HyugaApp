@@ -3,12 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:hyuga_app/widgets/LocalsList.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 
-class SecondPage extends StatefulWidget {
+class DiscountLocalsPage extends StatefulWidget {
   @override
-  _SecondPageState createState() => _SecondPageState();
+  _DiscountLocalsPageState createState() => _DiscountLocalsPageState();
 }
 
-class _SecondPageState extends State<SecondPage> {
+class _DiscountLocalsPageState extends State<DiscountLocalsPage> {
   final ScrollController _scrollController = ScrollController();
 
   bool _showAppbar = true; //this is to show app bar
@@ -97,6 +97,6 @@ class _SecondPageState extends State<SecondPage> {
                 )
               ];
             },
-            body: Locals()));
+            body: Locals(onlyWithDiscounts: true,)));
   }
 }

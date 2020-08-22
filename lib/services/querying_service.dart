@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 
@@ -278,21 +279,21 @@ class QueryService{
     // g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
  
-  double getLocalLocation(GeoPoint location){
+  double getLocalLocation(LengthUnit unit, GeoPoint location){
     if(location == null)
       print("LOCATION IS NULL");
     LocationData localLocation ;
-        localLocation = LocationData.fromMap({
-          'latitude': location.latitude,
-          'longitude': location.longitude
-          }
-        );
-        Distance distance = Distance();
-        double fromAtoB = distance.as(
-          LengthUnit.Kilometer,
-          LatLng(localLocation.latitude, localLocation.longitude),
-          LatLng(_userLocation.latitude, _userLocation.longitude)
-          );
+    localLocation = LocationData.fromMap({
+      'latitude': location.latitude,
+      'longitude': location.longitude
+      }
+    );
+    Distance distance = Distance();
+    double fromAtoB = distance.as(
+      unit,
+      LatLng(localLocation.latitude, localLocation.longitude),
+      LatLng(_userLocation.latitude, _userLocation.longitude)
+      );
     return fromAtoB;
   }
 
@@ -343,13 +344,13 @@ class QueryService{
   }
 
   // Handles the whole process of querying
-  Future fetch() async{
+  Future fetch(bool onlyDiscountLocals) async{
     
     if(g.selectedArea == 0){
       _userLocation = await getUserLocation();
       print("DONE-----------");
     }
-
+    print(onlyDiscountLocals);
     String selectedAmbiance;
     int selectedHowMany;
     switch (g.selectedAmbiance) {
@@ -417,6 +418,10 @@ class QueryService{
         print(fromAtoB);
       }
       if(element.data['capacity'] < selectedHowMany)
+        result = false;
+      if(onlyDiscountLocals == true && (
+        element.data['discounts'] == null || ( element.data['discounts'] != null &&
+        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] != null )))
         result = false;
       return result;
     })

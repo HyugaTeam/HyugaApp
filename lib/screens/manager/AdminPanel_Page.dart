@@ -4,6 +4,7 @@ import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/manager/AnalysisPage.dart';
 import 'package:hyuga_app/screens/manager/EditorPage.dart';
+import 'package:hyuga_app/screens/manager/ReservationsPage.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/manager/ManagerQRScan_Page.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
@@ -48,7 +49,7 @@ class AdminPanel extends StatelessWidget {
           return Scaffold(body: Center(child: CircularProgressIndicator(),));
         else 
           return DefaultTabController(
-            length: 2,
+            length: 3,
             child: Scaffold(
 
               drawer: ProfileDrawer(),
@@ -74,7 +75,7 @@ class AdminPanel extends StatelessWidget {
                 title: Text('smth'),
                 bottom: TabBar(
                   labelPadding: EdgeInsets.all(5),
-                  tabs: [Text("Analiza"), Text("Editor")]
+                  tabs: [Text("Analiza"), Text("Editor"),Text("Rezervari")]
                 ),
               ),
               body: TabBarView(
@@ -87,6 +88,10 @@ class AdminPanel extends StatelessWidget {
                     create: (context) => _managedLocal,
                     child: EditorPage()
                   ),
+                  Provider(
+                    create: (context) => _managedLocal,
+                    child: ReservationsPage()
+                  )
                 ]
               )
             ),

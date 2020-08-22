@@ -303,8 +303,7 @@ class _SignInState extends State<SignIn> {
                 },
               ),
               SizedBox(height: 20,),
-              //g.isIOS ?  // checks if the platform on which the app is ran is IOS
-              true == true?
+              g.isIOS ?  // checks if the platform on which the app is ran is IOS
               // AppleSignInButton(
               //   cornerRadius: 30,
               //   style: ButtonStyle.black,

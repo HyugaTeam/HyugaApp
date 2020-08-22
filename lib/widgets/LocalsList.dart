@@ -4,6 +4,7 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong/latlong.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'Place_List_profile.dart';
@@ -11,7 +12,9 @@ import 'Place_List_profile.dart';
 /// A class which renders the list of queried locals
 class Locals extends StatefulWidget {
 
-  final bool onlyWithDiscounts = false;
+  // Used by the DiscountLocals_Page in order to obtain only the Places with Discounts 
+  final bool onlyWithDiscounts;
+  Locals({this.onlyWithDiscounts});
   @override
   _LocalsState createState() => _LocalsState();
 }
@@ -84,7 +87,7 @@ class _LocalsState extends State<Locals> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: queryingService.fetch(),
+      future: queryingService.fetch(widget.onlyWithDiscounts),
       builder:(context,locals){
         if(!locals.hasData)
           return Center(child: CircularProgressIndicator(),);
@@ -114,8 +117,11 @@ class _LocalsState extends State<Locals> {
                 //Address tempAddress = Address();
                 PlaceListProfile place = PlaceListProfile(
                   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForUser(local),
-                  distance: queryingService.getLocalLocation(local.location).toInt().toString(),
-                  onTap: (){
+                  distance: queryingService.getLocalLocation(LengthUnit.Meter,local.location) > 1000 
+                  ? queryingService.getLocalLocation(LengthUnit.Kilometer,local.location).toInt().toString() 
+                  + '.' + ((queryingService.getLocalLocation(LengthUnit.Meter,local.location)/100%10).toInt()).toString()
+                  :'0.' + ((queryingService.getLocalLocation(LengthUnit.Meter,local.location)/100%10).toInt()).toString()
+                  ,onTap: (){
                   Navigator.pushNamed(
                       context,
                       '/third',
