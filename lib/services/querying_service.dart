@@ -307,7 +307,7 @@ class QueryService{
     return firstAddress;
   }
 
-  Local _docSnapToLocal(DocumentSnapshot doc){
+  Local docSnapToLocal(DocumentSnapshot doc){
 
     // var profileImage = Image.network(
     //   'https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/photos%2Feurope%2Fbucharest%2Facuarela_bistro%2Facuarela_bistro_profile.jpg?alt=media&token=cee42f66-d71d-4493-8e9a-b4ed509110b9',
@@ -419,13 +419,17 @@ class QueryService{
       }
       if(element.data['capacity'] < selectedHowMany)
         result = false;
+      if(element.data['discounts'] != null)
+      print(
+        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
+      );
       if(onlyDiscountLocals == true && (
         element.data['discounts'] == null || ( element.data['discounts'] != null &&
-        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] != null )))
+        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null )))
         result = false;
       return result;
     })
-    .map(_docSnapToLocal)).toList();
+    .map(docSnapToLocal)).toList();
   }
 }
 

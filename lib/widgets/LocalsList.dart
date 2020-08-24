@@ -93,7 +93,7 @@ class _LocalsState extends State<Locals> {
           return Center(child: CircularProgressIndicator(),);
         else if(locals.data.length == 0)
           return Center(
-            child: Text("Sorry, there are no result.\nTry looking for something else.")
+            child: Text("Ne pare rau, dar nu exista rezultate.\nIncearca sa cauti altceva.")
           );
           else return RefreshIndicator(
             displacement: 50,
@@ -115,12 +115,14 @@ class _LocalsState extends State<Locals> {
               itemBuilder: (BuildContext context, int index) {
                 Local local = locals.data[index];
                 //Address tempAddress = Address();
+                double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
+                double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
                 PlaceListProfile place = PlaceListProfile(
                   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForUser(local),
-                  distance: queryingService.getLocalLocation(LengthUnit.Meter,local.location) > 1000 
-                  ? queryingService.getLocalLocation(LengthUnit.Kilometer,local.location).toInt().toString() 
-                  + '.' + ((queryingService.getLocalLocation(LengthUnit.Meter,local.location)/100%10).toInt()).toString()
-                  :'0.' + ((queryingService.getLocalLocation(LengthUnit.Meter,local.location)/100%10).toInt()).toString()
+                  distance: lengthInMeter > 1000 
+                  ?  lengthInKm.toInt().toString() 
+                  + '.' + ((lengthInMeter/100%10).toInt()).toString()
+                  :'0.' + ((lengthInMeter/100%10).toInt()).toString()
                   ,onTap: (){
                   Navigator.pushNamed(
                       context,

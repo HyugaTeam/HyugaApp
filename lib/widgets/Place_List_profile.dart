@@ -89,8 +89,7 @@ class PlaceListProfile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Padding(
-                padding:
-                    EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 5),
+                padding: EdgeInsets.only(left: 15, right: 10, top: 10, bottom: 5),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

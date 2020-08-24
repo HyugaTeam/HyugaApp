@@ -36,3 +36,21 @@ keytool -exportcert -alias androiddebugkey -keystore "C:\Users\Florian\.android\
 keytool -exportcert -alias YOUR_RELEASE_KEY_ALIAS -keystore YOUR_RELEASE_KEY_PATH | openssl sha1 -binary | openssl base64
 
 kzUmjA91eqkhh3ZR2oL73kPkMoE=
+
+
+Utilizator: 
+- ajung in restaurant, scanez codul si apoi aplicatia se schimba intr un ecran alb cat timp sunt la restaurant si nu am platit nota
+- cand primesc nota, pe aplicatie apare: "Fara Hyuga: 200 lei. Cu Hyuga ai de platit 150 lei. Este in regula? Da/Nu." 
+  Daca da, se termina procesul si retin toate detaliile notei in baza de date si vor aparea si in istoricul restaurantului si in istoricul utilizatorului
+Chelner:
+- scaneaza codul folosind butonul de camera din aplicatie, il scaneaza, iar apoi apare un pop-up in care i se cere sa introduca numarul mesei
+- dupa ce a introdus numarul mesei, in tab-ul "Mese active" apare noua masa cu toate detaliile(nr pers, nr mesei, discount,etc)
+- in momentul in care este ceruta nota de catre client, chelnerul apasa pe finalizare bon(la masa respectiva) si i se cere sa introduca suma finala(cu reducerea deja aplicata) si va astepta confirmarea utilizatorului.
+- dupa ce utilizatorul confirma, se incheie procesul.
+La rezervari:
+- Ora, zi, nr persoane
+
+Altele: 
+-semn Hyuga de jos in Home (cred ca l am rezolvat)
+-tutorialul (tudor)
+-schimbat in romana 

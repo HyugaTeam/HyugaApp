@@ -138,6 +138,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     Stream<QuerySnapshot> scanResult = _db.collection('users').document(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
     await ref.setData(
       {
+          'place_id' : managedLocal.id,
           'date': DateTime.now().toUtc(),
           'applied_discount': getAppliedDiscount(),
           'retained_percentage': 5,

@@ -170,6 +170,7 @@ class _HomeState extends State<Home> {
       ),
       body: Builder(
         builder: (context) => Stack(// used a builder for the context
+        //alignment: Alignment.topCenter,
           children: <Widget>[
             Container(
               constraints: BoxConstraints(
@@ -232,20 +233,18 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
+              alignment: Alignment.bottomCenter,
               ///  'HYUGA' TITLE
-              padding: EdgeInsets.all(25),
-              child: Align(
-                alignment: Alignment(0, 1),
-                child: Text(
-                  "hyuga",
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontFamily: 'Comfortaa',
-                      fontSize: 25.0,
-                      //fontWeight: FontWeight.bold
-                  ),
-                )
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.02),
+              child: Text(
+                "hyuga",
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontFamily: 'Comfortaa',
+                    fontSize: 25.0,
+                    //fontWeight: FontWeight.bold
+                ),
               )
             ),
           ]
