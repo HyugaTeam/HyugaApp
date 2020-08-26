@@ -6,6 +6,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:rxdart/rxdart.dart'; 
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
@@ -54,6 +55,10 @@ class AuthService{
   // create user object based on FirebaseUser
   User _ourUserFromFirebaseUser(FirebaseUser user){
     
+    /// Added in order to set the User ID property for the Google Analytics Service
+    if(user!= null)
+      AnalyticsService().setUserProperties(user.uid);
+
     return user != null 
     ? User(
       uid: user.uid,
@@ -80,11 +85,12 @@ class AuthService{
     
   }
 
-  void updateUserData(FirebaseUser user) async{
+  void updateUserData(FirebaseUser user, [String credentialProvider]) async{
 
     DocumentReference ref = _db.collection('users').reference().document(user.uid);
     DocumentSnapshot document = await ref.get();
     if(document.data == null){
+      AnalyticsService().analytics.logSignUp(signUpMethod: credentialProvider);
       g.isNewUser = true;
       ref.setData({
       'uid' : user.uid,
@@ -135,7 +141,8 @@ class AuthService{
           break;
       }
       if(user!=null)
-        updateUserData(user);
+        updateUserData(user,'facebook');
+      AnalyticsService().analytics.logLogin(loginMethod: 'facebook');
     }
     catch(error){
       return error;
@@ -153,7 +160,9 @@ class AuthService{
       );
       final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
       if(user != null)
-        updateUserData(user);
+        updateUserData(user,'google');
+      
+      AnalyticsService().analytics.logLogin(loginMethod: 'google');
       //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
@@ -180,7 +189,8 @@ class AuthService{
         );
         final user = (await _auth.signInWithCredential(credential)).user;
         if(user != null)
-          updateUserData(user);
+          updateUserData(user, 'apple');
+        AnalyticsService().analytics.logLogin(loginMethod: 'apple');
       break;
       case AuthorizationStatus.error:
         print(result.status);
@@ -199,6 +209,7 @@ class AuthService{
       FirebaseUser user = result.user;
       if(user != null)
         updateUserData(user);
+      AnalyticsService().analytics.logLogin(loginMethod: 'email_and_password');
       //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
@@ -214,7 +225,7 @@ class AuthService{
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       //FirebaseUser user = result.user;
       if(result.user != null)
-        updateUserData(result.user);
+        updateUserData(result.user,'email_and_password');
       return result;
     }
     //on AuthException 
@@ -226,10 +237,10 @@ class AuthService{
   // sign out
   Future signOut() async{
     try{
-     //DocumentReference ref  = _db.collection('users').reference().document((await authService.user.last).uid);
-     //await ref.delete();
-     await _auth.signOut();
-
+      //DocumentReference ref  = _db.collection('users').reference().document((await authService.user.last).uid);
+      //await ref.delete();
+      await _auth.signOut();
+      
     }
     catch(error){
       //print(error.toString());

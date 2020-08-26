@@ -1,10 +1,10 @@
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
@@ -19,10 +19,10 @@ class ThirdPageGenerator{
   //Function which generates the ThirdPage
   static Route<dynamic> generateRoute(RouteSettings settings){
     Local args = settings.arguments;  
+    bool onlyDiscounts = settings.arguments;
     return MaterialPageRoute(
       builder: (_) => ThirdPage(
         local: args
-
       )
     );
   }
@@ -35,7 +35,14 @@ class ThirdPage extends StatefulWidget {
   final Local local;
   //final Future<Image> size;
   
-  ThirdPage({this.local});
+  ThirdPage({this.local}){
+    
+    AnalyticsService().analytics.logViewItem(
+      itemId: local.id, 
+      itemName: local.name,
+      itemCategory: "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}",
+    );
+  }
 
   @override
   _ThirdPageState createState() => _ThirdPageState(

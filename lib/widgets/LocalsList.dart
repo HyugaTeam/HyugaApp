@@ -87,7 +87,7 @@ class _LocalsState extends State<Locals> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: queryingService.fetch(widget.onlyWithDiscounts),
+      future: widget.onlyWithDiscounts != true? queryingService.fetch(false) : queryingService.fetchOnlyDiscounts(),
       builder:(context,locals){
         if(!locals.hasData)
           return Center(child: CircularProgressIndicator(),);
@@ -127,7 +127,7 @@ class _LocalsState extends State<Locals> {
                   Navigator.pushNamed(
                       context,
                       '/third',
-                      arguments: locals.data[index]
+                      arguments: [locals.data[index],widget.onlyWithDiscounts]
                   );
                 },
                 );

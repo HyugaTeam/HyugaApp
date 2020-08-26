@@ -7,31 +7,28 @@ import 'package:hyuga_app/widgets/drawer.dart';
 
 class ScannedLocalsPage extends StatefulWidget {
 
-  List<Local> favoritePlaces ;
-  //DateTime date = DateTime.tryParse(formattedString)
-  ScannedLocalsPage(){
-    
-  }
-
-
   @override
   _ScannedLocalsPageState createState() => _ScannedLocalsPageState();
 }
 
 class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
 
+  int itemCount;
+
   Future<List> getScanHistory() async {
     QuerySnapshot scanHistory = await Firestore.instance.collection('users')
     .document(authService.currentUser.uid).collection('scan_history')
     .getDocuments();
-
+    itemCount = scanHistory.documents.length;
     return scanHistory.documents.map((doc)=>doc.data).toList();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        title: Text(itemCount == null? "" : itemCount.toString()+" scanari"),
         backgroundColor: Colors.blueGrey,
       ),
       //drawer: ProfileDrawer(),
@@ -41,7 +38,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
           if(!scanHistory.hasData)
             return Center(child: CircularProgressIndicator(),);
           else if(scanHistory.data == 0)
-            return Center(child: Text("You have no scans! \n Start scanning now!"),);
+            return Center(child: Text("Nu ai nicio scanare. \n Incepe sa scanezi pentru a revendica reduceri!"),);
           else
             return  Container(
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),

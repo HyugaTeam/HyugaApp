@@ -393,10 +393,9 @@ class QueryService{
     
     print(locals.documents.length);
     locals.documents.forEach( (element) {
-      print("\nsaddas"+ element.data.toString());
-      
-        
+      print("\nsaddas"+ element.data.toString());  
     });
+
     return (locals.documents
     .where((element){
       bool result = true;
@@ -431,7 +430,26 @@ class QueryService{
     })
     .map(docSnapToLocal)).toList();
   }
+
+  Future fetchOnlyDiscounts() async{
+      QuerySnapshot locals = await _db.collection('locals_bucharest')
+      .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}').getDocuments();
+      return (locals.documents
+    .where((element){
+      bool result = true;
+      
+      if(element.data['discounts'] != null)
+      print(
+        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
+      );
+      return result;
+    })
+    .map(docSnapToLocal)).toList();
+  }
+
 }
+
+  
 
 QueryService queryingService = new QueryService(); 
 

@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/screens/main/home.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/LoadingScreen.dart';
 import 'package:hyuga_app/screens/main/Second_Page.dart';
@@ -19,7 +21,7 @@ void main() async{
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   print("LOCATIA INCEPE");
   queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
-
+ 
   g.isIOS = Platform.isIOS == true? true : false;
   
   runApp(StreamProvider<User>.value( 
@@ -41,6 +43,8 @@ void main() async{
         }, 
         // Route generator (designed for the Third Page only)
         onGenerateRoute: ThirdPageGenerator.generateRoute,
+
+        navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
 
         theme: ThemeData(
           textTheme: TextTheme(

@@ -11,15 +11,35 @@ import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:provider/provider.dart';
 
 class AdminPanel extends StatelessWidget {
-
   
+  Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID) async{
+    QuerySnapshot scannedCodes = await Firestore.instance.collection('users').document(authService.currentUser.uid)
+    .collection('managed_locals').document(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).getDocuments();
+    double sum = 0;
+    scannedCodes.documents.forEach((element) {
+      sum += element.data['total'];
+    });
+    Map<String,dynamic> result = {};
+    result.addAll({'scanned_codes': scannedCodes.documents});
+    result.addAll({"all_time_income": sum});
+    return result;
+  }
+
   Future<ManagedLocal> _getLocalData() async{
-    ManagedLocal _managedLocal;
-    String localDocumentID = (await Firestore.instance
+    ManagedLocal _managedLocal = ManagedLocal();
+
+    // Queryes data about the place from the manager's directory
+    DocumentSnapshot placeData = (await Firestore.instance
     .collection('users').document(authService.currentUser.uid)
     .collection('managed_locals')
     .getDocuments())
-    .documents.first.documentID;
+    .documents.first;
+
+    String localDocumentID = placeData.documentID;
+    print(localDocumentID);
+    Map<String,dynamic> analytics = {};
+    analytics.addAll(await _getPlaceAnalytics(localDocumentID));
+    
     print("start");
     DocumentSnapshot localDocument = await Firestore.instance
     .collection('locals_bucharest')
@@ -34,7 +54,9 @@ class AdminPanel extends StatelessWidget {
       capacity: localDocument.data['capacity'],
       ambiance: localDocument.data['ambiance'],
       profile: localDocument.data['profile'],
-      discounts: localDocument.data['discounts']
+      discounts: localDocument.data['discounts'],
+      analytics: analytics,
+      reservations: localDocument.data['reservations']
     );
     print("finished");
     return _managedLocal;
@@ -72,7 +94,7 @@ class AdminPanel extends StatelessWidget {
                 ),],
                 backgroundColor: Theme.of(context).accentColor,
                 centerTitle: true,
-                title: Text('smth'),
+                title: Text(_managedLocal.data.name),
                 bottom: TabBar(
                   labelPadding: EdgeInsets.all(5),
                   tabs: [Text("Analiza"), Text("Editor"),Text("Rezervari")]
