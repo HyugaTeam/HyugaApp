@@ -88,36 +88,41 @@ class PlaceListProfile extends StatelessWidget {
                 color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 15, right: 10, top: 10, bottom: 5),
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width*0.025, 
+                  right: MediaQuery.of(context).size.width*0.03, 
+                  top: 10, 
+                  bottom: 5
+                ),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              width: 270,
-                              padding: EdgeInsets.only(
-                                  top: 7.0, bottom: 7.0, left: 7.0),
-                              child: Text(
-                                name,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontFamily: 'Comfortaa',
-                                    color: Colors.white,
-                                    shadows: [
-                                      Shadow(
-                                        offset: Offset(1.5, 1.5),
-                                        color: Colors.black,
-                                      )
-                                    ],
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1.2),
-                              ),
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            width: 270,
+                            padding: EdgeInsets.only(
+                                top: 7.0, bottom: 7.0, left: 7.0),
+                            child: Text( // The Place's name
+                              name,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontFamily: 'Comfortaa',
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(1.5, 1.5),
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                  fontSize: 17.0,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.2),
                             ),
+                          ),
 //                            FutureBuilder(
 //                              future: address,
 //                              builder:(context,  address){
@@ -146,10 +151,12 @@ class PlaceListProfile extends StatelessWidget {
 //                                  );
 //                                },
 //                            ),
-                          ]),
-                      Column(
+                        ]),
+                    Container(
+                      //margin: EdgeInsets.only(right: 10),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
                             distance.toString() + 'km',
@@ -184,7 +191,9 @@ class PlaceListProfile extends StatelessWidget {
                           )
                         ],
                       ),
-                    ]),
+                    ),
+                  ]
+                ),
               ),
             ),
           ),

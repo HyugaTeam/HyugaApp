@@ -136,6 +136,8 @@ class QueryService{
         }
       );
   }
+
+  /// Deprecated, too slow for queries
   Future<List<Uint8List>> _getImages(String documentID) async{
 
       Uint8List imageFile;
@@ -326,7 +328,7 @@ class QueryService{
 //    }
 
     var profileImage = getImage(doc.documentID);
-    var images = _getImages(doc.documentID);
+    //var images = _getImages(doc.documentID);
 
     return Local(
       cost: doc.data['cost'],
@@ -338,7 +340,7 @@ class QueryService{
       description: doc.data['description'],
       capacity: doc.data['capacity'],
       discounts: doc.data['discounts'],
-      images: images,
+      //images: images,
       address: address
     );
   }

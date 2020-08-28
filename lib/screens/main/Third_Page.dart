@@ -18,11 +18,13 @@ class ThirdPageGenerator{
 
   //Function which generates the ThirdPage
   static Route<dynamic> generateRoute(RouteSettings settings){
-    Local args = settings.arguments;  
-    bool onlyDiscounts = settings.arguments;
+    List<dynamic> args = settings.arguments;
+    Local local = args[0];  // This is the first argument(The 'Local')
+    bool onlyDiscounts = args[1]; // This is the second argument(whether it shows only discounts or not)
     return MaterialPageRoute(
       builder: (_) => ThirdPage(
-        local: args
+        local: local,
+        onlyDiscounts: onlyDiscounts
       )
     );
   }
@@ -33,14 +35,21 @@ class ThirdPageGenerator{
 class ThirdPage extends StatefulWidget {
 
   final Local local;
+  final bool onlyDiscounts;
   //final Future<Image> size;
   
-  ThirdPage({this.local}){
+  ThirdPage({this.local,this.onlyDiscounts}){
     
-    AnalyticsService().analytics.logViewItem(
+    if(this.onlyDiscounts == null) /// This path is followed if the user visits the Place from the Second Page
+      AnalyticsService().analytics.logViewItem(
+        itemId: local.id, 
+        itemName: local.name,
+        itemCategory: "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}",
+      );
+    else AnalyticsService().analytics.logViewItem( /// ----""----- from the 'Only Discounts' Page
       itemId: local.id, 
       itemName: local.name,
-      itemCategory: "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}",
+      itemCategory: "only_discounts",
     );
   }
 

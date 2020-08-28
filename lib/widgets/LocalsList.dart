@@ -120,8 +120,8 @@ class _LocalsState extends State<Locals> {
                 PlaceListProfile place = PlaceListProfile(
                   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForUser(local),
                   distance: lengthInMeter > 1000 
-                  ?  lengthInKm.toInt().toString() 
-                  + '.' + ((lengthInMeter/100%10).toInt()).toString()
+                  ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
+                  + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
                   :'0.' + ((lengthInMeter/100%10).toInt()).toString()
                   ,onTap: (){
                   Navigator.pushNamed(
