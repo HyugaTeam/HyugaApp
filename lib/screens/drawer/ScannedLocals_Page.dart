@@ -30,7 +30,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
         future: getScanHistory(),
         builder:(context, scanHistory){ 
           if(!scanHistory.hasData)
-            return Scaffold(appBar: AppBar(),body: CircularProgressIndicator(),);
+            return Scaffold(appBar: AppBar(),body: Center(child: CircularProgressIndicator()),);
           else if(scanHistory.data == 0)
             return Scaffold(appBar: AppBar(),body: Center(child: Text("Nu ai nicio scanare. \n Incepe sa scanezi pentru a revendica reduceri!"),));
           else
@@ -279,12 +279,12 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           Flexible(
                                             //width: MediaQuery.of(context).size.width*0.23,
                                             child: Text(
-                                              "2000 RON",
+                                              // "2000 RON",
                                               
                                               //"30000 RON",
-                                              // scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toInt()
-                                              //   ? scanHistory.data[index]['total'].toInt().toString()+" RON"
-                                              //   : scanHistory.data[index]['total'] +" RON",
+                                              scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toInt()
+                                                ? scanHistory.data[index]['total'].toInt().toString()+" RON"
+                                                : scanHistory.data[index]['total'] +" RON",
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 color: Colors.white,

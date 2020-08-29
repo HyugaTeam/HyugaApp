@@ -11,6 +11,7 @@ import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
 import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/services/uber_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 // The generator of the third page
@@ -184,6 +185,18 @@ class _ThirdPageState extends State<ThirdPage> {
       return null; // if nothing else happens
   }
 
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
   double getDiscountForUser(double maxDiscount){
     List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscount)['per_level'];
     return userDiscounts[authService.currentUser.getLevel()].toDouble();
@@ -416,7 +429,8 @@ class _ThirdPageState extends State<ThirdPage> {
                   // The 'Discounts' Widget
                   widget.local.discounts != null && widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null
                     ? ListTile(
-                      title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
+                      contentPadding: EdgeInsets.symmetric(vertical: 10),
+                      title: Center(child: Text("Discounturi", style: TextStyle(fontWeight: FontWeight.bold),)),
                       subtitle: Container(
                         height: 120,
                         child: ListView.builder(
@@ -503,6 +517,164 @@ class _ThirdPageState extends State<ThirdPage> {
                       padding: const EdgeInsets.symmetric(vertical: 30.0),
                       child: Center(child: Text("Localul nu are astazi reduceri.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
                     ),
+                  Container(
+                    color: Colors.blueGrey.withOpacity(0.3),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Center(
+                      child: Text(
+                        "Program:"
+                      ),
+                    )
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Lu")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "00:00"
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Ma")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "00:00"
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Mi")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "00:00"
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Jo")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "00:00"
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Vi")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "00:00"
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Sa")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "00:00"
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: Text("Du")
+                            ),
+                            Text(
+                              "12:00",
+                            ),
+                            Text(
+                              "22:00"
+                            )
+                          ],
+                        )
+                      ],
+                    )
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        RaisedButton(
+                          highlightElevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                          ),
+                          color:Colors.blueGrey,
+                          child: Text(
+                            "Meniu",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          onPressed: (){
+                            _launchInBrowser("http://hotel-restaurant-transilvania.ro/include/Meniu-Restaurant-Transilvania.pdf");
+                          }
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.3,
+                          child: Text(
+                            "Terasa:   Da"
+                          ),
+                        )
+                      ],
+                    )
+                  ),
+                  RaisedButton(
+                    color: Colors.orange[600],
+                    highlightElevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Text(
+                      "Rezerva o masa",
+                    ),
+                    onPressed: (){
+
+                    },
+                  ),
                   Container( // Second Image
                     padding: EdgeInsets.only(top:30),
                     child: FutureBuilder(
