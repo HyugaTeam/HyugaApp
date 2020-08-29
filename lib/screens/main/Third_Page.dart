@@ -482,9 +482,10 @@ class _ThirdPageState extends State<ThirdPage> {
                                   Padding(
                                     padding: EdgeInsets.all(10),
                                     child: Text(
-                                      
-                                      getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
+                                      int.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14))
                                       .toString() + '%',
+                                      /// Old computation for the Discount per level
+                                      //getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontFamily: 'Roboto'

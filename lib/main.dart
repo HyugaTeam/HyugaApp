@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
@@ -47,6 +46,9 @@ void main() async{
         navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
 
         theme: ThemeData(
+          appBarTheme: AppBarTheme(
+            color: Colors.blueGrey
+          ),
           textTheme: TextTheme(
             subtitle2: TextStyle(
               color: Colors.black

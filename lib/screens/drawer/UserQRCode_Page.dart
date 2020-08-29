@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +17,13 @@ class UserQRCode extends StatelessWidget {
     scanInProgress.listen((QuerySnapshot event) {
         showDialog(context: globalContext, builder: (globalContext) => 
           AlertDialog(
-            title: Text("Local: " + event.documentChanges.last.document.data['place_name'].toString().substring(0,20)),
+            title: Text(
+              "Local: " + event.documentChanges.last.document.data['place_name'].toString()
+              .substring(0, min(
+                20,
+                event.documentChanges.last.document.data['place_name'].length
+              ))
+            ),
             content: Text("Valoarea bonului este: " + event.documentChanges.last.document.data['total'].toString()),
             actions: <Widget>[
               RaisedButton(

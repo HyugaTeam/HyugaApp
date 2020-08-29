@@ -66,8 +66,8 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
               child: Text(
                     options[index],
                     style: TextStyle(
-                        fontFamily: 'OpenSans',
-                        fontSize: 20,
+                        fontFamily: 'Comfortaa',
+                        fontSize: 21.5,
                         //fontWeight: FontWeight.bold
                     ),
                   ),

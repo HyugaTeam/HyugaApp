@@ -18,8 +18,12 @@ bool isNewUser = false;
 
 List<Local> placesList = [];
 
-Map<String,int> selectedOptions = {'Where?':selectedWhere, 'What?':selectedWhat, 
-                       'How many?':selectedHowMany, 'Ambiance':selectedAmbiance};
+Map<String,int> selectedOptions = {
+  'Categorie':selectedWhere, // 'Where?'
+  'Specific':selectedWhat,  // 'What?'
+  'Numar persoane':selectedHowMany, //'How many?'
+  'Ambienta':selectedAmbiance //'Ambiance'
+};
  /// Where-to-go list
 final List<String> whereList = ["Cafè","Restaurant","Pub"];
  /// What list

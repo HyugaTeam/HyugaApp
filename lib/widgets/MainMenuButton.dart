@@ -4,7 +4,7 @@ import 'MainMenu_OptionsDropAction.dart';
 
 
 
-// THIS CLASS IS NOT USED
+// DEPRECATED
 class MainMenuButton2 extends StatelessWidget {
 
   String buttonText;

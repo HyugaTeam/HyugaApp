@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/widgets/UserQRCode_Page.dart';
+import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
 
 // class ProgressColorAnimation extends Animation{
 //   @override

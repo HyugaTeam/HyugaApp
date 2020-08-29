@@ -166,7 +166,8 @@ class MainMenuButtonState extends State<MainMenuButton>{
                         style: TextStyle(
                             fontSize: 30,
                             color: textColor,
-                            fontFamily: 'Roboto'
+                            letterSpacing: -1,
+                            fontFamily: 'Comfortaa'
                             ),
                       ),
                       icon: Icon(

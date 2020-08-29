@@ -93,6 +93,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     }
   }
 
+  // Gets the current discount percentage
   double getAppliedDiscount(){
     Map<String, dynamic> discounts = managedLocal.discounts;
     List todayDiscounts;
@@ -130,8 +131,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
   Future<bool> tryToSendDataToUser(userData,context)async {
     
-    bool ok = false;
-
+    bool ok = false; // This decides whether the scan process has been approved by the user or not
     DocumentReference ref = _db.collection('users').document(userData.documentID).collection('scan_history').document();
     String docName = userData.documentID;
     int usersLevel = getLevel(userData['score']);
@@ -156,6 +156,21 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     );
 
     incrementUserScore(userData.documentID);
+
+    //Set data about the scanned code in the database
+    DocumentReference newScannedCodeRef = _db.collection('users')
+    .document(authService.currentUser.uid).collection('managed_locals')
+    .document(managedLocal.id).collection('scanned_codes').document();
+    newScannedCodeRef.setData({
+      'place_id' : managedLocal.id,
+      'date': DateTime.now().toUtc(),
+      'applied_discount': getAppliedDiscount(),
+      'retained_percentage': 5,
+      'score' : userData.data['score'] + 1,
+      'total' : receiptValue,
+      'place_name' : managedLocal.name,
+      'approved_by_user' : true
+    });
     return ok;
   }
 
