@@ -25,6 +25,10 @@ class QueryService{
   }
 
   QueryService(){
+    Location.instance.onLocationChanged.listen((event) {
+      _userLocation = event;
+    });
+
     getUserLocation().then((value) => _userLocation = value);
 
     Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
@@ -299,14 +303,15 @@ class QueryService{
     return fromAtoB;
   }
 
-  Future getLocationAddress(GeoPoint location) async {
+  /// Not in use for the moment
+  Future<String> getLocationAddress(GeoPoint location) async {
     final coordinates = Coordinates(location.latitude,location.longitude);
     var addresses = await Geocoder.local.findAddressesFromCoordinates(
         coordinates);
     var firstAddress = addresses.first;
-    print(firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(',')));
+    print("STRADA ESTE "+firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(',')));
     var street = firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(','));
-    return firstAddress;
+    return street;
   }
 
   Local docSnapToLocal(DocumentSnapshot doc){
@@ -319,13 +324,14 @@ class QueryService{
     // ),
     // errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
     // );
-    Future<Address> address;
-//    try{
-//      address = getLocationAddress(doc.data['location']);
-//    }
-//    catch(err){
-//      address = Address(addressLine: '');
-//    }
+    //Future<Address> address;
+    Future<String> address;
+  //  try{
+  //    address = getLocationAddress(doc.data['location']);
+  //  }
+  //  catch(err){
+  //    address = Future(()=>"");
+  //  }
 
     var profileImage = getImage(doc.documentID);
     //var images = _getImages(doc.documentID);
@@ -341,7 +347,8 @@ class QueryService{
       capacity: doc.data['capacity'],
       discounts: doc.data['discounts'],
       //images: images,
-      address: address
+      address: address,
+      reference: doc.data.containsKey('manager_reference') ? doc.data['manager_reference']: null
     );
   }
 
@@ -413,7 +420,7 @@ class QueryService{
           LengthUnit.Meter,
           LatLng(localLocation.latitude, localLocation.longitude),
           LatLng(_userLocation.latitude, _userLocation.longitude)
-          );
+        );
         if(fromAtoB > 3000)
           result = false;
         print(fromAtoB);

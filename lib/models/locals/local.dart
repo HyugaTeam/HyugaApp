@@ -14,7 +14,8 @@ class Local{
   final int capacity;
   final Map<String,dynamic> discounts;
   final Future<List<Uint8List>> images; // The Local images from Firebase Storage
-  final Future<Address> address; // The Street&No of the Local
+  final Future<String> address; // The Street&No of the Local
+  final DocumentReference reference;
 
   Local({
     this.cost,
@@ -27,7 +28,8 @@ class Local{
     this.capacity,
     this.discounts,
     this.images,
-    this.address
+    this.address,
+    this.reference
   });
 }
 /*

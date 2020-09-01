@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/widgets/Reservation_Panel.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
 import 'package:shimmer/shimmer.dart';
@@ -205,6 +206,8 @@ class _ThirdPageState extends State<ThirdPage> {
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
   void initState(){
+    print(widget.local.reference.toString());
+
     firstImage = _getFirstImage();
     secondImage = _getSecondImage();
     _scrollController.addListener(() { 
@@ -456,7 +459,7 @@ class _ThirdPageState extends State<ThirdPage> {
                                         Scaffold.of(context).showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              "Scan your code in your preferred time interval and receive the discount.",
+                                              "Scaneaza codul in intervalul dorit pentru a primi reducerea.",
                                               textAlign: TextAlign.center,
                                             ),
                                             backgroundColor: Colors.orange[600],
@@ -672,7 +675,7 @@ class _ThirdPageState extends State<ThirdPage> {
                       "Rezerva o masa",
                     ),
                     onPressed: (){
-
+                      showDialog(context: context, builder: (newContext) => ReservationPanel());
                     },
                   ),
                   Container( // Second Image

@@ -117,21 +117,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      // floatingActionButton: StreamBuilder(
-      //   stream: authService.loading.stream,
-      //   builder: (context, snapshot) {
-      //     if(snapshot.hasData)
-      //       if(snapshot.data == false && authService.currentUser.isManager == true)
-      //         return FloatingActionButton(
-      //           backgroundColor: Colors.orange,
-      //           child: Icon(Icons.photo_camera),
-      //           onPressed: (){
-      //             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ManagerQRScan()));
-      //           },
-      //         );
-      //     return Container(); // just an empty container
-      //   }
-      // ),
+      extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).backgroundColor,
       key: _drawerKey,
       drawer: _drawer,
@@ -149,7 +135,7 @@ class _HomeState extends State<Home> {
         leading: IconButton(
           icon: Icon(Icons.menu),
           iconSize: 20,
-          color: Colors.black,
+          color: Colors.blueGrey,
           onPressed: () async {
             _drawerKey.currentState.openDrawer();
           },
@@ -167,7 +153,8 @@ class _HomeState extends State<Home> {
       ),
       body: Builder(
         builder: (context) => Stack(// used a builder for the context
-        //alignment: Alignment.topCenter,
+          //mainAxisAlignment: MainAxisAlignment.center,
+          alignment: Alignment.center,
           children: <Widget>[
             Container(
               constraints: BoxConstraints(
@@ -213,7 +200,7 @@ class _HomeState extends State<Home> {
                               g.isSnackBarActive = true;
                               Scaffold.of(context).showSnackBar(SnackBar(
                                 content: Text(
-                                  'Make sure you select an option for each field',
+                                  'Selecteaza fiecare camp.',
                                   textAlign: TextAlign.center,
                                 ),
                                 backgroundColor: Colors.orange[600],

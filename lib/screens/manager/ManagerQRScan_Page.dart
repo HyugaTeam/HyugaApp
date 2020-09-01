@@ -62,7 +62,12 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
   Future<DocumentSnapshot> _scanQR() async{
     try{
-      String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) => scanResult.rawContent);
+      String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) {
+        print("GATA");
+        if(scanResult.type == ResultType.Cancelled)
+          return null;
+        return scanResult.rawContent;
+        });
       DocumentReference ref = _db.collection('users').document(qrResult); // a reference to the scanned user's profile
       var refData = await ref.get();
       print(uid);

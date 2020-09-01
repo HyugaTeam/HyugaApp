@@ -11,12 +11,18 @@ class UserQRCode extends StatelessWidget {
 
   BuildContext globalContext;
   static Firestore _db = Firestore.instance;
-  Stream<QuerySnapshot> scanInProgress = _db.collection('users').document(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
-  
+  Stream<QuerySnapshot> scanInProgress = _db.collection('users')
+  .document(authService.currentUser.uid).collection('scan_history')
+  .where('approved_by_user', isNull: true)
+  .snapshots()
+  .skip(1);
+  //UniqueKey dialogKey = UniqueKey();
+
   UserQRCode(this.globalContext){
     scanInProgress.listen((QuerySnapshot event) {
         showDialog(context: globalContext, builder: (globalContext) => 
           AlertDialog(
+            //key: dialogKey,
             title: Text(
               "Local: " + event.documentChanges.last.document.data['place_name'].toString()
               .substring(0, min(
@@ -24,7 +30,24 @@ class UserQRCode extends StatelessWidget {
                 event.documentChanges.last.document.data['place_name'].length
               ))
             ),
-            content: Text("Valoarea bonului este: " + event.documentChanges.last.document.data['total'].toString()),
+            content: Container(
+
+              child: Column(
+                children: <Widget>[
+                  Text("Valoarea bonului este: " + event.documentChanges.last.document.data['total'].toString()),
+                  Text("Ora: "
+                    + DateTime.fromMillisecondsSinceEpoch
+                    (event.documentChanges.last.document.data['date']
+                    .millisecondsSinceEpoch).hour.toString()
+                    +":"
+                    + DateTime.fromMillisecondsSinceEpoch
+                    (event.documentChanges.last.document.data['date']
+                    .millisecondsSinceEpoch).minute.toString()
+                  )
+                  
+                ],
+              ),
+            ),
             actions: <Widget>[
               RaisedButton(
                 child: FaIcon(FontAwesomeIcons.checkSquare, color: Colors.green, size: 20),
@@ -38,8 +61,8 @@ class UserQRCode extends StatelessWidget {
                     builder: (context){
                       return FutureBuilder(
                         future: Future<bool>.delayed(Duration(milliseconds: 1500)).then((value) { 
-                          Navigator.removeRouteBelow(context, ModalRoute.of(context)); 
                           Navigator.pop(globalContext);
+                          Navigator.pop(this.globalContext);
                         }),
                         builder:(context,finished){ 
                           if(!finished.hasData)
@@ -51,8 +74,8 @@ class UserQRCode extends StatelessWidget {
                             );
                             return Container();
                         });
-                    }).then((value){ 
-                      Navigator.removeRouteBelow(globalContext, ModalRoute.of(globalContext));
+                    }).then((value){
+                      Navigator.pop(this.globalContext);
                     } ));}
                 
               ),
@@ -125,7 +148,7 @@ class UserQRCode extends StatelessWidget {
                   return Container(
                     child: Center(
                       child: Text(
-                        "Uh oh! Something went wrong...",
+                        "Oops! Ceva a mers gresit...",
                         textAlign: TextAlign.center,
                       ),
                     ),

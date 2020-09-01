@@ -170,7 +170,7 @@ class ProfileDrawer extends StatelessWidget {
                           builder: (context, snapshot) {
                           return authService.currentUser.isManager == null 
                             ? ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
-                                title: Text('Scan History'), 
+                                title: Text('Istoric'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
                                 }
@@ -185,7 +185,7 @@ class ProfileDrawer extends StatelessWidget {
                             return authService.currentUser.isManager == null 
                               ? ListTile(
                                 leading: FaIcon(FontAwesomeIcons.qrcode, color: Colors.blueGrey), 
-                                title: Text('My code'), 
+                                title: Text('Codul meu'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(context); }));
                                 }

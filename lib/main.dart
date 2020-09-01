@@ -47,7 +47,7 @@ void main() async{
 
         theme: ThemeData(
           appBarTheme: AppBarTheme(
-            color: Colors.blueGrey
+            color: Colors.blueGrey,
           ),
           textTheme: TextTheme(
             subtitle2: TextStyle(

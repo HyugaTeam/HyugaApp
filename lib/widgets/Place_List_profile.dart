@@ -52,7 +52,7 @@ class PlaceListProfile extends StatelessWidget {
   final GeoPoint location;
   final Future<Image> image;
   final String name;
-  final Future<Address> address;
+  final Future<String> address;
   final String distance;
   final int price;
   final VoidCallback onTap;
@@ -105,7 +105,9 @@ class PlaceListProfile extends StatelessWidget {
                           Container(
                             width: 270,
                             padding: EdgeInsets.only(
-                                top: 7.0, bottom: 7.0, left: 7.0),
+                                top: 7.0, 
+                                bottom: MediaQuery.of(context).size.height*0.01, 
+                                left: 7.0),
                             child: Text( // The Place's name
                               name,
                               maxLines: 2,
@@ -123,34 +125,34 @@ class PlaceListProfile extends StatelessWidget {
                                   letterSpacing: 1.2),
                             ),
                           ),
-//                            FutureBuilder(
-//                              future: address,
-//                              builder:(context,  address){
-//                                if(!address.hasData)
-//                                  return Container(
-//                                    child: Text('')
-//                                  );
-//                                else
-//                                  return Text(
-//                                    '',
-//                                    style: TextStyle(
-//                                      color: Colors.white,
-//                                      shadows: [
-//                                        Shadow(
-//                                          offset: Offset(0.7, 1),
-//                                          color: Colors.black,
-//                                        ),
-//                                        Shadow(
-//                                          offset: Offset(-0.5, 0.7),
-//                                          color: Colors.black,
-//                                        ),
-//                                      ],
-//                                      fontWeight: FontWeight.w600,
-//                                      fontStyle: FontStyle.italic,
-//                                    ),
-//                                  );
-//                                },
-//                            ),
+                          //  FutureBuilder(
+                          //    future: address,
+                          //    builder:(context,  AsyncSnapshot<String> address){
+                          //      if(!address.hasData)
+                          //        return Container(
+                          //          child: Text('')
+                          //        );
+                          //      else
+                          //        return Text(
+                          //          address.data,
+                          //          style: TextStyle(
+                          //            color: Colors.white,
+                          //            shadows: [
+                          //              Shadow(
+                          //                offset: Offset(0.7, 1),
+                          //                color: Colors.black,
+                          //              ),
+                          //              Shadow(
+                          //                offset: Offset(-0.5, 0.7),
+                          //                color: Colors.black,
+                          //              ),
+                          //            ],
+                          //            fontWeight: FontWeight.w600,
+                          //            fontStyle: FontStyle.italic,
+                          //          ),
+                          //        );
+                          //      },
+                          //  ),
                         ]),
                     Container(
                       //margin: EdgeInsets.only(right: 10),
@@ -282,7 +284,7 @@ class PlaceListProfile extends StatelessWidget {
                             }
                           },
                           child: Text(
-                            '-' + discount.toString() + '%',
+                            '-' + discount.toInt().toString() + '%',
                             style: TextStyle(
                               //fontSize: 20,
                               color: Colors.white,
