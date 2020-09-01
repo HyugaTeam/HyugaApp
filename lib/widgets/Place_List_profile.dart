@@ -91,9 +91,9 @@ class PlaceListProfile extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width*0.025, 
-                  right: MediaQuery.of(context).size.width*0.03, 
+                  //right: MediaQuery.of(context).size.width*0.03, 
                   top: 10, 
-                  bottom: 5
+                  bottom: name.length < 20? 5 : 0
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
