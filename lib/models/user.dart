@@ -1,4 +1,5 @@
-class User{
+/// 02.09.2020 changed the 'User' class name to 'OurUser' (bcs of Firestore update)
+class OurUser{
   
   final String uid;
   final String email;
@@ -8,7 +9,7 @@ class User{
   int score;
   bool isManager;
 
-  User({this.uid,this.email,this.photoURL, this.displayName, this.isAnonymous});
+  OurUser({this.uid,this.email,this.photoURL, this.displayName, this.isAnonymous});
   
 
   // Can only return a number in the range [0,5]

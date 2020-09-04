@@ -49,14 +49,17 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   
   /// Increseas the user's scan count with 1
   Future incrementUserScore(String uid) async{
-    DocumentReference ref = _db.collection('users').document(uid); // a reference to the scanned user's profile
+    DocumentReference ref = _db.collection('users').doc(uid); // a reference to the scanned user's profile
       scannedUser = await ref.get();
       if(scannedUser != null){
         print(scannedUser.data);
-        ref.setData(({
-          'score' : scannedUser.data['score'] + 1
+        ref.set(({
+          'score' : scannedUser.data()['score'] + 1
         }),
-        merge:  true);
+        SetOptions(
+          merge: true
+        )
+        );
       }
   }
 
@@ -137,11 +140,11 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   Future<bool> tryToSendDataToUser(userData,context)async {
     
     bool ok = false; // This decides whether the scan process has been approved by the user or not
-    DocumentReference ref = _db.collection('users').document(userData.documentID).collection('scan_history').document();
+    DocumentReference ref = _db.collection('users').doc(userData.documentID).collection('scan_history').doc();
     String docName = userData.documentID;
     int usersLevel = getLevel(userData['score']);
-    Stream<QuerySnapshot> scanResult = _db.collection('users').document(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
-    await ref.setData(
+    Stream<QuerySnapshot> scanResult = _db.collection('users').doc(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
+    await ref.set(
       {
           'place_id' : managedLocal.id,
           'date': DateTime.now().toUtc(),
@@ -152,10 +155,12 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           'place_name' : managedLocal.name,
           'approved_by_user' : null
       },
-      merge: true
+      SetOptions(
+        merge: true
+      )
     );
     scanResult.first.then((value) {
-      if(value.documentChanges.first.document.data['approved_by_user'] == true)
+      if(value.docChanges.first.doc.data()['approved_by_user'] == true)
         ok = true;
     }
     );
@@ -164,9 +169,9 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
     //Set data about the scanned code in the database
     DocumentReference newScannedCodeRef = _db.collection('users')
-    .document(authService.currentUser.uid).collection('managed_locals')
-    .document(managedLocal.id).collection('scanned_codes').document();
-    newScannedCodeRef.setData({
+    .doc(authService.currentUser.uid).collection('managed_locals')
+    .doc(managedLocal.id).collection('scanned_codes').doc();
+    newScannedCodeRef.set({
       'place_id' : managedLocal.id,
       'date': DateTime.now().toUtc(),
       'applied_discount': getAppliedDiscount(),
@@ -192,11 +197,17 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       future: _scanQR(),
       builder:(context,scanResult) {
         print(scanResult);
-        if(!scanResult.hasData || getAppliedDiscount() == null)
+        if(!scanResult.hasData)
           return Scaffold(
             body: Container(
               child: Center(child: Text("Ceva a mers gresit, incearca sa scanezi din nou!"))
             )
+          );
+        else if(getAppliedDiscount() == null)
+          return Scaffold(
+            body: Container(
+              child: Center(child: Text("Localul nu are astazi reduceri!"),)
+            ),
           );
         else if(scanResult.data.data!= null){
           print("valid code///////");

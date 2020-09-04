@@ -277,7 +277,7 @@ class PlaceListProfile extends StatelessWidget {
                                   .showSnackBar(SnackBar(
                                     backgroundColor: Colors.orange[600],
                                     content: Text(
-                                        "The maximum discount today, check the restaurant for the exact hours"),
+                                        "Reducerea maxima de astazi. Vizualizeaza restaurantul pentru mai multe detalii."),
                                   ))
                                   .closed
                                   .then((value) => g.isSnackBarActive = false);

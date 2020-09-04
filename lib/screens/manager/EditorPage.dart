@@ -171,7 +171,9 @@ class _EditorPageState extends State<EditorPage> {
         'description': place.description,
         'capacity': place.capacity
       },
-      merge: true
+      SetOptions(
+        merge: true
+      )
     );
     FirebaseStorage storage = FirebaseStorage.instance;
     StorageReference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');

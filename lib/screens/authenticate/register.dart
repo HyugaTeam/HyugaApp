@@ -105,7 +105,7 @@ class _RegisterState extends State<Register> {
                                 if(registerResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 
                                   showErrorSnackBar(context, "The entered email is already in use! Try another email or sign-in method.");
                               }
-                              else if(registerResult is AuthResult){ // not actually an error, but that's the name of the method
+                              else if(registerResult is UserCredential){ // not actually an error, but that's the name of the method
                                 showErrorSnackBar(context, 'Registered succesfully!');
                                 Navigator.pop(context);
                               } 

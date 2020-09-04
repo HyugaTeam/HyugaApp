@@ -14,7 +14,7 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final user = Provider.of<User>(context);
+    final user = Provider.of<OurUser>(context);
     print(user.toString() + 'din provider');
     // if(g.isStarting){
     //   return FutureBuilder(

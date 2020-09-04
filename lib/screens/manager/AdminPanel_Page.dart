@@ -13,14 +13,14 @@ import 'package:provider/provider.dart';
 class AdminPanel extends StatelessWidget {
   
   Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID) async{
-    QuerySnapshot scannedCodes = await Firestore.instance.collection('users').document(authService.currentUser.uid)
-    .collection('managed_locals').document(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).getDocuments();
+    QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
+    .collection('managed_locals').doc(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).get();
     double sum = 0;
-    scannedCodes.documents.forEach((element) {
-      sum += element.data['total'];
+    scannedCodes.docs.forEach((element) {
+      sum += element.data()['total'];
     });
     Map<String,dynamic> result = {};
-    result.addAll({'scanned_codes': scannedCodes.documents});
+    result.addAll({'scanned_codes': scannedCodes.docs});
     result.addAll({"all_time_income": sum});
     return result;
   }
@@ -29,34 +29,34 @@ class AdminPanel extends StatelessWidget {
     ManagedLocal _managedLocal = ManagedLocal();
 
     // Queryes data about the place from the manager's directory
-    DocumentSnapshot placeData = (await Firestore.instance
-    .collection('users').document(authService.currentUser.uid)
+    DocumentSnapshot placeData = (await FirebaseFirestore.instance
+    .collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals')
-    .getDocuments())
-    .documents.first;
+    .get())
+    .docs.first;
 
-    String localDocumentID = placeData.documentID;
+    String localDocumentID = placeData.id;
     print(localDocumentID);
     Map<String,dynamic> analytics = {};
     analytics.addAll(await _getPlaceAnalytics(localDocumentID));
     
     print("start");
-    DocumentSnapshot localDocument = await Firestore.instance
+    DocumentSnapshot localDocument = await FirebaseFirestore.instance
     .collection('locals_bucharest')
-    .document(localDocumentID)
+    .doc(localDocumentID)
     .get();
     print(localDocument.data);
     _managedLocal = ManagedLocal( 
       id: localDocumentID,
-      name: localDocument.data['name'],
-      description: localDocument.data['description'],
-      cost: localDocument.data['cost'],
-      capacity: localDocument.data['capacity'],
-      ambiance: localDocument.data['ambiance'],
-      profile: localDocument.data['profile'],
-      discounts: localDocument.data['discounts'],
+      name: localDocument.data()['name'],
+      description: localDocument.data()['description'],
+      cost: localDocument.data()['cost'],
+      capacity: localDocument.data()['capacity'],
+      ambiance: localDocument.data()['ambiance'],
+      profile: localDocument.data()['profile'],
+      discounts: localDocument.data()['discounts'],
       analytics: analytics,
-      reservations: localDocument.data['reservations']
+      reservations: localDocument.data()['reservations']
     );
     print("finished");
     return _managedLocal;

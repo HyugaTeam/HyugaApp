@@ -10,9 +10,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 class UserQRCode extends StatelessWidget {
 
   BuildContext globalContext;
-  static Firestore _db = Firestore.instance;
-  Stream<QuerySnapshot> scanInProgress = _db.collection('users')
-  .document(authService.currentUser.uid).collection('scan_history')
+  Stream<QuerySnapshot> scanInProgress = FirebaseFirestore.instance.collection('users')
+  .doc(authService.currentUser.uid).collection('scan_history')
   .where('approved_by_user', isNull: true)
   .snapshots()
   .skip(1);
@@ -24,24 +23,24 @@ class UserQRCode extends StatelessWidget {
           AlertDialog(
             //key: dialogKey,
             title: Text(
-              "Local: " + event.documentChanges.last.document.data['place_name'].toString()
+              "Local: " + event.docChanges.last.doc.data()['place_name'].toString()
               .substring(0, min(
                 20,
-                event.documentChanges.last.document.data['place_name'].length
+                event.docChanges.last.doc.data()['place_name'].length
               ))
             ),
             content: Container(
 
               child: Column(
                 children: <Widget>[
-                  Text("Valoarea bonului este: " + event.documentChanges.last.document.data['total'].toString()),
+                  Text("Valoarea bonului este: " + event.docChanges.last.doc.data()['total'].toString()),
                   Text("Ora: "
                     + DateTime.fromMillisecondsSinceEpoch
-                    (event.documentChanges.last.document.data['date']
+                    (event.docChanges.last.doc.data()['date']
                     .millisecondsSinceEpoch).hour.toString()
                     +":"
                     + DateTime.fromMillisecondsSinceEpoch
-                    (event.documentChanges.last.document.data['date']
+                    (event.docChanges.last.doc.data()['date']
                     .millisecondsSinceEpoch).minute.toString()
                   )
                   
@@ -53,9 +52,9 @@ class UserQRCode extends StatelessWidget {
                 child: FaIcon(FontAwesomeIcons.checkSquare, color: Colors.green, size: 20),
                 //child: Text("OK"),
                 onPressed: (){
-                  event.documentChanges.single.document.reference.setData(
+                  event.docChanges.single.doc.reference.set(
                     {'approved_by_user': true},
-                    merge: true
+                    SetOptions(merge: true)
                   ).then((value) => showDialog(
                     context: globalContext, 
                     builder: (context){
@@ -83,9 +82,9 @@ class UserQRCode extends StatelessWidget {
                 child: FaIcon(FontAwesomeIcons.times, color: Colors.red, size: 20),
                 //child: Text("Valoarea este gresita"),
                 onPressed: (){
-                  event.documentChanges.single.document.reference.setData(
+                  event.docChanges.single.doc.reference.set(
                     {'approved_by_user': false},
-                    merge: true
+                    SetOptions(merge: true)
                   ).then((value) => 
                     showDialog(context: globalContext, builder: (context){
                       return FutureBuilder(

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
@@ -13,19 +13,30 @@ import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async{
   
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await Firebase.initializeApp();
   print("LOCATIA INCEPE");
   queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
  
   g.isIOS = Platform.isIOS == true? true : false;
   
-  runApp(StreamProvider<User>.value( 
+  runApp(StreamProvider<OurUser>.value( 
       value: authService.user,
       child: MaterialApp(
+        /// Locales aren't used yet
+        // supportedLocales: [
+        //   Locale('en','US'),
+        //   Locale('ro','RO')
+        // ],
+        // localizationsDelegates: [
+        //   GlobalWidgetsLocalizations.delegate,
+        //   GlobalMaterialLocalizations.delegate
+        // ],
         debugShowCheckedModeBanner: false,
         debugShowMaterialGrid: false,
         initialRoute: 'wrapper/',

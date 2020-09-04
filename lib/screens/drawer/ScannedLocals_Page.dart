@@ -14,14 +14,15 @@ class ScannedLocalsPage extends StatefulWidget {
 class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
 
   int itemCount;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List> getScanHistory() async {
-    QuerySnapshot scanHistory = await Firestore.instance.collection('users')
-    .document(authService.currentUser.uid).collection('scan_history')
+    QuerySnapshot scanHistory = await _db.collection('users')
+    .doc(authService.currentUser.uid).collection('scan_history')
     .where('approved_by_user', isEqualTo: true) 
-    .getDocuments();
-    itemCount = scanHistory.documents.length;
-    return scanHistory.documents.map((doc)=>doc.data).toList();
+    .get();
+    itemCount = scanHistory.docs.length;
+    return scanHistory.docs.map((doc)=>doc.data()).toList();
   }
 
   @override
@@ -68,8 +69,9 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                 children: [
                                   GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
                                     onTap: () async {
-                                      await Firestore.instance
-                                      .collection('locals_bucharest').document(scanHistory.data[index]['place_id']).get().then((value) => 
+                                      await _db
+                                      .collection('locals_bucharest').doc(scanHistory.data[index]['place_id'])
+                                      .get().then((value) => 
                                       Navigator.pushNamed(
                                         context,
                                         '/third',

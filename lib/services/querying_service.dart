@@ -14,7 +14,7 @@ import 'package:location/location.dart';
 class QueryService{
 
 
-  static final Firestore _db = Firestore.instance;
+  static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final StorageReference storageRef = storage.ref();
   static LocationData _userLocation ;
@@ -25,11 +25,15 @@ class QueryService{
   }
 
   QueryService(){
+    getUserLocation().then((value) => _userLocation = value);
+    Location.instance.changeSettings(
+      interval: 10000
+    );
     Location.instance.onLocationChanged.listen((event) {
+      //print(event);
       _userLocation = event;
     });
 
-    getUserLocation().then((value) => _userLocation = value);
 
     Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
       _userLocation = instantUserLocation;
@@ -96,12 +100,12 @@ class QueryService{
           .where('ambiance',isEqualTo: selectedAmbiance)
           //.where('score.lemonade',isGreaterThan: null)///////////////
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
-          .getDocuments();
+          .get();
     else
       //return Firestore.instance.collection('locals_bucharest')
       return _db.collection('locals_bucharest')
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
-          .getDocuments();
+          .get();
   }
   
   //Old method, no longer in use
@@ -112,7 +116,7 @@ class QueryService{
     //return Firestore.instance
     return _db
     .collection('_$collectionName').orderBy('score',descending: true)
-    .getDocuments();
+    .get();
   }
   
   // Obtains the images from Firebase Storage
@@ -333,22 +337,23 @@ class QueryService{
   //    address = Future(()=>"");
   //  }
 
-    var profileImage = getImage(doc.documentID);
+    var profileImage = getImage(doc.id);
     //var images = _getImages(doc.documentID);
+    Map<String, dynamic> userData = doc.data();
 
     return Local(
-      cost: doc.data['cost'],
-      score: doc.data['score'],
-      id: doc.documentID,
+      cost: userData['cost'],
+      score: userData['score'],
+      id: doc.id,
       image: profileImage,
-      name: doc.data['name'],
-      location:doc.data['location'],
-      description: doc.data['description'],
-      capacity: doc.data['capacity'],
-      discounts: doc.data['discounts'],
+      name: userData['name'],
+      location:userData['location'],
+      description: userData['description'],
+      capacity: userData['capacity'],
+      discounts: userData['discounts'],
       //images: images,
       address: address,
-      reference: doc.data.containsKey('manager_reference') ? doc.data['manager_reference']: null
+      reference: userData.containsKey('manager_reference') ? userData['manager_reference']: null
     );
   }
 
@@ -394,25 +399,25 @@ class QueryService{
       locals = await _db.collection('locals_bucharest')
       .where('ambiance', isEqualTo: selectedAmbiance)
       .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
-      .getDocuments();
+      .get();
     else // ignore 'ambiance' field if not selected
      locals = await _db.collection('locals_bucharest') 
      .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
-     .getDocuments();
+     .get();
     
-    print(locals.documents.length);
-    locals.documents.forEach( (element) {
-      print("\nsaddas"+ element.data.toString());  
+    print(locals.docs.length);
+    locals.docs.forEach( (element) {
+      print("\nsaddas"+ element.data().toString());  
     });
 
-    return (locals.documents
+    return (locals.docs
     .where((element){
       bool result = true;
       if(_userLocation != null && g.selectedArea == 0) { // Filters the result by the 1km radius criteria
         LocationData localLocation ;
         localLocation = LocationData.fromMap({
-          'latitude': element.data['location'].latitude,
-          'longitude': element.data['location'].longitude
+          'latitude': element.data()['location'].latitude,
+          'longitude': element.data()['location'].longitude
           }
         );
         Distance distance = Distance();
@@ -425,15 +430,15 @@ class QueryService{
           result = false;
         print(fromAtoB);
       }
-      if(element.data['capacity'] < selectedHowMany)
+      if(element.data()['capacity'] < selectedHowMany)
         result = false;
-      if(element.data['discounts'] != null)
+      if(element.data()['discounts'] != null)
       print(
-        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
+        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
       );
       if(onlyDiscountLocals == true && (
-        element.data['discounts'] == null || ( element.data['discounts'] != null &&
-        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null )))
+        element.data()['discounts'] == null || ( element.data()['discounts'] != null &&
+        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null )))
         result = false;
       return result;
     })
@@ -442,14 +447,14 @@ class QueryService{
 
   Future fetchOnlyDiscounts() async{
       QuerySnapshot locals = await _db.collection('locals_bucharest')
-      .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}').getDocuments();
-      return (locals.documents
+      .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}').get();
+      return (locals.docs
     .where((element){
       bool result = true;
       
-      if(element.data['discounts'] != null)
+      if(element.data()['discounts'] != null)
       print(
-        element.data['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
+        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
       );
       return result;
     })
