@@ -339,21 +339,22 @@ class QueryService{
 
     var profileImage = getImage(doc.id);
     //var images = _getImages(doc.documentID);
-    Map<String, dynamic> userData = doc.data();
+    Map<String, dynamic> placeData = doc.data();
 
     return Local(
-      cost: userData['cost'],
-      score: userData['score'],
+      cost: placeData['cost'],
+      score: placeData['score'],
       id: doc.id,
       image: profileImage,
-      name: userData['name'],
-      location:userData['location'],
-      description: userData['description'],
-      capacity: userData['capacity'],
-      discounts: userData['discounts'],
+      name: placeData['name'],
+      location:placeData['location'],
+      description: placeData['description'],
+      capacity: placeData['capacity'],
+      discounts: placeData['discounts'],
       //images: images,
       address: address,
-      reference: userData.containsKey('manager_reference') ? userData['manager_reference']: null
+      reference: placeData.containsKey('manager_reference') ? placeData['manager_reference']: null,
+      schedule: placeData.containsKey('schedule') ? placeData['schedule']: null
     );
   }
 
@@ -457,7 +458,7 @@ class QueryService{
         element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
       );
       return result;
-    })
+    }) 
     .map(docSnapToLocal)).toList();
   }
 

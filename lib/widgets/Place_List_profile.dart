@@ -259,7 +259,7 @@ class PlaceListProfile extends StatelessWidget {
           ),
           Positioned(
               // The maximum discount bubble
-              right: 10,
+              right: MediaQuery.of(context).size.width*0.5-200,
               top: 0,
               child: discount != null
                   ? Container(
@@ -277,7 +277,8 @@ class PlaceListProfile extends StatelessWidget {
                                   .showSnackBar(SnackBar(
                                     backgroundColor: Colors.orange[600],
                                     content: Text(
-                                        "Reducerea maxima de astazi. Vizualizeaza restaurantul pentru mai multe detalii."),
+                                      "The maximum discount today, check the restaurant for the exact hours."
+                                    ),
                                   ))
                                   .closed
                                   .then((value) => g.isSnackBarActive = false);

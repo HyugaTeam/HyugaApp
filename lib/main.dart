@@ -9,6 +9,7 @@ import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/LoadingScreen.dart';
 import 'package:hyuga_app/screens/main/Second_Page.dart';
+import 'package:hyuga_app/services/message_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,8 @@ void main() async{
   await Firebase.initializeApp();
   print("LOCATIA INCEPE");
   queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
- 
+  MessagingService messagingService = MessagingService().instance;
+
   g.isIOS = Platform.isIOS == true? true : false;
   
   runApp(StreamProvider<OurUser>.value( 

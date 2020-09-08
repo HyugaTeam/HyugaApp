@@ -9,6 +9,7 @@ import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/Reservation_Panel.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/services/uber_service.dart';
@@ -675,7 +676,10 @@ class _ThirdPageState extends State<ThirdPage> {
                       "Rezerva o masa",
                     ),
                     onPressed: (){
-                      showDialog(context: context, builder: (newContext) => ReservationPanel());
+                      showDialog(context: context, builder: (newContext) => Provider(
+                        create: (context) => widget.local, 
+                        child: ReservationPanel(context:newContext))
+                      );
                     },
                   ),
                   Container( // Second Image

@@ -4,20 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 /// This Stateful Widget handles all the Firebase Push Notification service
-class MessagingService extends StatefulWidget {
-  @override
-  _MessagingServiceState createState() => _MessagingServiceState();
-}
-
-class _MessagingServiceState extends State<MessagingService> {
+class MessagingService{
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
   
-  @override
-  void initState() {
-    super.initState();
+  MessagingService get instance => messagingService;
 
+  @override
+  MessagingService() {
     /// Requests permission to send notifications on IOS
     if(g.isIOS)
       _fcm.requestNotificationPermissions(IosNotificationSettings());
@@ -35,10 +30,12 @@ class _MessagingServiceState extends State<MessagingService> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+// @override
+//   Widget build(BuildContext context) {
+//     return Container(
       
-    );
-  }
+//     );
+//   }
 }
+
+MessagingService messagingService = MessagingService();
