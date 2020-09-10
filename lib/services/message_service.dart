@@ -11,11 +11,14 @@ class MessagingService{
   
   MessagingService get instance => messagingService;
 
-  @override
-  MessagingService() {
-    /// Requests permission to send notifications on IOS
+  /// Requests permission to send notifications on IOS
+  requestNotificationPermissions(){
     if(g.isIOS)
       _fcm.requestNotificationPermissions(IosNotificationSettings());
+  }
+
+  @override
+  MessagingService() {
 
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {

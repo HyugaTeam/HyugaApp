@@ -22,10 +22,10 @@ void main() async{
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
   print("LOCATIA INCEPE");
-  queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
-  MessagingService messagingService = MessagingService().instance;
-
+  
   g.isIOS = Platform.isIOS == true? true : false;
+  queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
+  MessagingService().requestNotificationPermissions();
   
   runApp(StreamProvider<OurUser>.value( 
       value: authService.user,
