@@ -28,7 +28,7 @@ class ManagerQRScan extends StatefulWidget {
 class _ManagerQRScanState extends State<ManagerQRScan> {
 
   ManagedLocal managedLocal;
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   DocumentSnapshot scannedUser;
   String uid = "";
   double receiptValue;
@@ -52,7 +52,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     DocumentReference ref = _db.collection('users').doc(uid); // a reference to the scanned user's profile
       scannedUser = await ref.get();
       if(scannedUser != null){
-        print(scannedUser.data);
+        print(scannedUser.data());
         ref.set(({
           'score' : scannedUser.data()['score'] + 1
         }),

@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/bigquery/v2.dart';
+import 'package:googleapis/logging/v2.dart';
+import 'package:http/http.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/models/user.dart';
+import 'package:hyuga_app/screens/manager/ActiveGuests_Page.dart';
 import 'package:hyuga_app/screens/manager/AnalysisPage.dart';
 import 'package:hyuga_app/screens/manager/EditorPage.dart';
 import 'package:hyuga_app/screens/manager/ReservationsPage.dart';
@@ -12,7 +16,36 @@ import 'package:provider/provider.dart';
 
 class AdminPanel extends StatelessWidget {
   
+  Future<void> fetchBigQueryData() async {
+    try{
+      
+      Client client = Client();
+      
+      String str = BigqueryApi.BigqueryReadonlyScope;
+      BigqueryApi bigqueryApi = BigqueryApi(
+        client,
+        rootUrl: 'https://bigquery.googleapis.com/',
+        servicePath: 'bigquery/v2/'
+      );
+      var data = bigqueryApi.tables;
+      await data.get(
+        'hyuga-app',
+        'hyuga-app:analytics_223957065',
+        'hyuga-app:analytics_223957065.events_20200909'
+      );
+      print(data);
+    }
+    catch(error){
+      print('ERROR');
+      print(error);
+      print('/////');
+    }
+  }
+
   Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID) async{
+
+    fetchBigQueryData();
+
     QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals').doc(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).get();
     double sum = 0;
@@ -71,9 +104,8 @@ class AdminPanel extends StatelessWidget {
           return Scaffold(body: Center(child: CircularProgressIndicator(),));
         else 
           return DefaultTabController(
-            length: 3,
+            length: 4,
             child: Scaffold(
-
               drawer: ProfileDrawer(),
               backgroundColor: Theme.of(context).backgroundColor,
               appBar: AppBar(
@@ -97,11 +129,19 @@ class AdminPanel extends StatelessWidget {
                 title: Text(_managedLocal.data.name),
                 bottom: TabBar(
                   labelPadding: EdgeInsets.all(5),
-                  tabs: [Text("Analiza"), Text("Editor"),Text("Rezervari")]
+                  tabs: [Text("Mese active"),Text("Rezervari"),Text("Analiza"), Text("Editor")]
                 ),
               ),
               body: TabBarView(
                 children: [
+                  Provider(
+                    create: (context) => _managedLocal,
+                    child: ActiveGuestsPage()
+                  ),
+                  Provider(
+                    create: (context) => _managedLocal,
+                    child: ReservationsPage()
+                  ),
                   Provider(
                     create: (context) => _managedLocal,
                     child: AnalysisPage()
@@ -110,10 +150,6 @@ class AdminPanel extends StatelessWidget {
                     create: (context) => _managedLocal,
                     child: EditorPage()
                   ),
-                  Provider(
-                    create: (context) => _managedLocal,
-                    child: ReservationsPage()
-                  )
                 ]
               )
             ),

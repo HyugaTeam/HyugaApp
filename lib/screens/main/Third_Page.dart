@@ -43,17 +43,39 @@ class ThirdPage extends StatefulWidget {
   
   ThirdPage({this.local,this.onlyDiscounts}){
     
-    if(this.onlyDiscounts == null) /// This path is followed if the user visits the Place from the Second Page
-      AnalyticsService().analytics.logViewItem(
-        itemId: local.id, 
-        itemName: local.name,
-        itemCategory: "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}",
+    ///Added for test
+    if(this.onlyDiscounts == null){
+      AnalyticsService().analytics.logEvent(
+        name: 'view_place',
+        parameters: {
+          "place_id": local.id,
+          "place_name": local.name,
+          "place_path": "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}"
+        }
+      ).then((value) => print(local.id+local.name));
+    }
+    else{
+      AnalyticsService().analytics.logEvent(
+        name: 'view_place',
+        parameters: {
+          "place_id": local.id,
+          "place_name": local.name,
+          "place_path": "only_discounts"
+        }
       );
-    else AnalyticsService().analytics.logViewItem( /// ----""----- from the 'Only Discounts' Page
-      itemId: local.id, 
-      itemName: local.name,
-      itemCategory: "only_discounts",
-    );
+    }
+
+    // if(this.onlyDiscounts == null) /// This path is followed if the user visits the Place from the Second Page
+    //   AnalyticsService().analytics.logViewItem(
+    //     itemId: local.id, 
+    //     itemName: local.name,
+    //     itemCategory: "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}",
+    //   );
+    // else AnalyticsService().analytics.logViewItem( /// ----""----- from the 'Only Discounts' Page
+    //   itemId: local.id, 
+    //   itemName: local.name,
+    //   itemCategory: "only_discounts",
+    // );
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hyuga_app/screens/drawer/PastReservations_Page.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -160,19 +161,32 @@ class ProfileDrawer extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(), // used to disable scroll
-                      padding: EdgeInsets.zero,
+                    child: Column(
+                      //physics: NeverScrollableScrollPhysics(), // used to disable scroll
+                     // padding: EdgeInsets.zero,
                       children: <Widget>[
                         /// Either shows the 'Scan History' button or nothing depending on the user's 'manager' property
                         StreamBuilder<bool>(
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
                           return authService.currentUser.isManager == null 
-                            ? ListTile(leading: FaIcon(Icons.place, color: Colors.blueGrey,), 
-                                title: Text('Istoric'), 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Colors.blueGrey, size: 20,), 
+                                title: Text('Istoric scanari'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
+                                }
+                            )
+                            : Container();
+                          }
+                        ),
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                          return authService.currentUser.isManager == null 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Colors.blueGrey, size: 20), 
+                                title: Text('Istoric rezervari'), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return PastReservationsPage(); }));
                                 }
                             )
                             : Container();
@@ -202,8 +216,11 @@ class ProfileDrawer extends StatelessWidget {
                         //   },
                         // ) 
                         // : Container(), 
+                        Expanded(
+                          child: Container(),
+                        ),
                         ListTile(
-                            title: Container( // sign-out button
+                          title: Container( // sign-out button
                             padding: EdgeInsets.symmetric(horizontal: 80),
                             child: RaisedButton(
                               shape: RoundedRectangleBorder(
@@ -225,6 +242,9 @@ class ProfileDrawer extends StatelessWidget {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height*0.05,
+                        )
                       ],
                     ),
                   ),

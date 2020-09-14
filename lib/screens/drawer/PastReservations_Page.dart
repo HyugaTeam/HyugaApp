@@ -1,19 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/drawer.dart';
 
-class ScannedLocalsPage extends StatefulWidget {
+class PastReservationsPage extends StatelessWidget {
 
-  @override
-  _ScannedLocalsPageState createState() => _ScannedLocalsPageState();
-}
-
-class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
-
-  int itemCount;
+  int itemCount = 0;
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List> getScanHistory() async {

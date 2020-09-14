@@ -17,6 +17,15 @@
         android:icon="@mipmap/hyuga">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDNdhCM43QwuN5t98P282RENyCUQ7H9erw"/> 
+        <!-- <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@mipmap/ic_stat_ic_notification" /> -->
+        <!-- <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/transparent.png" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" /> -->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

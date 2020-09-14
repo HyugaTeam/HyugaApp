@@ -67,6 +67,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   @override
   Widget build(BuildContext context) {
     
+    Local local = Provider.of<Local>(context);
     initiateHours(context);
 
     return Theme(
@@ -296,12 +297,29 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         'date_start': Timestamp.fromDate(_selectedDate),
                         'guest_id' : authService.currentUser.uid,
                         'guest_name' : authService.currentUser.displayName,
-                        'is_active' : false,
-                        'number_of_guests' : _selectedNoOfPeople
+                        'is_active' : null,
+                        'number_of_guests' : _selectedNoOfPeople + 1
                       });
                       setState(() {
                         _isProgressIndicatorVisible = false;
-                      });
+                      }); 
+                      
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Rezervarea la ${local.name} pentru ora ${DateFormat('H:m').format(_selectedDate)} a fost facuta"),
+                        )
+                      );
+                      Navigator.pop(context);
+                      // if(g.isSnackBarActive == false){
+                      //   g.isSnackBarActive = true;
+                      //   Scaffold.of(context).showSnackBar(
+                      //     SnackBar(
+                      //     content: Text("Rezervarea la ${local.name} pentru ora ${DateFormat('H:m').format(_selectedDate)} a fost facuta"),
+                      //   )).closed.then((SnackBarClosedReason reason){
+                      //     g.isSnackBarActive = false;
+                      //   });
+                      // }
+                     
                     },
                   ),
                   SizedBox(

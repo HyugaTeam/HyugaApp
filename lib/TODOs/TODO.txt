@@ -51,6 +51,12 @@ La rezervari:
 - Ora, zi, nr persoane
 
 Altele: 
--semn Hyuga de jos in Home (cred ca l am rezolvat)
 -tutorialul (tudor)
 -schimbat in romana 
+
+11.09.2020
+-verificat procesul de scanare
+-dialog dupa ce faci rezervare
+-pagin cu istoricul rezervarilor
+-starea latenta a aplicatiei
+
