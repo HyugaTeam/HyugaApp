@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 
-class PastReservationsPage extends StatelessWidget {
+class ReservationsHistoryPage extends StatelessWidget {
 
   int itemCount = 0;
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<List> getScanHistory() async {
+  Future<List> getPastReservations() async {
     QuerySnapshot scanHistory = await _db.collection('users')
-    .doc(authService.currentUser.uid).collection('scan_history')
-    .where('approved_by_user', isEqualTo: true) 
+    .doc(authService.currentUser.uid).collection('reservations_history')
+    .where('is_active', isEqualTo: false) 
     .get();
     itemCount = scanHistory.docs.length;
     return scanHistory.docs.map((doc)=>doc.data()).toList();
@@ -20,11 +20,11 @@ class PastReservationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getScanHistory(),
-        builder:(context, scanHistory){ 
-          if(!scanHistory.hasData)
+        future: getPastReservations(),
+        builder:(context, reservationsHistory){ 
+          if(!reservationsHistory.hasData)
             return Scaffold(appBar: AppBar(),body: Center(child: CircularProgressIndicator()),);
-          else if(scanHistory.data == 0)
+          else if(reservationsHistory.data == 0)
             return Scaffold(appBar: AppBar(),body: Center(child: Text("Nu ai nicio scanare. \n Incepe sa scanezi pentru a revendica reduceri!"),));
           else
             return  Scaffold(
@@ -36,7 +36,7 @@ class PastReservationsPage extends StatelessWidget {
               body: Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.03, vertical: MediaQuery.of(context).size.width*0.05),
                 child: ListView.separated(
-                  itemCount: scanHistory.data.length,
+                  itemCount: reservationsHistory.data.length,
                   separatorBuilder: (context,index) => SizedBox(
                     height: 10,
                   ),
@@ -45,7 +45,7 @@ class PastReservationsPage extends StatelessWidget {
                       onTap: (){
                         Future<Image> placeImage;
                         try{
-                          placeImage = queryingService.getImage(scanHistory.data[index]['place_id']);
+                          placeImage = queryingService.getImage(reservationsHistory.data[index]['place_id']);
                         }
                         catch(e){}
                         // Shows a pop-up containing the details about the bill
@@ -65,7 +65,7 @@ class PastReservationsPage extends StatelessWidget {
                                   GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
                                     onTap: () async {
                                       await _db
-                                      .collection('locals_bucharest').doc(scanHistory.data[index]['place_id'])
+                                      .collection('locals_bucharest').doc(reservationsHistory.data[index]['place_id'])
                                       .get().then((value) => 
                                       Navigator.pushNamed(
                                         context,
@@ -110,7 +110,7 @@ class PastReservationsPage extends StatelessWidget {
                                           width: 300,
                                           //height: 300,
                                           child: Text(
-                                            scanHistory.data[index]['place_name'], 
+                                            reservationsHistory.data[index]['place_name'], 
                                             style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                                           )
                                         )
@@ -125,7 +125,7 @@ class PastReservationsPage extends StatelessWidget {
                                         style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                         children:[
                                           TextSpan(text: "Valoare finala bon: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                          TextSpan(text: scanHistory.data[index]['total'].toString()+"RON")
+                                          TextSpan(text: reservationsHistory.data[index]['total'].toString()+"RON")
                                         ]
                                       ), 
                                     ),
@@ -138,7 +138,7 @@ class PastReservationsPage extends StatelessWidget {
                                         style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                         children:[
                                           TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                          TextSpan(text: scanHistory.data[index]['applied_discount'].toString() + "%")
+                                          TextSpan(text: reservationsHistory.data[index]['applied_discount'].toString() + "%")
                                         ]
                                       ), 
                                     ),
@@ -152,8 +152,8 @@ class PastReservationsPage extends StatelessWidget {
                                         children:[
                                           TextSpan(text: "Numar persoane: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                            text: scanHistory.data[index]['number_of_guests'] != null 
-                                            ? scanHistory.data[index]['number_of_guests'].toString()
+                                            text: reservationsHistory.data[index]['number_of_guests'] != null 
+                                            ? reservationsHistory.data[index]['number_of_guests'].toString()
                                             : 1
                                           )
                                         ]
@@ -170,7 +170,7 @@ class PastReservationsPage extends StatelessWidget {
                                           TextSpan(text: "Data: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
                                             text: 
-                                            DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date'].millisecondsSinceEpoch).toString()
+                                            DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date'].millisecondsSinceEpoch).toString()
                                           )
                                         ]
                                       ), 
@@ -210,7 +210,7 @@ class PastReservationsPage extends StatelessWidget {
                                   height: 225,
                                   width: 400,
                                   child: FutureBuilder(
-                                    future: queryingService.getImage(scanHistory.data[index]['place_id']),
+                                    future: queryingService.getImage(reservationsHistory.data[index]['place_id']),
                                     builder: (context, image) {
                                       if(!image.hasData)
                                         return Container(); 
@@ -254,7 +254,7 @@ class PastReservationsPage extends StatelessWidget {
                                                 ),
                                                 child: Text(
                                                   //"Trattoria Buongiorno Covaci",
-                                                  scanHistory.data[index]['place_name'],
+                                                  reservationsHistory.data[index]['place_name'],
                                                   style: TextStyle(
                                                     wordSpacing: 0.1,
                                                     fontWeight: FontWeight.bold,
@@ -285,9 +285,9 @@ class PastReservationsPage extends StatelessWidget {
                                                 // "2000 RON",
                                                 
                                                 //"30000 RON",
-                                                scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toInt()
-                                                  ? scanHistory.data[index]['total'].toInt().toString()+" RON"
-                                                  : scanHistory.data[index]['total'] +" RON",
+                                                reservationsHistory.data[index]['total'] == reservationsHistory.data[index]['total'].toInt()
+                                                  ? reservationsHistory.data[index]['total'].toInt().toString()+" RON"
+                                                  : reservationsHistory.data[index]['total'] +" RON",
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   color: Colors.white,
@@ -303,7 +303,7 @@ class PastReservationsPage extends StatelessWidget {
                                         padding: const EdgeInsets.only(top: 5, bottom: 8),
                                         child: Text(
                                           /// A formula which converts the Timestamp to Date format
-                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
+                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
                                           .substring(0,16),
                                           style: TextStyle(
                                             fontSize: 12,
@@ -329,7 +329,7 @@ class PastReservationsPage extends StatelessWidget {
                                       Container(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
-                                          "Discount: "+ scanHistory.data[index]['applied_discount'].toString() + '%',
+                                          "Discount: "+ reservationsHistory.data[index]['applied_discount'].toString() + '%',
                                           style: TextStyle(
                                             fontSize: 17,
                                             color: Colors.blueGrey

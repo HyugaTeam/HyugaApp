@@ -23,6 +23,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   int _selectedDay = 0;
   int _selectedHour = DateTime.now().toLocal().hour;
   DateTime _selectedDate; // The final parsed Date which will go in the database
+  int _selectedDiscount;
   
   DateTime currentTime = DateTime.now().toLocal();
 
@@ -31,7 +32,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   ScrollController _dayScrollController;
   ScrollController _hourScrollController;
 
-  
+  Local local;
   Map<String,dynamic> placeSchedule;
   String startHour; // The starting hour of the schedule
   String endHour; // The ending hour of the schedule
@@ -51,6 +52,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
     // });
   }
 
+  /// Initiate the time schedule for this widget
   initiateHours(BuildContext context){
     placeSchedule = Provider.of<Local>(context).schedule;
     
@@ -64,10 +66,26 @@ class _ReservationPanelState extends State<ReservationPanel> {
     }
   }
 
+  int getDiscountForHour(int index){
+    String selectedHour =  
+    hour.add(Duration(minutes: index*30)).hour.toString()
+        + ":" +
+          (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
+          ? '00'
+          : hour.add(Duration(minutes: index*30)).minute.toString());
+    List hourAndDiscount = local.discounts[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    //print(hourAndDiscount.length);
+    for(int i = 0; i< hourAndDiscount.length; i++)
+      if(selectedHour.compareTo(hourAndDiscount[i].substring(0,5))>= 0 &&
+      selectedHour.compareTo(hourAndDiscount[i].substring(6,11))< 0)
+        return int.tryParse(hourAndDiscount[i].substring(12,14));
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     
-    Local local = Provider.of<Local>(context);
+    local = Provider.of<Local>(context);
     initiateHours(context);
 
     return Theme(
@@ -212,7 +230,10 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         //? 3//(int.parse(startHour) - int.parse(endHour))*4
                         : 0,
                       separatorBuilder: (context,index)=>SizedBox(width: 10,),
-                      itemBuilder: (context,index) => GestureDetector(
+                      itemBuilder: (context,index) {
+                        int discount = getDiscountForHour(index);
+                        //print(discount);
+                        return  GestureDetector(
                         onTap: (){
                           if(hour.add(Duration(minutes: index*30)).compareTo(DateTime.now()) < 0 && _selectedDay == 0){
                             if(g.isSnackBarActive == false){
@@ -230,20 +251,20 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           }
                           
                           else {
+                            _selectedHour = index;
+                            String selectedHour =  
+                            hour.add(Duration(minutes: index*30)).hour.toString()
+                                + ":" +
+                                  (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
+                                  ? '00'
+                                  : hour.add(Duration(minutes: index*30)).minute.toString());
+                            String selectedDay = 
+                            DateFormat('y-MM-dd').format(DateTime.now().add(Duration(days: _selectedDay)));
                             setState(() {
-                              _selectedHour = index;
-                              String selectedHour =  
-                              hour.add(Duration(minutes: index*30)).hour.toString()
-                                  + ":" +
-                                    (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
-                                    ? '00'
-                                    : hour.add(Duration(minutes: index*30)).minute.toString());
-                              String selectedDay = 
-                              DateFormat('y-MM-dd').format(DateTime.now().add(Duration(days: _selectedDay)));
                               _selectedDate = DateTime.parse(selectedDay +' '+ selectedHour + ':00').toUtc();
+                              _selectedDiscount = discount;
                               print(_selectedDate);
                             });
-
                             _hourScrollController.animateTo(
                               //_selectedNoOfPeople*30+MediaQuery.of(widget.context).size.width*0.2, 
                               (_selectedHour-1.6)*93.toDouble(),
@@ -255,24 +276,62 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         child: Opacity(
                           opacity: hour.add(Duration(minutes: index*30)).compareTo(DateTime.now()) < 0 && _selectedDay == 0
                                   ? 0.4 : 1,
-                          child: Chip(
-                            backgroundColor:  index == _selectedHour ? Colors.orange[600]: Colors.grey[200],
-                            labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
-                            label: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  hour.add(Duration(minutes: index*30)).hour.toString()
-                                  + ":" +
-                                    (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
-                                    ? '00'
-                                    : hour.add(Duration(minutes: index*30)).minute.toString())
+                          child: Stack(
+                            overflow: Overflow.visible,
+                            children: [
+                              Chip(
+                                backgroundColor:  index == _selectedHour ? Colors.orange[600]: Colors.grey[200],
+                                labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
+                                label: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      hour.add(Duration(minutes: index*30)).hour.toString()
+                                      + ":" +
+                                        (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
+                                        ? '00'
+                                        : hour.add(Duration(minutes: index*30)).minute.toString()),
+                                      style: TextStyle(
+                                        fontSize: 15
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ),
+                              discount != 0
+                              ? Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width*0.11,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueGrey,
+                                    // border: Border(
+                                    //   top: BorderSide(width: 4,color: Colors.blueGrey),
+                                    //   left: BorderSide(width: 4,color: Colors.blueGrey),
+                                    //   bottom: BorderSide(width: 4,color: Colors.blueGrey),
+                                    //   right: BorderSide(width: 4,color: Colors.blueGrey)
+                                    // ),
+                                    borderRadius: BorderRadius.circular(30)
+                                    //shape: BoxShape.circle
+                                  ),
+                                  child: Text(
+                                    "-$discount%",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            )
+                              )
+                              : Container()
+                            ],
                           ),
                         ),
-                      )
+                      );
+                      }
                     ),
                   ),
                   Expanded(
@@ -284,42 +343,53 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     color: Colors.orange[600],
                    // minWidth: 100,
                     child: Text("Rezerva"),
+                    /// The callback invoked when the 'Rezerva' button is pressed
                     onPressed: _selectedDate == null? null : () async{
                       print(_selectedDate);
                       setState(() {
                         _isProgressIndicatorVisible = true;
                       });
-                      DocumentReference newReservationRef = 
-                      Provider.of<Local>(context, listen: false).reference.collection('reservations').doc();
-                      await newReservationRef.set({
+                      DocumentReference placeReservationRef = 
+                      local.reference.collection('reservations').doc();
+                      DocumentReference userReservationRef = FirebaseFirestore.instance.collection('users')
+                      .doc(authService.currentUser.uid).collection('reservations_history').doc();
+                      await placeReservationRef.set({
                         'accepted': null,
                         'date_created' : FieldValue.serverTimestamp(),
                         'date_start': Timestamp.fromDate(_selectedDate),
                         'guest_id' : authService.currentUser.uid,
                         'guest_name' : authService.currentUser.displayName,
                         'is_active' : null,
-                        'number_of_guests' : _selectedNoOfPeople + 1
+                        'number_of_guests' : _selectedNoOfPeople + 1,
+                        'discount': _selectedDiscount,
+                        'user_reservation_ref' : userReservationRef
                       });
+                      
+                      await userReservationRef.set(
+                        {
+                          'accepted': null,
+                          'date_created' : FieldValue.serverTimestamp(),
+                          'date_start': Timestamp.fromDate(_selectedDate),
+                          'place_id' : local.id,
+                          'place_name' : local.name,
+                          'is_active' : null,
+                          'number_of_guests' : _selectedNoOfPeople + 1,
+                          'discount': _selectedDiscount,
+                          'place_reservation_ref': placeReservationRef
+                        }
+                      );
+                      
+                      // await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
+                      // .set(
+                      //   {
+                      //     'upcoming_reservation': true,
+                      //   },
+                      //   SetOptions(merge: true)
+                      // );
                       setState(() {
                         _isProgressIndicatorVisible = false;
-                      }); 
-                      
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Rezervarea la ${local.name} pentru ora ${DateFormat('H:m').format(_selectedDate)} a fost facuta"),
-                        )
-                      );
-                      Navigator.pop(context);
-                      // if(g.isSnackBarActive == false){
-                      //   g.isSnackBarActive = true;
-                      //   Scaffold.of(context).showSnackBar(
-                      //     SnackBar(
-                      //     content: Text("Rezervarea la ${local.name} pentru ora ${DateFormat('H:m').format(_selectedDate)} a fost facuta"),
-                      //   )).closed.then((SnackBarClosedReason reason){
-                      //     g.isSnackBarActive = false;
-                      //   });
-                      // }
-                     
+                      });
+                      Navigator.pop(context, {'place_name': local.name, 'hour': DateFormat('HH:mm').format(_selectedDate.toLocal())});
                     },
                   ),
                   SizedBox(

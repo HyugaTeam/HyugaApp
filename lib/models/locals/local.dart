@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
 
 class Local{
   final int score; // Dynamic (depends on the score of the category)

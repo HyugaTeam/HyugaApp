@@ -162,7 +162,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           TextSpan(
                                             text: scanHistory.data[index]['number_of_guests'] != null 
                                             ? scanHistory.data[index]['number_of_guests'].toString()
-                                            : 1
+                                            : "1"
                                           )
                                         ]
                                       ), 

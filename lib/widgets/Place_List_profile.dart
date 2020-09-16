@@ -275,9 +275,10 @@ class PlaceListProfile extends StatelessWidget {
                               g.isSnackBarActive = true;
                               Scaffold.of(context)
                                   .showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 5),
                                     backgroundColor: Colors.orange[600],
                                     content: Text(
-                                      "The maximum discount today, check the restaurant for the exact hours."
+                                      "Reducerea maxima de astazi, intra pe restaurant pentru mai multe detalii"
                                     ),
                                   ))
                                   .closed

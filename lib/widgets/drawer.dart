@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/screens/drawer/PastReservations_Page.dart';
+import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -186,7 +186,7 @@ class ProfileDrawer extends StatelessWidget {
                             ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Colors.blueGrey, size: 20), 
                                 title: Text('Istoric rezervari'), 
                                 onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return PastReservationsPage(); }));
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
                                 }
                             )
                             : Container();
