@@ -172,13 +172,13 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     .doc(authService.currentUser.uid).collection('managed_locals')
     .doc(managedLocal.id).collection('scanned_codes').doc();
     newScannedCodeRef.set({
-      'place_id' : managedLocal.id,
+      'guest_id' : userData.documentID,
       'date': DateTime.now().toUtc(),
       'applied_discount': getAppliedDiscount(),
       'retained_percentage': 5,
       'score' : userData.data['score'] + 1,
       'total' : receiptValue,
-      'place_name' : managedLocal.name,
+      'guest_name' : userData.data()['name'],
       'approved_by_user' : true
     });
     return ok;

@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +16,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   Map<String,String> weekdaysTranslate = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
 
-  List pendingReservationsCopy;
+  //List pendingReservationsCopy;
   List pendingReservations;
   List acceptedReservations=[];
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -26,7 +27,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
     return   _db.collection('users').doc(authService.currentUser.uid).collection('managed_locals')
     .doc(_managedLocal.id).collection('reservations')
     .where('accepted',isNull: true)
-    .orderBy('date_created')
+    .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal().add(Duration(minutes: -30))))
+    .orderBy('date_start')
     .snapshots();
   }
 
@@ -35,12 +37,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
     return _db.collection('users').doc(authService.currentUser.uid).collection('managed_locals')
     .doc(_managedLocal.id).collection('reservations')
     .where('accepted',isEqualTo: true)
-    .where('date_start',isGreaterThan: Timestamp.now())
+    .where('is_active',isNull: true)
+    .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
     .snapshots();
   }
 
   /// Shows a bottom sheet when a list tile is pressed
-  void _showBottomSheet(BuildContext context, DocumentSnapshot reservation){
+  void _showBottomSheet(BuildContext context, DocumentSnapshot reservation, [bool accepted = false]){
     showModalBottomSheet(context: context, builder: (context)=> Theme(
       data: ThemeData(
         fontFamily: 'Comfortaa',
@@ -49,7 +52,9 @@ class _ReservationsPageState extends State<ReservationsPage> {
       ),
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: ButtonBar(
+        floatingActionButton: 
+        !accepted
+        ? ButtonBar(
           alignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
@@ -78,9 +83,16 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 ),
                 onPressed: (){
                   Navigator.pop(context);
-                  DocumentReference ref = reservation.reference;
+                  DocumentReference managerRef = reservation.reference;
                   DateTime date = DateTime.fromMillisecondsSinceEpoch(reservation.data()['date_start'].millisecondsSinceEpoch);
-                  ref.set(
+                  managerRef.set(
+                    {
+                      "accepted": true
+                    },
+                    SetOptions(merge: true)
+                  );
+                  DocumentReference userRef = reservation.data()['user_reservation_ref'];
+                  userRef.set(
                     {
                       "accepted": true
                     },
@@ -129,6 +141,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     },
                     SetOptions(merge: true)
                   );
+                  DocumentReference userRef = reservation.data()['user_reservation_ref'];
+                  userRef.set(
+                    {
+                      "accepted": false
+                    },
+                    SetOptions(merge: true)
+                  );
                   _scaffoldKey.currentState.showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.orange[600],
@@ -139,7 +158,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
               ),
             ),
           ],
-        ),
+        )
+        : Container(),
         body: Center(
           child: Column(
             children: [
@@ -168,7 +188,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 alignment: Alignment.bottomCenter,
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
-                  "Facuta la data: ${DateFormat("dd-MM-yyyy  H:m").format(DateTime.fromMillisecondsSinceEpoch(
+                  "Facuta la data: ${DateFormat("dd-MM-yyyy  HH:mm").format(DateTime.fromMillisecondsSinceEpoch(
                   reservation.data()['date_created'].millisecondsSinceEpoch
                   ))}",
                   style: TextStyle(fontSize: 18),
@@ -249,9 +269,16 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         ),
                       ),
                       onDismissed: (direction) async {
-                        DocumentReference ref = pendingReservations[index].reference;
                         DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
-                        await ref.set(
+                        DocumentReference placeRef = pendingReservations[index].reference;
+                        await placeRef.set(
+                          {
+                            "accepted": true
+                          },
+                          SetOptions(merge: true)
+                        );
+                        DocumentReference userRef = pendingReservations[index].data()['user_reservation_ref'];
+                        await userRef.set(
                           {
                             "accepted": true
                           },
@@ -335,7 +362,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       SizedBox(
                         height: 40,
                       ),
-                      LinearProgressIndicator()
+                      Center(child: CircularProgressIndicator())
                     ],
                   );
                 else{
@@ -364,7 +391,9 @@ class _ReservationsPageState extends State<ReservationsPage> {
                           "Activeaza",
                         ),
                         onPressed: (){
-                          GlobalKey<FormState> _formKey = GlobalKey();
+                          DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(acceptedReservations[index].data()['date_start'].millisecondsSinceEpoch);
+                          if(dateStart.difference(DateTime.now().toLocal()) < Duration(minutes: 30).abs()){
+                            GlobalKey<FormState> _formKey = GlobalKey();
                           int tableNumber;
                           bool isLoading = false;
                           showDialog(context: context, builder: (context) => Dialog(
@@ -403,13 +432,68 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         RaisedButton(
                                           color: Colors.blueGrey,
                                           child: Text("Continua"),
-                                          onPressed: (){
+                                          onPressed: () async{
                                             if(_formKey.currentState.validate()){
-                                              DocumentReference ref = acceptedReservations[index].reference;
-                                              ref.set({
+                                              /// Activate the 'place' reservation  
+                                              DocumentReference placeRef = acceptedReservations[index].reference;
+                                              placeRef.set(
+                                                {
                                                 "table_number": tableNumber,
                                                 "is_active": true
-                                              });
+                                                },
+                                                SetOptions(merge: true)
+                                              );
+                                              /// Activate the 'user' reservation 
+                                              DocumentReference userRef = acceptedReservations[index].data()['user_reservation_ref'];
+                                              userRef.set(
+                                                {
+                                                //"table_number": tableNumber,
+                                                "is_active": true
+                                                },
+                                                SetOptions(merge: true)
+                                              );
+                                            //   /// TODO: Add a scanned code
+                                            if(acceptedReservations[index].data()['discount'] != 0){
+                                              
+                                              /// Add the new scanned code to the manager's collection
+                                              DocumentReference placeScanningRef = acceptedReservations[index].reference
+                                              .parent.parent
+                                              .collection('scanned_codes').doc();
+                                              Map placeScanData = acceptedReservations[index].data();
+                                              placeScanData.addAll(
+                                                {
+                                                  "is_active": true,
+                                                  "reservation": true,
+                                                  "reservation_id": placeRef.id,
+                                                  "retained_percentage": _managedLocal.retainedPercentage
+                                                }
+                                              );
+                                              placeScanningRef.set(
+                                                placeScanData
+                                              );
+                                              // QuerySnapshot otherDocs = await FirebaseFirestore.instance.collection('users')
+                                              // .doc(authService.currentUser.uid).collection('scan_history')
+                                              /// Add the new scanned code to the user's collection   
+                                              DocumentReference userScanningRef = acceptedReservations[index].data()['user_reservation_ref']
+                                              .parent.parent
+                                              .collection('scan_history').doc();
+                                              Map userScanData = acceptedReservations[index].data();
+                                              userScanData.addAll(
+                                                {
+                                                  "is_active": true,
+                                                  "reservation": true,
+                                                  "reservation_id": userRef.id,
+                                                  //"retained_percentage": _managedLocal.retainedPercentage
+                                                }
+                                              );
+                                              userScanningRef.set(
+                                                userScanData
+                                              );
+                                            }
+                                              print("gata");
+                                              // DocumentReference newScanRef = FirebaseFirestore.instance.collection(
+                                              //   ''
+                                              // )
                                               Navigator.pop(context);
                                             }
                                           },
@@ -437,6 +521,15 @@ class _ReservationsPageState extends State<ReservationsPage> {
                               ),
                             ),
                           ));
+                          }
+                          else _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Rezervarile pot fi activate cu cel mult 30 de minute inainte si dupa ora acestora."
+                              ),
+                              duration: Duration(seconds: 5),
+                            )
+                          );
                           // Navigator.pop(context);
                           // DocumentReference ref = pendingReservations[index].reference;
                           // DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
@@ -477,7 +570,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         )
                       ),
                       subtitle: Text("Persoane: "+"${acceptedReservations[index].data()['number_of_guests']}"),
-                      onTap:() => _showBottomSheet(context, acceptedReservations[index]),
+                      onTap:() => _showBottomSheet(context, acceptedReservations[index], true),
                     )
                   );
                 }

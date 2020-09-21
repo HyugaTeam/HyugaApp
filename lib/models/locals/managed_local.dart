@@ -5,6 +5,7 @@ class ManagedLocal{
   String description;
   int cost;
   int capacity;
+  int retainedPercentage;
   String ambiance;
   Map<String,dynamic> profile;
   Map<String,dynamic> discounts;
@@ -14,5 +15,5 @@ class ManagedLocal{
   /// all_time_income
   /// 
 
-  ManagedLocal({this.reservations,this.id,this.name,this.description,this.cost,this.capacity,this.ambiance,this.profile,this.discounts,this.analytics});
+  ManagedLocal({this.reservations,this.id,this.name,this.description,this.cost,this.capacity,this.ambiance,this.profile,this.discounts,this.analytics,this.retainedPercentage});
 }

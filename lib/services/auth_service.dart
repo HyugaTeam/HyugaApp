@@ -53,6 +53,15 @@ class AuthService{
     );
   }
   
+  Stream<QuerySnapshot> get seatingStatus {
+    if(currentUser != null)
+      if(currentUser.isAnonymous != true)
+        return _db.collection('users').doc(currentUser.uid)
+        .collection('scan_history')
+        .where('is_active', isEqualTo: true)
+        .snapshots();
+  }
+  
 
   // create user object based on FirebaseUser
   OurUser _ourUserFromFirebaseUser(User user){
@@ -186,7 +195,7 @@ class AuthService{
       //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
-      print(error);
+      print(error.code);
       //handleAuthError(error);
       return(error);
     }

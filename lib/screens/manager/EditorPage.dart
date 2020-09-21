@@ -563,52 +563,40 @@ class _EditorPageState extends State<EditorPage> {
                 ),
                 
               ),
-              ListTile( // The Discount Schedule set up
-                title: Text(
-                  "Program Reduceri",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  ),
-                ),
-                subtitle: Column(
-                  children: <Widget>[
-                    // GridView(
-                      
-                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    //     crossAxisCount: 3
-                    //   ),
-                    //   children: <Widget>[
-                    //     Text("1"),
-                    //     Text("2"),
-                    //     Text("3"),
-                    //     Text("4")
-                    //   ],
-                    // ),
-                    CalendarDatePicker(
-                      initialDate: DateTime.now(), 
-                      firstDate: DateTime.now(), 
-                      lastDate: DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day+7
-                      ), 
-                      onDateChanged: (dateTime){
-                        showTimePicker(
-                          context: context, 
-                          initialTime: TimeOfDay.now()
-                        ).then((value) => setState((){
-                          if(value != null)
-                            _unsavedTimeInterval = value.format(context);
-                        }));
-                      }
-                    ),
-                    Text(
-                      _unsavedTimeInterval
-                    )
-                  ],
-                ),
-              ),
+              // ListTile( // The Discount Schedule set up
+              //   title: Text(
+              //     "Program Reduceri",
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 20
+              //     ),
+              //   ),
+              //   subtitle: Column(
+              //     children: <Widget>[
+              //       CalendarDatePicker(
+              //         initialDate: DateTime.now(), 
+              //         firstDate: DateTime.now(), 
+              //         lastDate: DateTime(
+              //           DateTime.now().year,
+              //           DateTime.now().month,
+              //           DateTime.now().day+7
+              //         ), 
+              //         onDateChanged: (dateTime){
+              //           showTimePicker(
+              //             context: context, 
+              //             initialTime: TimeOfDay.now()
+              //           ).then((value) => setState((){
+              //             if(value != null)
+              //               _unsavedTimeInterval = value.format(context);
+              //           }));
+              //         }
+              //       ),
+              //       Text(
+              //         _unsavedTimeInterval
+              //       )
+              //     ],
+              //   ),
+              // ),
               // ListTile(  // Tipul localului
               //   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
               //   title: Text(

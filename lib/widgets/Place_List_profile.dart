@@ -237,13 +237,16 @@ class PlaceListProfile extends StatelessWidget {
                                   width: 400,
                                   height: 200,
                                   child: Shimmer.fromColors(
-                                      child: Container(),
-                                      baseColor: Colors.white,
-                                      highlightColor: Colors.grey),
+                                    child: Container(),
+                                    baseColor: Colors.white,
+                                    highlightColor: Colors.grey
+                                  ),
                                 );
                               else
                                 return Container(
-                                    color: Colors.transparent, child: img.data);
+                                  color: Colors.transparent, 
+                                  child: img.data
+                                );
                             }),
                       ),
 //                  child: Image(

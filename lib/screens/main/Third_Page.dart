@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/Reservation_Panel.dart';
@@ -493,20 +494,21 @@ class _ThirdPageState extends State<ThirdPage> {
                                 ],
                               ),
                               Container(
-                                height: 100,
-                                child: ListView.builder(
-                                  itemExtent: 135, /// Added to add some space between the tiles
+                                height: MediaQuery.of(context).size.height*0.14,
+                                child: ListView.separated(
+                                  //itemExtent: 135, /// Added to add some space between the tiles
                                   padding: EdgeInsets.all(10),
                                   scrollDirection: Axis.horizontal,
                                   itemCount: widget.local.discounts != null ?  
                                               (widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
                                                 widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
                                               0,
+                                  separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
                                   /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
                                   /// the current weekday. If not, the field will be empty
                                   itemBuilder: (BuildContext context, int index){
                                     return Container(
-                                      width: 100,
+                                      width: MediaQuery.of(context).size.width*0.35,
                                       height: 100,
                                       child: Column(
                                         children: <Widget>[
@@ -529,12 +531,11 @@ class _ThirdPageState extends State<ThirdPage> {
                                             child: Container(
                                               alignment: Alignment.center,
                                               height: 30,
-                                              width: 120,
                                               decoration: BoxDecoration(
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.black45, 
-                                                    offset: Offset(1.5,1),
+                                                    offset: Offset(-1,1),
                                                     blurRadius: 2,
                                                     spreadRadius: 0.2
                                                   )
@@ -739,19 +740,36 @@ class _ThirdPageState extends State<ThirdPage> {
                           ),
                         ),
                         onPressed: () async{
+                          //print("dasd");
                           await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
                           .collection('reservations_history')
-                          .where('is_active',isNull: true).get().then((value){
-                            if(value.docs.length != 0)
-                              if(g.isSnackBarActive == true){
-                                Scaffold.of(context).removeCurrentSnackBar();
+                          .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
+                            print(value.docs.length);
+                            if(value.docs.length != 0 && (value.docs[0].data()['accepted'] == null || value.docs[0].data()['accepted'] == true)){
+                                if(g.isSnackBarActive == true)
+                                  Scaffold.of(context).removeCurrentSnackBar();
                                 Scaffold.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text("Ai deja o rezervare."),
+                                    content: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text("Ai deja o rezervare."),
+                                        TextButton(
+                                          child: Text(
+                                            "Verifica aici"
+                                          ),
+                                          onPressed: (){
+                                            Scaffold.of(context).removeCurrentSnackBar();
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
+                                          },
+                                        )
+                                      ],
+                                    ),
                                   )
                                 );
                               }
-                            else
+                            else if(value.docs.length == 0){
+                              print("nu are rezervari");
                               showDialog(context: context, builder: (newContext) => Provider(
                                 create: (context) => widget.local, 
                                 child: ReservationPanel(context:newContext))
@@ -760,6 +778,7 @@ class _ThirdPageState extends State<ThirdPage> {
                                   content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
                                 )
                               ): null); 
+                            }
                           });
                         },
                       ),

@@ -39,7 +39,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
           else if(ss.data.docs.length == 0)
             return Container(
               height: 40,
-              child: Text("Nu exista mese active"),
+              child: Center(child: Text("Nu exista mese active")),
             );
           else{
             activeGuestsList = ss.data.docs;

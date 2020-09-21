@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/main/DiscountLocals_Page.dart';
+import 'package:hyuga_app/screens/main/SeatingInterface_Page.dart';
+import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/drawer.dart';
@@ -116,124 +118,134 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Theme.of(context).backgroundColor,
-      key: _drawerKey,
-      drawer: _drawer,
-      appBar: AppBar(
-        title: Text(
-          "Hello!",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).accentColor,
-            fontSize: 23,
-            decorationThickness: 1)),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          iconSize: 20,
-          color: Colors.blueGrey,
-          onPressed: () async {
-            _drawerKey.currentState.openDrawer();
-          },
-        ),
-        actions: <Widget>[
-          IconButton(
-            tooltip: "Vezi reducerile de astazi",
-            color: Colors.blueGrey,
-            icon: FaIcon(FontAwesomeIcons.percentage, size: 18),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>DiscountLocalsPage()));
-            },
-          )
-        ],    ///Un-comment in case we want to add further Widgets on the appBar
-      ),
-      body: Builder(
-        builder: (context) => Stack(// used a builder for the context
-          //mainAxisAlignment: MainAxisAlignment.center,
-          alignment: Alignment.center,
-          children: <Widget>[
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: 650,
-              ),
-              alignment: Alignment(0, 0),
-              child: Column(
-                /// Replaced 'Stack' with 'Column' for the Buttons
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  listOfButtons[0],
-                  listOfButtons[1],
-                  listOfButtons[2],
-                  listOfButtons[3],
-                  listOfButtons[4],
-                  Container(
-                    /// The 'Search' Button
-                    padding: EdgeInsets.symmetric(),
-                    child: Center(
-                      child: MaterialButton(
-                        highlightColor: Colors.transparent,
-                        color: Colors.blueGrey,
-                        splashColor: Colors.orange[600],
-                        minWidth: 120,
-                        height: 44,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Icon(Icons.search, color: Colors.white),
-                        onPressed: () async {
-                          if (checkOptions()) {
-                            Navigator.pushNamed(context, '/second');
-                            // g.placesList = [];
-                            // Navigator.pushNamed(context, '/loading');
-                            // QueryService().queryForLocals().then((data) {
-                            //   Navigator.pushReplacementNamed(
-                            //       context, '/second');
-                            // });
-                            // print(g.placesList);
-                          } 
-                          else {
-                            if(g.isSnackBarActive == false){
-                              g.isSnackBarActive = true;
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                  'Selecteaza fiecare camp.',
-                                  textAlign: TextAlign.center,
-                                ),
-                                backgroundColor: Colors.orange[600],
-                              )).closed.then((SnackBarClosedReason reason){
-                                g.isSnackBarActive = false;
-                              });
-                            }
-                          }
-                        }
-                      )
-                    ),
-                  ),
-                ],
-              ),
+    return StreamBuilder(
+      stream: authService.seatingStatus,
+      builder: (context, ss) {
+      if(!ss.hasData)
+        return Scaffold(body: CircularProgressIndicator(),);
+      else if(ss.data.docs.length == 1)
+        return SeatingInterface();
+      else
+        return Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: Theme.of(context).backgroundColor,
+          key: _drawerKey,
+          drawer: _drawer,
+          appBar: AppBar(
+            title: Text(
+              "Hello!",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor,
+                fontSize: 23,
+                decorationThickness: 1)),
+            centerTitle: true,
+            backgroundColor: Theme.of(context).backgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              iconSize: 20,
+              color: Colors.blueGrey,
+              onPressed: () async {
+                _drawerKey.currentState.openDrawer();
+              },
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              ///  'HYUGA' TITLE
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.02),
-              child: Text(
-                "hyuga",
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontFamily: 'Comfortaa',
-                    fontSize: 25.0,
-                    //fontWeight: FontWeight.bold
-                ),
+            actions: <Widget>[
+              IconButton(
+                tooltip: "Vezi reducerile de astazi",
+                color: Colors.blueGrey,
+                icon: FaIcon(FontAwesomeIcons.percentage, size: 18),
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>DiscountLocalsPage()));
+                },
               )
+            ],    ///Un-comment in case we want to add further Widgets on the appBar
+          ),
+          body: Builder(
+            builder: (context) => Stack(// used a builder for the context
+              //mainAxisAlignment: MainAxisAlignment.center,
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 650,
+                  ),
+                  alignment: Alignment(0, 0),
+                  child: Column(
+                    /// Replaced 'Stack' with 'Column' for the Buttons
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      listOfButtons[0],
+                      listOfButtons[1],
+                      listOfButtons[2],
+                      listOfButtons[3],
+                      listOfButtons[4],
+                      Container(
+                        /// The 'Search' Button
+                        padding: EdgeInsets.symmetric(),
+                        child: Center(
+                          child: MaterialButton(
+                            highlightColor: Colors.transparent,
+                            color: Colors.blueGrey,
+                            splashColor: Colors.orange[600],
+                            minWidth: 120,
+                            height: 44,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Icon(Icons.search, color: Colors.white),
+                            onPressed: () async {
+                              if (checkOptions()) {
+                                Navigator.pushNamed(context, '/second');
+                                // g.placesList = [];
+                                // Navigator.pushNamed(context, '/loading');
+                                // QueryService().queryForLocals().then((data) {
+                                //   Navigator.pushReplacementNamed(
+                                //       context, '/second');
+                                // });
+                                // print(g.placesList);
+                              } 
+                              else {
+                                if(g.isSnackBarActive == false){
+                                  g.isSnackBarActive = true;
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text(
+                                      'Selecteaza fiecare camp.',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: Colors.orange[600],
+                                  )).closed.then((SnackBarClosedReason reason){
+                                    g.isSnackBarActive = false;
+                                  });
+                                }
+                              }
+                            }
+                          )
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  ///  'HYUGA' TITLE
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.02),
+                  child: Text(
+                    "hyuga",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontFamily: 'Comfortaa',
+                        fontSize: 25.0,
+                        //fontWeight: FontWeight.bold
+                    ),
+                  )
+                ),
+              ]
             ),
-          ]
-        ),
-      ),
+          ),
+        );
+      }
     );
   }
 }

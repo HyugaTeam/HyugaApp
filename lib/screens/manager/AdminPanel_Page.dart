@@ -89,7 +89,8 @@ class AdminPanel extends StatelessWidget {
       profile: localDocument.data()['profile'],
       discounts: localDocument.data()['discounts'],
       analytics: analytics,
-      reservations: localDocument.data()['reservations']
+      reservations: localDocument.data()['reservations'],
+      retainedPercentage: localDocument.data()['retained_percentage']
     );
     print("finished");
     return _managedLocal;
