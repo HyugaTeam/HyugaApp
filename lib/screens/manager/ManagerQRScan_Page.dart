@@ -11,6 +11,7 @@ import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/LevelProgressBar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 
@@ -27,16 +28,25 @@ class ManagerQRScan extends StatefulWidget {
 
 class _ManagerQRScanState extends State<ManagerQRScan> {
 
+  bool cameraAccessDenied = false;
   ManagedLocal managedLocal;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   DocumentSnapshot scannedUser;
   String uid = "";
-  double receiptValue;
-  TextEditingController textController = new TextEditingController();
+  int tableNumber;
+  int numberOfGuests;
+  TextEditingController _tableNumberTextController = new TextEditingController();
+  TextEditingController _noOfGuestsTextController = new TextEditingController();
+  GlobalKey<FormState> _tableNoFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _noOfGuestsFormKey = GlobalKey<FormState>();
+
 
   _ManagerQRScanState(){
-    textController.addListener(() {
-      receiptValue = double.parse(textController.value.text);
+    _tableNumberTextController.addListener(() {
+      tableNumber = int.parse(_tableNumberTextController.value.text);
+    });
+    _noOfGuestsTextController.addListener(() {
+      numberOfGuests = int.parse(_noOfGuestsTextController.value.text);
     });
   }
 
@@ -70,8 +80,8 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         if(scanResult.type == ResultType.Cancelled)
           return null;
         return scanResult.rawContent;
-        });
-      DocumentReference ref = _db.collection('users').document(qrResult); // a reference to the scanned user's profile
+      });
+      DocumentReference ref = _db.collection('users').doc(qrResult); // a reference to the scanned user's profile
       var refData = await ref.get();
       print(uid);
       if(qrResult == null || refData == null)
@@ -80,8 +90,12 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         return refData;
     } //on PlatformException
     catch(error){
-      if(error.code == BarcodeScanner.cameraAccessDenied)
+      if(error.code == BarcodeScanner.cameraAccessDenied){
         print("Camera access is denied");
+        setState(() {
+          cameraAccessDenied = true;
+        });
+      }
     }
   }
 
@@ -124,7 +138,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           return double.parse(todayDiscounts[i].toString().substring(12));
       }
     }
-    return null;
+    return 0;
   }
 
 /// TODO: FINISH SCANNING PROCESS
@@ -137,55 +151,76 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 /// ...WITH THE 'OK' FLAG SET TO 'NO'
 
 
-  Future<bool> tryToSendDataToUser(userData,context)async {
+  Future<bool> addNewScan(DocumentSnapshot userData,context)async {
     
     bool ok = false; // This decides whether the scan process has been approved by the user or not
-    DocumentReference ref = _db.collection('users').doc(userData.documentID).collection('scan_history').doc();
-    String docName = userData.documentID;
-    int usersLevel = getLevel(userData['score']);
-    Stream<QuerySnapshot> scanResult = _db.collection('users').doc(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
-    await ref.set(
+    DocumentReference userRef = _db.collection('users').doc(userData.id).collection('scan_history').doc();
+    DocumentReference placeRef = _db.collection('users').doc(authService.currentUser.uid)
+    .collection('managed_locals').doc(managedLocal.id).collection('scanned_codes').doc();
+    String docName = userData.id;
+    int usersLevel = getLevel(userData.data()['score']);
+    //Stream<QuerySnapshot> scanResult = _db.collection('users').doc(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
+    await userRef.set(
       {
           'place_id' : managedLocal.id,
-          'date': DateTime.now().toUtc(),
-          'applied_discount': getAppliedDiscount(),
-          'retained_percentage': 5,
-          'score' : userData.data['score'] + 1,
-          'total' : receiptValue,
           'place_name' : managedLocal.name,
-          'approved_by_user' : null
+          'date_start': FieldValue.serverTimestamp(), 
+          'discount': getAppliedDiscount(),
+          'is_active': true,
+          'number_of_guests': numberOfGuests,
+          'score' : userData.data()['score'],
+          'approved_by_user' : null,
+          'reservation' : false,
+          'reservation_ref' : null,
+          'place_scan_ref' : placeRef
       },
       SetOptions(
         merge: true
       )
     );
-    scanResult.first.then((value) {
-      if(value.docChanges.first.doc.data()['approved_by_user'] == true)
-        ok = true;
-    }
+    await placeRef.set(
+      {
+          'guest_id' : userData.id,
+          'guest_name' : userData.data()['displayName'],
+          'date_start': FieldValue.serverTimestamp(), 
+          'discount': getAppliedDiscount(),
+          'is_active': true,
+          'number_of_guests': numberOfGuests,
+          'retained_percentage': managedLocal.retainedPercentage,
+          'score' : userData.data()['score'],
+          'table_number' : tableNumber,
+          'approved_by_user' : null,
+          'reservation' : false,
+          'reservation_ref' : null,
+          'user_scan_ref' : userRef
+      },
+      SetOptions(
+        merge: true
+      )
     );
+    // scanResult.first.then((value) {
+    //   if(value.docChanges.first.doc.data()['approved_by_user'] == true)
+    //     ok = true;
+    // }
+    // );
 
-    incrementUserScore(userData.documentID);
+    //incrementUserScore(userData.documentID);
 
     //Set data about the scanned code in the database
-    DocumentReference newScannedCodeRef = _db.collection('users')
-    .doc(authService.currentUser.uid).collection('managed_locals')
-    .doc(managedLocal.id).collection('scanned_codes').doc();
-    newScannedCodeRef.set({
-      'guest_id' : userData.documentID,
-      'date': DateTime.now().toUtc(),
-      'applied_discount': getAppliedDiscount(),
-      'retained_percentage': 5,
-      'score' : userData.data['score'] + 1,
-      'total' : receiptValue,
-      'guest_name' : userData.data()['name'],
-      'approved_by_user' : true
-    });
+    // DocumentReference newScannedCodeRef = _db.collection('users')
+    // .doc(authService.currentUser.uid).collection('managed_locals')
+    // .doc(managedLocal.id).collection('scanned_codes').doc();
+    // newScannedCodeRef.set({
+    //   'guest_id' : userData.documentID,
+    //   'date': DateTime.now().toUtc(),
+    //   'applied_discount': getAppliedDiscount(),
+    //   'retained_percentage': 5,
+    //   'score' : userData.data['score'] + 1,
+    //   'total' : tableNumber,
+    //   'guest_name' : userData.data()['name'],
+    //   'approved_by_user' : true
+    // });
     return ok;
-  }
-
-  void addScannedCodeToDatabase(userData){
-
   }
 
   @override
@@ -193,25 +228,34 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
     managedLocal =  Provider.of<AsyncSnapshot<dynamic>>(context).data;
 
-    return FutureBuilder(
+    return FutureBuilder<DocumentSnapshot>(
       future: _scanQR(),
       builder:(context,scanResult) {
         print(scanResult);
         if(!scanResult.hasData)
           return Scaffold(
             body: Container(
-              child: Center(child: Text("Ceva a mers gresit, incearca sa scanezi din nou!"))
+              child: Center(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Ceva a mers gresit, incearca sa scanezi din nou!"),
+                  cameraAccessDenied
+                  ? TextButton(
+                    onPressed: (){
+                      Permission.camera.request().then((value) => setState((){
+                        cameraAccessDenied = value.isGranted;
+                      }));
+                    }, 
+                    child: Text("Permite acces camerei.")
+                  )
+                  : Container()
+                ],
+              ))
             )
           );
-        else if(getAppliedDiscount() == null)
-          return Scaffold(
-            body: Container(
-              child: Center(child: Text("Localul nu are astazi reduceri!"),)
-            ),
-          );
-        else if(scanResult.data.data!= null){
+        else if(scanResult.data.data()!= null){
           print("valid code///////");
-          uid = scanResult.data.documentID;
+          uid = scanResult.data.id;
           return Scaffold(
             body: Container(
               child: Column(
@@ -222,66 +266,155 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                   //     scanResult.data.data['displayName']
                   //   )
                   // ),
-                  AlertDialog(
-                    title: Wrap(
-                      children: <Widget>[
-                        Text("Reducerea care trebuie aplicata:", style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(getAppliedDiscount().toString(),style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
-                    ),
-                    content: Text("Introduceti valoarea bonului (cu reducerea deja aplicata):"),
-                    actionsPadding: EdgeInsets.only(right: 20),
-                    actions: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                height: 100,
-                                width: 200,
-                                child: TextField(
-                                  controller: textController,
-                                  keyboardType: TextInputType.number,
-                                  onSubmitted: (String str){
-                                    setState((){receiptValue = double.parse(str);});
-                                  },
-                                ),
+                  Dialog(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                              height: MediaQuery.of(context).size.height*0.5,
+                              width: MediaQuery.of(context).size.height*0.8,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "Introduceti numarul mesei:",
+                                      style: TextStyle(
+                                        fontSize: 20
+                                      ),
+                                    ),
+                                    Form(
+                                      key: _tableNoFormKey,
+                                      child: TextFormField(
+                                        onChanged: (input) => tableNumber = int.tryParse(input),
+                                        //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
+                                        onFieldSubmitted: (input) => _tableNoFormKey.currentState.validate(),
+                                        cursorColor: Colors.blueGrey,
+                                        keyboardType: TextInputType.number,
+                                        validator: (String input) => int.tryParse(input) == null 
+                                          ? "Numarul introdus nu este corect!"
+                                          : null,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Text(
+                                      "Introduceti numarul de oaspeti:",
+                                      style: TextStyle(
+                                        fontSize: 20
+                                      ),
+                                    ),
+                                    Form(
+                                      key: _noOfGuestsFormKey,
+                                      child: TextFormField(
+                                        onChanged: (input) => numberOfGuests = int.tryParse(input),
+                                        //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
+                                        onFieldSubmitted: (input) => _noOfGuestsFormKey.currentState.validate(),
+                                        cursorColor: Colors.blueGrey,
+                                        keyboardType: TextInputType.number,
+                                        validator: (String input) => int.tryParse(input) == null 
+                                          ? "Numarul introdus nu este corect!"
+                                          : null,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height*0.05,
+                                    ),
+                                    
+                                    ButtonBar(
+                                      children: [
+                                        RaisedButton(
+                                          color: Colors.blueGrey,
+                                          child: Text("Continua"),
+                                          onPressed: () async{
+                                            if(_tableNoFormKey.currentState.validate()){
+                                              addNewScan(scanResult.data,context).then((value)=> Navigator.pop(context,value));
+                                            }
+                                          }
+                                        ),
+                                        RaisedButton(
+                                          color: Colors.white,
+                                          child: Text("Renunta"),
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    // SizedBox(
+                                    //   height: MediaQuery.of(context).size.height*0.1
+                                    // ),
+                                    Expanded(
+                                      child:Container()
+                                    ),
+                                    // isLoading == true
+                                    // ? CircularProgressIndicator()
+                                    // : SizedBox(height: 6,)
+                                  ],
+                                )
                               ),
-                              Text(
-                                "Lei"
-                              ),
-                            ],
-                          ),
-                          RaisedButton(
-                            child: Text(
-                              "GATA",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              )
                             ),
-                            onPressed: () {
-                              tryToSendDataToUser(scanResult.data, context);
-                              showDialog(context: context, builder: (context){
-                                  return FutureBuilder(
-                                    future: Future<bool>.delayed(Duration(milliseconds: 1500)).then((value) { Navigator.pop(context); }),
-                                    builder:(context,finished){ 
-                                      if(!finished.hasData)
-                                        return AlertDialog(
-                                          title: Text(
-                                            "Cod scanat cu succes!"
-                                          ),
-                                          content: FaIcon(FontAwesomeIcons.checkCircle, color: Colors.green,),
-                                        );
-                                        return Container();
-                                    });
-                                }).then((value) { Navigator.pop(context); });
-                            } 
                           )
-                        ],
-                      ),
+                          
+                  // AlertDialog(
+                  //   title: Wrap(
+                  //     children: <Widget>[
+                  //       Text("Reducerea care trebuie aplicata:", style: TextStyle(fontWeight: FontWeight.bold)),
+                  //       Text(getAppliedDiscount().toString(),style: TextStyle(fontWeight: FontWeight.bold))
+                  //     ],
+                  //   ),
+                  //   content: Text("Introduceti numarul mesei"),
+                  //   actionsPadding: EdgeInsets.only(right: 20),
+                  //   actions: <Widget>[
+                  //     Column(
+                  //       children: <Widget>[
+                  //         Row(
+                  //           children: <Widget>[
+                  //             Container(
+                  //               height: 100,
+                  //               width: 200,
+                  //               child: TextField(
+                  //                 controller: textController,
+                  //                 keyboardType: TextInputType.number,
+                  //                 onSubmitted: (String str){
+                  //                   setState((){tableNumber = int.parse(str);});
+                  //                 },
+                  //               ),
+                  //             ),
+                  //             Text(
+                  //               "Lei"
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         RaisedButton(
+                  //           child: Text(
+                  //             "GATA",
+                  //             style: TextStyle(
+                  //               fontWeight: FontWeight.bold
+                  //             )
+                  //           ),
+                  //           onPressed: () {
+                  //             tryToSendDataToUser(scanResult.data, context);
+                  //             showDialog(context: context, builder: (context){
+                  //                 return FutureBuilder(
+                  //                   future: Future<bool>.delayed(Duration(milliseconds: 1500)).then((value) { Navigator.pop(context); }),
+                  //                   builder:(context,finished){ 
+                  //                     if(!finished.hasData)
+                  //                       return AlertDialog(
+                  //                         title: Text(
+                  //                           "Cod scanat cu succes!"
+                  //                         ),
+                  //                         content: FaIcon(FontAwesomeIcons.checkCircle, color: Colors.green,),
+                  //                       );
+                  //                       return Container();
+                  //                   });
+                  //               }).then((value) { Navigator.pop(context); });
+                  //           } 
+                  //         )
+                  //       ],
+                  //     ),
                       
-                    ],
-                  )
+                  //   ],
+                  // )
                 ],
               )
             )

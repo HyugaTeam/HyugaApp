@@ -58,7 +58,7 @@ class AdminPanel extends StatelessWidget {
     return result;
   }
 
-  Future<ManagedLocal> _getLocalData() async{
+  Future<ManagedLocal> _getPlaceData() async{
     ManagedLocal _managedLocal = ManagedLocal();
 
     // Queryes data about the place from the manager's directory
@@ -68,29 +68,30 @@ class AdminPanel extends StatelessWidget {
     .get())
     .docs.first;
 
-    String localDocumentID = placeData.id;
-    print(localDocumentID);
+    String placeDocumentID = placeData.id;
+    print(placeDocumentID);
     Map<String,dynamic> analytics = {};
-    analytics.addAll(await _getPlaceAnalytics(localDocumentID));
+    analytics.addAll(await _getPlaceAnalytics(placeDocumentID));
     
     print("start");
-    DocumentSnapshot localDocument = await FirebaseFirestore.instance
+    DocumentSnapshot placeDocument = await FirebaseFirestore.instance
     .collection('locals_bucharest')
-    .doc(localDocumentID)
+    .doc(placeDocumentID)
     .get();
-    print(localDocument.data);
+    print(placeDocument.data);
     _managedLocal = ManagedLocal( 
-      id: localDocumentID,
-      name: localDocument.data()['name'],
-      description: localDocument.data()['description'],
-      cost: localDocument.data()['cost'],
-      capacity: localDocument.data()['capacity'],
-      ambiance: localDocument.data()['ambiance'],
-      profile: localDocument.data()['profile'],
-      discounts: localDocument.data()['discounts'],
+      id: placeDocumentID,
+      name: placeDocument.data()['name'],
+      description: placeDocument.data()['description'],
+      cost: placeDocument.data()['cost'],
+      capacity: placeDocument.data()['capacity'],
+      ambiance: placeDocument.data()['ambiance'],
+      profile: placeDocument.data()['profile'],
+      discounts: placeDocument.data()['discounts'],
       analytics: analytics,
-      reservations: localDocument.data()['reservations'],
-      retainedPercentage: localDocument.data()['retained_percentage']
+      reservations: placeDocument.data()['reservations'],
+      retainedPercentage: placeDocument.data()['retained_percentage'],
+      schedule: placeDocument.data()['schedule']
     );
     print("finished");
     return _managedLocal;
@@ -99,7 +100,7 @@ class AdminPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getLocalData(),
+      future: _getPlaceData(),
       builder: (context, _managedLocal) {
         if(!_managedLocal.hasData)
           return Scaffold(body: Center(child: CircularProgressIndicator(),));

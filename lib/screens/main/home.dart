@@ -122,9 +122,9 @@ class _HomeState extends State<Home> {
       stream: authService.seatingStatus,
       builder: (context, ss) {
       if(!ss.hasData)
-        return Scaffold(body: CircularProgressIndicator(),);
+        return Scaffold(body: Center(child: CircularProgressIndicator(),));
       else if(ss.data.docs.length == 1)
-        return SeatingInterface();
+        return SeatingInterface(place: ss.data.docs[0]);
       else
         return Scaffold(
           extendBodyBehindAppBar: true,

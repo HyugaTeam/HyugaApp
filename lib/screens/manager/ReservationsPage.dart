@@ -452,19 +452,18 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 },
                                                 SetOptions(merge: true)
                                               );
-                                            //   /// TODO: Add a scanned code
-                                            if(acceptedReservations[index].data()['discount'] != 0){
-                                              
+                                            /// Adds a new scanned code ONLY if there's and offer/discount in that interval
+                                            //if(acceptedReservations[index].data()['discount'] != 0){
                                               /// Add the new scanned code to the manager's collection
                                               DocumentReference placeScanningRef = acceptedReservations[index].reference
                                               .parent.parent
                                               .collection('scanned_codes').doc();
-                                              Map placeScanData = acceptedReservations[index].data();
+                                              Map<String, dynamic> placeScanData = acceptedReservations[index].data();
                                               placeScanData.addAll(
                                                 {
                                                   "is_active": true,
                                                   "reservation": true,
-                                                  "reservation_id": placeRef.id,
+                                                  "reservation_ref": placeRef,
                                                   "retained_percentage": _managedLocal.retainedPercentage
                                                 }
                                               );
@@ -477,19 +476,19 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               DocumentReference userScanningRef = acceptedReservations[index].data()['user_reservation_ref']
                                               .parent.parent
                                               .collection('scan_history').doc();
-                                              Map userScanData = acceptedReservations[index].data();
+                                              Map<String,dynamic> userScanData = acceptedReservations[index].data();
                                               userScanData.addAll(
                                                 {
                                                   "is_active": true,
                                                   "reservation": true,
-                                                  "reservation_id": userRef.id,
+                                                  "reservation_ref": userRef,
                                                   //"retained_percentage": _managedLocal.retainedPercentage
                                                 }
                                               );
                                               userScanningRef.set(
                                                 userScanData
                                               );
-                                            }
+                                            //}
                                               print("gata");
                                               // DocumentReference newScanRef = FirebaseFirestore.instance.collection(
                                               //   ''

@@ -118,6 +118,97 @@ class _SignInState extends State<SignIn> {
               //   value: Text("Continue with email"),
               //   onChanged: (Widget widget) => setState(() => ),
               // ),
+              
+              //SizedBox(height:40),
+              SizedBox(height: 20),
+              MaterialButton(   /// Continue with Google button
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                  side: BorderSide(
+                    width: 1,
+                    color: Colors.black26
+                  )
+                ),
+                minWidth: 360,
+                height: 50,
+                child: Container(
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Image.asset('assets/images/google-logo-icon.png',width: 24,),
+                      //Container(width: 80,),
+                      Text("Continue with Google"),
+                    ],
+                  ),
+                ),
+                onPressed: (){
+                  dynamic signInResult = authService.signInWithGoogle(); 
+                  if(signInResult.runtimeType == PlatformException) 
+                    handleAuthError(context, signInResult);
+                },
+              ),
+              SizedBox(height: 20),
+              MaterialButton(   /// Continue with Facebook button
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                  side: BorderSide(
+                    width: 1,
+                    color: Colors.black26
+                  )
+                ),
+                minWidth: 360,
+                height: 50,
+                child: Container(
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
+                      //Container(width: 80,),
+                      Text("Continue with Facebook"),
+                    ],
+                  ),
+                ),
+                onPressed: (){
+                  dynamic signInResult = authService.signInWithFacebook();
+                  if(signInResult.runtimeType == PlatformException) 
+                    handleAuthError(context, signInResult);  
+                },
+              ),
+              SizedBox(height: 20,),
+              g.isIOS ?  // checks if the platform on which the app is ran is IOS
+              // AppleSignInButton(
+              //   cornerRadius: 30,
+              //   style: ButtonStyle.black,
+              //   type: ButtonType.signIn,
+              // )
+              MaterialButton(   /// Continue with AppleID button
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                  side: BorderSide(
+                    width: 1,
+                    color: Colors.black26
+                  )
+                ),
+                minWidth: 360,
+                height: 50,
+                child: Container(
+                  width: 300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      FaIcon(FontAwesomeIcons.apple, color: Colors.black,),
+                      //Container(width: 80,),
+                      Text("Continue with Apple"),
+                    ],
+                  ),
+                ),
+                onPressed: (){
+                  authService.signInWithApple();
+                },
+              )
+              : Container(),
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -244,96 +335,6 @@ class _SignInState extends State<SignIn> {
                   ],
                 ),
               ),
-              //SizedBox(height:40),
-              SizedBox(height: 20),
-              MaterialButton(   /// Continue with Google button
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                  side: BorderSide(
-                    width: 1,
-                    color: Colors.black26
-                  )
-                ),
-                minWidth: 360,
-                height: 50,
-                child: Container(
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Image.asset('assets/images/google-logo-icon.png',width: 24,),
-                      //Container(width: 80,),
-                      Text("Continue with Google"),
-                    ],
-                  ),
-                ),
-                onPressed: (){
-                  dynamic signInResult = authService.signInWithGoogle(); 
-                  if(signInResult.runtimeType == PlatformException) 
-                    handleAuthError(context, signInResult);
-                },
-              ),
-              SizedBox(height: 20),
-              MaterialButton(   /// Continue with Facebook button
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                  side: BorderSide(
-                    width: 1,
-                    color: Colors.black26
-                  )
-                ),
-                minWidth: 360,
-                height: 50,
-                child: Container(
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
-                      //Container(width: 80,),
-                      Text("Continue with Facebook"),
-                    ],
-                  ),
-                ),
-                onPressed: (){
-                  dynamic signInResult = authService.signInWithFacebook();
-                  if(signInResult.runtimeType == PlatformException) 
-                    handleAuthError(context, signInResult);  
-                },
-              ),
-              SizedBox(height: 20,),
-              g.isIOS ?  // checks if the platform on which the app is ran is IOS
-              // AppleSignInButton(
-              //   cornerRadius: 30,
-              //   style: ButtonStyle.black,
-              //   type: ButtonType.signIn,
-              // )
-              MaterialButton(   /// Continue with AppleID button
-                shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                  side: BorderSide(
-                    width: 1,
-                    color: Colors.black26
-                  )
-                ),
-                minWidth: 360,
-                height: 50,
-                child: Container(
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      FaIcon(FontAwesomeIcons.apple, color: Colors.black,),
-                      //Container(width: 80,),
-                      Text("Continue with Apple"),
-                    ],
-                  ),
-                ),
-                onPressed: (){
-                  authService.signInWithApple();
-                },
-              )
-              : Container(),
               ],
             ),
           ),

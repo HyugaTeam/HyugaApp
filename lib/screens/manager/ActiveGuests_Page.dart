@@ -18,7 +18,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
   Stream activeGuestsStream(){
     FirebaseFirestore _db = FirebaseFirestore.instance;
     return   _db.collection('users').doc(authService.currentUser.uid).collection('managed_locals')
-    .doc(_managedLocal.id).collection('reservations')
+    .doc(_managedLocal.id).collection('scanned_codes')
     .where('is_active',isEqualTo: true)
     .snapshots();
   }
@@ -73,11 +73,29 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Reducerea care trebuie aplicata:",
+                                  "Reducerea care trebuie aplicata: " +
+                                    (activeGuestsList[index].data()['discount'] != 0
+                                    ? "${activeGuestsList[index].data()['discount']}%"
+                                    : "0%"),
                                   style: TextStyle(
                                     fontSize: 20
                                   ),
                                 ),
+                                // RichText(
+                                //   text: TextSpan(
+                                //     children: [ 
+                                //       TextSpan( 
+                                //         text: "Reducerea care trebuie aplicata: " +
+                                //           (activeGuestsList[index].data()['discount'] != 0
+                                //           ? "${activeGuestsList[index].data()['discount']}%"
+                                //           : "0%"),
+                                //         style: TextStyle(
+                                //           fontSize: 20
+                                //         ),
+                                //       ),
+                                //     ]
+                                //   )
+                                // ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.05),
                                 Text(
                                   "Introduceti valoarea bonului:",
@@ -113,14 +131,27 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                       color: Colors.blueGrey,
                                       child: Text("Continua"),
                                       onPressed: (){
-                                        // if(_formKey.currentState.validate()){
-                                        //   DocumentReference ref = activeGuestsList[index].reference;
-                                        //   ref.set({
-                                        //     "receipt_total": receiptTotal,
-                                        //     "is_active": false
-                                        //   });
-                                        //   Navigator.pop(context);
-                                        // }
+                                        if(_formKey.currentState.validate()){
+                                          DocumentReference placeRef = activeGuestsList[index].reference;
+                                          placeRef.set(
+                                            {
+                                            "receipt_total": receiptTotal,
+                                            "is_active": false,
+                                            "date_end" : FieldValue.serverTimestamp()
+                                            },
+                                            SetOptions(merge: true)
+                                          );
+                                          DocumentReference userRef = activeGuestsList[index].data()['user_scan_ref'];
+                                          userRef.set(
+                                            {
+                                            "receipt_total": receiptTotal,
+                                            "is_active": false,
+                                            "date_end" : FieldValue.serverTimestamp()
+                                            },
+                                            SetOptions(merge: true)
+                                          );
+                                          Navigator.pop(context);
+                                        }
                                       },
                                     ),
                                     RaisedButton(
@@ -145,7 +176,15 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                             )
                           ),
                         ),
-                      ));
+                      )).then((value) {
+                          Scaffold.of(context).removeCurrentSnackBar();
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Masa a fost finalizata!"),
+                            )
+                          );
+                        }
+                      );
                       // Navigator.pop(context);
                       // DocumentReference ref = pendingReservations[index].reference;
                       // DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
