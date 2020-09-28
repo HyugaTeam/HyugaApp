@@ -189,7 +189,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             ),
                             SizedBox(height: 20),
                             Text(
-                              'Atunci cand vezi un cerculet portocaliu in coltul unui restaurant inseamna ca poti primi reduceri de pana la 50% sau oferte speciale!\nPentru a vedea exact discountul intra pe profilul localului!',
+                              'Atunci cand vezi un cerculet portocaliu in coltul unui restaurant inseamna ca poti primi reduceri de pana la 40% sau oferte speciale!\nPentru a vedea exact discountul intra pe profilul localului!',
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 16,
@@ -236,7 +236,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             ),
                             SizedBox(height: 17.0),
                             Text(
-                              'Cand ceri bonul informeaza un angajat al localului ca esti client Hyuga',
+                              'Cand ajungi in local informeaza un angajat al localului ca esti client Hyuga',
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 20,
@@ -251,7 +251,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             ),
                             SizedBox(height: 17.0),
                             Text(
-                              'Acesta iti va scana codul unic si tu vei primi o reducere in functie de ora la care ai cerut nota de plata!\nOrele si reducerile respective se afla pe profilul localului!',
+                              'Acesta iti in functie de ora la care a fost scanat codul!\nOrele si reducerile respective se afla pe profilul localului!',
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 16.5,

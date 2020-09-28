@@ -754,16 +754,16 @@ class _ThirdPageState extends State<ThirdPage> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text("Ai deja o rezervare."),
-                                        TextButton(
-                                          child: Text(
-                                            "Verifica aici"
-                                          ),
-                                          onPressed: (){
-                                            Scaffold.of(context).removeCurrentSnackBar();
-                                            Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
-                                          },
-                                        )
-                                      ],
+                                      //   TextButton(
+                                      //     child: Text(
+                                      //       "Verifica aici"
+                                      //     ),
+                                      //     onPressed: (){
+                                      //       Scaffold.of(context).removeCurrentSnackBar();
+                                      //       Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
+                                      //     },
+                                      //   )
+                                     ],
                                     ),
                                   )
                                 );

@@ -209,6 +209,9 @@ class _SignInState extends State<SignIn> {
                 },
               )
               : Container(),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(

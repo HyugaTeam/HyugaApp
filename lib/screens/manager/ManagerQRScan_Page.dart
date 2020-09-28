@@ -240,7 +240,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                 children: [
                   Text("Ceva a mers gresit, incearca sa scanezi din nou!"),
                   cameraAccessDenied
-                  ? TextButton(
+                  ? RaisedButton(
                     onPressed: (){
                       Permission.camera.request().then((value) => setState((){
                         cameraAccessDenied = value.isGranted;

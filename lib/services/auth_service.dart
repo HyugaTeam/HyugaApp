@@ -34,8 +34,8 @@ class AuthService{
           isLoading = true;
           DocumentReference ref = _db.collection('users').doc(value.uid);
           ref.get().then((DocumentSnapshot docSnap) {
-            if(docSnap.data != null){
-              print(docSnap.data);
+            if(docSnap != null && docSnap.data() != null){
+              //print(docSnap.data);
               if(docSnap.data().containsKey('manager') == true)
                 currentUser.isManager = docSnap.data()['manager'];
               else 
@@ -54,6 +54,7 @@ class AuthService{
   }
   
   Stream<QuerySnapshot> get seatingStatus {
+    //print("loading seating status");
     if(currentUser != null)
       if(currentUser.isAnonymous != true)
         return _db.collection('users').doc(currentUser.uid)
@@ -195,7 +196,7 @@ class AuthService{
       //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
-      print(error.code);
+      print(error);
       //handleAuthError(error);
       return(error);
     }

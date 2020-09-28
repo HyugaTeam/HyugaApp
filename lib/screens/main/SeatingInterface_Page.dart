@@ -29,8 +29,10 @@ class _SeatingInterfaceState extends State<SeatingInterface> {
   ScrollController _scrollController;
 
   Future<Local> getPlaceData() async{
+    //print(widget.place.data()['place_id']);
     DocumentSnapshot placeData = await FirebaseFirestore.instance
     .collection('locals_bucharest').doc(widget.place.data()['place_id']).get();
+    print(placeData.data());
     Local place = queryingService.docSnapToLocal(placeData);
     return place;
   }

@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/bigquery/v2.dart';
-import 'package:googleapis/logging/v2.dart';
 import 'package:http/http.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/models/user.dart';
@@ -17,29 +15,29 @@ import 'package:provider/provider.dart';
 class AdminPanel extends StatelessWidget {
   
   Future<void> fetchBigQueryData() async {
-    try{
+    // try{
       
-      Client client = Client();
+    //   Client client = Client();
       
-      String str = BigqueryApi.BigqueryReadonlyScope;
-      BigqueryApi bigqueryApi = BigqueryApi(
-        client,
-        rootUrl: 'https://bigquery.googleapis.com/',
-        servicePath: 'bigquery/v2/'
-      );
-      var data = bigqueryApi.tables;
-      await data.get(
-        'hyuga-app',
-        'hyuga-app:analytics_223957065',
-        'hyuga-app:analytics_223957065.events_20200909'
-      );
-      print(data);
-    }
-    catch(error){
-      print('ERROR');
-      print(error);
-      print('/////');
-    }
+    //   String str = BigqueryApi.BigqueryReadonlyScope;
+    //   BigqueryApi bigqueryApi = BigqueryApi(
+    //     client,
+    //     rootUrl: 'https://bigquery.googleapis.com/',
+    //     servicePath: 'bigquery/v2/'
+    //   );
+    //   var data = bigqueryApi.tables;
+    //   await data.get(
+    //     'hyuga-app',
+    //     'hyuga-app:analytics_223957065',
+    //     'hyuga-app:analytics_223957065.events_20200909'
+    //   );
+    //   print(data);
+    // }
+    // catch(error){
+    //   print('ERROR');
+    //   print(error);
+    //   print('/////');
+    // }
   }
 
   Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID) async{
