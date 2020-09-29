@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -16,10 +18,20 @@ class ReservationsHistoryPage extends StatelessWidget {
      QuerySnapshot scanHistory = await _db.collection('users')
     .doc(authService.currentUser.uid).collection('reservations_history')
     .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
-    .where('claimed', isEqualTo: null) 
+    .where('claimed', isNull: true) 
     .get();
     itemCount = scanHistory.docs.length;
-    return scanHistory.docs[0].data();
+    bool allAreDenied = true;
+    DocumentSnapshot reservation;
+    scanHistory.docs.forEach((element) {
+      if(element.data()['accepted'] != false){
+        reservation = element;
+        allAreDenied = false;
+      }
+    });
+    if(allAreDenied) return null;
+
+    return reservation.data();
   }
 
   Future<List> getPastReservations() async {
@@ -469,12 +481,10 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                 Divider(
                                                   indent: 10,
                                                 ),
-                                                Flexible(
+                                                reservationsHistory.data[index]['total'] != null
+                                                ? Flexible(
                                                   //width: MediaQuery.of(context).size.width*0.23,
                                                   child: Text(
-                                                    // "2000 RON",
-                                                    
-                                                    //"30000 RON",
                                                     reservationsHistory.data[index]['total'] == reservationsHistory.data[index]['total'].toInt()
                                                       ? reservationsHistory.data[index]['total'].toInt().toString()+" RON"
                                                       : reservationsHistory.data[index]['total'] +" RON",
@@ -486,6 +496,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                     maxLines: 2,
                                                   ),
                                                 )
+                                                : Container()
                                               ],
                                             ),
                                           ),
@@ -493,7 +504,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             padding: const EdgeInsets.only(top: 5, bottom: 8),
                                             child: Text(
                                               /// A formula which converts the Timestamp to Date format
-                                              'Data: ' + DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
+                                              'Data: ' + DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date_start'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
                                               .substring(0,16),
                                               style: TextStyle(
                                                 fontSize: 12,

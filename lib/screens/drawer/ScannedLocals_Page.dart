@@ -19,7 +19,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
   Future<List> getScanHistory() async {
     QuerySnapshot scanHistory = await _db.collection('users')
     .doc(authService.currentUser.uid).collection('scan_history')
-    .where('approved_by_user', isEqualTo: true) 
+    //.where('approved_by_user', isEqualTo: true) 
     .get();
     itemCount = scanHistory.docs.length;
     return scanHistory.docs.map((doc)=>doc.data()).toList();

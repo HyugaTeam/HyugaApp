@@ -768,7 +768,7 @@ class _ThirdPageState extends State<ThirdPage> {
                                   )
                                 );
                               }
-                            else if(value.docs.length == 0){
+                            else{
                               print("nu are rezervari");
                               showDialog(context: context, builder: (newContext) => Provider(
                                 create: (context) => widget.local, 

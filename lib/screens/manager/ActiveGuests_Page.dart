@@ -135,7 +135,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                           DocumentReference placeRef = activeGuestsList[index].reference;
                                           placeRef.set(
                                             {
-                                            "receipt_total": receiptTotal,
+                                            "total": receiptTotal,
                                             "is_active": false,
                                             "date_end" : FieldValue.serverTimestamp()
                                             },
@@ -144,7 +144,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                           DocumentReference userRef = activeGuestsList[index].data()['user_scan_ref'];
                                           userRef.set(
                                             {
-                                            "receipt_total": receiptTotal,
+                                            "total": receiptTotal,
                                             "is_active": false,
                                             "date_end" : FieldValue.serverTimestamp()
                                             },
@@ -203,6 +203,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                     }
                   ),
                   title: Text("Masa numarul ${activeGuestsList[index].data()['table_number']}"),
+                  subtitle: Text(activeGuestsList[index].data()['guest_name']),
                 ),
                 separatorBuilder: (context,index) => Divider(
                   thickness: 2,

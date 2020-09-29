@@ -473,7 +473,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 "guest_name": acceptedReservations[index].data()['guest_name'],
                                                 "is_active": true,
                                                 "number_of_guests": acceptedReservations[index].data()['number_of_guests'],
-                                                "user_scan_ref": placeScanningRef,
+                                                "user_scan_ref": userScanningRef,
                                                 "reservation": true,
                                                 "reservation_ref": placeRef
                                               };
