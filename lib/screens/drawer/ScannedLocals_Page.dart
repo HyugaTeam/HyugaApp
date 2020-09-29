@@ -178,7 +178,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           TextSpan(text: "Data: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
                                             text: 
-                                            DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date'].millisecondsSinceEpoch).toString()
+                                            DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch).toString()
                                           )
                                         ]
                                       ), 
@@ -287,12 +287,9 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                             Divider(
                                               indent: 10,
                                             ),
-                                            Flexible(
-                                              //width: MediaQuery.of(context).size.width*0.23,
+                                            scanHistory.data[index]['total'] != null
+                                            ? Flexible(
                                               child: Text(
-                                                // "2000 RON",
-                                                
-                                                //"30000 RON",
                                                 scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toInt()
                                                   ? scanHistory.data[index]['total'].toInt().toString()+" RON"
                                                   : scanHistory.data[index]['total'] +" RON",
@@ -304,6 +301,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                                 maxLines: 2,
                                               ),
                                             )
+                                            : Container()
                                           ],
                                         ),
                                       ),
@@ -311,7 +309,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         padding: const EdgeInsets.only(top: 5, bottom: 8),
                                         child: Text(
                                           /// A formula which converts the Timestamp to Date format
-                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
+                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
                                           .substring(0,16),
                                           style: TextStyle(
                                             fontSize: 12,

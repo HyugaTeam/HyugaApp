@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -18,7 +16,7 @@ class ReservationsHistoryPage extends StatelessWidget {
      QuerySnapshot scanHistory = await _db.collection('users')
     .doc(authService.currentUser.uid).collection('reservations_history')
     .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
-    .where('claimed', isNull: true) 
+    .where('claimed', isNull: true)     
     .get();
     itemCount = scanHistory.docs.length;
     bool allAreDenied = true;
@@ -29,6 +27,7 @@ class ReservationsHistoryPage extends StatelessWidget {
         allAreDenied = false;
       }
     });
+    print(reservation);
     if(allAreDenied) return null;
 
     return reservation.data();
