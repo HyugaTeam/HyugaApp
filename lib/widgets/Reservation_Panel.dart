@@ -359,7 +359,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         'date_start': Timestamp.fromDate(_selectedDate),
                         'guest_id' : authService.currentUser.uid,
                         'guest_name' : authService.currentUser.displayName,
-                        'is_active' : null,
+                        'claimed' : null,
                         'number_of_guests' : _selectedNoOfPeople + 1,
                         'discount': _selectedDiscount,
                         'user_reservation_ref' : userReservationRef
@@ -372,7 +372,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'date_start': Timestamp.fromDate(_selectedDate),
                           'place_id' : local.id,
                           'place_name' : local.name,
-                          'is_active' : null,
+                          'claimed' : null,
                           'number_of_guests' : _selectedNoOfPeople + 1,
                           'discount': _selectedDiscount,
                           'place_reservation_ref': placeReservationRef

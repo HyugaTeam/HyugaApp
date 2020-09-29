@@ -16,7 +16,7 @@ class ReservationsHistoryPage extends StatelessWidget {
      QuerySnapshot scanHistory = await _db.collection('users')
     .doc(authService.currentUser.uid).collection('reservations_history')
     .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
-    .where('is_active', isEqualTo: null) 
+    .where('claimed', isEqualTo: null) 
     .get();
     itemCount = scanHistory.docs.length;
     return scanHistory.docs[0].data();
@@ -25,7 +25,7 @@ class ReservationsHistoryPage extends StatelessWidget {
   Future<List> getPastReservations() async {
     QuerySnapshot scanHistory = await _db.collection('users')
     .doc(authService.currentUser.uid).collection('reservations_history')
-    .where('is_active', isEqualTo: false) 
+    //.where('claimed', isEqualTo: true) 
     .get();
     itemCount = scanHistory.docs.length;
     return scanHistory.docs.map((doc)=>doc.data()).toList();

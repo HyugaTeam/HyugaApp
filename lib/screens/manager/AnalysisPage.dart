@@ -15,14 +15,14 @@ class AnalysisPage extends StatelessWidget {
       body: Container(
         child: ListView(
           children: <Widget>[
-            ListTile(
-              //dense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 50),
-              title: Text("Vizualizari in timp real"),
-              //leading: Text("leading"),
-              subtitle: Text("(ultimele 14 zile)"),
-              trailing: Text("119")
-            ),
+            // ListTile(
+            //   //dense: true,
+            //   contentPadding: EdgeInsets.symmetric(horizontal: 50),
+            //   title: Text("Vizualizari in timp real"),
+            //   //leading: Text("leading"),
+            //   subtitle: Text("(ultimele 14 zile)"),
+            //   trailing: Text("119")
+            // ),
             Divider(thickness: 1,),
             ListTile(
               //dense: true,
@@ -30,7 +30,9 @@ class AnalysisPage extends StatelessWidget {
               title: Text("Venituri generate de Hyuga"),
               //leading: Text("leading"),
               subtitle: Text("(ultimele 30 zile)"),
-              trailing: Text("??")
+              trailing: Text(
+                _managedLocal.analytics['thirty_days_income'].toString()+"\nRON"
+              )
             ),
             ListTile(
               //dense: true,
@@ -38,15 +40,17 @@ class AnalysisPage extends StatelessWidget {
               title: Text("Clienti adusi de Hyuga"),
               //leading: Text("leading"),
               subtitle: Text("(ultimele 30 zile)"),
-              trailing: Text("??")
+              trailing: Text(
+                _managedLocal.analytics['thirty_days_guests'].toString()
+              )
             ),
-            ListTile(
-                //dense: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 50),
-                title: Text("Retentie utilizatori"),
-                subtitle: Text("(clienti/vizualizare)"),
-                trailing: Text("2%")
-            ),
+            // ListTile(
+            //     //dense: true,
+            //     contentPadding: EdgeInsets.symmetric(horizontal: 50),
+            //     title: Text("Retentie utilizatori"),
+            //     subtitle: Text("(clienti/vizualizare)"),
+            //     trailing: Text("2%")
+            // ),
             Divider(
               thickness: 1,
             ),
@@ -58,13 +62,13 @@ class AnalysisPage extends StatelessWidget {
                 ),
               ),
             ),
-            ListTile(
-                //dense: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 50),
-                title: Text("Vizualizari"),
-                //subtitle: Text("(clienti/vizualizare)"),
-                trailing: Text("2%")
-            ),
+            // ListTile(
+            //     //dense: true,
+            //     contentPadding: EdgeInsets.symmetric(horizontal: 50),
+            //     title: Text("Vizualizari"),
+            //     //subtitle: Text("(clienti/vizualizare)"),
+            //     trailing: Text("2%")
+            // ),
             ListTile(
                 //dense: true,
                 contentPadding: EdgeInsets.symmetric(horizontal: 50),
@@ -72,8 +76,15 @@ class AnalysisPage extends StatelessWidget {
                 //subtitle: Text("(clienti/vizualizare)"),
                 trailing: Text(_managedLocal.analytics['all_time_income'].toString()+"\nRON")
             ),
+            ListTile(
+                //dense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 50),
+                title: Text("Clienti adusi de Hyuga"),
+                //subtitle: Text("(clienti/vizualizare)"),
+                trailing: Text(_managedLocal.analytics['all_time_guests'].toString())
+            ),
             //Divider(thickness: 2,),
-            MaterialButton(
+            MaterialButton( /// Scan History button
               shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.zero,
                   side: BorderSide(

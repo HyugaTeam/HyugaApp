@@ -42,17 +42,34 @@ class AdminPanel extends StatelessWidget {
 
   Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID) async{
 
-    fetchBigQueryData();
+    //fetchBigQueryData();
 
     QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals').doc(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).get();
-    double sum = 0;
+    double allTimeIncome = 0;
+    int allTimeGuests = 0;
+    double thirtyDaysIncome = 0;
+    int thirtyDaysGuests = 0;
     scannedCodes.docs.forEach((element) {
-      sum += element.data()['total'];
+      allTimeIncome += element.data()['total'];
+      allTimeGuests += element.data()['number_of_guests'];
+      if(DateTime.now().toLocal().difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
+        thirtyDaysIncome += element.data()['total'];
+        thirtyDaysGuests += element.data()['numberOfGuests'];
+      }
+
     });
     Map<String,dynamic> result = {};
-    result.addAll({'scanned_codes': scannedCodes.docs});
-    result.addAll({"all_time_income": sum});
+    result.addAll(
+      {
+        'scanned_codes': scannedCodes.docs,
+        "all_time_income" : allTimeIncome,
+        "all_time_guests": allTimeGuests,
+        "thirty_days_guests": thirtyDaysGuests,
+        "thirty_days_income": thirtyDaysIncome,
+      }
+    );
+    result.addAll({"all_time_income": allTimeIncome});
     return result;
   }
 
