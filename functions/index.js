@@ -56,6 +56,40 @@ exports.sendReservationNotification = functions.firestore
         // })
     })
 
+exports.sendReservationNotificationToUser = functions.firestore
+.document('users/{user}/reservation_history/{reservation}')
+.onUpdate(async (docSnapshot,context) => {
+    const dataAfter = docSnapshot.after.data()
+    const dataBefore = docSnapshot.before.data()
+
+    const querySnapshot = await db.collection('users').doc(data['guest_id'])
+    .collection('tokens').get();
+    
+    const registrationTokens = querySnapshot.docs.map(ss => ss.id);
+
+    const time = dataBefore['date_start']
+    if(dataBefore['accepted'] == null && dataAfter['accepted'] == true){
+      const payload = {
+            notification: {
+              title: 'Rezervare acceptata',
+              body: 'Rezervarea dumneavoastra la ' + dataAfter['place_name'] +' pentru ora '+ time+' a fost acceptata!',
+              clickAction: 'FLUTTER_NOTIFICATION_CLICK'
+            }
+          }
+      return fcm.sendToDevice(registrationTokens,payload);
+    }
+    else {
+      const payload = {
+        notification: {
+          title: 'Rezervare refuzata',
+          body: 'Rezervarea dumneavoastra la ' + dataAfter['place_name'] +' pentru ora '+ time+' a fost refuzata!',
+          clickAction: 'FLUTTER_NOTIFICATION_CLICK'
+        }
+      }
+      return fcm.sendToDevice(registrationTokens,payload);
+    }
+})
+
 // exports.setScoreToZero = functions.https.onRequest(async (req, res) => {
 //     // Grab the text parameter.
 //     const original = req.query.text;
