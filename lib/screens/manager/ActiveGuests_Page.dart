@@ -150,7 +150,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                             },
                                             SetOptions(merge: true)
                                           );
-                                          Navigator.pop(context);
+                                          Navigator.pop(context,true);
                                         }
                                       },
                                     ),
@@ -158,7 +158,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                       color: Colors.white,
                                       child: Text("Renunta"),
                                       onPressed: (){
-                                        Navigator.pop(context);
+                                        Navigator.pop(context,false);
                                       },
                                     )
                                   ],
@@ -177,12 +177,14 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                           ),
                         ),
                       )).then((value) {
-                          Scaffold.of(context).removeCurrentSnackBar();
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Masa a fost finalizata!"),
-                            )
-                          );
+                          if (value == null) {
+                            Scaffold.of(context).removeCurrentSnackBar();
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Masa a fost finalizata!"),
+                              )
+                            );
+                          }
                         }
                       );
                       // Navigator.pop(context);

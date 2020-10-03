@@ -57,6 +57,7 @@ Altele:
 PRELANSARE:
 
 - Schimbat totul in romana
+Categorie,Specific,Cati,Ambianta,Zona
 
 BONUS:
 - Adaugat limba engleza

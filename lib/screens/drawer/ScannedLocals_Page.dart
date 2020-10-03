@@ -146,7 +146,11 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                         children:[
                                           TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                          TextSpan(text: scanHistory.data[index]['applied_discount'].toString() + "%")
+                                          TextSpan(
+                                            text: scanHistory.data[index]['discount'] != null
+                                            ? scanHistory.data[index]['discount'].toString() + "%"
+                                            : "Fara discount"
+                                          )
                                         ]
                                       ), 
                                     ),
@@ -309,7 +313,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         padding: const EdgeInsets.only(top: 5, bottom: 8),
                                         child: Text(
                                           /// A formula which converts the Timestamp to Date format
-                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
+                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch).toLocal().toString()
                                           .substring(0,16),
                                           style: TextStyle(
                                             fontSize: 12,
@@ -335,7 +339,9 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                       Container(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
-                                          "Discount: "+ scanHistory.data[index]['applied_discount'].toString() + '%',
+                                          scanHistory.data[index]['discount'] != null
+                                          ? "Discount: "+ scanHistory.data[index]['discount'].toString() + "%"
+                                          : "Fara discount",
                                           style: TextStyle(
                                             fontSize: 17,
                                             color: Colors.blueGrey

@@ -13,6 +13,7 @@ class MessagingService{
 
   /// Requests permission to send notifications on IOS
   requestNotificationPermissions(){
+     
     if(g.isIOS)
       _fcm.requestNotificationPermissions(IosNotificationSettings());
   }

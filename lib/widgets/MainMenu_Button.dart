@@ -77,6 +77,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
             child: Container(
               padding: EdgeInsets.only(
                 top: _getPosition().dy - 30,
+                //left: MediaQuery.of(context).size.width-
                 left: _getPosition().dx,
                 right: _getPosition().dx,
                 //bottom: _getPosition().dy
@@ -131,9 +132,10 @@ class MainMenuButtonState extends State<MainMenuButton>{
               key: _key,
               //key: name != "What?" ? _key : whatKey,
               child: ButtonTheme(
-                  minWidth: 290,
+                  minWidth: 310,
                   height: 50,
                   child: RaisedButton.icon(
+                      //padding: EdgeInsets.all(0),
                       animationDuration: Duration(
                         milliseconds: 100
                       ),
@@ -141,12 +143,12 @@ class MainMenuButtonState extends State<MainMenuButton>{
                       color: buttonColor, //changes when the selected option first changes
                       elevation: 5,
                       onPressed: () {
-                        if(buttonText=='What?' && g.selectedWhere==null){
+                        if(name=='What?' && g.selectedWhere==null){
                           if(g.isSnackBarActive == false){
                             g.isSnackBarActive = true;
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text(
-                                'Please select the desired location first',
+                                'Selecteaza intai categoria.',
                                 textAlign: TextAlign.center,
                                 ),
                                 backgroundColor: Colors.orange[600],
@@ -164,7 +166,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                       label: Text(
                         buttonText,
                         style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 28,
                             color: textColor,
                             letterSpacing: -1,
                             fontFamily: 'Comfortaa'

@@ -67,6 +67,7 @@ class ReservationsHistoryPage extends StatelessWidget {
               else {
                 DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(reservation.data['date_start'].millisecondsSinceEpoch);
                 return ListView(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   children: [
                     Padding(
@@ -236,6 +237,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                   return  Container( /// The past reservations list
                     padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.03, vertical: MediaQuery.of(context).size.width*0.05),
                     child: ListView.separated(
+                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: reservationsHistory.data.length,
                       separatorBuilder: (context,index) => SizedBox(
@@ -339,7 +341,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                             children:[
                                               TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                              TextSpan(text: reservationsHistory.data[index]['applied_discount'].toString() + "%")
+                                              TextSpan(text: reservationsHistory.data[index]['discount'].toString() + "%")
                                             ]
                                           ), 
                                         ),
@@ -371,7 +373,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               TextSpan(text: "Data: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                               TextSpan(
                                                 text: 
-                                                DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date'].millisecondsSinceEpoch).toString()
+                                                DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date_start'].millisecondsSinceEpoch).toString()
                                               )
                                             ]
                                           ), 
@@ -529,7 +531,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                           Container(
                                             padding: const EdgeInsets.only(top: 5),
                                             child: Text(
-                                              "Discount: "+ reservationsHistory.data[index]['applied_discount'].toString() + '%',
+                                              "Discount: "+ reservationsHistory.data[index]['discount'].toString() + '%',
                                               style: TextStyle(
                                                 fontSize: 17,
                                                 color: Colors.blueGrey

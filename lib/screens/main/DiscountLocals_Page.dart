@@ -72,6 +72,7 @@ class _DiscountLocalsPageState extends State<DiscountLocalsPage> {
         // ),
         drawer: ProfileDrawer(),
         backgroundColor: Theme.of(context).backgroundColor,
+        //body: Locals(onlyWithDiscounts: true,)
         body: NestedScrollView(
             controller: _scrollController,
             headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -97,6 +98,9 @@ class _DiscountLocalsPageState extends State<DiscountLocalsPage> {
                 )
               ];
             },
-            body: Locals(onlyWithDiscounts: true,)));
+            body: Locals(onlyWithDiscounts: true,
+          )
+        )
+      );
   }
 }

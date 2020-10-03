@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/main/DiscountLocals_Page.dart';
 import 'package:hyuga_app/screens/main/SeatingInterface_Page.dart';
+import 'package:hyuga_app/screens/main/home/QuestionsSearch.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -16,14 +17,7 @@ class Home extends StatefulWidget {
 }
 
 // method called upon initiating the searching process
-bool checkOptions() {
-  if (g.selectedAmbiance == null ||
-      g.selectedWhat == null ||
-      g.selectedArea == null ||
-      g.selectedHowMany == null ||
-      g.selectedWhere == null) return false;
-  return true;
-}
+
 
 class HomeButtonsController{
   
@@ -45,78 +39,91 @@ class HomeButtonsController{
   }
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   HomeButtonsController buttonsController;
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   ProfileDrawer _drawer = ProfileDrawer();
 
-  List<MainMenuButton> listOfButtons = [
-    MainMenuButton(
-      /// 'Where' Button
-      name: "Where?",
-      options: g.whereList,
-      buttonText: "Where?",
-      key: UniqueKey(),
-      //changeText: (index)=>changeText(index),
-    ),
-    MainMenuButton(
+  Widget _animatedWidget;
+  Size _topWidgetSize;
+  Size _bottomWidgetSize;
 
-        /// 'What' Button
-        name: "What?",
-        options: g.whatList[0],
-        buttonText: "What?",
-        key: UniqueKey(),
-      ),
-    MainMenuButton(
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _animatedWidget = 
+  // }
 
-        /// 'How Many' Button
-        name: "How many?",
-        options: g.howManyList,
-        buttonText: "How many?",
-        key: UniqueKey(),
-    ),
-    MainMenuButton(
-      /// 'Ambiance' Button
-      name: "Ambiance",
-      options: g.ambianceList,
-      buttonText: "Ambiance",
-      key: UniqueKey(),
-    ),
-    MainMenuButton(
-      /// 'Area' Button
-      name: "Area",
-      options: g.areaList,
-      buttonText: "Area",
-      key: UniqueKey(),
-    ),
-  ];
-
-  void changeText(int index) {
-    setState(() {
-      // This if-statement handles the particularity of "What"'s button dropdown criteria
-      if (listOfButtons[index].name == 'What?') {
-        listOfButtons[index].buttonText = g.whatList[g.selectedWhere][index];
-        //listOfButtons[index].buttonColor = Colors.blueGrey;
-        //listOfButtons[index].textColor = Colors.white;
-      } else {
-        listOfButtons[index].buttonText = listOfButtons[index].options[index];
-        //listOfButtons[index].buttonColor = Colors.blueGrey;
-        //listOfButtons[index].textColor = Colors.white;
-      }
-      if (listOfButtons[index].name == 'Where?' && g.selectedWhat != null) {
-        listOfButtons[1].buttonText = 'What?';
-        //listOfButtons[1].buttonColor = Colors.white;
-        //listOfButtons[1].textColor = Colors.black;
-        g.selectedWhat = null;
-      }
-    });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _topWidgetSize = Size(500,0);
+    _bottomWidgetSize = Size(500,0);
   }
 
-  
+  void initWidget(BuildContext context){
+    _animatedWidget = Column(
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.orange[600],
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height*0.5,
+            child: MaterialButton(
+              splashColor: Colors.black12,
+              highlightColor: Colors.transparent,
+              child: Text(
+                "Gaseste localul perfect",
+                style: TextStyle(
+                  fontSize: 20,
+                  letterSpacing: -0.5
+                ),
+              ),
+              onPressed: (){
+                setState(() {
+                  print("Gaseste localul perfect");
+                  //_animatedWidget = QuestionsSearch();
+                  _animatedWidget = Text("Da");
+                });
+              }
+            ),
+          ),
+        ),
+        Divider(),
+        Expanded(
+          child: Container(
+            color: Colors.blueGrey,
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height*0.5,
+            child: MaterialButton(
+              splashColor: Colors.black12,
+              highlightColor: Colors.transparent,
+              child: Text(
+                "Reducerile de astazi",
+                style: TextStyle(
+                  fontSize: 20,
+                  letterSpacing: -0.5
+                ),
+              ),
+              onPressed: (){
+                setState(() {
+                  print("Reducerile de astazi");
+                  _animatedWidget = DiscountLocalsPage();
+                });
+              }
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    initWidget(context);
 
     return StreamBuilder(
       stream: authService.seatingStatus,
@@ -127,6 +134,23 @@ class _HomeState extends State<Home> {
         return SeatingInterface(place: ss.data.docs[0]);
       else
         return Scaffold(
+          // bottomSheet: DraggableScrollableSheet(
+          //   initialChildSize:0.5,
+          //   maxChildSize: 1,
+          //   builder: (context, _scrollController){
+          //     return Container(
+          //       color: Colors.red,
+          //       height: MediaQuery.of(context).size.height,
+          //       constraints: BoxConstraints(
+          //         //minHeight: MediaQuery.of(context).size.height*0.5,
+          //         //maxHeight: MediaQuery.of(context).size.height
+          //       ),
+          //     );
+          //   }
+          // ),
+          // Container(
+          //   height: 300,
+          // ),
           extendBodyBehindAppBar: true,
           backgroundColor: Theme.of(context).backgroundColor,
           key: _drawerKey,
@@ -136,11 +160,15 @@ class _HomeState extends State<Home> {
               "Hello!",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).accentColor,
+                //color: Theme.of(context).accentColor,
+                color: Colors.black,
                 fontSize: 23,
-                decorationThickness: 1)),
+                decorationThickness: 1
+              )
+            ),
             centerTitle: true,
-            backgroundColor: Theme.of(context).backgroundColor,
+            backgroundColor: Colors.transparent,
+            //backgroundColor: Theme.of(context).backgroundColor,
             elevation: 0,
             leading: IconButton(
               icon: Icon(Icons.menu),
@@ -166,69 +194,165 @@ class _HomeState extends State<Home> {
               //mainAxisAlignment: MainAxisAlignment.center,
               alignment: Alignment.center,
               children: <Widget>[
-                Container(
-                  constraints: BoxConstraints(
-                    maxHeight: 650,
-                  ),
-                  alignment: Alignment(0, 0),
-                  child: Column(
-                    /// Replaced 'Stack' with 'Column' for the Buttons
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      listOfButtons[0],
-                      listOfButtons[1],
-                      listOfButtons[2],
-                      listOfButtons[3],
-                      listOfButtons[4],
-                      Container(
-                        /// The 'Search' Button
-                        padding: EdgeInsets.symmetric(),
-                        child: Center(
-                          child: MaterialButton(
-                            highlightColor: Colors.transparent,
-                            color: Colors.blueGrey,
-                            splashColor: Colors.orange[600],
-                            minWidth: 120,
-                            height: 44,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
+                // AnimatedSwitcher(
+                //   duration: Duration(milliseconds: 600),
+                //   child: _animatedWidget
+                // ),
+                // Positioned( // The Top Widget
+                //   top: 0,
+                //   child: AnimatedSize(
+                //     alignment: Alignment.topCenter,
+                //     duration: Duration(milliseconds: 200), 
+                //     vsync: this,
+                //     child: Container(
+                //       height: _topWidgetSize.height,
+                //       child: QuestionsSearch()
+                //     ),
+                //   ),
+                // ),
+                
+                Column( // The Two Options Widget
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: Colors.orange[600],
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height*0.5,
+                        child: MaterialButton(
+                          splashColor: Colors.black12,
+                          highlightColor: Colors.transparent,
+                          child: Text(
+                            "Gaseste localul perfect",
+                            style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: -0.5
                             ),
-                            child: Icon(Icons.search, color: Colors.white),
-                            onPressed: () async {
-                              if (checkOptions()) {
-                                Navigator.pushNamed(context, '/second');
-                                // g.placesList = [];
-                                // Navigator.pushNamed(context, '/loading');
-                                // QueryService().queryForLocals().then((data) {
-                                //   Navigator.pushReplacementNamed(
-                                //       context, '/second');
-                                // });
-                                // print(g.placesList);
-                              } 
-                              else {
-                                if(g.isSnackBarActive == false){
-                                  g.isSnackBarActive = true;
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(
-                                      'Selecteaza fiecare camp.',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    backgroundColor: Colors.orange[600],
-                                  )).closed.then((SnackBarClosedReason reason){
-                                    g.isSnackBarActive = false;
-                                  });
-                                }
-                              }
-                            }
-                          )
+                          ),
+                          onPressed: (){
+                            Navigator.push(
+                                context, 
+                                PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 200),
+                                  transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
+                                    // return SlideTransition(
+                                    //   position: Animation
+                                    // );
+                                    return ScaleTransition(
+                                      alignment: Alignment.topCenter,
+                                      scale: animation,
+                                      child: child
+                                    );
+                                  },
+                                  pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
+                                    return QuestionsSearch();
+                                  }
+                                )
+                              );
+                            // setState(() {
+                            //   print("Gaseste localul perfect");
+                            //   //_animatedWidget = QuestionsSearch();
+                            //   //_animatedWidget = Text("Da");
+                            //   _topWidgetSize = Size(double.infinity,MediaQuery.of(context).size.height);
+                            // });
+                          }
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    // GestureDetector(
+                    //   onVerticalDragDown: (details) {
+                    //     print(details);
+                    //     if(details.globalPosition.distance <= MediaQuery.of(context).size.height*0.25){
+                    //       setState(() {
+                    //         _bottomWidgetSize = Size(600,MediaQuery.of(context).size.height);
+                    //       });
+                    //     }
+                    //   },
+                    //   child: Divider(
+                    //     thickness: 10,
+                    //   )
+                    // ),
+                    Divider(
+                      thickness: 10,
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.blueGrey,
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height*0.5,
+                        child: MaterialButton(
+                          splashColor: Colors.black12,
+                          highlightColor: Colors.transparent,
+                          child: Text(
+                            "Reducerile de astazi",
+                            style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: -0.5
+                            ),
+                          ),
+                          onPressed: (){
+                            //setState(() {
+                              // print("Reducerile de astazi");
+                              // _animatedWidget = DiscountLocalsPage();
+                              //_bottomWidgetSize = Size(600,MediaQuery.of(context).size.height);
+                              Navigator.push(
+                                context, 
+                                PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 200),
+                                  transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
+                                    // return SlideTransition(
+                                    //   position: Animation
+                                    // );
+                                    return ScaleTransition(
+                                      alignment: Alignment.bottomCenter,
+                                      scale: animation,
+                                      child: child
+                                    );
+                                  },
+                                  pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
+                                    return DiscountLocalsPage();
+                                  }
+                                )
+                              );
+                            //});
+                          }
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Container(
+                // Positioned( // The Top Widget
+                //   top: 0,
+                //   child: AnimatedSize(
+                //     curve: Curves.easeInExpo,
+                //     alignment: Alignment.topCenter,
+                //     duration: Duration(milliseconds: 500), 
+                //     vsync: this,
+                //     child: Container(
+                //       height: _topWidgetSize.height,
+                //       child: QuestionsSearch()
+                //     ),
+                //   ),
+                // ),
+                // Positioned( // The Bottom Widget
+                //   bottom: 0,
+                //   child: AnimatedSize(
+                //     curve: Curves.easeInExpo,
+                //     alignment: Alignment.topCenter,
+                //     duration: Duration(milliseconds: 500), 
+                //     vsync: this,
+                //     child: Container(
+                //       width: _bottomWidgetSize.width,
+                //       height: _bottomWidgetSize.height,
+                //       constraints: BoxConstraints(
+                //         maxHeight: MediaQuery.of(context).size.height,
+                //         maxWidth: MediaQuery.of(context).size.width
+                //       ),
+                //       child: DiscountLocalsPage()
+                //     ),
+                //   ),
+                // ),
+                Container(///  'HYUGA' TITLE
                   alignment: Alignment.bottomCenter,
-                  ///  'HYUGA' TITLE
                   padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.02),
                   child: Text(
                     "hyuga",
@@ -241,6 +365,7 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 ),
+                
               ]
             ),
           ),

@@ -18,6 +18,8 @@ class Local{
   /// Contains some data about the place, and the 'reservations' and 'scanned_codes' subcollections. 
   final DocumentReference reference;
   final Map<String,dynamic> schedule;
+  final Map<String,dynamic> deals;
+  final String menu; // A link to a webpage containing the Place's menu
 
   Local({
     this.cost,
@@ -32,7 +34,9 @@ class Local{
     this.images,
     this.address,
     this.reference,
-    this.schedule
+    this.schedule,
+    this.deals,
+    this.menu
   });
 }
 /*

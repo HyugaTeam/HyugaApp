@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expansion_card/expansion_card.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -87,7 +88,7 @@ class ThirdPage extends StatefulWidget {
   );
 }
 
-class _ThirdPageState extends State<ThirdPage> {
+class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
 
   Map<String,String> weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
   Future<Image> firstImage;
@@ -99,6 +100,8 @@ class _ThirdPageState extends State<ThirdPage> {
     keepScrollOffset: true,
     initialScrollOffset: 0
   );
+  double dealWidgetHeight = 80;
+  List<bool> isOfferExpanded;
   final double localLongitude,localLatitude;
   List<Uint8List> listOfImages;
 
@@ -236,8 +239,12 @@ class _ThirdPageState extends State<ThirdPage> {
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
   void initState(){
-    print(widget.local.reference.toString());
-
+    //print(widget.local.reference.toString());
+    if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
+    isOfferExpanded = widget.local
+      .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+      .map<bool>((key) => false).toList();
+    print(isOfferExpanded);
     firstImage = _getFirstImage();
     secondImage = _getSecondImage();
     _scrollController.addListener(() { 
@@ -460,7 +467,159 @@ class _ThirdPageState extends State<ThirdPage> {
                           }
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 15,),
+                      // The 'Deals' Widget
+                      widget.local.deals != null && widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                      ? Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                SizedBox(
+                                  width: 150
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10,),
+                            AnimatedContainer(
+                              //key: UniqueKey(),
+                              duration: Duration(milliseconds: 200),
+                              height: dealWidgetHeight,
+                              child: ListView.separated(
+                                padding: EdgeInsets.all(10),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: widget.local.deals != null ?  
+                                            (widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
+                                              widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
+                                            0,
+                                separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
+                                itemBuilder: (context,index) {
+                                  ValueKey key = ValueKey(index);
+                                  
+                                  return Container(
+                                    height: 100,
+                                    width: 180,
+                                    //width: MediaQuery.of(context).size.width*0.3,
+                                    constraints: BoxConstraints(maxHeight: 100),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        // BoxShadow(
+                                        //   offset: Offset(0,0)
+                                        // )
+                                      ]
+                                      //color: Colors.orange[600],
+                                    ),
+                                    child: 
+                                    //Container()
+                                    ExpansionCard(
+                                      key: key,
+                                      borderRadius: 20,
+                                      backgroundColor: Colors.orange[600],
+                                      margin: EdgeInsets.zero,
+                                      // background: Container(
+                                      //   height: double.infinity,
+                                      //   width: double.infinity,
+                                      //   color: Colors.orange[600],
+                                      // ),
+                                      title: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
+                                            style: TextStyle(color: Colors.black,fontSize: 13, fontWeight: FontWeight.bold),
+                                          ),
+                                          Divider(
+                                            thickness: 2
+                                          ),
+                                          Text(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                            [index].substring(0,5) 
+                                            +  ' - ' + 
+                                            widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                            [index].substring(6,11),
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black
+                                            ),
+                                          )  // 
+                                        ],
+                                      ),
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
+                                            style: TextStyle(
+                                              //fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                      onExpansionChanged: (expanded) => setState((){
+                                        isOfferExpanded[index] = expanded;
+                                        print(isOfferExpanded);
+                                        bool allClosed = true;
+                                        isOfferExpanded.forEach((element) {if(element) allClosed = false;});
+                                        if(allClosed)
+                                          dealWidgetHeight = 80;
+                                        else dealWidgetHeight = 180;
+                                        }
+                                      ),
+                                    // ),
+                                      ),
+                                  // Container(
+                                  //   //height: 30,
+                                  //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                                  //   constraints: BoxConstraints(
+                                  //     maxWidth: MediaQuery.of(context).size.width*0.4
+                                  //   ),
+                                  //   decoration: BoxDecoration(
+                                  //     color: Colors.orange[600],
+                                  //     borderRadius: BorderRadius.circular(10)
+                                  //   ),
+                                  //   child: Center(
+                                  //     child: Column(
+                                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                                  //       mainAxisAlignment: MainAxisAlignment.center,
+                                  //       children: [
+                                  //         Text(
+                                  //           widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
+                                  //           style: TextStyle(
+                                  //             fontSize: 15,
+                                  //             color: Colors.white,
+                                  //             fontWeight: FontWeight.bold
+                                  //           )
+                                  //         ),
+                                  //         // Text(
+                                  //         //   widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
+                                  //         //   style: TextStyle(
+                                  //         //       fontSize: 12
+                                  //         //   )
+                                  //         // ),
+                                  //       ],
+                                  //     )
+                                  //   ),
+                                  // ),
+                              );}
+                              )
+                            ),
+                          ],
+                        ),
+                      )
+                      : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30.0),
+                        child: Center(child: Text(
+                          "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} oferte.", 
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)
+                        ),
+                      ),
+                      Divider(
+                        thickness: 3,
+                      ),           
                       // The 'Discounts' Widget
                       widget.local.discounts != null && widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
                         ? Container(
@@ -488,6 +647,10 @@ class _ThirdPageState extends State<ThirdPage> {
                                       setState((){
                                         //print(weekdays.keys.toList().indexOf(value));
                                         _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
+                                        if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
+                                        isOfferExpanded = widget.local
+                                          .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                          .map<bool>((key) => false).toList();
                                       });
                                     }
                                   )
@@ -550,7 +713,7 @@ class _ThirdPageState extends State<ThirdPage> {
                                                       [index].substring(6,11),
                                                       style: TextStyle(
                                                         fontSize: 16,
-                                                        fontFamily: 'Roboto'
+                                                        //fontFamily: 'Roboto'
                                                       ),
                                                     )  // A concatenation of the string representing the time interval
                                             ),
@@ -558,13 +721,13 @@ class _ThirdPageState extends State<ThirdPage> {
                                           Padding(
                                             padding: EdgeInsets.all(10),
                                             child: Text(
-                                              int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
+                                              '-'+int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
                                               .toString() + '%',
                                               /// Old computation for the Discount per level
                                               //getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
                                               style: TextStyle(
                                                 fontSize: 20,
-                                                fontFamily: 'Roboto'
+                                                //fontFamily: 'Roboto'
                                               )
                                               )
                                           )
@@ -582,6 +745,29 @@ class _ThirdPageState extends State<ThirdPage> {
                           padding: const EdgeInsets.symmetric(vertical: 30.0),
                           child: Center(child: Text("Localul nu are astazi reduceri.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
                         ),
+                      // The 'Second Image'      
+                      Container( // Third Image
+                        padding: EdgeInsets.only(top:30),
+                        child: FutureBuilder(
+                          future: secondImage,
+                          builder: (context, image){
+                            if(!image.hasData){
+                              return Shimmer.fromColors(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 300,
+                                ), 
+                                baseColor: Colors.white, 
+                                highlightColor: Colors.orange[600]
+                              );
+                            }
+                            else return image.data;
+                          }
+                        ),
+                      ), 
+                      SizedBox(
+                        height: 15,
+                      ),
                       Container(
                         color: Colors.blueGrey.withOpacity(0.3),
                         padding: EdgeInsets.symmetric(vertical: 10),
@@ -591,111 +777,128 @@ class _ThirdPageState extends State<ThirdPage> {
                           ),
                         )
                       ),
-                      Container(
+                      widget.local.schedule != null
+                      ? Container( // The 'Schedule'
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Column(
+                          children: weekdays.keys.map((String key) => Column(
                               children: <Widget>[
                                 Container(
                                   margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Lu")
+                                  child: Text(weekdays[key].substring(0,2))
                                 ),
                                 Text(
-                                  "12:00",
+                                  widget.local.schedule[key.toLowerCase()].substring(0,5),
                                 ),
                                 Text(
-                                  "00:00"
+                                  widget.local.schedule[key.toLowerCase()].substring(6,11),
                                 )
                               ],
                             ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Ma")
-                                ),
-                                Text(
-                                  "12:00",
-                                ),
-                                Text(
-                                  "00:00"
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Mi")
-                                ),
-                                Text(
-                                  "12:00",
-                                ),
-                                Text(
-                                  "00:00"
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Jo")
-                                ),
-                                Text(
-                                  "12:00",
-                                ),
-                                Text(
-                                  "00:00"
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Vi")
-                                ),
-                                Text(
-                                  "12:00",
-                                ),
-                                Text(
-                                  "00:00"
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Sa")
-                                ),
-                                Text(
-                                  "12:00",
-                                ),
-                                Text(
-                                  "00:00"
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text("Du")
-                                ),
-                                Text(
-                                  "12:00",
-                                ),
-                                Text(
-                                  "22:00"
-                                )
-                              ],
-                            )
-                          ],
+                          ).toList()
+                          // children: <Widget>[
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Lu")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "00:00"
+                          //       )
+                          //     ],
+                          //   ),
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Ma")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "00:00"
+                          //       )
+                          //     ],
+                          //   ),
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Mi")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "00:00"
+                          //       )
+                          //     ],
+                          //   ),
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Jo")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "00:00"
+                          //       )
+                          //     ],
+                          //   ),
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Vi")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "00:00"
+                          //       )
+                          //     ],
+                          //   ),
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Sa")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "00:00"
+                          //       )
+                          //     ],
+                          //   ),
+                          //   Column(
+                          //     children: <Widget>[
+                          //       Container(
+                          //         margin: EdgeInsets.symmetric(vertical: 8),
+                          //         child: Text("Du")
+                          //       ),
+                          //       Text(
+                          //         "12:00",
+                          //       ),
+                          //       Text(
+                          //         "22:00"
+                          //       )
+                          //     ],
+                          //   )
+                          //],
                         )
-                      ),
+                      )
+                      : Container(),
                       Container(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         child: Row(
@@ -715,7 +918,7 @@ class _ThirdPageState extends State<ThirdPage> {
                                 ),
                               ),
                               onPressed: (){
-                                _launchInBrowser("http://hotel-restaurant-transilvania.ro/include/Meniu-Restaurant-Transilvania.pdf");
+                                _launchInBrowser(widget.local.menu);
                               }
                             ),
                             Container(
@@ -745,25 +948,37 @@ class _ThirdPageState extends State<ThirdPage> {
                           .collection('reservations_history')
                           .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
                             print(value.docs.length);
-                            if(value.docs.length != 0 && (value.docs[0].data()['accepted'] == null || value.docs[0].data()['accepted'] == true)){
+                            bool ok = true;
+                            /// Checks if there are any upcoming unclaimed reservations
+                            value.docs.forEach((element) { 
+                              if(element.data()['accepted'] == null || (element.data()['accepted'] == true && element.data()['claimed'] == null))
+                                ok = false;
+                              //print(element.data());
+                            });
+                            if(!ok){
                                 if(g.isSnackBarActive == true)
                                   Scaffold.of(context).removeCurrentSnackBar();
                                 Scaffold.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text("Ai deja o rezervare."),
-                                      //   TextButton(
-                                      //     child: Text(
-                                      //       "Verifica aici"
-                                      //     ),
-                                      //     onPressed: (){
-                                      //       Scaffold.of(context).removeCurrentSnackBar();
-                                      //       Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
-                                      //     },
-                                      //   )
-                                     ],
+                                    content: MaterialButton(
+                                      onPressed: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ReservationsHistoryPage()));
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text("Ai deja o rezervare."),
+                                        //   TextButton(
+                                        //     child: Text(
+                                        //       "Verifica aici"
+                                        //     ),
+                                        //     onPressed: (){
+                                        //       Scaffold.of(context).removeCurrentSnackBar();
+                                        //       Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
+                                        //     },
+                                        //   )
+                                       ],
+                                      ),
                                     ),
                                   )
                                 );
@@ -782,7 +997,7 @@ class _ThirdPageState extends State<ThirdPage> {
                           });
                         },
                       ),
-                      Container( // Second Image
+                      Container( // Third Image
                         padding: EdgeInsets.only(top:30),
                         child: FutureBuilder(
                           future: secondImage,

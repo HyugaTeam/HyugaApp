@@ -354,7 +354,8 @@ class QueryService{
       //images: images,
       address: address,
       reference: placeData.containsKey('manager_reference') ? placeData['manager_reference']: null,
-      schedule: placeData.containsKey('schedule') ? placeData['schedule']: null
+      schedule: placeData.containsKey('schedule') ? placeData['schedule']: null,
+      deals: placeData.containsKey('deals') ? placeData['deals']: null
     );
   }
 

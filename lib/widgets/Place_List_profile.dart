@@ -227,7 +227,7 @@ class PlaceListProfile extends StatelessWidget {
                       splashColor: Colors.orange[600].withOpacity(0.65),
                       highlightColor: Colors.black.withOpacity(0.1),
                       child: Container(
-                        width: 325,
+                        width: min(325,MediaQuery.of(context).size.width*0.85),
                         height: 220,
                         child: FutureBuilder(
                             future: image,
@@ -262,7 +262,7 @@ class PlaceListProfile extends StatelessWidget {
           ),
           Positioned(
               // The maximum discount bubble
-              right: MediaQuery.of(context).size.width*0.5-200,
+              right: MediaQuery.of(context).size.width*0.5-min(200,MediaQuery.of(context).size.width*0.5),
               top: 0,
               child: discount != null
                   ? Container(

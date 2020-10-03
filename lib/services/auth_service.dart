@@ -71,12 +71,13 @@ class AuthService{
     if(user!= null)
       AnalyticsService().setUserProperties(user.uid);
 
+    print("da");
     return user != null 
     ? OurUser(
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
-      displayName: user.displayName,
+      displayName: user.displayName != null ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
       isAnonymous : user.isAnonymous
     ) 
     : null;
@@ -125,8 +126,8 @@ class AuthService{
         'uid' : user.uid,
         'email' : user.email,
         'photoURL' : user.photoURL,
-        'displayName' : user.displayName,
-        'score' : 0
+        'display_name' : user.displayName != null ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
+        'score' : 0,
         },
         SetOptions(merge: true)
       );
