@@ -26,6 +26,14 @@ exports.sendReservationNotification = functions.firestore
         const registrationTokens = querySnapshot.docs.map(ss => ss.id);
 
         const time = data['date_start'].toDate()
+        const utc_offset = time.getTimezoneOffset()
+        const hourOffset = utc_offset/30
+        var hoursAndMinutes = ""
+        if(time.getHours()<10)
+          hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()
+        else
+          hoursAndMinutes += (time.getHours()+hourOffset).toString()
+        hoursAndMinutes += ":" + time.getMinutes().toString()
         const months = {
           0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
         }
@@ -35,7 +43,8 @@ exports.sendReservationNotification = functions.firestore
         const payload = {
               notification: {
                 title: 'Rezervare noua!',
-                body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes(),
+                //body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+(time.getHours()+hourOffset)+':'+time.getMinutes(),
+                body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+ hoursAndMinutes,
                 clickAction: 'FLUTTER_NOTIFICATION_CLICK'
               }
             }
@@ -43,41 +52,53 @@ exports.sendReservationNotification = functions.firestore
     })
 
 exports.sendReservationNotificationToUser = functions.firestore
-.document('users/{user}/managed_locals/{managed_local}/reservations/{reservation}')
-.onUpdate(async (docSnapshot,context) => {
-    const dataAfter = docSnapshot.after.data()
-    const dataBefore = docSnapshot.before.data()
+  .document('users/{user}/managed_locals/{managed_local}/reservations/{reservation}')
+  .onUpdate(async (docSnapshot,context) => {
+      const dataAfter = docSnapshot.after.data()
+      const dataBefore = docSnapshot.before.data()
 
-    const querySnapshot = await db.collection('users').doc(dataBefore['guest_id'])
-    .collection('tokens').get();
-    
-    const placeDoc = await docSnapshot.before.ref.parent.parent.get();
-    const placeName = placeDoc.data()['name'];
-    
-    const registrationTokens = querySnapshot.docs.map(ss => ss.id);
+      const querySnapshot = await db.collection('users').doc(dataBefore['guest_id'])
+      .collection('tokens').get();
+      
+      const placeDoc = await docSnapshot.before.ref.parent.parent.get();
+      const placeName = placeDoc.data()['name'];
+      
+      const registrationTokens = querySnapshot.docs.map(ss => ss.id);
 
-    const time = dataBefore['date_start'].toDate()
-    const months = {
-      0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
-    }
-    if(dataBefore['accepted'] === null && dataAfter['accepted'] === true){
-      const payload = {
-            notification: {
-              title: 'Rezervare acceptata',
-              body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost acceptata!',
-              clickAction: 'FLUTTER_NOTIFICATION_CLICK'
-            }
-          }
-      return fcm.sendToDevice(registrationTokens,payload);
-    }
-    else if(dataBefore['accepted'] === null && dataAfter['accepted'] === false){
-      const payload = {
-        notification: {
-          title: 'Rezervare refuzata',
-          body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost refuzata!',
-          clickAction: 'FLUTTER_NOTIFICATION_CLICK'
-        }
+      const time = dataBefore['date_start'].toDate()
+      const utc_offset = time.getTimezoneOffset()
+      const hourOffset = utc_offset/30
+      var hoursAndMinutes = ""
+      if(time.getHours()<10)
+        hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()
+      else
+        hoursAndMinutes += (time.getHours()+hourOffset).toString()
+      hoursAndMinutes += ":" + time.getMinutes().toString()
+
+      const months = {
+        0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
       }
-      return fcm.sendToDevice(registrationTokens,payload);
-    }
-})
+      if(dataBefore['accepted'] === null && dataAfter['accepted'] === true){
+        const payload = {
+              notification: {
+                title: 'Rezervare acceptata',
+                //body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost acceptata!',
+                body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+hoursAndMinutes + " a fost acceptata!",
+                clickAction: 'FLUTTER_NOTIFICATION_CLICK'
+              }
+            }
+        return fcm.sendToDevice(registrationTokens,payload);
+      }
+      else if(dataBefore['accepted'] === null && dataAfter['accepted'] === false){
+        const payload = {
+          notification: {
+            title: 'Rezervare refuzata',
+            //body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost refuzata!',
+            body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+hoursAndMinutes +' a fost refuzata!',
+            clickAction: 'FLUTTER_NOTIFICATION_CLICK'
+          }
+        }
+        return fcm.sendToDevice(registrationTokens,payload);
+      }
+  }
+)
