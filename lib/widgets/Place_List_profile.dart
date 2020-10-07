@@ -46,7 +46,7 @@ class _InkWrapper extends StatelessWidget {
 //-------------------pana aici----------------------
 
 ///The rendered element in the 'Places' List on the Second Page
-class PlaceListProfile extends StatelessWidget {
+class PlaceListProfile extends StatefulWidget {
   //final String _image;
 
   final GeoPoint location;
@@ -69,7 +69,18 @@ class PlaceListProfile extends StatelessWidget {
       this.discount});
 
   @override
+  _PlaceListProfileState createState() => _PlaceListProfileState();
+}
+
+class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepAliveClientMixin{
+  
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       //color: Colors.blue,
       width: 400.0,
@@ -93,7 +104,7 @@ class PlaceListProfile extends StatelessWidget {
                   left: MediaQuery.of(context).size.width*0.025, 
                   //right: MediaQuery.of(context).size.width*0.03, 
                   top: 10, 
-                  bottom: name.length < 20? 5 : 0
+                  bottom: widget.name.length < 20? 5 : 0
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -109,7 +120,7 @@ class PlaceListProfile extends StatelessWidget {
                                 bottom: MediaQuery.of(context).size.height*0.01, 
                                 left: 7.0),
                             child: Text( // The Place's name
-                              name,
+                              widget.name,
                               maxLines: 2,
                               style: TextStyle(
                                   fontFamily: 'Comfortaa',
@@ -161,7 +172,7 @@ class PlaceListProfile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            distance.toString() + 'km',
+                            widget.distance.toString() + 'km',
                             style: TextStyle(
                               color: Colors.white,
                               shadows: [
@@ -179,7 +190,7 @@ class PlaceListProfile extends StatelessWidget {
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: price,
+                              itemCount: widget.price,
                               itemBuilder: (context, costIndex) {
                                 //return FaIcon(FontAwesomeIcons.dollarSign, color: Colors.lightGreenAccent, size: 16,);
                                 return Text(
@@ -230,7 +241,7 @@ class PlaceListProfile extends StatelessWidget {
                         width: min(325,MediaQuery.of(context).size.width*0.85),
                         height: 220,
                         child: FutureBuilder(
-                            future: image,
+                            future: widget.image,
                             builder: (context, img) {
                               if (!img.hasData)
                                 return Container(
@@ -255,7 +266,7 @@ class PlaceListProfile extends StatelessWidget {
 //                    image: AssetImage(_image),
 //                    fit: BoxFit.cover, //look into this
 //                  ),
-                      onTap: onTap),
+                      onTap: widget.onTap),
                 ),
               ),
             ],
@@ -264,7 +275,7 @@ class PlaceListProfile extends StatelessWidget {
               // The maximum discount bubble
               right: MediaQuery.of(context).size.width*0.5-min(200,MediaQuery.of(context).size.width*0.5),
               top: 0,
-              child: discount != null
+              child: widget.discount != null
                   ? Container(
                       width: 70,
                       height: 70,
@@ -289,7 +300,7 @@ class PlaceListProfile extends StatelessWidget {
                             }
                           },
                           child: Text(
-                            '-' + discount.toInt().toString() + '%',
+                            '-' + widget.discount.toInt().toString() + '%',
                             style: TextStyle(
                               //fontSize: 20,
                               color: Colors.white,

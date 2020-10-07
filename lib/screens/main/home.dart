@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/screens/main/DiscountLocals_Page.dart';
+import 'package:hyuga_app/screens/main/home/DiscountLocals_Page.dart';
 import 'package:hyuga_app/screens/main/SeatingInterface_Page.dart';
 import 'package:hyuga_app/screens/main/home/QuestionsSearch.dart';
+import 'package:hyuga_app/screens/main/home/SearchBar_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -49,6 +50,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   Size _topWidgetSize;
   Size _bottomWidgetSize;
 
+  // Animation<Offset> _animation;
+  // AnimationController _controller;
   // @override
   // void initState() {
   //   super.initState();
@@ -61,6 +64,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     super.initState();
     _topWidgetSize = Size(500,0);
     _bottomWidgetSize = Size(500,0);
+
+    // _controller = AnimationController(
+    //   duration: const Duration(milliseconds: 500),
+    //   vsync: this,
+    // );
+    // _animation = Tween<Offset>(
+    //   begin: const Offset(0, -1),
+    //   end: const Offset(0, 0.0),
+    // ).animate(CurvedAnimation(
+      
+    //   parent: _controller,
+    //   curve: Curves.elasticInOut,
+    // ));
   }
 
   void initWidget(BuildContext context){
@@ -118,6 +134,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
         ),
       ],
     );
+    _topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.5);
+    _bottomWidgetSize = Size(500,MediaQuery.of(context).size.height*0.5);
   }
 
   @override
@@ -156,16 +174,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
           key: _drawerKey,
           drawer: _drawer,
           appBar: AppBar(
-            title: Text(
-              "Hello!",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                //color: Theme.of(context).accentColor,
-                color: Colors.black,
-                fontSize: 23,
-                decorationThickness: 1
-              )
-            ),
+            // title: Text(
+            //   "Hello!",
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     //color: Theme.of(context).accentColor,
+            //     color: Colors.black,
+            //     fontSize: 23,
+            //     decorationThickness: 1
+            //   )
+            // ),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             //backgroundColor: Theme.of(context).backgroundColor,
@@ -173,18 +191,53 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             leading: IconButton(
               icon: Icon(Icons.menu),
               iconSize: 20,
-              color: Colors.blueGrey,
+              color: Colors.black,
+              //color: Colors.blueGrey,
               onPressed: () async {
                 _drawerKey.currentState.openDrawer();
               },
             ),
             actions: <Widget>[
+              // IconButton(
+              //   tooltip: "Vezi reducerile de astazi",
+              //   color: Colors.black,
+              //   //color: Colors.blueGrey,
+              //   icon: FaIcon(FontAwesomeIcons.percentage, size: 18),
+              //   onPressed: (){
+              //     Navigator.push(context, MaterialPageRoute(builder: (context)=>DiscountLocalsPage()));
+              //   },
+              // )
               IconButton(
-                tooltip: "Vezi reducerile de astazi",
-                color: Colors.blueGrey,
-                icon: FaIcon(FontAwesomeIcons.percentage, size: 18),
+                splashColor: Colors.white.withOpacity(0.8),
+                highlightColor: Colors.white.withOpacity(0.2),
+                icon: FaIcon(FontAwesomeIcons.search, size: 18),
+                color: Colors.black,
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>DiscountLocalsPage()));
+                  // showSearch(
+                  //   context: context, 
+                  //   delegate: 
+                  // );
+                  Navigator.push(
+                    context, 
+                    PageRouteBuilder(
+                      opaque: false,
+                      barrierColor: Colors.black.withOpacity(0.3),
+                      transitionDuration: Duration(milliseconds: 200),
+                      transitionsBuilder: (context,animation,secondAnimation,child){
+                        var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+                        return SlideTransition(
+                          child: child,
+                          position: Tween<Offset>(
+                            begin: Offset(0,-1),
+                            end: Offset(0,0)
+                          ).animate(_animation),
+                        );
+                      },
+                      pageBuilder: (context,animation,secondAnimation){
+                        return SearchBarPage();
+                      }
+                    )
+                  );
                 },
               )
             ],    ///Un-comment in case we want to add further Widgets on the appBar
@@ -210,51 +263,70 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 //     ),
                 //   ),
                 // ),
-                
                 Column( // The Two Options Widget
                   children: [
                     Expanded(
-                      child: Container(
-                        color: Colors.orange[600],
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height*0.5,
-                        child: MaterialButton(
-                          splashColor: Colors.black12,
-                          highlightColor: Colors.transparent,
-                          child: Text(
-                            "Gaseste localul perfect",
-                            style: TextStyle(
-                              fontSize: 20,
-                              letterSpacing: -0.5
+                      child: AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1000),
+                        child: Container(
+                          color: Colors.orange[600],
+                          width: double.infinity,
+                          height: _topWidgetSize.height,
+                          child: MaterialButton(
+                            splashColor: Colors.black12,
+                            highlightColor: Colors.transparent,
+                            child: Text(
+                              "Gaseste localul perfect",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                letterSpacing: -0.5
+                              ),
                             ),
+                            onPressed: (){
+                              setState(() {
+                                print(_topWidgetSize.height);
+                                //_topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.9);
+                                //_bottomWidgetSize = Size(500,MediaQuery.of(context).size.height*0.1);
+                                //Future.delayed(Duration(milliseconds: 500)).then((value) => _topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.9));
+                              });
+                              Navigator.push(
+                                  context, 
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    //barrierColor: Colors.blueGrey.withOpacity(0.1),
+                                    barrierDismissible: true,
+                                    transitionDuration: Duration(milliseconds: 1500),
+                                    transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
+                                      var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut);
+                                      //var _controller = AnimationController()
+                                      return SlideTransition(
+                                        child: child,
+                                        position: Tween<Offset>(
+                                          begin: Offset(0,-1),
+                                          end: Offset(0,0)
+                                        ).animate(_animation)
+                                      );
+                                      // return ScaleTransition(
+                                      //   alignment: Alignment.topCenter,
+                                      //   scale: animation,
+                                      //   child: child
+                                      // );
+                                    },
+                                    pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
+                                      return QuestionsSearch();
+                                    }
+                                  )
+                                );
+                              // setState(() {
+                              //   print("Gaseste localul perfect");
+                              //   //_animatedWidget = QuestionsSearch();
+                              //   //_animatedWidget = Text("Da");
+                              //   _topWidgetSize = Size(double.infinity,MediaQuery.of(context).size.height);
+                              // });
+                            }
                           ),
-                          onPressed: (){
-                            Navigator.push(
-                                context, 
-                                PageRouteBuilder(
-                                  transitionDuration: Duration(milliseconds: 200),
-                                  transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
-                                    // return SlideTransition(
-                                    //   position: Animation
-                                    // );
-                                    return ScaleTransition(
-                                      alignment: Alignment.topCenter,
-                                      scale: animation,
-                                      child: child
-                                    );
-                                  },
-                                  pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
-                                    return QuestionsSearch();
-                                  }
-                                )
-                              );
-                            // setState(() {
-                            //   print("Gaseste localul perfect");
-                            //   //_animatedWidget = QuestionsSearch();
-                            //   //_animatedWidget = Text("Da");
-                            //   _topWidgetSize = Size(double.infinity,MediaQuery.of(context).size.height);
-                            // });
-                          }
                         ),
                       ),
                     ),
@@ -275,46 +347,56 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       thickness: 10,
                     ),
                     Expanded(
-                      child: Container(
-                        color: Colors.blueGrey,
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height*0.5,
-                        child: MaterialButton(
-                          splashColor: Colors.black12,
-                          highlightColor: Colors.transparent,
-                          child: Text(
-                            "Reducerile de astazi",
-                            style: TextStyle(
-                              fontSize: 20,
-                              letterSpacing: -0.5
+                      child: AnimatedSize(
+                        vsync: this,
+                        duration: Duration(milliseconds: 1000),
+                        child: Container(
+                          color: Colors.blueGrey,
+                          width: double.infinity,
+                          height: _bottomWidgetSize.height,
+                          //height: MediaQuery.of(context).size.height*0.5,
+                          child: MaterialButton(
+                            splashColor: Colors.black12,
+                            highlightColor: Colors.transparent,
+                            child: Text(
+                              "Reducerile de astazi",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                letterSpacing: -0.5
+                              ),
                             ),
+                            onPressed: (){
+                              //setState(() {
+                                // print("Reducerile de astazi");
+                                // _animatedWidget = DiscountLocalsPage();
+                                //_bottomWidgetSize = Size(600,MediaQuery.of(context).size.height);
+                                Navigator.push(
+                                  context, 
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    //barrierColor: Colors.blueGrey.withOpacity(0.1),
+                                    barrierDismissible: true,
+                                    transitionDuration: Duration(milliseconds: 1500),
+                                    transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
+                                      var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut);
+                                      //var _controller = AnimationController()
+                                      return SlideTransition(
+                                        child: child,
+                                        position: Tween<Offset>(
+                                          begin: Offset(0,1),
+                                          end: Offset(0,0)
+                                        ).animate(_animation)
+                                      );
+                                    },
+                                    pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
+                                      return DiscountLocalsPage();
+                                    }
+                                  )
+                                );
+                              //});
+                            }
                           ),
-                          onPressed: (){
-                            //setState(() {
-                              // print("Reducerile de astazi");
-                              // _animatedWidget = DiscountLocalsPage();
-                              //_bottomWidgetSize = Size(600,MediaQuery.of(context).size.height);
-                              Navigator.push(
-                                context, 
-                                PageRouteBuilder(
-                                  transitionDuration: Duration(milliseconds: 200),
-                                  transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
-                                    // return SlideTransition(
-                                    //   position: Animation
-                                    // );
-                                    return ScaleTransition(
-                                      alignment: Alignment.bottomCenter,
-                                      scale: animation,
-                                      child: child
-                                    );
-                                  },
-                                  pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
-                                    return DiscountLocalsPage();
-                                  }
-                                )
-                              );
-                            //});
-                          }
                         ),
                       ),
                     ),

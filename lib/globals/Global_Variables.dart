@@ -25,33 +25,33 @@ Map<String,int> selectedOptions = {
   'Ambianta':selectedAmbiance, //'Ambiance'
   'Zona': selectedArea
 };
-//  /// Where-to-go list
-// final List<String> whereList = ["Cafè","Restaurant","Pub"];
-//  /// What list
-// final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie","Board Games"],
-//                 ["Burger","Italian","Local","Asian","Oriental","Sushi"],
-//                 ["Beer","Cocktail","Wine"]]; 
-//  /// How Many List
-// final List<String> howManyList = 
-//                   ['Forever Alone','Me & my date','3-4','5-8','8+'];
-//  /// Ambiance list
-// final List<String> ambianceList = ["Intimate","Anything","Social-friendly"];
-//  /// Area list
-// final List<String> areaList = ["15 minute walk", "Anywhere"];
+ /// Where-to-go list
+final List<String> whereList = ["Cafè","Restaurant","Pub"];
+ /// What list
+final List<List<String>> whatList = [["Coffee","Tea","Lemonade","Smoothie","Board Games"],
+                ["Burger","Italian","Local","Asian","Oriental","Sushi"],
+                ["Beer","Cocktail","Wine"]]; 
+ /// How Many List
+final List<String> howManyList = 
+                  ['Forever Alone','Me & my date','3-4','5-8','8+'];
+ /// Ambiance list
+final List<String> ambianceList = ["Intimate","Anything","Social-friendly"];
+ /// Area list
+final List<String> areaList = ["15 minute walk", "Anywhere"];
 
  /// Where-to-go list
-final List<String> whereList = ["Cafenea","Restaurant","Pub"];
+final List<String> whereListTranslation = ["Cafenea","Restaurant","Pub"];
  /// What list
-final List<List<String>> whatList = [["Cafea","Ceai","Limonada","Smoothie","Jocuri"],
+final List<List<String>> whatListTranslation = [["Cafea","Ceai","Limonada","Smoothie","Jocuri"],
                 ["Burger","Italienesc","Local","Asiatic","Oriental","Sushi"],
                 ["Bere","Cocktail","Vin"]]; 
  /// How Many List
-final List<String> howManyList = 
+final List<String> howManyListTranslation = 
                   ['Singur','Cu partenerul/a','3-4','5-8','8+'];
  /// Ambiance list
-final List<String> ambianceList = ["Intima","Orice","Voie buna"];
+final List<String> ambianceListTranslation = ["Intima","Orice","Voie buna"];
  /// Area list
-final List<String> areaList = ["In apropiere", "Oriunde"];
+final List<String> areaListTranslation = ["In apropiere", "Oriunde"];
 
 final List<Map<String, Object>> discounts = [
     {

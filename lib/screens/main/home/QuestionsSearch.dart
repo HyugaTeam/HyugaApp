@@ -24,7 +24,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
     MainMenuButton(
       /// 'Where' Button
       name: "Where?",
-      options: g.whereList,
+      options: g.whereListTranslation,
       buttonText: "Categorie",
       key: UniqueKey(),
       //changeText: (index)=>changeText(index),
@@ -33,7 +33,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
 
         /// 'What' Button
         name: "What?",
-        options: g.whatList[0],
+        options: g.whatListTranslation[0],
         buttonText: "Specific",
         key: UniqueKey(),
       ),
@@ -41,21 +41,21 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
 
         /// 'How Many' Button
         name: "How many?",
-        options: g.howManyList,
+        options: g.howManyListTranslation,
         buttonText: "Cate persoane?",
         key: UniqueKey(),
     ),
     MainMenuButton(
       /// 'Ambiance' Button
       name: "Ambiance",
-      options: g.ambianceList,
+      options: g.ambianceListTranslation,
       buttonText: "Ambianta",
       key: UniqueKey(),
     ),
     MainMenuButton(
       /// 'Area' Button
       name: "Area",
-      options: g.areaList,
+      options: g.areaListTranslation,
       buttonText: "Zona",
       key: UniqueKey(),
     ),
@@ -65,7 +65,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
     setState(() {
       // This if-statement handles the particularity of "What"'s button dropdown criteria
       if (listOfButtons[index].name == 'What?') {
-        listOfButtons[index].buttonText = g.whatList[g.selectedWhere][index];
+        listOfButtons[index].buttonText = g.whatListTranslation[g.selectedWhere][index];
       } else {
         listOfButtons[index].buttonText = listOfButtons[index].options[index];
       }

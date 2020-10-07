@@ -431,6 +431,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                 onTap: () {
                   g.isNewUser = false;
                   authService.loading.add(false);
+                  //Navigator.pu
                 } ,
                 child: Center(
                   child: Padding(

@@ -15,7 +15,7 @@ import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
-import 'package:hyuga_app/services/uber_service.dart';
+import 'package:hyuga_app/services/uber_service.dart' ;
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -53,7 +53,7 @@ class ThirdPage extends StatefulWidget {
         parameters: {
           "place_id": local.id,
           "place_name": local.name,
-          "place_path": "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}"
+          "place_path": "${g.whereListTranslation[g.selectedWhere]}_${g.whatListTranslation[g.selectedWhere][g.selectedWhat]}_${g.howManyListTranslation[g.selectedHowMany]}_${g.ambianceListTranslation[g.selectedAmbiance]}_${g.areaListTranslation[g.selectedArea]}"
         }
       ).then((value) => print(local.id+local.name));
     }
@@ -240,10 +240,11 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   @override
   void initState(){
     //print(widget.local.reference.toString());
-    if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
-    isOfferExpanded = widget.local
-      .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-      .map<bool>((key) => false).toList();
+    if(widget.local.deals != null)
+      if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
+        isOfferExpanded = widget.local
+          .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+          .map<bool>((key) => false).toList();
     print(isOfferExpanded);
     firstImage = _getFirstImage();
     secondImage = _getSecondImage();
@@ -1150,7 +1151,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       //     }
                       //   )
                       // )
-                      /*Container( // Uber Button
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container( // Uber Button
                             width: 100,
                             height: 30,
                             decoration: BoxDecoration(
@@ -1158,17 +1162,23 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               borderRadius: BorderRadius.circular(20)
                             ),
                             child: RaisedButton(
-                              child: Text('Uber',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1
-                              ),),
+                              child: Text(
+                                'Uber',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1
+                                ),
+                              ),
                               color: Colors.transparent,
-                              onPressed: (){
+                              onPressed: () async{
+                                _launchInBrowser(
+                                  "https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
+                                );
+                                await UberService().getRide();
                               },
                             ),
-                          )*/
+                          )
                 ],)
               ]
             )

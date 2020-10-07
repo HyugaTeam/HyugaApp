@@ -59,6 +59,14 @@ void main() async{
         navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
 
         theme: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            labelStyle: TextStyle(
+              color: Colors.white
+            ),
+            suffixStyle: TextStyle(
+              color: Colors.white
+            )
+          ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.orange[600]
           ),

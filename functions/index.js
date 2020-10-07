@@ -25,11 +25,17 @@ exports.sendReservationNotification = functions.firestore
           
         const registrationTokens = querySnapshot.docs.map(ss => ss.id);
 
-        const time = dataBefore['date_start'].toDate()
+        const time = data['date_start'].toDate()
+        const months = {
+          0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
+        }
+        
+        //const options = {hours: "long",minutes:"long"};
+        //const hour = Intl.DateTimeFormat('ro',options)
         const payload = {
               notification: {
                 title: 'Rezervare noua!',
-                body: "O noua rezervare a fost facuta la data " + time,
+                body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes(),
                 clickAction: 'FLUTTER_NOTIFICATION_CLICK'
               }
             }
@@ -51,11 +57,14 @@ exports.sendReservationNotificationToUser = functions.firestore
     const registrationTokens = querySnapshot.docs.map(ss => ss.id);
 
     const time = dataBefore['date_start'].toDate()
+    const months = {
+      0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
+    }
     if(dataBefore['accepted'] === null && dataAfter['accepted'] === true){
       const payload = {
             notification: {
               title: 'Rezervare acceptata',
-              body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time +' a fost acceptata!',
+              body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost acceptata!',
               clickAction: 'FLUTTER_NOTIFICATION_CLICK'
             }
           }
@@ -65,7 +74,7 @@ exports.sendReservationNotificationToUser = functions.firestore
       const payload = {
         notification: {
           title: 'Rezervare refuzata',
-          body: 'Rezervarea dumneavoastra la ' + placeName + ' pentru data '+ time +' a fost refuzata!',
+          body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost refuzata!',
           clickAction: 'FLUTTER_NOTIFICATION_CLICK'
         }
       }

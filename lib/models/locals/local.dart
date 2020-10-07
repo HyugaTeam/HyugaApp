@@ -12,7 +12,7 @@ class Local{
   final int cost; // Imported from the database
   final int capacity;
   final Map<String,dynamic> discounts;
-  final Future<List<Uint8List>> images; // The Local images from Firebase Storage
+  //final Future<List<Uint8List>> images; // The Local images from Firebase Storage
   final Future<String> address; // The Street&No of the Local
   /// A reference to the 'users/{usersId}/managed_local/{managed_local}' in the database
   /// Contains some data about the place, and the 'reservations' and 'scanned_codes' subcollections. 
@@ -31,7 +31,7 @@ class Local{
     this.location,
     this.capacity,
     this.discounts,
-    this.images,
+    //this.images,
     this.address,
     this.reference,
     this.schedule,

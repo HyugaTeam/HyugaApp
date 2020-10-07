@@ -44,7 +44,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
   void changeText(int index){
     setState((){
       if(name == 'What?'){
-        buttonText = g.whatList[g.selectedWhere][index];
+        buttonText = g.whatListTranslation[g.selectedWhere][index];
         buttonColor = Colors.blueGrey;
         textColor = Colors.white;
       }
@@ -83,7 +83,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                 //bottom: _getPosition().dy
               ),
               child: OptionsDropButton(
-                  options: name == 'What?' ? g.whatList[g.selectedWhere] : options,
+                  options: name == 'What?' ? g.whatListTranslation[g.selectedWhere] : options,
                   question: name,
                   sizeOfButton: _getPosition(),
                   button: this.widget,
@@ -117,7 +117,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
     return StreamBuilder<Object>(
       stream: HomeButtonsController.whereButton,
       builder: (context, snapshot) {
-        if(name == 'What?' && (snapshot.hasData && g.whatList[snapshot.data].contains(buttonText) == false )){
+        if(name == 'What?' && (snapshot.hasData && g.whatListTranslation[snapshot.data].contains(buttonText) == false )){
           buttonText = name;
           buttonColor = Colors.white;
           textColor = Colors.black;

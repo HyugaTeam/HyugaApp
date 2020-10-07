@@ -17,6 +17,18 @@ class _SignInState extends State<SignIn> {
   String password;
   bool formVisibility = false;
 
+  ScrollController _scrollController;
+  GlobalKey _formFieldKey = GlobalKey();
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    // _scrollController.addListener(() {
+    //   if(_scrollController)
+    // });
+    super.initState();
+  }
+
   void handleAuthError(BuildContext context, signInResult){
 
     void showErrorSnackBar(String message){
@@ -47,6 +59,7 @@ class _SignInState extends State<SignIn> {
 
     return Theme(
       data: ThemeData(
+        accentColor: Colors.blueGrey,
         textTheme: TextTheme(
           button: TextStyle(
             fontSize: 15,
@@ -72,7 +85,7 @@ class _SignInState extends State<SignIn> {
         body: Builder(
           builder: (context) => Center(
           child: ListView(
-            
+            controller: _scrollController,
             padding: EdgeInsets.symmetric(horizontal: 20),
             children: <Widget>[
               SizedBox(height: 130),
@@ -101,7 +114,7 @@ class _SignInState extends State<SignIn> {
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: Text(
-                    "Skip for now", style: TextStyle(fontSize: 13),
+                    "Sari peste", style: TextStyle(fontSize: 13),
                   ),
                   onPressed: () async{
                       dynamic signInResult = await authService.signInAnon(); // it either returns a user
@@ -138,7 +151,7 @@ class _SignInState extends State<SignIn> {
                     children: <Widget>[
                       Image.asset('assets/images/google-logo-icon.png',width: 24,),
                       //Container(width: 80,),
-                      Text("Continue with Google"),
+                      Text("Continua prin Google"),
                     ],
                   ),
                 ),
@@ -166,7 +179,7 @@ class _SignInState extends State<SignIn> {
                     children: <Widget>[
                       FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
                       //Container(width: 80,),
-                      Text("Continue with Facebook"),
+                      Text("Continua prin Facebook"),
                     ],
                   ),
                 ),
@@ -176,14 +189,11 @@ class _SignInState extends State<SignIn> {
                     handleAuthError(context, signInResult);  
                 },
               ),
-              SizedBox(height: 20,),
-              g.isIOS ?  // checks if the platform on which the app is ran is IOS
-              // AppleSignInButton(
-              //   cornerRadius: 30,
-              //   style: ButtonStyle.black,
-              //   type: ButtonType.signIn,
-              // )
-              MaterialButton(   /// Continue with AppleID button
+              g.isIOS 
+              ? SizedBox(height: 20,)
+              : Container(),
+              g.isIOS   // checks if the platform on which the app is ran is IOS
+              ? MaterialButton(   /// Continue with AppleID button
                 shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.zero,
                   side: BorderSide(
@@ -200,7 +210,7 @@ class _SignInState extends State<SignIn> {
                     children: <Widget>[
                       FaIcon(FontAwesomeIcons.apple, color: Colors.black,),
                       //Container(width: 80,),
-                      Text("Continue with Apple"),
+                      Text("Continua prin Apple"),
                     ],
                   ),
                 ),
@@ -234,7 +244,7 @@ class _SignInState extends State<SignIn> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             FaIcon(FontAwesomeIcons.solidEnvelope, color:  Colors.blueGrey,),
-                            Text("Continue with email"),
+                            Text("Continua prin email"),
                           ],
                         ),
                       ),
@@ -263,6 +273,15 @@ class _SignInState extends State<SignIn> {
                               children: <Widget>[
                                 SizedBox(height: 20),
                                 TextFormField(
+                                  key: _formFieldKey,
+                                  onTap: (){
+                                    RenderBox field = _formFieldKey.currentContext.findRenderObject();
+                                    print(field.localToGlobal(Offset.zero));
+                                    _scrollController.animateTo(
+                                      field.localToGlobal(Offset.zero).dy, 
+                                      duration: Duration(milliseconds: 100), 
+                                    curve: Curves.easeIn);
+                                  },
                                   decoration: InputDecoration(
                                     labelText: 'Email',
                                     hoverColor: Colors.blue
@@ -302,7 +321,7 @@ class _SignInState extends State<SignIn> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      Text("Don't have an account?"),
+                                      Text("Nu ai cont?"),
                                       Container(
                                         // constraints: BoxConstraints(
                                         //   minWidth: 40,
@@ -313,7 +332,7 @@ class _SignInState extends State<SignIn> {
                                         //padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
                                         child: InkWell(   /// "Register with Email" button
                                           child: Text(
-                                            "Register",
+                                            "Inregistare",
                                             style: TextStyle(
                                               color: Colors.orange[600]
                                             ),
@@ -335,9 +354,16 @@ class _SignInState extends State<SignIn> {
                         ),
                         ),
                       ),
+                    
                   ],
                 ),
               ),
+              formVisibility 
+                    ? Container(
+                      height: MediaQuery.of(context).size.height*0.35,
+                      
+                    )
+                    : Container()
               ],
             ),
           ),

@@ -77,7 +77,7 @@ class AuthService{
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
-      displayName: user.displayName != null ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
+      displayName: (user.displayName != null && user.isAnonymous == true) ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
       isAnonymous : user.isAnonymous
     ) 
     : null;
@@ -126,7 +126,7 @@ class AuthService{
         'uid' : user.uid,
         'email' : user.email,
         'photoURL' : user.photoURL,
-        'display_name' : user.displayName != null ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
+        'display_name' : (user.displayName != null || user.isAnonymous == true) ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
         'score' : 0,
         },
         SetOptions(merge: true)
@@ -138,7 +138,8 @@ class AuthService{
   // sign in anonimously
   Future signInAnon() async{
     try{
-      UserCredential result = await _auth.signInAnonymously().then((value){g.isNewUser = true;});
+      UserCredential result = await _auth.signInAnonymously();//.then((value){g.isNewUser = true;});
+      //print(result);
       return result;
     } catch(error){
       print(error);
