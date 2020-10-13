@@ -181,7 +181,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   ],
                 ),
               ));
-            else {
+         else {
               //_controller.forward();
               return Scaffold(
               extendBodyBehindAppBar: true,
@@ -419,7 +419,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             
           }
         );
-      }
+     }
     );
   }
 }

@@ -81,7 +81,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.blueGrey,), onPressed: () => Navigator.pop(context)),
       ),
       extendBodyBehindAppBar: true,
@@ -98,6 +98,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
             /// Replaced 'Stack' with 'Column' for the Buttons
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
+              SizedBox(height: MediaQuery.of(context).size.height*0.01,),
               listOfButtons[0],
               listOfButtons[1],
               listOfButtons[2],
