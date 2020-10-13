@@ -14,7 +14,6 @@ import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async{
   
@@ -24,7 +23,8 @@ void main() async{
   print("LOCATIA INCEPE");
   
   g.isIOS = Platform.isIOS == true? true : false;
-  queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
+  queryingService = QueryService();
+  //queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
   MessagingService().requestNotificationPermissions();
   
   runApp(StreamProvider<OurUser>.value( 

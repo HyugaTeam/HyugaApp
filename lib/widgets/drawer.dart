@@ -286,31 +286,31 @@ class ProfileDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(), /// used to disable scroll
-                      padding: EdgeInsets.zero,
-                      children: <Widget>[
-                        Container( // sign-out button
-                          padding: EdgeInsets.symmetric(horizontal: 80),
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            color: Colors.orange[600],
-                            splashColor: Colors.deepOrangeAccent,
-                            child: Text("Log in"),
-                            onPressed: () async {
-                              await authService.signOut();
-                              if(authService.user == null)
-                                print("Daskhfjghfjsdf");
-                              //Navigator.of(context).push<Route>(MaterialPageRoute(builder: (context) => SignIn() ));
-                            },
-                          ),
-                        )
-                      ],
+                  Container( // sign-out button
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: Colors.orange[600],
+                      splashColor: Colors.deepOrangeAccent,
+                      child: Text("Log in",style: TextStyle(fontWeight: FontWeight.bold),),
+                      onPressed: () async {
+                        await authService.signOut();
+                        if(authService.user == null)
+                          print("Daskhfjghfjsdf");
+                        //Navigator.of(context).push<Route>(MaterialPageRoute(builder: (context) => SignIn() ));
+                      },
                     ),
                   ),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  // Container(
+                  //   child: Text(
+                  //     "Pentru o experienta ideala, va rugam sa va inregistrati."
+                  //   ),
+                  // )
                 ],
               );
           }

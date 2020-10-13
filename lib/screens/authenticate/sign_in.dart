@@ -88,7 +88,16 @@ class _SignInState extends State<SignIn> {
             controller: _scrollController,
             padding: EdgeInsets.symmetric(horizontal: 20),
             children: <Widget>[
-              SizedBox(height: 130),
+              SizedBox(height: MediaQuery.of(context).size.height*0.1),
+              Center(
+                child: Image.asset(
+                  'assets/images/hyuga-logo.png',
+                  width: 80,
+                )
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Center(
                 child: Text( // Hello text
                   'hyuga',

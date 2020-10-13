@@ -118,6 +118,7 @@ class _LocalsState extends State<Locals> {
                 double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
                 double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
                 PlaceListProfile place = PlaceListProfile(
+                  scaffoldContext: context,
                   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForUser(local),
                   distance: lengthInMeter > 1000 
                   ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 

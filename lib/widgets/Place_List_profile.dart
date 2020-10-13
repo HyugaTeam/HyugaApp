@@ -58,6 +58,8 @@ class PlaceListProfile extends StatefulWidget {
   final VoidCallback onTap;
   double discount = 0; //TREBUIE UN IF PENTRU discount 0
 
+  final BuildContext scaffoldContext;
+
   PlaceListProfile(
       {this.address,
       this.location,
@@ -66,7 +68,9 @@ class PlaceListProfile extends StatefulWidget {
       this.distance,
       this.price,
       this.onTap,
-      this.discount});
+      this.discount,
+      this.scaffoldContext
+      });
 
   @override
   _PlaceListProfileState createState() => _PlaceListProfileState();
@@ -75,7 +79,6 @@ class PlaceListProfile extends StatefulWidget {
 class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepAliveClientMixin{
   
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
@@ -286,8 +289,8 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           backgroundColor: Colors.orange[600],
                           onPressed: () {
                             if (g.isSnackBarActive == false) {
-                              g.isSnackBarActive = true;
-                              Scaffold.of(context)
+                              //g.isSnackBarActive = true;
+                              Scaffold.of(widget.scaffoldContext)
                                   .showSnackBar(SnackBar(
                                     duration: Duration(seconds: 5),
                                     backgroundColor: Colors.orange[600],

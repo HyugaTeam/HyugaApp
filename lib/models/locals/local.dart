@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +19,8 @@ class Local{
   final Map<String,dynamic> schedule;
   final Map<String,dynamic> deals;
   final String menu; // A link to a webpage containing the Place's menu
+  final bool hasOpenspace;
+  final bool hasReservations;
 
   Local({
     this.cost,
@@ -36,7 +37,9 @@ class Local{
     this.reference,
     this.schedule,
     this.deals,
-    this.menu
+    this.menu,
+    this.hasOpenspace,
+    this.hasReservations
   });
 }
 /*

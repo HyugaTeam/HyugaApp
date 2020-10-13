@@ -8,6 +8,7 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
+import 'package:rxdart/rxdart.dart';
 
 // Class responsible for the whole querying service for locals
 // This class acts as a singleton
@@ -17,6 +18,7 @@ class QueryService{
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final StorageReference storageRef = storage.ref();
+  static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
   static LocationData _userLocation ;
   
   /// A getter for the user's location
@@ -29,14 +31,9 @@ class QueryService{
     Location.instance.changeSettings(
       interval: 10000
     );
-    Location.instance.onLocationChanged.listen((event) {
-      //print(event);
-      _userLocation = event;
-    });
-
-
     Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
       _userLocation = instantUserLocation;
+      userLocationStream.add(true);
     });
   }
 
@@ -200,20 +197,23 @@ class QueryService{
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
+    // _permissionGranted = await location.hasPermission();
+    // if (_permissionGranted == PermissionStatus.denied) {
+    //   _permissionGranted = await location.requestPermission();
+    //   if (_permissionGranted != PermissionStatus.granted) {
+    //     return null;
+    //   }
+    // }
 
+    //g.locationPermissionGranted = true;
 
     try {
       position = await location.getLocation();
+      userLocationStream.add(true);
     }
     catch(error){
-      print(error);
+      if(error.code == "PERMISSION_DENIED_NEVER_ASK" || error.code == "PERMISSION_DENIED")
+        userLocationStream.add(false);
     }
     return position;
 
@@ -330,12 +330,6 @@ class QueryService{
     // );
     //Future<Address> address;
     Future<String> address;
-  //  try{
-  //    address = getLocationAddress(doc.data['location']);
-  //  }
-  //  catch(err){
-  //    address = Future(()=>"");
-  //  }
 
     var profileImage = getImage(doc.id);
     //var images = _getImages(doc.documentID);
@@ -355,14 +349,17 @@ class QueryService{
       address: address,
       reference: placeData.containsKey('manager_reference') ? placeData['manager_reference']: null,
       schedule: placeData.containsKey('schedule') ? placeData['schedule']: null,
-      deals: placeData.containsKey('deals') ? placeData['deals']: null
+      deals: placeData.containsKey('deals') ? placeData['deals']: null,
+      menu: placeData.containsKey('menu') ? placeData['menu']: null,
+      hasOpenspace: placeData.containsKey('open_space') ? placeData['open_space']: null,
+      hasReservations: placeData.containsKey('reservations') ? placeData['reservations']: null
     );
   }
 
   // Handles the whole process of querying
   Future fetch(bool onlyDiscountLocals) async{
     
-    if(g.selectedArea == 0){
+    if(g.selectedArea == 0 && _userLocation == null){
       _userLocation = await getUserLocation();
       print("DONE-----------");
     }

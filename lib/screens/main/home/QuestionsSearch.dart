@@ -78,67 +78,78 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //height: 650,
-      color: Theme.of(context).backgroundColor,
-      constraints: BoxConstraints(
-        maxHeight: 350,
-        minWidth: MediaQuery.of(context).size.width
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.blueGrey,), onPressed: () => Navigator.pop(context)),
       ),
-      alignment: Alignment(0, 0),
-      child: Column(
-        /// Replaced 'Stack' with 'Column' for the Buttons
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          listOfButtons[0],
-          listOfButtons[1],
-          listOfButtons[2],
-          listOfButtons[3],
-          listOfButtons[4],
-          Container(/// The 'Search' Button
-            padding: EdgeInsets.symmetric(),
-            child: Center(
-              child: MaterialButton(
-                highlightColor: Colors.transparent,
-                color: Colors.blueGrey,
-                splashColor: Colors.orange[600],
-                minWidth: 120,
-                height: 44,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Icon(Icons.search, color: Colors.white),
-                onPressed: () async {
-                  if (checkOptions()) {
-                    Navigator.pushNamed(context, '/second');
-                    // g.placesList = [];
-                    // Navigator.pushNamed(context, '/loading');
-                    // QueryService().queryForLocals().then((data) {
-                    //   Navigator.pushReplacementNamed(
-                    //       context, '/second');
-                    // });
-                    // print(g.placesList);
-                  } 
-                  else {
-                    if(g.isSnackBarActive == false){
-                      g.isSnackBarActive = true;
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          'Selecteaza fiecare camp.',
-                          textAlign: TextAlign.center,
-                        ),
-                        backgroundColor: Colors.orange[600],
-                      )).closed.then((SnackBarClosedReason reason){
-                        g.isSnackBarActive = false;
-                      });
-                    }
-                  }
-                }
-              )
-            ),
+      extendBodyBehindAppBar: true,
+      body: Builder(
+        builder:(context) => Container(
+          //height: 650,
+          color: Theme.of(context).backgroundColor,
+          constraints: BoxConstraints(
+            //maxHeight: 350,
+            minWidth: MediaQuery.of(context).size.width
           ),
-          
-        ],
+          alignment: Alignment(0, 0),
+          child: Column(
+            /// Replaced 'Stack' with 'Column' for the Buttons
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              listOfButtons[0],
+              listOfButtons[1],
+              listOfButtons[2],
+              listOfButtons[3],
+              listOfButtons[4],
+              Container(/// The 'Search' Button
+                padding: EdgeInsets.symmetric(),
+                child: Center(
+                  child: MaterialButton(
+                    highlightColor: Colors.transparent,
+                    color: Colors.blueGrey,
+                    splashColor: Colors.orange[600],
+                    minWidth: 120,
+                    height: 44,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Icon(Icons.search, color: Colors.white),
+                    onPressed: () async {
+                      if (checkOptions()) {
+                        Navigator.pushNamed(context, '/second');
+                        // g.placesList = [];
+                        // Navigator.pushNamed(context, '/loading');
+                        // QueryService().queryForLocals().then((data) {
+                        //   Navigator.pushReplacementNamed(
+                        //       context, '/second');
+                        // });
+                        // print(g.placesList);
+                      } 
+                      else {
+                        if(g.isSnackBarActive == false){
+                        print("incomplet");
+                          g.isSnackBarActive = true;
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              'Selecteaza fiecare camp.',
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Colors.orange[600],
+                          )).closed.then((SnackBarClosedReason reason){
+                            g.isSnackBarActive = false;
+                          });
+                        }
+                      }
+                    }
+                  )
+                ),
+              ),
+              
+            ],
+          ),
+        ),
       ),
     );
   }

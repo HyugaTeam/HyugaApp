@@ -7,6 +7,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/hyuga" />
+            android:src="@drawable/launch_screen2" />
     </item>
 </layer-list>

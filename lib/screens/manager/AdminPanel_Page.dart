@@ -40,24 +40,35 @@ class AdminPanel extends StatelessWidget {
     // }
   }
 
-  Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID) async{
+  Future<Map<String,dynamic>> _getPlaceAnalytics(String placeID, int maturityDay, num retainedPercentage) async{
 
     //fetchBigQueryData();
 
+    DateTime today = DateTime.now().toLocal();
     QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals').doc(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).get();
     double allTimeIncome = 0;
     int allTimeGuests = 0;
     double thirtyDaysIncome = 0;
     int thirtyDaysGuests = 0;
+    double currentBillTotal = 0;
+
+    int maturityMonth;
+    if(today.day >= maturityDay)
+      maturityMonth = (today.month + 12) % 12;
+    else maturityMonth = (today.month-12)%12 - 1;
+    DateTime emissionDate = DateTime(today.year, maturityMonth,maturityDay);
+    DateTime maturityDate = DateTime(today.year, (maturityMonth + 1) % 12, (maturityDay-1)%31);
+
     scannedCodes.docs.forEach((element) {
       allTimeIncome += element.data()['total'];
       allTimeGuests += element.data()['number_of_guests'];
-      if(DateTime.now().toLocal().difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
+      if(today.difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
         thirtyDaysIncome += element.data()['total'];
         thirtyDaysGuests += element.data()['numberOfGuests'];
       }
-
+      if(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 && (element.data()['discount'] != 0 || element.data()['deal'] != null))
+        currentBillTotal += element.data()['total'] * retainedPercentage; 
     });
     Map<String,dynamic> result = {};
     result.addAll(
@@ -67,16 +78,18 @@ class AdminPanel extends StatelessWidget {
         "all_time_guests": allTimeGuests,
         "thirty_days_guests": thirtyDaysGuests,
         "thirty_days_income": thirtyDaysIncome,
+        "current_bill_total": currentBillTotal,
+        "emission_date": emissionDate,
+        "maturity_date": maturityDate
       }
     );
-    result.addAll({"all_time_income": allTimeIncome});
     return result;
   }
 
   Future<ManagedLocal> _getPlaceData() async{
     ManagedLocal _managedLocal = ManagedLocal();
 
-    // Queryes data about the place from the manager's directory
+    // Queries data about the place from the manager's directory
     DocumentSnapshot placeData = (await FirebaseFirestore.instance
     .collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals')
@@ -85,8 +98,13 @@ class AdminPanel extends StatelessWidget {
 
     String placeDocumentID = placeData.id;
     print(placeDocumentID);
+    print(placeData.data()['retained_percentage']);
     Map<String,dynamic> analytics = {};
-    analytics.addAll(await _getPlaceAnalytics(placeDocumentID));
+    analytics.addAll(await _getPlaceAnalytics(
+      placeDocumentID, 
+      placeData.data()['maturity'],
+      placeData.data()['retained_percentage']
+    ));
     
     print("start");
     DocumentSnapshot placeDocument = await FirebaseFirestore.instance
@@ -103,12 +121,14 @@ class AdminPanel extends StatelessWidget {
       ambiance: placeDocument.data()['ambiance'],
       profile: placeDocument.data()['profile'],
       discounts: placeDocument.data()['discounts'],
+      deals: placeDocument.data()['deals'],
       analytics: analytics,
       reservations: placeDocument.data()['reservations'],
-      retainedPercentage: placeDocument.data()['retained_percentage'],
-      schedule: placeDocument.data()['schedule']
+      retainedPercentage: placeData.data()['retained_percentage'],
+      schedule: placeDocument.data()['schedule'],
+      maturity: placeData.data()['maturity']
     );
-    print("finished");
+    print(_managedLocal.retainedPercentage);
     return _managedLocal;
   }
 
@@ -146,7 +166,7 @@ class AdminPanel extends StatelessWidget {
                 title: Text(_managedLocal.data.name),
                 bottom: TabBar(
                   labelPadding: EdgeInsets.all(5),
-                  tabs: [Text("Mese active"),Text("Rezervari"),Text("Analiza"), Text("Editor")]
+                  tabs: [Text("Mese active"),Text("Rezervari"),Text("Analiza & Facturi"), Text("Editor")]
                 ),
               ),
               body: TabBarView(

@@ -117,27 +117,24 @@ class SearchListTile extends StatefulWidget {
 class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAliveClientMixin{
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(
+    return MaterialButton(
+      highlightColor: Colors.grey.withOpacity(0.2),
+      splashColor: Colors.orange[600],
+      onPressed: () => Navigator.pushNamed(
         context, 
         '/third',
         arguments: [widget.place,false]
       ),
       child: Container(
-        // padding: EdgeInsets.symmetric(
-        //   //vertical: 100,
-        //   horizontal: MediaQuery.of(context).size.width*0.05,
-        // ),
         height: 80,
         child: Row(
           children: [
-            FutureBuilder(
+            FutureBuilder( // The Image
               future: widget.place.image,
               builder: (context,image){
                 if(!image.hasData)
@@ -153,7 +150,7 @@ class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAlive
               },
             ),
             SizedBox(width: 10,),
-            Padding(
+            Padding( // The name
               padding: EdgeInsets.only(bottom: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,

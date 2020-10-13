@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/screens/manager/ScannedCodesHistoryPage.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AnalysisPage extends StatelessWidget {
@@ -23,34 +24,31 @@ class AnalysisPage extends StatelessWidget {
             //   subtitle: Text("(ultimele 14 zile)"),
             //   trailing: Text("119")
             // ),
-            Divider(thickness: 1,),
+            SizedBox(height: 20,),
+            Center(
+              child: Text(
+                "Ultimele 30 de zile", 
+                style: TextStyle(
+                  fontSize: 20
+                ),
+              ),
+            ),
             ListTile(
-              //dense: true,
               contentPadding: EdgeInsets.symmetric(horizontal: 50),
               title: Text("Venituri generate de Hyuga"),
-              //leading: Text("leading"),
               subtitle: Text("(ultimele 30 zile)"),
               trailing: Text(
                 _managedLocal.analytics['thirty_days_income'].toString()+"\nRON"
               )
             ),
             ListTile(
-              //dense: true,
               contentPadding: EdgeInsets.symmetric(horizontal: 50),
               title: Text("Clienti adusi de Hyuga"),
-              //leading: Text("leading"),
               subtitle: Text("(ultimele 30 zile)"),
               trailing: Text(
                 _managedLocal.analytics['thirty_days_guests'].toString()
               )
             ),
-            // ListTile(
-            //     //dense: true,
-            //     contentPadding: EdgeInsets.symmetric(horizontal: 50),
-            //     title: Text("Retentie utilizatori"),
-            //     subtitle: Text("(clienti/vizualizare)"),
-            //     trailing: Text("2%")
-            // ),
             Divider(
               thickness: 1,
             ),
@@ -62,28 +60,46 @@ class AnalysisPage extends StatelessWidget {
                 ),
               ),
             ),
-            // ListTile(
-            //     //dense: true,
-            //     contentPadding: EdgeInsets.symmetric(horizontal: 50),
-            //     title: Text("Vizualizari"),
-            //     //subtitle: Text("(clienti/vizualizare)"),
-            //     trailing: Text("2%")
-            // ),
             ListTile(
-                //dense: true,
                 contentPadding: EdgeInsets.symmetric(horizontal: 50),
                 title: Text("Venituri generate de Hyuga"),
-                //subtitle: Text("(clienti/vizualizare)"),
                 trailing: Text(_managedLocal.analytics['all_time_income'].toString()+"\nRON")
             ),
             ListTile(
-                //dense: true,
                 contentPadding: EdgeInsets.symmetric(horizontal: 50),
                 title: Text("Clienti adusi de Hyuga"),
-                //subtitle: Text("(clienti/vizualizare)"),
                 trailing: Text(_managedLocal.analytics['all_time_guests'].toString())
             ),
-            //Divider(thickness: 2,),
+            Divider(thickness: 1,),
+            Center(
+              child: Text(
+                "Facturi", 
+                style: TextStyle(
+                  fontSize: 20
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top : 20),
+              child: Text("Factura curenta", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
+            ), 
+            ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 50),
+                title: Text("Valoare"),
+                trailing: Text(_managedLocal.analytics['current_bill_total'].toString()+"\nRON")
+            ),
+            ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 50),
+                title: Text("Data emisa"),
+                trailing: Text(DateFormat("yyyy-MMM-dd").format(_managedLocal.analytics['emission_date']).toString())
+            ),
+            ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 50),
+                title: Text("Data scadenta"),
+                trailing: Text(
+                  DateFormat("yyyy-MMM-dd").format(_managedLocal.analytics['maturity_date']).toString()
+                )
+            ),
             MaterialButton( /// Scan History button
               shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.zero,

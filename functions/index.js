@@ -27,10 +27,10 @@ exports.sendReservationNotification = functions.firestore
 
         const time = data['date_start'].toDate()
         const utc_offset = time.getTimezoneOffset()
-        const hourOffset = utc_offset/30
+        const hourOffset = 3
         var hoursAndMinutes = ""
         if(time.getHours()<10)
-          hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()
+          hoursAndMinutes += "0" + (time.getHours()+3).toString()
         else
           hoursAndMinutes += (time.getHours()+hourOffset).toString()
         hoursAndMinutes += ":" + time.getMinutes().toString()
@@ -67,7 +67,7 @@ exports.sendReservationNotificationToUser = functions.firestore
 
       const time = dataBefore['date_start'].toDate()
       const utc_offset = time.getTimezoneOffset()
-      const hourOffset = utc_offset/30
+      const hourOffset = 3
       var hoursAndMinutes = ""
       if(time.getHours()<10)
         hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()

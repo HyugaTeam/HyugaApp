@@ -36,7 +36,7 @@ class ReservationsHistoryPage extends StatelessWidget {
   Future<List> getPastReservations() async {
     QuerySnapshot scanHistory = await _db.collection('users')
     .doc(authService.currentUser.uid).collection('reservations_history')
-    //.where('claimed', isEqualTo: true) 
+    .where('date_start', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal())) 
     .get();
     itemCount = scanHistory.docs.length;
     return scanHistory.docs.map((doc)=>doc.data()).toList();
@@ -321,7 +321,8 @@ class ReservationsHistoryPage extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(height: 20,),
-                                      Container(
+                                      reservationsHistory.data[index]['claimed'] == true
+                                      ? Container(
                                         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
                                         child: RichText(
                                           text: TextSpan(
@@ -332,7 +333,8 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             ]
                                           ), 
                                         ),
-                                      ),
+                                      )
+                                      : Container(),
                                       SizedBox(height: 20,),
                                       Container(
                                         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
@@ -342,6 +344,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             children:[
                                               TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                               TextSpan(text: reservationsHistory.data[index]['discount'].toString() + "%")
+                                              
                                             ]
                                           ), 
                                         ),
@@ -528,13 +531,37 @@ class ReservationsHistoryPage extends StatelessWidget {
                                           //     ]
                                           //   )
                                           // ),
+                                          /// The Discount received on the reservation
+                                          // Container(
+                                          //   padding: const EdgeInsets.only(top: 5),
+                                          //   child: Text(
+                                          //     "Discount: "+ reservationsHistory.data[index]['discount'].toString() + '%',
+                                          //     style: TextStyle(
+                                          //       fontSize: 17,
+                                          //       color: Colors.blueGrey
+                                          //     )
+                                          //   )
+                                          // ),
                                           Container(
                                             padding: const EdgeInsets.only(top: 5),
                                             child: Text(
-                                              "Discount: "+ reservationsHistory.data[index]['discount'].toString() + '%',
+                                              reservationsHistory.data[index]['accepted'] == true
+                                              ? (
+                                                reservationsHistory.data[index]['claimed'] == true
+                                                ? "Revendicata"
+                                                : "Nerevendicata"
+                                              )
+                                              : "Refuzata"
+                                              ,
                                               style: TextStyle(
                                                 fontSize: 17,
-                                                color: Colors.blueGrey
+                                                color: reservationsHistory.data[index]['accepted'] == true
+                                              ? (
+                                                reservationsHistory.data[index]['claimed'] == true
+                                                ? Colors.green
+                                                : Colors.red
+                                              )
+                                              : Colors.yellow
                                               )
                                             )
                                           ),

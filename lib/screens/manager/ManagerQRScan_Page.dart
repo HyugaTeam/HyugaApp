@@ -116,7 +116,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   }
 
   // Gets the current discount percentage
-  double getAppliedDiscount(){
+  double getDiscount(){
     Map<String, dynamic> discounts = managedLocal.discounts;
     List todayDiscounts;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
@@ -139,6 +139,31 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       }
     }
     return 0;
+  }
+
+  dynamic getDeals(){
+    Map<String, dynamic> deals = managedLocal.deals;
+    List todayDeals;
+    String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
+    /// Checks if the place has discounts in the current weekday
+    if(deals.containsKey(currentWeekday) != true)
+      return null;
+    else {
+      todayDeals = deals[currentWeekday];
+      for(int i = 0 ; i< todayDeals.length; i++){
+        String startHour = todayDeals[i]['interval'].toString().substring(0,5);
+        String endHour = todayDeals[i]['interval'].toString().substring(6,11);
+        String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
+        print(startHour+endHour);
+
+        //print(DateTime.now().toLocal().toString());
+        //print(DateTime.now().toUtc().toString());
+        if(startHour.compareTo(currentTime) <=0 
+        && endHour.compareTo(currentTime) >=0)
+          return double.parse(deals[i].toString().substring(12));
+      }
+    }
+    return null;
   }
 
 /// TODO: FINISH SCANNING PROCESS
@@ -165,7 +190,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           'place_id' : managedLocal.id,
           'place_name' : managedLocal.name,
           'date_start': FieldValue.serverTimestamp(), 
-          'discount': getAppliedDiscount(),
+          'discount': getDiscount(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
           'score' : userData.data()['score'],
@@ -183,7 +208,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           'guest_id' : userData.id,
           'guest_name' : userData.data()['displayName'],
           'date_start': FieldValue.serverTimestamp(), 
-          'discount': getAppliedDiscount(),
+          'discount': getDiscount(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
           'retained_percentage': managedLocal.retainedPercentage,

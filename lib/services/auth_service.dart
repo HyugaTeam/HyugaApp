@@ -32,22 +32,28 @@ class AuthService{
         if(currentUser != null){
           loading.add(true);
           isLoading = true;
-          DocumentReference ref = _db.collection('users').doc(value.uid);
-          ref.get().then((DocumentSnapshot docSnap) {
-            if(docSnap != null && docSnap.data() != null){
-              //print(docSnap.data);
-              if(docSnap.data().containsKey('manager') == true)
-                currentUser.isManager = docSnap.data()['manager'];
-              else 
-                currentUser.isManager = null;
-              if(docSnap.data().containsKey('score') == true)
-                currentUser.score = docSnap.data()['score'];
-              else
-                currentUser.score = null;
-            }
+          try{
+            DocumentReference ref = _db.collection('users').doc(value.uid);
+            ref.get().then((DocumentSnapshot docSnap) {
+              if(docSnap != null && docSnap.data() != null){
+                //print(docSnap.data);
+                if(docSnap.data().containsKey('manager') == true)
+                  currentUser.isManager = docSnap.data()['manager'];
+                else 
+                  currentUser.isManager = null;
+                if(docSnap.data().containsKey('score') == true)
+                  currentUser.score = docSnap.data()['score'];
+                else
+                  currentUser.score = null;
+              }
+              loading.add(false);
+              isLoading = false;
+            });
+          }
+          catch(error){
             loading.add(false);
             isLoading = false;
-          });
+          }
          }
       },
     );
@@ -60,7 +66,9 @@ class AuthService{
         return _db.collection('users').doc(currentUser.uid)
         .collection('scan_history')
         .where('is_active', isEqualTo: true)
+        .orderBy('date_start',descending: true)
         .snapshots();
+    return null;
   }
   
 
@@ -71,13 +79,19 @@ class AuthService{
     if(user!= null)
       AnalyticsService().setUserProperties(user.uid);
 
-    print("da");
+    //authService.signOut();
+
+    //print(user.isAnonymous);
     return user != null 
     ? OurUser(
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
-      displayName: (user.displayName != null && user.isAnonymous == true) ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
+      displayName: user.displayName != null 
+        ? user.displayName 
+        : (user.email != null
+          ? user.email.substring(0,user.email.indexOf('@'))
+          : "Guest"),
       isAnonymous : user.isAnonymous
     ) 
     : null;

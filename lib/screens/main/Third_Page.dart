@@ -9,6 +9,7 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/Reservation_Panel.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
@@ -383,7 +384,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         alignment: Alignment(-0.9, 0),
                         padding: EdgeInsets.only(top:20),
                         child: Text(
-                          'Description',
+                          'Descriere',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12
@@ -448,6 +449,85 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           },
                             //TODO: Add a 'Return to location' button
                         ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(// Uber Button
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            "Mergi cu: "
+                          ),
+                          Container( 
+                            width: 100,
+                            height: 30,
+                            // decoration: BoxDecoration(
+                            //   color: Colors.black,
+                            //   //borderRadius: BorderRadius.circular(20)
+                            // ),
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)
+                              ),
+                              child: Text(
+                                'Uber',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1
+                                ),
+                              ),
+                              color: Colors.black,
+                              onPressed: () async{
+                                LatLng pickup = LatLng(
+                                  queryingService.userLocation.latitude, 
+                                  queryingService.userLocation.longitude
+                                );
+                                LatLng dropoff = LatLng(
+                                  widget.local.location.latitude, 
+                                  widget.local.location.longitude
+                                );
+                                String deeplink = "https://m.uber.com/ul/?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&action=setPickup&pickup[latitude]=" 
+                                + pickup.latitude.toString()+
+                                "&pickup[longitude]=" 
+                                + pickup.longitude.toString() +
+                                "&pickup[nickname]="
+                                + "" +
+                                "&pickup[formatted_address]="
+                                + "" +
+                                "&dropoff[latitude]="
+                                + dropoff.latitude.toString() + 
+                                "&dropoff[longitude]="
+                                + dropoff.longitude.toString() +
+                                "&dropoff[nickname]="
+                                + widget.local.name.replaceAll(' ', '%20') +
+                                "&dropoff[formatted_address]="
+                                + "" +
+                                "&product_id="
+                                +"a1111c8c-c720-46c3-8534-2fcdd730040d"
+                                ;
+                                _launchInBrowser(
+                                  deeplink
+                                  //"https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
+                                  // "https://m.uber.com/ul/
+                                  // ?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&
+                                  // action=setPickup
+                                  // &pickup[latitude]=37.775818
+                                  // &pickup[longitude]=-122.418028
+                                  // &pickup[nickname]=UberHQ
+                                  // &pickup[formatted_address]=1455%20Market%20St%2C%20San%20Francisco%2C%20CA%2094103
+                                  // &dropoff[latitude]=37.802374
+                                  // &dropoff[longitude]=-122.405818
+                                  // &dropoff[nickname]=Coit%20Tower
+                                  // &dropoff[formatted_address]=1%20Telegraph%20Hill%20Blvd%2C%20San%20Francisco%2C%20CA%2094133
+                                  // &product_id=a1111c8c-c720-46c3-8534-2fcdd730040d"
+                                );
+                                //await UberService().getRide();
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       Container( // First Image
                         padding: EdgeInsets.only(top:30),
@@ -658,10 +738,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 ],
                               ),
                               Container(
-                                height: MediaQuery.of(context).size.height*0.14,
+                                height: 100,
                                 child: ListView.separated(
-                                  //itemExtent: 135, /// Added to add some space between the tiles
-                                  padding: EdgeInsets.all(10),
+                                  //shrinkWrap: true,
+                                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                   scrollDirection: Axis.horizontal,
                                   itemCount: widget.local.discounts != null ?  
                                               (widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
@@ -925,7 +1005,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             Container(
                               width: MediaQuery.of(context).size.width*0.3,
                               child: Text(
-                                "Terasa:   Da"
+                                widget.local.hasOpenspace == true
+                                ? "Terasa: Da"
+                                : "Terasa: Nu"
                               ),
                             )
                           ],
@@ -944,7 +1026,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           ),
                         ),
                         onPressed: () async{
-                          //print("dasd");
+                        if(!authService.currentUser.isAnonymous){
+                        if(widget.local.hasReservations == true){
                           await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
                           .collection('reservations_history')
                           .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
@@ -984,19 +1067,42 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   )
                                 );
                               }
-                            else{
-                              print("nu are rezervari");
+                            else if(widget.local.hasReservations == true){
+                              //print("nu are rezervari");
                               showDialog(context: context, builder: (newContext) => Provider(
                                 create: (context) => widget.local, 
                                 child: ReservationPanel(context:newContext))
-                              ).then((reservation) => reservation != null ? Scaffold.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                              ).then((reservation) => reservation != null 
+                                ? Scaffold.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                                  )
                                 )
-                              ): null); 
+                                : null
+                              ); 
                             }
                           });
-                        },
+                          }
+                        else Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Localul nu accepta rezervari")
+                            )
+                          );
+                        }
+                      else if(authService.currentUser.isAnonymous == true)
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Trebuie sa te loghezi pentru a face rezervari."),
+                              action: SnackBarAction(
+                                label: "Log In", 
+                                onPressed: () async{
+                                  await authService.signOut();
+                                }
+                              ),
+                            ),
+                          );
+                      }
+                      
                       ),
                       Container( // Third Image
                         padding: EdgeInsets.only(top:30),
@@ -1154,32 +1260,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       SizedBox(
                         height: 20,
                       ),
-                      Container( // Uber Button
-                            width: 100,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(20)
-                            ),
-                            child: RaisedButton(
-                              child: Text(
-                                'Uber',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1
-                                ),
-                              ),
-                              color: Colors.transparent,
-                              onPressed: () async{
-                                _launchInBrowser(
-                                  "https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
-                                );
-                                await UberService().getRide();
-                              },
-                            ),
-                          )
-                ],)
+                      
+                  ],
+                )
               ]
             )
           ),
