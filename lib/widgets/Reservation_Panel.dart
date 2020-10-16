@@ -24,6 +24,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   int _selectedHour = DateTime.now().toLocal().hour;
   DateTime _selectedDate; // The final parsed Date which will go in the database
   int _selectedDiscount;
+  List<Map<String,dynamic>> _selectedDeals;
   
   DateTime currentTime = DateTime.now().toLocal();
 
@@ -39,6 +40,16 @@ class _ReservationPanelState extends State<ReservationPanel> {
   int hourDiff; // The difference(in hours) between the ending and starting hour respectively
   int minDiff; // It's value is either 1 or 0, for :30 and :00 respectively 
   DateTime hour; // The first hour of the current weekday in the place's schedule (used for indexing the avaiable hours)
+
+  String formatDealTooltip(List<Map<String,dynamic>> deals){
+    String result = "";
+    deals.forEach((element) {
+      result += element['title'] + " - " + element['interval'] + '\n';
+      result += element['content']+'\n\n';
+    });
+    //result.pad
+    return result;
+  }
 
   @override
   void initState() {
@@ -80,6 +91,24 @@ class _ReservationPanelState extends State<ReservationPanel> {
       selectedHour.compareTo(hourAndDiscount[i].substring(6,11))< 0)
         return int.tryParse(hourAndDiscount[i].substring(12,14));
     return 0;
+  }
+
+  List<Map<String,dynamic>> getDealsForHour(int index){
+    String selectedHour =  
+    hour.add(Duration(minutes: index*30)).hour.toString()
+        + ":" +
+          (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
+          ? '00'
+          : hour.add(Duration(minutes: index*30)).minute.toString());
+    List hourAndDiscount = local.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    //print(hourAndDiscount.length);
+    List<Map<String,dynamic>> deals = <Map<String,dynamic>>[];
+    if(hourAndDiscount != null)
+      for(int i = 0; i< hourAndDiscount.length; i++)
+        if(selectedHour.compareTo(hourAndDiscount[i]['interval'].substring(0,5))>= 0 &&
+          selectedHour.compareTo(hourAndDiscount[i]['interval'].substring(6,11))< 0)
+          deals.add(hourAndDiscount[i]);
+    return deals;
   }
 
   @override
@@ -218,11 +247,11 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   ),
                   SizedBox(height: 13,),
                   Container( /// Hours list
-                    height: 50,
+                    height: 60,
                     width: double.infinity,
                     child: ListView.separated(
                       controller: _hourScrollController,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10,),
                       scrollDirection: Axis.horizontal,
                       itemCount: placeSchedule != null
                       //?3
@@ -231,7 +260,9 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         : 0,
                       separatorBuilder: (context,index)=>SizedBox(width: 10,),
                       itemBuilder: (context,index) {
+                        GlobalKey _tooltipKey = GlobalKey();
                         int discount = getDiscountForHour(index);
+                        List<Map<String,dynamic>> deals = getDealsForHour(index);
                         //print(discount);
                         return  GestureDetector(
                         onTap: (){
@@ -263,6 +294,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                             setState(() {
                               _selectedDate = DateTime.parse(selectedDay +' '+ selectedHour + ':00').toUtc();
                               _selectedDiscount = discount;
+                              _selectedDeals = deals;
                               print(_selectedDate);
                             });
                             _hourScrollController.animateTo(
@@ -279,25 +311,58 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           child: Stack(
                             overflow: Overflow.visible,
                             children: [
-                              Chip(
-                                backgroundColor:  index == _selectedHour ? Colors.orange[600]: Colors.grey[200],
-                                labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
-                                label: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      hour.add(Duration(minutes: index*30)).hour.toString()
-                                      + ":" +
-                                        (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
-                                        ? '00'
-                                        : hour.add(Duration(minutes: index*30)).minute.toString()),
-                                      style: TextStyle(
-                                        fontSize: 15
-                                      ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Chip(
+                                  backgroundColor:  index == _selectedHour ? Colors.orange[600]: Colors.grey[200],
+                                  labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
+                                  label: Text(
+                                    hour.add(Duration(minutes: index*30)).hour.toString()
+                                    + ":" +
+                                      (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
+                                      ? '00'
+                                      : hour.add(Duration(minutes: index*30)).minute.toString()),
+                                    style: TextStyle(
+                                      fontSize: 15
                                     ),
-                                  ],
-                                )
+                                  )
+                                ),
                               ),
+                              // The 'Deal' Chip
+                              deals.length != 0
+                              ? Positioned(
+                                top: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: (){
+                                    final dynamic tooltip = _tooltipKey.currentState;
+                                    tooltip.ensureTooltipVisible();
+                                  },
+                                  child: Tooltip(
+                                    margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.2),
+                                    padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+                                    key: _tooltipKey,
+                                    message: formatDealTooltip(deals),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: MediaQuery.of(context).size.width*0.11,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueGrey,
+                                        borderRadius: BorderRadius.circular(30)
+                                        //shape: BoxShape.circle
+                                      ),
+                                      child: Icon(
+                                        Icons.local_offer,
+                                        color: Colors.white,
+                                        size: 19,
+                                      )
+                                    ),
+                                  ),
+                                ),
+                              )
+                              : Container(),
+                              // The 'Discount' Chip
                               discount != 0
                               ? Positioned(
                                 bottom: 0,
@@ -308,12 +373,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                   height: 20,
                                   decoration: BoxDecoration(
                                     color: Colors.blueGrey,
-                                    // border: Border(
-                                    //   top: BorderSide(width: 4,color: Colors.blueGrey),
-                                    //   left: BorderSide(width: 4,color: Colors.blueGrey),
-                                    //   bottom: BorderSide(width: 4,color: Colors.blueGrey),
-                                    //   right: BorderSide(width: 4,color: Colors.blueGrey)
-                                    // ),
                                     borderRadius: BorderRadius.circular(30)
                                     //shape: BoxShape.circle
                                   ),
@@ -362,6 +421,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         'claimed' : null,
                         'number_of_guests' : _selectedNoOfPeople + 1,
                         'discount': _selectedDiscount,
+                        'deals': _selectedDeals,
                         'user_reservation_ref' : userReservationRef
                       });
                       
@@ -375,6 +435,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'claimed' : null,
                           'number_of_guests' : _selectedNoOfPeople + 1,
                           'discount': _selectedDiscount,
+                          'deals': _selectedDeals,
                           'place_reservation_ref': placeReservationRef
                         }
                       );

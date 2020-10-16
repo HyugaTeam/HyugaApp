@@ -538,7 +538,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                           else _scaffoldKey.currentState.showSnackBar(
                             SnackBar(
                               content: Text(
-                                "Rezervarile pot fi activate cu cel mult 30 de minute inainte si dupa ora acestora."
+                                "Rezervarile pot fi activate cu cel mult 30 de minute inainte sau dupa ora acestora."
                               ),
                               duration: Duration(seconds: 5),
                             )

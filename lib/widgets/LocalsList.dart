@@ -66,12 +66,17 @@ class _LocalsState extends State<Locals> {
     if(local.discounts != null)
       if(local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null){
       double maxDiscountToday = 0 ;
-      for(int i = 0 ;i < local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length;i ++){
-        if(double.parse(local.discounts[DateFormat('EEEE').format(today).toLowerCase()][i].substring(12,14)) > maxDiscountToday)
-          maxDiscountToday = double.parse(local.discounts[DateFormat('EEEE').format(today).toLowerCase()][i].substring(12,14));
-      }
-      List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscountToday)['per_level'];
-      return userDiscounts.reduce(max).toDouble();
+      local.discounts[DateFormat('EEEE').format(today).toLowerCase()].forEach((element){
+        if(double.parse(element.substring(12,14)) > maxDiscountToday)
+          maxDiscountToday = double.parse(element.substring(12,14));
+      });
+      return maxDiscountToday;
+      // for(int i = 0 ;i < local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length;i++){
+      //   if(double.parse(local.discounts[DateFormat('EEEE').format(today).toLowerCase()][i].substring(12,14)) > maxDiscountToday)
+      //     maxDiscountToday = double.parse(local.discounts[DateFormat('EEEE').format(today).toLowerCase()][i].substring(12,14));
+      // }
+      // List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscountToday)['per_level'];
+      // return userDiscounts.reduce(max).toDouble();
     }
   }
 

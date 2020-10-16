@@ -16,7 +16,7 @@ class AuthService{
 
   // instance of the Firebase Authantication system
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSingIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FacebookLogin _facebookLogin = FacebookLogin();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
@@ -153,6 +153,7 @@ class AuthService{
   Future signInAnon() async{
     try{
       UserCredential result = await _auth.signInAnonymously();//.then((value){g.isNewUser = true;});
+      g.isNewUser = true;
       //print(result);
       return result;
     } catch(error){
@@ -198,7 +199,8 @@ class AuthService{
   // sign in method for Google
   Future signInWithGoogle() async{
     try{
-      final GoogleSignInAccount googleUser = await _googleSingIn.signIn();
+      await _googleSignIn.signOut();
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, 

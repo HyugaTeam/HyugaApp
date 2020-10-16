@@ -286,6 +286,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                       child: Transform.scale(
                         scale: 1.25,
                         child: FloatingActionButton(
+                          heroTag: widget.name,
                           backgroundColor: Colors.orange[600],
                           onPressed: () {
                             if (g.isSnackBarActive == false) {

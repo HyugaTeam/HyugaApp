@@ -88,6 +88,13 @@ flutter:
     - assets/images/empty-profile.png
     - assets/images/google-logo-icon.png
     - assets/images/hyuga-logo.png
+    - assets/gifs/first-slide.gif
+    - assets/gifs/second-slide.gif
+    - assets/gifs/third-slide.gif
+    - assets/gifs/fourth-slide.gif
+    - assets/gifs/fifth-slide.gif
+    - assets/images/gaseste_localul_perfect.png
+    - assets/images/reducerile_de_astazi.png
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/main/home/DiscountLocals_Page.dart';
@@ -158,7 +160,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   child: CircularProgressIndicator(),
                 )
               );
-            if(location.data == false)
+            else if(location.data == false)
               return Scaffold(body: Container(
                 padding: EdgeInsets.only(left: 30),
                 child: Column(
@@ -182,8 +184,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 ),
               ));
          else {
-              //_controller.forward();
-              return Scaffold(
+            return Scaffold(
               extendBodyBehindAppBar: true,
               backgroundColor: Theme.of(context).backgroundColor,
               key: _drawerKey,
@@ -191,11 +192,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
+                toolbarHeight: 70,
                 leading: IconButton(
                   icon: Icon(Icons.menu),
                   iconSize: 20,
-                  color: Colors.black,
-                  //color: Colors.blueGrey,
+                  color: Colors.white,
+                  highlightColor: Colors.white.withOpacity(0.2),
+                  splashColor: Colors.white.withOpacity(0.8),
                   onPressed: () async {
                     _drawerKey.currentState.openDrawer();
                   },
@@ -205,7 +208,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     splashColor: Colors.white.withOpacity(0.8),
                     highlightColor: Colors.white.withOpacity(0.2),
                     icon: FaIcon(FontAwesomeIcons.search, size: 18),
-                    color: Colors.black,
+                    color: Colors.white,
                     onPressed: (){
                       Navigator.push(
                         context, 
@@ -250,30 +253,52 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               duration: Duration(milliseconds: 1000),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.bottomLeft,
-                                    end: Alignment.bottomRight,
-                                    //focalRadius: 1,
-                                    //focal: Alignment.bottomLeft,
-                                    transform: GradientRotation(2),
-                                    colors: [
-                                      Colors.orange[600],
-                                      Colors.orange[800]
-                                    ]
-                                  )
+                                  image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage(
+                                      'assets/images/gaseste_localul_perfect.png'
+                                    )
+                                  ),
+                                  // gradient: LinearGradient(
+                                  //   begin: Alignment.bottomLeft,
+                                  //   end: Alignment.bottomRight,
+                                  //   //focalRadius: 1,
+                                  //   //focal: Alignment.bottomLeft,
+                                  //   transform: GradientRotation(2),
+                                  //   colors: [
+                                  //     Colors.orange[600],
+                                  //     Colors.orange[800]
+                                  //   ]
+                                  // )
                                 ),
                                 //color: Colors.orange[600],
                                 width: double.infinity,
                                 height: _topWidgetSize.height,
                                 child: MaterialButton(
-                                  splashColor: Colors.black12,
-                                  highlightColor: Colors.transparent,
+                                  color: Colors.orange[600].withOpacity(0.2),
+                                  splashColor: Colors.black26,
+                                  highlightColor: Colors.black12,
                                   child: Text(
                                     "Gaseste localul perfect",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      letterSpacing: -0.5
+                                      fontSize: 25,
+                                      letterSpacing: -0.5,
+                                      color: Colors.white,
+                                      shadows: [
+                                        // Shadow(
+                                        //   offset: Offset(1, 1)
+                                        // ),
+                                        Shadow(
+                                          offset: Offset(1, -1)
+                                        ),
+                                        Shadow(
+                                          offset: Offset(-1, 1)
+                                        ),
+                                        Shadow(
+                                          offset: Offset(-1, -1)
+                                        ),
+                                      ]
                                     ),
                                   ),
                                   onPressed: (){
@@ -288,7 +313,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         PageRouteBuilder(
                                           opaque: false,
                                           //barrierColor: Colors.blueGrey.withOpacity(0.1),
-                                          barrierDismissible: true,
+                                          //barrierDismissible: true,
                                           transitionDuration: Duration(milliseconds: 1500),
                                           transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
                                             var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut);
@@ -334,28 +359,47 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               child: Container(
                                 //color: Colors.blueGrey,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.topLeft,
-                                    transform: GradientRotation(2),
-                                    colors: [
-                                      Colors.blueGrey[600],
-                                      Colors.blueGrey[700]
-                                    ]
-                                  )
+                                  image: DecorationImage(
+                                    fit: BoxFit.fitHeight,
+                                    image: AssetImage(
+                                      'assets/images/reducerile_de_astazi.png'
+                                    )
+                                  ),
+                                  // gradient: LinearGradient(
+                                  //   begin: Alignment.topRight,
+                                  //   end: Alignment.topLeft,
+                                  //   transform: GradientRotation(2),
+                                  //   colors: [
+                                  //     Colors.blueGrey[600],
+                                  //     Colors.blueGrey[700]
+                                  //   ]
+                                  // )
                                 ),
                                 width: double.infinity,
                                 height: _bottomWidgetSize.height,
                                 //height: MediaQuery.of(context).size.height*0.5,
                                 child: MaterialButton(
-                                  splashColor: Colors.black12,
-                                  highlightColor: Colors.transparent,
+                                  color: Colors.blueGrey.withOpacity(0.6),
+                                  splashColor: Colors.black26,
+                                  highlightColor: Colors.black12,
                                   child: Text(
                                     "Reducerile de astazi",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      letterSpacing: -0.5
+                                      fontSize: 25,
+                                      letterSpacing: -0.5,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          offset: Offset(1, -1)
+                                        ),
+                                        Shadow(
+                                          offset: Offset(-1, 1)
+                                        ),
+                                        Shadow(
+                                          offset: Offset(-1, -1)
+                                        ),
+                                      ]
                                     ),
                                   ),
                                   onPressed: (){
@@ -368,7 +412,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         PageRouteBuilder(
                                           opaque: false,
                                           //barrierColor: Colors.blueGrey.withOpacity(0.1),
-                                          barrierDismissible: true,
+                                          //barrierDismissible: true,
                                           transitionDuration: Duration(milliseconds: 1500),
                                           transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
                                             var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut);
@@ -404,7 +448,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           style: TextStyle(
                             fontFamily: 'Comfortaa',
                             fontSize: 25.0,
-                            //fontWeight: FontWeight.bold
+                            color: Colors.white70
                           ),
                         )
                       ),

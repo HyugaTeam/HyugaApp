@@ -232,10 +232,12 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     }
   }
   
+  /// Deprecated
   double getDiscountForUser(double maxDiscount){
     List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscount)['per_level'];
     return userDiscounts[authService.currentUser.getLevel()].toDouble();
   }
+
 
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
@@ -579,9 +581,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
                                 itemBuilder: (context,index) {
                                   ValueKey key = ValueKey(index);
-                                  
                                   return Container(
-                                    height: 100,
+                                    height: 120,
                                     width: 180,
                                     //width: MediaQuery.of(context).size.width*0.3,
                                     constraints: BoxConstraints(maxHeight: 100),
@@ -617,11 +618,11 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                           Divider(
                                             thickness: 2
                                           ),
-                                          Text(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                            [index].substring(0,5) 
+                                          Text(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                            [index]['interval'].substring(0,5) 
                                             +  ' - ' + 
-                                            widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                            [index].substring(6,11),
+                                            widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                            [index]['interval'].substring(6,11),
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.black
@@ -763,7 +764,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                 Scaffold.of(context).showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      "Scaneaza codul in intervalul dorit pentru a primi reducerea.",
+                                                      "Vino in local si scaneaza codul in intervalul dorit pentru a primi reducerea.",
                                                       textAlign: TextAlign.center,
                                                     ),
                                                     backgroundColor: Colors.orange[600],

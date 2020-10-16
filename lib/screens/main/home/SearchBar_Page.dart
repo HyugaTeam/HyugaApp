@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/widgets/HintsCarouselAnimation.dart';
 
 class SearchBarPage extends StatefulWidget {
   @override
@@ -85,8 +86,12 @@ class _SearchBarPageState extends State<SearchBarPage> {
             stream: searchResults(),
             builder: (context, result) {
               if(!result.hasData)
-                return Center(
-                  child: CircularProgressIndicator(),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    //HintsCarousel()
+                  ],
                 );
               else if(result.data.length == 0) 
                 return Center(child: Text("Ne pare rau, nu exista rezultate"),);
@@ -94,8 +99,11 @@ class _SearchBarPageState extends State<SearchBarPage> {
                 shrinkWrap: true,
                 itemCount: result.data.length,
                 separatorBuilder: (context,index) => SizedBox(height: 15,),
-                itemBuilder: (context, index) =>
-                  SearchListTile(place: queryingService.docSnapToLocal(result.data[index]))
+                itemBuilder: (context, index) {
+                  Local place = queryingService.docSnapToLocal(result.data[index]);
+                  return SearchListTile(place: place, key: ValueKey(place.name));
+                }
+                  
               );
             }
           ),
@@ -108,7 +116,8 @@ class _SearchBarPageState extends State<SearchBarPage> {
 class SearchListTile extends StatefulWidget {
 
   final Local place;
-  SearchListTile({this.place});
+  final Key key;
+  SearchListTile({this.place, this.key});
 
   @override
   _SearchListTileState createState() => _SearchListTileState();

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/widgets/clipper.dart';
 
 class SlideShowIntro extends StatefulWidget {
   @override
   _SlideShowIntroState createState() => _SlideShowIntroState();
 }
 
-class _SlideShowIntroState extends State<SlideShowIntro> {
+class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStateMixin{
   final int _numPages = 5;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
@@ -35,6 +36,13 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -56,7 +64,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   alignment: Alignment.centerRight,
@@ -90,10 +98,10 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                       });
                     },
                     children: <Widget>[
-                      Padding(
+                      Padding( /// First Slide
                         padding: EdgeInsets.all(8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             // Center(
                             //   child: Container(
@@ -127,7 +135,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                               height: 30.0,
                             ), // de ce nu face asta
                             Text(
-                              'Completeaza cele 5 intrebari scurte:   + tipul de local\n+ specificul dorit\n+ numarul de persoane\n+ atmosfera\n+ distanta fata de tine',
+                              'Completeaza cele 5 intrebari scurte:\n+ tipul de local\n+ specificul dorit\n+ numarul de persoane\n+ atmosfera\n+ distanta fata de tine',
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 17,
@@ -140,14 +148,27 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                               ),
                               textAlign: TextAlign.center,
                             ),
+                            SizedBox(height: 15,),
+                            SizedBox(
+                              width: 150,
+                              height: 270,
+                              child: ClipRect(
+                                clipper: MyClipper(),
+                                child: Image(
+                                  image: AssetImage(
+                                    'assets/gifs/first-slide.gif'
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
                       //---------------------------------END OF SLIDE ONE--------------------------------------
-                      Padding(
+                      Padding( /// Second Slide
                         padding: EdgeInsets.all(8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             // Center(
                             //   child: Image(
@@ -158,7 +179,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             Align(
                               widthFactor: 10,
                               child: Text(
-                                'Descopera cele mai mari discounturi!',
+                                'Descopera cele mai mari reduceri!',
                                 style: TextStyle(
                                   fontFamily: 'Comfortaa',
                                   fontSize: 25,
@@ -174,7 +195,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             ),
                             SizedBox(height: 10.0),
                             Text(
-                              'Cauta cerculetul portocaliu!           El semnalizeaza REDUCERILE!',
+                              //'Cauta cerculetul portocaliu!           El semnalizeaza REDUCERILE!',
+                              "Toate reducerile si ofertele speciale sunt la un click distanta.",
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 19,
@@ -189,7 +211,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             ),
                             SizedBox(height: 20),
                             Text(
-                              'Atunci cand vezi un cerculet portocaliu in coltul unui restaurant inseamna ca poti primi reduceri de pana la 40% sau oferte speciale!\nPentru a vedea exact discountul intra pe profilul localului!',
+                              //'Atunci cand vezi un cerculet portocaliu in coltul unui restaurant inseamna ca poti primi reduceri de pana la 40% sau oferte speciale!\nPentru a vedea exact discountul intra pe profilul localului!',
+                              "Fiecare cerculet portocaliu indica reducerea de astazi din local.\nExploreaza lista pentru a gasi OFERTA care ti se potriveste.",
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 16,
@@ -202,41 +225,99 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                               ),
                               textAlign: TextAlign.center,
                             ),
+                            SizedBox(height: 15,),
+                            SizedBox(
+                              width: 150,
+                              height: 270,
+                              child: ClipRect(
+                                clipper: MyClipper(),
+                                child: Image(
+                                  image: AssetImage(
+                                    'assets/gifs/second-slide.gif'
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
                       //---------------------------------END OF SLIDE TWO--------------------------------------
-                      Padding(
+                      Padding( /// Third Slide
                         padding: EdgeInsets.all(8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             // Center(
                             //   child: Image(
                             //     image: AssetImage('assets/infinitea.jpg'),
                             //   ),
                             // ),
+                            //SizedBox(height: 15,),
+                            SizedBox(
+                              width: 150,
+                              height: 270,
+                              child: ClipRect(
+                                clipper: MyClipper(),
+                                child: Image(
+                                  image: AssetImage(
+                                    'assets/gifs/third-slide.gif'
+                                  ),
+                                ),
+                              ),
+                            ),
                             SizedBox(height: 30.0),
                             Align(
                               widthFactor: 10,
-                              child: Text(
-                                'Cum primesti reducerea?     Pasul 1:',
-                                style: TextStyle(
-                                  fontFamily: 'Comfortaa',
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  shadows: [
-                                    Shadow(
-                                        offset: Offset(1, 1), blurRadius: 2.0)
-                                  ],
-                                ),
+                              child: RichText(
                                 textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [ 
+                                    TextSpan(
+                                      text: "Cum primesti ",
+                                      style: TextStyle(
+                                        fontFamily: 'Comfortaa',
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        shadows: [
+                                          Shadow(
+                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                        ],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "reducerea",
+                                      style: TextStyle(
+                                        fontFamily: 'Comfortaa',
+                                        fontSize: 25,
+                                        color: Colors.orange[600],
+                                        fontWeight: FontWeight.w800,
+                                        shadows: [
+                                          Shadow(
+                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                        ],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "?\nVarianta 1:",
+                                      style: TextStyle(
+                                        fontFamily: 'Comfortaa',
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        shadows: [
+                                          Shadow(
+                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                        ],
+                                      ),
+                                    ),
+                                  ]
+                                )
                               ),
                             ),
                             SizedBox(height: 17.0),
                             Text(
-                              'Cand ajungi in local informeaza un angajat al localului ca esti client Hyuga',
+                              'Cand ajungi in local, scaneaza codul tau unic.',
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 20,
@@ -251,7 +332,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             ),
                             SizedBox(height: 17.0),
                             Text(
-                              'Acesta iti in functie de ora la care a fost scanat codul!\nOrele si reducerile respective se afla pe profilul localului!',
+                              //'Acesta iti in functie de ora la care a fost scanat codul!\nOrele si reducerile respective se afla pe profilul localului!',
+                              "Esti in oras si vrei sa obtii oferta/reducerea unui local Hyuga?\nDupa ce un angajat iti va scana codul, te poti bucura de experienta ta pana la venirea notei de plata",
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 16.5,
@@ -264,41 +346,100 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                               ),
                               textAlign: TextAlign.center,
                             ),
+                            
                           ],
                         ),
                       ),
                       //---------------------------------END OF SLIDE THREE--------------------------------------
-                      Padding(
+                      Padding( /// Fourth Slide
                         padding: EdgeInsets.all(8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            // Center(
-                            //   child: Image(
-                            //     image: AssetImage('assets/infinitea.jpg'),
-                            //   ),
-                            // ),
-                            SizedBox(height: 40.0),
+                            SizedBox(height: 15.0),
                             Align(
                               widthFactor: 10,
-                              child: Text(
-                                'Pasul 2:',
-                                style: TextStyle(
-                                  fontFamily: 'Comfortaa',
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  shadows: [
-                                    Shadow(
-                                        offset: Offset(1, 1), blurRadius: 2.0)
-                                  ],
-                                ),
+                              child: RichText(
                                 textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  children: [ 
+                                    TextSpan(
+                                      text: "Cum primesti ",
+                                      style: TextStyle(
+                                        fontFamily: 'Comfortaa',
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        shadows: [
+                                          Shadow(
+                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                        ],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "reducerea",
+                                      style: TextStyle(
+                                        fontFamily: 'Comfortaa',
+                                        fontSize: 25,
+                                        color: Colors.orange[600],
+                                        fontWeight: FontWeight.w800,
+                                        shadows: [
+                                          Shadow(
+                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                        ],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "?\nVarianta 2:",
+                                      style: TextStyle(
+                                        fontFamily: 'Comfortaa',
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        shadows: [
+                                          Shadow(
+                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                        ],
+                                      ),
+                                    ),
+                                  ]
+                                )
+                                //'Cum primesti reducerea?\nVarianta 2:',
+                                
+                                //textAlign: TextAlign.center,
                               ),
                             ),
+                            SizedBox(
+                              width: 150,
+                              height: 270,
+                              child: ClipRect(
+                                clipper: MyClipper(),
+                                child: Image(
+                                  image: AssetImage(
+                                    'assets/gifs/fourth-slide.gif'
+                                  ),
+                                ),
+                              ),
+                            ),
+                            //SizedBox(height: 40.0),
                             SizedBox(height: 15.0),
                             Text(
-                              'Pentru a ne asigura ca veti primi reducerea corecta si pentru a va proteja, angajatul localului va introduce suma pe care trebuie sa o platiti (dupa reducere) iar dumneavoastra o confirmati prin aplicatie!\nAsta este tot!',
+                              'Fa o rezervare intr-unul din localurile partenere',
+                              style: TextStyle(
+                                fontFamily: 'Comfortaa',
+                                fontSize: 20,
+                                color: Colors.orange[600],
+                                fontWeight: FontWeight.w600,
+                                height: 1.4,
+                                shadows: [
+                                  Shadow(offset: Offset(2, 2), blurRadius: 3.0)
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 17,),
+                            Text(
+                              'Planifici o iesire in oras? Fa o rezervare la unul dintre localuri si beneficiaza automat de reducerile si ofertele din acel interval orar.',
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 18,
@@ -318,23 +459,13 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            // Center(
-                            //   child: Container(
-                            //     decoration: BoxDecoration(
-                            //         color: Colors.white,
-                            //         borderRadius: BorderRadius.circular(32)),
-                            //     child: Image(
-                            //       image: AssetImage('assets/infinitea.jpg'),
-                            //     ),
-                            //   ),
-                            // ),
                             SizedBox(height: 30.0),
                             Align(
                               widthFactor: 10,
                               child: Text(
-                                'BONUS!',
+                                'Cauta un local!',
                                 style: TextStyle(
                                   fontFamily: 'Comfortaa',
                                   fontSize: 25,
@@ -351,8 +482,23 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                             SizedBox(
                               height: 20.0,
                             ), // de ce nu face asta
+                            SizedBox(
+                              width: 150,
+                              height: 270,
+                              child: ClipRect(
+                                clipper: MyClipper(),
+                                child: Image(
+                                  image: AssetImage(
+                                    'assets/gifs/fifth-slide.gif'
+                                  ),
+                                ),
+                              ),
+                            ),
+                            //SizedBox(height: 40.0),
+                            SizedBox(height: 15.0),
                             Text(
-                              'Salveaza localurile preferate pentru a le putea accesa oricand la sectiunea "FAVORITE". Vezi unde este locatia exact prin Google Maps si comanda un Uber! Vizualizeaza menu-ul complet prin aplicatie!\nSi multe altele!',
+                              //'Salveaza localurile preferate pentru a le putea accesa oricand la sectiunea "FAVORITE". Vezi unde este locatia exact prin Google Maps si comanda un Uber! Vizualizeaza menu-ul complet prin aplicatie!\nSi multe altele!',
+                              "Cauta localul tau preferat in aplicatia Hyuga si profita de reducerile acestuia. Fa o rezervare, vezi locatia exacta, studiaza meniul sau comanda un Uber!",
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
                                 fontSize: 17,
@@ -365,6 +511,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                               ),
                               textAlign: TextAlign.center,
                             ),
+
                           ],
                         ),
                       ),
@@ -396,7 +543,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Text(
-                                  'Next',
+                                  'Urmatorul',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 17.5,
