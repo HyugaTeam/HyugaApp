@@ -4,6 +4,7 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:intl/intl.dart';
 
 class ScannedLocalsPage extends StatefulWidget {
 
@@ -145,11 +146,13 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                       text: TextSpan(
                                         style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                         children:[
-                                          TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                          scanHistory.data[index]['discount'] != 0 
+                                          ? TextSpan(text: "Reducere: ", style: TextStyle(fontWeight: FontWeight.bold))
+                                          : TextSpan(text: "Fara reducere", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                            text: scanHistory.data[index]['discount'] != null
+                                            text: scanHistory.data[index]['discount'] != 0
                                             ? scanHistory.data[index]['discount'].toString() + "%"
-                                            : "Fara discount"
+                                            : ""
                                           )
                                         ]
                                       ), 
@@ -182,7 +185,9 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           TextSpan(text: "Data: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
                                             text: 
-                                            DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch).toString()
+                                            DateFormat("y-MM-dd HH:mm").format(
+                                              DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch)
+                                            )
                                           )
                                         ]
                                       ), 
@@ -339,12 +344,12 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                       Container(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
-                                          scanHistory.data[index]['discount'] != null
-                                          ? "Discount: "+ scanHistory.data[index]['discount'].toString() + "%"
-                                          : "Fara discount",
+                                          scanHistory.data[index]['discount'] != 0
+                                          ? "Reducere: "+ scanHistory.data[index]['discount'].toString() + "%"
+                                          : "Fara reducere",
                                           style: TextStyle(
                                             fontSize: 17,
-                                            color: Colors.blueGrey
+                                            color: Colors.blueGrey.shade400
                                           )
                                         )
                                       ),

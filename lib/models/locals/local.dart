@@ -21,6 +21,7 @@ class Local{
   final String menu; // A link to a webpage containing the Place's menu
   final bool hasOpenspace;
   final bool hasReservations;
+  Image finalImage;
 
   Local({
     this.cost,
@@ -40,7 +41,9 @@ class Local{
     this.menu,
     this.hasOpenspace,
     this.hasReservations
-  });
+  }){
+    image.then((image) => finalImage = image);
+  }
 }
 /*
 class Restaurant extends Local{

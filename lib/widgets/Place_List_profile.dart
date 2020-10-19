@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geocoder/geocoder.dart';
-import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/models/locals/local.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'dart:math';
@@ -57,6 +55,8 @@ class PlaceListProfile extends StatefulWidget {
   final int price;
   final VoidCallback onTap;
   double discount = 0; //TREBUIE UN IF PENTRU discount 0
+  Image finalImage;
+  final Local place;
 
   final BuildContext scaffoldContext;
 
@@ -69,8 +69,11 @@ class PlaceListProfile extends StatefulWidget {
       this.price,
       this.onTap,
       this.discount,
-      this.scaffoldContext
-      });
+      this.scaffoldContext,
+      this.place
+      }){
+        image.then((image) => finalImage = image);
+      }
 
   @override
   _PlaceListProfileState createState() => _PlaceListProfileState();
@@ -243,25 +246,31 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                       child: Container(
                         width: min(325,MediaQuery.of(context).size.width*0.85),
                         height: 220,
-                        child: FutureBuilder(
-                            future: widget.image,
-                            builder: (context, img) {
-                              if (!img.hasData)
-                                return Container(
-                                  width: 400,
-                                  height: 200,
-                                  child: Shimmer.fromColors(
-                                    child: Container(),
-                                    baseColor: Colors.white,
-                                    highlightColor: Colors.grey
-                                  ),
-                                );
-                              else
-                                return Container(
-                                  color: Colors.transparent, 
-                                  child: img.data
-                                );
-                            }),
+                        child: Hero( /// The image Hero Widget
+                          tag: widget.name,
+                          child: FutureBuilder(
+                              future: widget.image,
+                              builder: (context, img) {
+                                //return img.data;
+                                if(widget.finalImage == null)
+                                //if (!img.hasData)
+                                  return Container(
+                                    width: 400,
+                                    height: 200,
+                                    child: Shimmer.fromColors(
+                                      child: Container(),
+                                      baseColor: Colors.white,
+                                      highlightColor: Colors.grey
+                                    ),
+                                  );
+                                else
+                                  return Container(
+                                    color: Colors.transparent, 
+                                    child: widget.finalImage
+                                    //child: img.data
+                                  );
+                              }),
+                        ),
                       ),
 //                  child: Image(
 //                    height: 220.0,
@@ -269,7 +278,15 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
 //                    image: AssetImage(_image),
 //                    fit: BoxFit.cover, //look into this
 //                  ),
-                      onTap: widget.onTap),
+                      onTap: widget.onTap
+                      // onTap: (){
+                      //   Navigator.pushNamed(
+                      //     context,
+                      //     '/third',
+                      //     arguments: [locals.data[index],widget.onlyWithDiscounts]
+                      // );
+                      // },
+                    ),
                 ),
               ),
             ],
@@ -286,7 +303,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                       child: Transform.scale(
                         scale: 1.25,
                         child: FloatingActionButton(
-                          heroTag: widget.name,
+                          heroTag: widget.name+'_button',
                           backgroundColor: Colors.orange[600],
                           onPressed: () {
                             if (g.isSnackBarActive == false) {

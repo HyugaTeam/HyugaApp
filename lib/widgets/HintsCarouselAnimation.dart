@@ -10,6 +10,7 @@ class _HintsCarouselState extends State<HintsCarousel> with TickerProviderStateM
   Animation<Offset> _animation;
   AnimationController _controller;
   List<String> _text = ["Breath in","Breath out"];
+  
   int index = 0;
 
   @override
@@ -58,11 +59,14 @@ class _HintsCarouselState extends State<HintsCarousel> with TickerProviderStateM
       width: 100,
       child: SlideTransition(
         position: _animation,
-        child: Text(
-          _text[index],
-          style: TextStyle(
-            fontSize: 18,
-            fontStyle: FontStyle.italic
+        child: Opacity(
+          opacity: 0.7,
+          child: Text(
+            _text[index],
+            style: TextStyle(
+              fontSize: 18,
+              fontStyle: FontStyle.italic,
+            ),
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -317,6 +318,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                 ))}"] + " "
                               ),
                               WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
                                 child: ClipOval(
                                   child: Container(
                                     alignment: Alignment.center,
@@ -443,7 +445,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 {
                                                 // "table_number": tableNumber,
                                                 "claimed": true,
-                                                "scan_ref": placeScanningRef
+                                                "scan_ref": placeScanningRef,
+                                                "date_claimed": FieldValue.serverTimestamp()
                                                 },
                                                 SetOptions(merge: true)
                                               );
@@ -456,7 +459,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 {
                                                 //"table_number": tableNumber,
                                                 "claimed": true,
-                                                "scan_ref": userScanningRef
+                                                "scan_ref": userScanningRef,
+                                                "date_claimed": FieldValue.serverTimestamp()
                                                 },
                                                 SetOptions(merge: true)
                                               );
@@ -466,9 +470,10 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               
                                               Map<String, dynamic> placeScanData = {
                                                 "approved_by_user": null,
-                                                //"date_created": acceptedReservations[index].data()['date_created'],
                                                 "date_start": acceptedReservations[index].data()['date_start'],
+                                                "date_claimed": FieldValue.serverTimestamp(),
                                                 "discount": acceptedReservations[index].data()['discount'],
+                                                'deals': acceptedReservations[index].data()['deals'],
                                                 "guest_id": acceptedReservations[index].data()['guest_id'],
                                                 "guest_name": acceptedReservations[index].data()['guest_name'],
                                                 "is_active": true,
@@ -488,9 +493,10 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               Map<String,dynamic> userScanData = {
                                                 "accepted": true,
                                                 "approved_by_user": null,
-                                                //"date_created": acceptedReservations[index].data()['date_created'],
+                                                "date_claimed": FieldValue.serverTimestamp(),
                                                 "date_start": acceptedReservations[index].data()['date_start'],
                                                 "discount": acceptedReservations[index].data()['discount'],
+                                                "deals": acceptedReservations[index].data()['deals'],
                                                 "place_id": _managedLocal.id,
                                                 "place_name": _managedLocal.name,
                                                 "is_active": true,
@@ -507,6 +513,19 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               // DocumentReference newScanRef = FirebaseFirestore.instance.collection(
                                               //   ''
                                               // )
+                                              AnalyticsService().analytics.logEvent(
+                                                name: 'new_scan',
+                                                parameters: {
+                                                  'place_name': _managedLocal.name,
+                                                  'place_id': _managedLocal.id,
+                                                  "date_claimed": FieldValue.serverTimestamp(),
+                                                  'date_start': acceptedReservations[index].data()['date_start'],
+                                                  'number_of_guests': acceptedReservations[index].data()['number_of_guests'],
+                                                  'reservation': true,
+                                                  'discount': acceptedReservations[index].data()['discount'],
+                                                  'deals': acceptedReservations[index].data()['deals']
+                                                }
+                                              );
                                               Navigator.pop(context);
                                             }
                                           },

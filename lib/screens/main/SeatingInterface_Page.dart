@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
+import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:intl/intl.dart';
 
 class SeatingInterface extends StatefulWidget {
 
@@ -23,10 +26,33 @@ class SeatingInterface extends StatefulWidget {
   _SeatingInterfaceState createState() => _SeatingInterfaceState();
 }
 
-class _SeatingInterfaceState extends State<SeatingInterface> {
+class _SeatingInterfaceState extends State<SeatingInterface> with TickerProviderStateMixin{
 
   Image placeImage = Image.memory(Uint8List(0));
   ScrollController _scrollController;
+  TabController _tabController;
+
+  GlobalKey<ScaffoldState> _scaffoldKey;
+
+  AnimationController _controller;
+  Animation<double> _animation;
+
+  Stream<String> get time{
+    return Stream.periodic(
+      Duration(milliseconds: 1000),
+      (i){
+        Timestamp dateStart = widget.place.data()['date_claimed'] == null ? widget.place.data()['date_start'] : widget.place.data()['date_claimed'];
+        Duration duration = DateTime.now().toLocal().difference(DateTime.fromMillisecondsSinceEpoch(dateStart.millisecondsSinceEpoch));
+        String hours = duration.inHours< 10 ? '0'+duration.inHours.toString() : duration.inHours.toString();
+        String minutes = duration.inMinutes%60 < 10 ? '0'+(duration.inMinutes%60).toString(): (duration.inMinutes%60).toString();
+        String seconds = duration.inSeconds%60 < 10 ? '0'+(duration.inSeconds%60).toString() : (duration.inSeconds%60).toString();
+        return 
+          hours +':'+
+          minutes.toString()+':'+
+          seconds.toString(); 
+      }
+    );
+  }
 
   Future<Local> getPlaceData() async{
     //print(widget.place.data()['place_id']);
@@ -37,146 +63,428 @@ class _SeatingInterfaceState extends State<SeatingInterface> {
     return place;
   }
   
+  String formatDeals(List<Map<String,dynamic>> deals){
+    String result = "";
+    if(deals != null)
+      deals.forEach((element) {
+        result += element['title'] + " - ";
+        result += element['content']+'\n\n';
+      });
+    //result.pad
+    return result == "" ? "Nicio oferta" : "";
+    
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _scaffoldKey = GlobalKey<ScaffoldState>();
+    _tabController = TabController(length: 2, vsync: this);
     _scrollController = ScrollController(initialScrollOffset: 0);
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 1000),
+      vsync: this
+    );
+    _animation = CurvedAnimation(
+      parent: _controller, 
+      curve: Curves.elasticInOut
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  FutureBuilder<Local>(
-        future: getPlaceData(),
-        builder: (context, place) {
-          if(!place.hasData)
-            return Center(child: CircularProgressIndicator());
-          else {
-            //place.data.image.then((image) => setState(() => placeImage = image));
-            return Stack(
-            alignment: AlignmentDirectional.topCenter,
-            children: [
-              GoogleMap( /// The background Google Map
-                markers: {
-                  Marker(
-                    markerId: MarkerId("1"),
-                    position: LatLng(place.data.location.latitude,place.data.location.longitude),
-                  )
-                },
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(place.data.location.latitude,place.data.location.longitude),
-                  zoom: 16
-                ),
-              ),
-              Opacity( // An orange shade on the map
-                opacity: 0.2,                
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.orange[600],
-                ),
-              ),
-              // Positioned(
-              //   bottom: 0,
-              //   child: Container(
-              //     width: 400,
-              //     height: 200,
-              //     child: FutureBuilder(
-              //       future: place.data.image,
-              //       builder: (context, image){
-              //         if(!image.hasData)
-              //           return Container();
-              //         else return image.data;
-              //       }
-              //     ),
-              //   ),
-              // ),
-              Positioned( // The text about the place
-                top: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
-                    color: Colors.white
-                  ),
-                  width: MediaQuery.of(context).size.width*0.8,
-                  height: MediaQuery.of(context).size.height*0.2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Text(
-                          "Te afli la ${widget.place.data()['place_name']}",
-                          style: TextStyle(
-                            fontSize: 18
-                          ),
-                        )
-                      ),
-                      SizedBox(height: 15,),
-                      Text(
-                        "Pofta buna!",
-                        style: TextStyle(
-                          fontSize: 23
-                        ),
-                      ),
-                    ]
-                  ),
-                ),
-              ),
-              // Container(
-              //   alignment: Alignment.bottomCenter,
-              //   //color: Colors.blueGrey,
-              //   width: double.infinity,
-              //   height: 30,
-              //   child: Text(
-              //     "hyuga",
-              //     style: TextStyle(
-              //       fontSize: 18,
-              //       //backgroundColor: Colors.blueGrey
-              //     ),
-              //   ),
-              // ),
-              DraggableScrollableSheet(
-                initialChildSize: 0.25,
-                maxChildSize: 0.8,
-                builder: (context,_scrollController){
-                  return SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Container(
-                      color: Colors.white,
-                      // decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))
-                      // ),
-                      height: MediaQuery.of(context).size.height*0.8,
-                      child: Column(
-                        children: [
-                          Container( // The place's image
-                            width: 400,
-                            height: 250,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))
+      key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: 70,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.report,color: Colors.blueGrey,),
+            tooltip: "Raporteaza o problema",
+            onPressed: (){
+              if(widget.place.data()['issue_ref'] == null)
+              showDialog(
+                context: context,
+                builder: (context){
+                  return Dialog(
+                    insetAnimationDuration: Duration(milliseconds: 1000),
+                    insetAnimationCurve: Curves.elasticIn,
+                    child: DefaultTabController(
+                      initialIndex: 0,
+                      length: 2,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height*0.5,
+                        width: MediaQuery.of(context).size.width*0.5,
+                        child: TabBarView(
+                          controller: _tabController,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            Container( /// First Step
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Ai o problema?",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  RaisedButton(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    color: Colors.white,
+                                    highlightColor: Colors.grey.withOpacity(0.4),
+                                    splashColor: Colors.orange[600],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                    elevation: 1,
+                                    highlightElevation: 2,
+                                    child: Text(
+                                      "Nu pot folosi aplicatia, desi am parasit localul.",
+                                      style: TextStyle(fontSize: 14),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    onPressed: (){
+                                      AnalyticsService().analytics.logEvent(name: "need_help", parameters: {"place_id": widget.place.data()['place_id']});
+                                      DocumentReference issueRef = FirebaseFirestore.instance.collection('issues').doc();
+                                      issueRef.set(
+                                        {
+                                          'guest_id': authService.currentUser.uid,
+                                          'guest_name': authService.currentUser.displayName,
+                                          'place_id': widget.place.data()['place_id'],
+                                          'place_name': widget.place.data()['place_name'],
+                                          'issue_ref': widget.place.reference
+                                        }
+                                      );
+                                      widget.place.reference.set(
+                                        {
+                                          'issue_ref': issueRef
+                                        },  
+                                        SetOptions(merge: true)
+                                      );
+                                      _tabController.animateTo(
+                                        1
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: FutureBuilder(
-                              future: place.data.image,
-                              builder: (context, image){
-                                if(!image.hasData)
-                                  return Container();
-                                else return image.data;
-                              }
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Text("")
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Te vom ajuta in scurt timp",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  SizedBox(height: 20,),
+                                  Text(
+                                    "Daca inca nu ai parasit localul, cere ajutorul personalului.",
+                                    style: TextStyle(fontSize: 14),
+                                  )
+                                ],
+                              ),
                             )
-                          )
-                        ],
+                          ]
+                        ),
                       ),
                     ),
                   );
-                },
-              )
-            ],
+                }
+              ).then((value) => _tabController.index = 0);
+              else _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text("O problema a fost deja raportata.")
+                )
+              );
+            },
+          )
+        ],
+      ),
+      extendBodyBehindAppBar: true,
+      body:  Builder(
+        builder: (context) {
+          _controller.forward();
+          return ScaleTransition(
+            scale: _animation,
+            child: FutureBuilder<Local>(
+              future: getPlaceData(),
+              builder: (context, place) {
+                if(!place.hasData)
+                  return Center(child: CircularProgressIndicator());
+                else {
+                  //place.data.image.then((image) => setState(() => placeImage = image));
+                  return Stack(
+                  alignment: AlignmentDirectional.topCenter,
+                  children: [
+                    GoogleMap( /// The background Google Map
+                      markers: {
+                        Marker(
+                          markerId: MarkerId("1"),
+                          position: LatLng(place.data.location.latitude,place.data.location.longitude),
+                        )
+                      },
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(place.data.location.latitude,place.data.location.longitude),
+                        zoom: 16
+                      ),
+                    ),
+                    Opacity( // An orange shade on the map
+                      opacity: 0.2,                
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        color: Colors.orange[600],
+                      ),
+                    ),
+                    // Positioned(
+                    //   bottom: 0,
+                    //   child: Container(
+                    //     width: 400,
+                    //     height: 200,
+                    //     child: FutureBuilder(
+                    //       future: place.data.image,
+                    //       builder: (context, image){
+                    //         if(!image.hasData)
+                    //           return Container();
+                    //         else return image.data;
+                    //       }
+                    //     ),
+                    //   ),
+                    // ),
+                    Positioned( // The text about the place
+                      top: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30),bottomRight: Radius.circular(30)),
+                          color: Colors.white
+                        ),
+                        width: MediaQuery.of(context).size.width*0.8,
+                        height: MediaQuery.of(context).size.height*0.2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: Text(
+                                "Te afli la ${widget.place.data()['place_name']}",
+                                style: TextStyle(
+                                  fontSize: 18
+                                ),
+                              )
+                            ),
+                            SizedBox(height: 15,),
+                            Text(
+                              "Pofta buna!",
+                              style: TextStyle(
+                                fontSize: 23
+                              ),
+                            ),
+                          ]
+                        ),
+                      ),
+                    ),
+                    // Container(
+                    //   alignment: Alignment.bottomCenter,
+                    //   //color: Colors.blueGrey,
+                    //   width: double.infinity,
+                    //   height: 30,
+                    //   child: Text(
+                    //     "hyuga",
+                    //     style: TextStyle(
+                    //       fontSize: 18,
+                    //       //backgroundColor: Colors.blueGrey
+                    //     ),
+                    //   ),
+                    // ),
+                    DraggableScrollableSheet(
+                      initialChildSize: 0.25,
+                      maxChildSize: 0.8,
+                      builder: (context,_scrollController){
+                        return SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                              color: Colors.white,
+                            ),
+                            height: MediaQuery.of(context).size.height*0.8,
+                            child: Column(
+                              children: [
+                                Container(// The place's image
+                                  constraints: BoxConstraints(
+                                   // maxWidth: 250,
+                                    maxHeight: 400
+                                  ),
+                                  child: AspectRatio( 
+                                    aspectRatio: 16/9,
+                                    child: FutureBuilder(
+                                      future: place.data.image,
+                                      builder: (context, image){
+                                        if(!image.hasData)
+                                          return Container();
+                                        else return ClipRRect(
+                                          child: image.data,
+                                          borderRadius: BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+                                        );
+                                      }
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "* Reducerea in procent si ofertele se pot aplica doar individual si nu se cumuleaza. Clientul trebuie sa aleaga intre reducere si oferte",
+                                  style: TextStyle(
+                                    fontSize: 12
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container( /// Discount
+                                  padding: EdgeInsets.symmetric(vertical: 20,),
+                                  child: Text.rich(
+                                     TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: "Reducere   ",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            
+                                          )
+                                        ),
+                                        WidgetSpan(
+                                          alignment: PlaceholderAlignment.middle,
+                                          //baseline: TextBaseline.alphabetic,
+                                          child: ClipOval(
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              //padding: EdgeInsets.only(bottom: 20),
+                                              color: Colors.black,
+                                              height: 7,
+                                              width: 7
+                                            ),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '   ' + widget.place.data()['discount'].toString()+'%',
+                                          style: TextStyle()
+                                        )
+                                      ]
+                                    )
+                                  ),
+                                ),
+                                Container( /// Deals
+                                  padding: EdgeInsets.symmetric(vertical: 20,),
+                                  child: 
+                                     Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "Oferte disponibile\n",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold
+                                          )
+                                        ),
+                                        Container(
+                                          child: ClipOval(
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              color: Colors.black,
+                                              height: 7,
+                                              width: 7
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                           '\n' + formatDeals(widget.place.data()['deals']),
+                                          style: TextStyle(
+                                            fontSize: 16
+                                          )
+                                        )
+                                      ]
+                                    ),
+                                ),
+                                Container( /// Discount
+                                  padding: EdgeInsets.symmetric(vertical: 20,),
+                                  child: Text.rich(
+                                     TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: "Ora de inceput   ",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            
+                                          )
+                                        ),
+                                        WidgetSpan(
+                                          alignment: PlaceholderAlignment.middle,
+                                          //baseline: TextBaseline.alphabetic,
+                                          child: ClipOval(
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              //padding: EdgeInsets.only(bottom: 20),
+                                              color: Colors.black,
+                                              height: 7,
+                                              width: 7
+                                            ),
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '   ' 
+                                          + DateFormat('hh:mm').format(DateTime.fromMillisecondsSinceEpoch(
+                                            widget.place.data()['date_start'].millisecondsSinceEpoch
+                                            ))
+                                            .toString(),
+                                          style: TextStyle()
+                                        )
+                                      ]
+                                    )
+                                  ),
+                                ),
+                                StreamBuilder(
+                                  stream: time,
+                                  builder: (context, currentTime) =>
+                                  Text(
+                                    currentTime.hasData 
+                                    ? currentTime.data
+                                    : "00:00:00",
+                                    style: TextStyle(
+                                      color: Colors.orange[600],
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  )
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  ],
+                );
+                }
+              }
+            ),
           );
-          }
         }
       ),
     );

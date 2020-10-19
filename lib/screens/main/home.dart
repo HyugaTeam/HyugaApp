@@ -6,8 +6,10 @@ import 'package:hyuga_app/screens/main/home/DiscountLocals_Page.dart';
 import 'package:hyuga_app/screens/main/SeatingInterface_Page.dart';
 import 'package:hyuga_app/screens/main/home/QuestionsSearch.dart';
 import 'package:hyuga_app/screens/main/home/SearchBar_Page.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/widgets/HintsCarouselAnimation.dart';
 import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/drawer.dart';
@@ -77,65 +79,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     //_controller.forward();
   }
 
-  void initWidget(BuildContext context){
-    _animatedWidget = Column(
-      children: [
-        Expanded(
-          child: Container(
-            color: Colors.orange[600],
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height*0.5,
-            child: MaterialButton(
-              splashColor: Colors.black12,
-              highlightColor: Colors.transparent,
-              child: Text(
-                "Gaseste localul perfect",
-                style: TextStyle(
-                  fontSize: 20,
-                  letterSpacing: -0.5
-                ),
-              ),
-              onPressed: (){
-                setState(() {
-                  print("Gaseste localul perfect");
-                  //_animatedWidget = QuestionsSearch();
-                  _animatedWidget = Text("Da");
-                });
-              }
-            ),
-          ),
-        ),
-        Divider(),
-        Expanded(
-          child: Container(
-            color: Colors.blueGrey,
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height*0.5,
-            child: MaterialButton(
-              splashColor: Colors.black12,
-              highlightColor: Colors.transparent,
-              child: Text(
-                "Reducerile de astazi",
-                style: TextStyle(
-                  fontSize: 20,
-                  letterSpacing: -0.5
-                ),
-              ),
-              onPressed: (){
-                setState(() {
-                  print("Reducerile de astazi");
-                  _animatedWidget = DiscountLocalsPage();
-                });
-              }
-            ),
-          ),
-        ),
-      ],
-    );
-    _topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.5);
-    _bottomWidgetSize = Size(500,MediaQuery.of(context).size.height*0.5);
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -157,7 +100,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             if(!location.hasData)
               return Scaffold(
                 body: Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(
+                        height: 10
+                      ),
+                      HintsCarousel()
+                    ],
+                  ),
                 )
               );
             else if(location.data == false)
@@ -253,23 +207,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               duration: Duration(milliseconds: 1000),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.fitHeight,
-                                    image: AssetImage(
-                                      'assets/images/gaseste_localul_perfect.png'
-                                    )
-                                  ),
-                                  // gradient: LinearGradient(
-                                  //   begin: Alignment.bottomLeft,
-                                  //   end: Alignment.bottomRight,
-                                  //   //focalRadius: 1,
-                                  //   //focal: Alignment.bottomLeft,
-                                  //   transform: GradientRotation(2),
-                                  //   colors: [
-                                  //     Colors.orange[600],
-                                  //     Colors.orange[800]
-                                  //   ]
-                                  // )
+                                  // image: DecorationImage(
+                                  //   fit: BoxFit.fitHeight,
+                                  //   image: AssetImage(
+                                  //     'assets/images/gaseste_localul_perfect.png'
+                                  //   )
+                                  // ),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomLeft,
+                                    end: Alignment.bottomRight,
+                                    //focalRadius: 1,
+                                    //focal: Alignment.bottomLeft,
+                                    transform: GradientRotation(2),
+                                    colors: [
+                                      Colors.orange[500],
+                                      Colors.orange[800]
+                                    ]
+                                  )
                                 ),
                                 //color: Colors.orange[600],
                                 width: double.infinity,
@@ -278,28 +232,59 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                   color: Colors.orange[600].withOpacity(0.2),
                                   splashColor: Colors.black26,
                                   highlightColor: Colors.black12,
-                                  child: Text(
-                                    "Gaseste localul perfect",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
-                                      letterSpacing: -0.5,
-                                      color: Colors.white,
-                                      shadows: [
-                                        // Shadow(
-                                        //   offset: Offset(1, 1)
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        // decoration: ShapeDecoration(
+                                        //   shape: CircleBorder(),
+                                        //   shadows: [
+                                        //     BoxShadow(
+                                        //       offset: Offset(1, 1),
+                                        //       blurRadius: 0.5
+                                        //     ),
+                                        //     BoxShadow(
+                                        //       offset: Offset(-1, 1),
+                                        //       blurRadius: 0.5
+                                        //     ),
+                                        //   ]
                                         // ),
-                                        Shadow(
-                                          offset: Offset(1, -1)
+                                        child: Image(
+                                          filterQuality: FilterQuality.high,
+                                          image: AssetImage(
+                                            'assets/images/stars.png',
+                                          ),
+                                          width: 50,
                                         ),
-                                        Shadow(
-                                          offset: Offset(-1, 1)
+                                      ),
+                                      SizedBox(height: 10,),
+                                      Text(
+                                        "Gaseste localul perfect",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25,
+                                          letterSpacing: -0.5,
+                                          color: Colors.white,
+                                          shadows: [
+                                            // Shadow(
+                                            //   offset: Offset(1, 1),
+                                            //   blurRadius: 0.5
+                                            // ),
+                                            // Shadow(
+                                            //   offset: Offset(-1, 1),
+                                            //   blurRadius: 0.5
+                                            // ),
+                                            // Shadow(
+                                            //   offset: Offset(1, -1),
+                                            //   blurRadius: 0.5
+                                            // ),
+                                            // Shadow(
+                                            //   offset: Offset(-1, -1)
+                                            // ),
+                                          ]
                                         ),
-                                        Shadow(
-                                          offset: Offset(-1, -1)
-                                        ),
-                                      ]
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                   onPressed: (){
                                     setState(() {
@@ -308,6 +293,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                       //_bottomWidgetSize = Size(500,MediaQuery.of(context).size.height*0.1);
                                       //Future.delayed(Duration(milliseconds: 500)).then((value) => _topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.9));
                                     });
+                                    AnalyticsService().analytics.logEvent(
+                                      name: 'find_perfect_escape',
+                                    );
                                     Navigator.push(
                                         context, 
                                         PageRouteBuilder(
@@ -359,21 +347,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               child: Container(
                                 //color: Colors.blueGrey,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.fitHeight,
-                                    image: AssetImage(
-                                      'assets/images/reducerile_de_astazi.png'
-                                    )
-                                  ),
-                                  // gradient: LinearGradient(
-                                  //   begin: Alignment.topRight,
-                                  //   end: Alignment.topLeft,
-                                  //   transform: GradientRotation(2),
-                                  //   colors: [
-                                  //     Colors.blueGrey[600],
-                                  //     Colors.blueGrey[700]
-                                  //   ]
-                                  // )
+                                  // image: DecorationImage(
+                                  //   fit: BoxFit.fitHeight,
+                                  //   image: AssetImage(
+                                  //     'assets/images/reducerile_de_astazi.png'
+                                  //   )
+                                  // ),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.topLeft,
+                                    transform: GradientRotation(2),
+                                    colors: [
+                                      Colors.blueGrey[600],
+                                      Colors.blueGrey[700]
+                                    ]
+                                  )
                                 ),
                                 width: double.infinity,
                                 height: _bottomWidgetSize.height,
@@ -382,31 +370,51 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                   color: Colors.blueGrey.withOpacity(0.6),
                                   splashColor: Colors.black26,
                                   highlightColor: Colors.black12,
-                                  child: Text(
-                                    "Reducerile de astazi",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
-                                      letterSpacing: -0.5,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                          offset: Offset(1, -1)
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        FontAwesomeIcons.percentage,
+                                        size: 42,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(height: 15),
+                                      Text(
+                                        "Reducerile de astazi",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25,
+                                          letterSpacing: -0.5,
+                                          color: Colors.white,
+                                          shadows: [
+                                            // Shadow(
+                                            //   offset: Offset(1, 1),
+                                            //   blurRadius: 0.5
+                                            // ),
+                                            // Shadow(
+                                            //   offset: Offset(-1, 1),
+                                            //   blurRadius: 0.5
+                                            // ),
+                                            // Shadow(
+                                            //   offset: Offset(1, -1),
+                                            //   blurRadius: 0.5
+                                            // ),
+                                            // Shadow(
+                                            //   offset: Offset(-1, -1)
+                                            // ),
+                                          ]
                                         ),
-                                        Shadow(
-                                          offset: Offset(-1, 1)
-                                        ),
-                                        Shadow(
-                                          offset: Offset(-1, -1)
-                                        ),
-                                      ]
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                   onPressed: (){
                                     //setState(() {
                                       // print("Reducerile de astazi");
                                       // _animatedWidget = DiscountLocalsPage();
                                       //_bottomWidgetSize = Size(600,MediaQuery.of(context).size.height);
+                                      AnalyticsService().analytics.logEvent(
+                                        name: 'highest_discounts',
+                                      );
                                       Navigator.push(
                                         context, 
                                         PageRouteBuilder(

@@ -28,6 +28,27 @@ class ThirdPageGenerator{
     List<dynamic> args = settings.arguments;
     Local local = args[0];  // This is the first argument(The 'Local')
     bool onlyDiscounts = args[1]; // This is the second argument(whether it shows only discounts or not)
+    // return PageRouteBuilder(
+    //   opaque: false,
+    //   //barrierColor: Colors.white.withOpacity(0.1),
+    //   transitionDuration: Duration(milliseconds: 200),
+    //   transitionsBuilder: (context,animation,secondAnimation,child){
+    //     var _animation = CurvedAnimation(parent: animation, curve: Curves.bounceIn);
+    //     return ScaleTransition(
+    //       child: child,
+    //       scale: Tween<double>(
+    //         begin: 0,
+    //         end: 1
+    //       ).animate(_animation),
+    //     );
+    //   },
+    //   pageBuilder: (context,animation,secondAnimation){
+    //     return ThirdPage(
+    //       local: local,
+    //       onlyDiscounts: onlyDiscounts
+    //     );
+    //   }
+    // );
     return MaterialPageRoute(
       builder: (_) => ThirdPage(
         local: local,
@@ -92,11 +113,17 @@ class ThirdPage extends StatefulWidget {
 class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
 
   Map<String,String> weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
-  Future<Image> firstImage;
-  Future <Image> secondImage;
+  Future<Image> _firstImage;
+  Future <Image> _secondImage;
+  Future <Image> _thirdImage;
   DateTime today;
+  
   int _selectedWeekday = 0;
   double titleOpacity = 0.0;
+
+  AnimationController _animationController;
+  Animation<double> _animation;
+
   ScrollController _scrollController = ScrollController(
     keepScrollOffset: true,
     initialScrollOffset: 0
@@ -193,6 +220,39 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       String pathName = 'photos/europe/bucharest/$fileName';
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
       try{
+        await storageRef.child('$fileName'+'_2.jpg')
+          .getData(maxSize).then((data){
+            imageFile = data;
+            }
+          );
+        return Image.memory(
+          imageFile,
+          frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+            if (wasSynchronouslyLoaded) {
+              return child;
+            }
+            return AnimatedOpacity(
+              child: child,
+              opacity: frame == null ? 0 : 1,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+            );
+          }
+        );
+      }
+      catch(error){
+        print(error);
+      }
+      return null; // if nothing else happens
+  }
+
+  Future<Image> _getThirdImage() async{
+    Uint8List imageFile;
+      int maxSize = 6*1024*1024;
+      String fileName = widget.local.id;
+      String pathName = 'photos/europe/bucharest/$fileName';
+      var storageRef = FirebaseStorage.instance.ref().child(pathName);
+      try{
         await storageRef.child('$fileName'+'_m.jpg')
           .getData(maxSize).then((data){
             imageFile = data;
@@ -219,10 +279,11 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       return null; // if nothing else happens
   }
 
-  Future<void> _launchInBrowser(String url) async {
+  Future<void> _launchInBrowser(String url, [bool universalLinks = false]) async {
     if (await canLaunch(url)) {
       await launch(
         url,
+        universalLinksOnly: universalLinks,
         forceSafariVC: false,
         forceWebView: false,
         headers: <String, String>{'my_header_key': 'my_header_value'},
@@ -249,10 +310,20 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
           .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
           .map<bool>((key) => false).toList();
     print(isOfferExpanded);
-    firstImage = _getFirstImage();
-    secondImage = _getSecondImage();
-    _scrollController.addListener(() { 
-      
+    _firstImage = _getFirstImage();
+    _secondImage = _getSecondImage();
+    _thirdImage = _getThirdImage();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000)
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController, 
+      curve: Curves.elasticInOut
+    );
+
+    _scrollController.addListener(() {
       setState(() {
         if(_scrollController.offset<197){
           titleOpacity = 0;
@@ -271,15 +342,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     return Scaffold(
       drawer: ProfileDrawer(),
       extendBodyBehindAppBar: true,
-      /*appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.orange[600]
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),*/
       body: Builder(
-        builder: (context) => NestedScrollView(
+        builder: (context) { 
+          _animationController.forward();
+          return NestedScrollView(
             controller: _scrollController,
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
@@ -297,21 +363,25 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                   ),
                   expandedHeight: 220,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: FutureBuilder(
-                      future: widget.local.image,
-                      builder: (context,imgSnapshot){
-                        if(!imgSnapshot.hasData)
-                          return Container(
-                            width: 400,
-                            height: 200,
-                            color: Colors.white,
-                          );
-                        else 
-                          return Container(
-                            color: Colors.white,
-                            child: imgSnapshot.data
-                          );
-                      }
+                    background: Hero(
+                      tag: widget.local.name,
+                      child: FutureBuilder(
+                        future: widget.local.image,
+                        builder: (context,imgSnapshot){
+                          if(widget.local.finalImage == null)
+                          //if(!imgSnapshot.hasData)
+                            return Container(
+                              width: 400,
+                              height: 200,
+                              color: Colors.white,
+                            );
+                          else 
+                            return Container(
+                              color: Colors.white,
+                              child: imgSnapshot.data
+                            );
+                        }
+                      ),
                     ),
                   ),
                   backgroundColor: Colors.blueGrey,
@@ -510,7 +580,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 +"a1111c8c-c720-46c3-8534-2fcdd730040d"
                                 ;
                                 _launchInBrowser(
-                                  deeplink
+                                  deeplink,
                                   //"https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
                                   // "https://m.uber.com/ul/
                                   // ?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&
@@ -523,7 +593,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   // &dropoff[longitude]=-122.405818
                                   // &dropoff[nickname]=Coit%20Tower
                                   // &dropoff[formatted_address]=1%20Telegraph%20Hill%20Blvd%2C%20San%20Francisco%2C%20CA%2094133
-                                  // &product_id=a1111c8c-c720-46c3-8534-2fcdd730040d"
+                                  // &product_id=a1111c8c-c720-46c3-8534-2fcdd730040d",
+                                  true
                                 );
                                 //await UberService().getRide();
                               },
@@ -534,7 +605,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       Container( // First Image
                         padding: EdgeInsets.only(top:30),
                         child: FutureBuilder(
-                          future: firstImage,
+                          future: _firstImage,
                           builder: (context, image){
                             if(!image.hasData){
                               return Shimmer.fromColors(
@@ -551,6 +622,31 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
+                      DropdownButton( /// 'Select the Day' widget
+                        value: weekdays.keys.toList()[_selectedWeekday-1],
+                        items: weekdays.keys
+                        .map((String weekday) {
+                          return DropdownMenuItem(
+                            value: weekday,
+                            child: Text(
+                              weekday != DateFormat("EEEE").format(today)
+                              ? weekdays[weekday] 
+                              : "Astazi - "+  weekdays[weekday] 
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value){
+                          setState((){
+                            //print(weekdays.keys.toList().indexOf(value));
+                            _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
+                            if(widget.local.deals != null)
+                              if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
+                                isOfferExpanded = widget.local
+                                  .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                  .map<bool>((key) => false).toList();
+                          });
+                        }
+                      ),
                       // The 'Deals' Widget
                       widget.local.deals != null && widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
                       ? Container(
@@ -711,31 +807,11 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text("Discounturi", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                  DropdownButton(
-                                    value: weekdays.keys.toList()[_selectedWeekday-1],
-                                    items: weekdays.keys
-                                    .map((String weekday) {
-                                      return DropdownMenuItem(
-                                        value: weekday,
-                                        child: Text(
-                                          weekday != DateFormat("EEEE").format(today)
-                                          ? weekdays[weekday] 
-                                          : "Astazi - "+  weekdays[weekday] 
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value){
-                                      setState((){
-                                        //print(weekdays.keys.toList().indexOf(value));
-                                        _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
-                                        if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
-                                        isOfferExpanded = widget.local
-                                          .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                          .map<bool>((key) => false).toList();
-                                      });
-                                    }
-                                  )
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("Reduceri", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                  ),
+                                  SizedBox(width: MediaQuery.of(context).size.width*0.2,)
                                 ],
                               ),
                               Container(
@@ -764,7 +840,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                 Scaffold.of(context).showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      "Vino in local si scaneaza codul in intervalul dorit pentru a primi reducerea.",
+                                                      "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
                                                       textAlign: TextAlign.center,
                                                     ),
                                                     backgroundColor: Colors.orange[600],
@@ -825,13 +901,18 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         )
                         : Padding(
                           padding: const EdgeInsets.symmetric(vertical: 30.0),
-                          child: Center(child: Text("Localul nu are astazi reduceri.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
+                          child: Center(
+                            child: Text(
+                              "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} reduceri.", 
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            )
+                          ),
                         ),
                       // The 'Second Image'      
-                      Container( // Third Image
+                      Container(
                         padding: EdgeInsets.only(top:30),
                         child: FutureBuilder(
-                          future: secondImage,
+                          future: _secondImage,
                           builder: (context, image){
                             if(!image.hasData){
                               return Shimmer.fromColors(
@@ -878,106 +959,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               ],
                             ),
                           ).toList()
-                          // children: <Widget>[
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Lu")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "00:00"
-                          //       )
-                          //     ],
-                          //   ),
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Ma")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "00:00"
-                          //       )
-                          //     ],
-                          //   ),
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Mi")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "00:00"
-                          //       )
-                          //     ],
-                          //   ),
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Jo")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "00:00"
-                          //       )
-                          //     ],
-                          //   ),
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Vi")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "00:00"
-                          //       )
-                          //     ],
-                          //   ),
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Sa")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "00:00"
-                          //       )
-                          //     ],
-                          //   ),
-                          //   Column(
-                          //     children: <Widget>[
-                          //       Container(
-                          //         margin: EdgeInsets.symmetric(vertical: 8),
-                          //         child: Text("Du")
-                          //       ),
-                          //       Text(
-                          //         "12:00",
-                          //       ),
-                          //       Text(
-                          //         "22:00"
-                          //       )
-                          //     ],
-                          //   )
-                          //],
                         )
                       )
                       : Container(),
@@ -1108,7 +1089,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       Container( // Third Image
                         padding: EdgeInsets.only(top:30),
                         child: FutureBuilder(
-                          future: secondImage,
+                          future: _thirdImage,
                           builder: (context, image){
                             if(!image.hasData){
                               return Shimmer.fromColors(
@@ -1267,8 +1248,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
               ]
             )
           ),
-        )
-      )
+        );
+    })
     );
   }
 }

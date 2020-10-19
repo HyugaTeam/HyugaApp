@@ -50,11 +50,11 @@ class _SearchBarPageState extends State<SearchBarPage> {
     return  Scaffold(
       appBar: AppBar(
         elevation: 0,
+        toolbarHeight: 70,
         title: Container(
           height: 50,
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: TextField(
-            
             style: TextStyle(
               color: Colors.white
             ),
@@ -63,11 +63,14 @@ class _SearchBarPageState extends State<SearchBarPage> {
               contentPadding: EdgeInsets.all(3),
               fillColor: Colors.white,
               suffixIcon: Icon(Icons.search,size: 15,color: Colors.white,),
-              labelText: "Cauta un restaurant..."
+              labelText: "Cauta un restaurant...",
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
             ),
             controller: _textController,
             onChanged: (string) => setState((){
-              _keyword = string;
+              _keyword = string.trim();
             }),
           ),
         ),
@@ -85,14 +88,16 @@ class _SearchBarPageState extends State<SearchBarPage> {
           child: StreamBuilder(
             stream: searchResults(),
             builder: (context, result) {
-              if(!result.hasData)
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    //HintsCarousel()
-                  ],
-                );
+              if(_keyword == "")
+                return Container();
+              else if(!result.hasData)
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      //HintsCarousel()
+                    ],
+                  );
               else if(result.data.length == 0) 
                 return Center(child: Text("Ne pare rau, nu exista rezultate"),);
               else return ListView.separated(
@@ -159,24 +164,22 @@ class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAlive
               },
             ),
             SizedBox(width: 10,),
-            Padding( // The name
-              padding: EdgeInsets.only(bottom: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+            Container( // The name
+              width: MediaQuery.of(context).size.width*0.65,
+              //padding: EdgeInsets.only(bottom: 10),
+              child: Wrap(
+                //direction: Axis.vertical,
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.start,
                 children: [
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    children: [
-                      Text(
-                        widget.place.name,
-                        maxLines: 3,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20
-                        )
-                      ),
-                    ],
-                  )
+                  Text(
+                    widget.place.name,
+                    maxLines: 3,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20
+                    )
+                  ),
                 ],
               ),
             )

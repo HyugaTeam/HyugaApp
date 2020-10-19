@@ -118,7 +118,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
       stream: HomeButtonsController.whereButton,
       builder: (context, snapshot) {
         if(name == 'What?' && (snapshot.hasData && g.whatListTranslation[snapshot.data].contains(buttonText) == false )){
-          buttonText = name;
+          buttonText = 'Specific';
           buttonColor = Colors.white;
           textColor = Colors.black;
           g.selectedWhat = null;

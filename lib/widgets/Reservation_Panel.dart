@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   ScrollController _dayScrollController;
   ScrollController _hourScrollController;
 
-  Local local;
+  Local place;
   Map<String,dynamic> placeSchedule;
   String startHour; // The starting hour of the schedule
   String endHour; // The ending hour of the schedule
@@ -84,7 +85,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
           (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
-    List hourAndDiscount = local.discounts[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    List hourAndDiscount = place.discounts[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
     //print(hourAndDiscount.length);
     for(int i = 0; i< hourAndDiscount.length; i++)
       if(selectedHour.compareTo(hourAndDiscount[i].substring(0,5))>= 0 &&
@@ -100,7 +101,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
           (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
-    List hourAndDiscount = local.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    List hourAndDiscount = place.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
     //print(hourAndDiscount.length);
     List<Map<String,dynamic>> deals = <Map<String,dynamic>>[];
     if(hourAndDiscount != null)
@@ -114,7 +115,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   @override
   Widget build(BuildContext context) {
     
-    local = Provider.of<Local>(context);
+    place = Provider.of<Local>(context);
     initiateHours(context);
 
     return Theme(
@@ -409,7 +410,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         _isProgressIndicatorVisible = true;
                       });
                       DocumentReference placeReservationRef = 
-                      local.reference.collection('reservations').doc();
+                      place.reference.collection('reservations').doc();
                       DocumentReference userReservationRef = FirebaseFirestore.instance.collection('users')
                       .doc(authService.currentUser.uid).collection('reservations_history').doc();
                       await placeReservationRef.set({
@@ -430,8 +431,8 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'accepted': null,
                           'date_created' : FieldValue.serverTimestamp(),
                           'date_start': Timestamp.fromDate(_selectedDate),
-                          'place_id' : local.id,
-                          'place_name' : local.name,
+                          'place_id' : place.id,
+                          'place_name' : place.name,
                           'claimed' : null,
                           'number_of_guests' : _selectedNoOfPeople + 1,
                           'discount': _selectedDiscount,
@@ -450,7 +451,19 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       setState(() {
                         _isProgressIndicatorVisible = false;
                       });
-                      Navigator.pop(context, {'place_name': local.name, 'hour': DateFormat('HH:mm').format(_selectedDate.toLocal())});
+                      AnalyticsService().analytics.logEvent(
+                        name: 'new_reservation',
+                        parameters: {
+                          'place_name': place.name,
+                          'place_id': place.id,
+                          'date_created': FieldValue.serverTimestamp(),
+                          'date_start': Timestamp.fromDate(_selectedDate),
+                          'number_of_guests': _selectedNoOfPeople,
+                          'discount': _selectedDiscount,
+                          'deals': _selectedDeals
+                        }
+                      );
+                      Navigator.pop(context, {'place_name': place.name, 'hour': DateFormat('HH:mm').format(_selectedDate.toLocal())});
                     },
                   ),
                   SizedBox(

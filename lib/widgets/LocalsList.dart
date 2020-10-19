@@ -131,9 +131,9 @@ class _LocalsState extends State<Locals> {
                   :'0.' + ((lengthInMeter/100%10).toInt()).toString()
                   ,onTap: (){
                   Navigator.pushNamed(
-                      context,
-                      '/third',
-                      arguments: [locals.data[index],widget.onlyWithDiscounts]
+                    context,
+                    '/third',
+                    arguments: [local,widget.onlyWithDiscounts]
                   );
                 },
                 );

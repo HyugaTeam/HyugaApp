@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/models/user.dart';
+import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/LevelProgressBar.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -116,7 +117,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   }
 
   // Gets the current discount percentage
-  double getDiscount(){
+  int getDiscount(){
     Map<String, dynamic> discounts = managedLocal.discounts;
     List todayDiscounts;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
@@ -135,23 +136,24 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         //print(DateTime.now().toUtc().toString());
         if(startHour.compareTo(currentTime) <=0 
         && endHour.compareTo(currentTime) >=0)
-          return double.parse(todayDiscounts[i].toString().substring(12));
+          return int.parse(todayDiscounts[i].toString().substring(12,14));
       }
     }
     return 0;
   }
 
-  dynamic getDeals(){
+  List<Map<String,dynamic>> getDeals(){
     Map<String, dynamic> deals = managedLocal.deals;
     List todayDeals;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
-    /// Checks if the place has discounts in the current weekday
+    /// Checks if the place has deals in the current weekday
     if(deals.containsKey(currentWeekday) != true)
       return null;
     else {
       todayDeals = deals[currentWeekday];
+      List<Map<String,dynamic>> result = <Map<String,dynamic>>[];
       for(int i = 0 ; i< todayDeals.length; i++){
-        String startHour = todayDeals[i]['interval'].toString().substring(0,5);
+        String startHour = todayDeals[i]['interval'].toString().substring(0,5); 
         String endHour = todayDeals[i]['interval'].toString().substring(6,11);
         String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
         print(startHour+endHour);
@@ -160,11 +162,37 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         //print(DateTime.now().toUtc().toString());
         if(startHour.compareTo(currentTime) <=0 
         && endHour.compareTo(currentTime) >=0)
-          return double.parse(deals[i].toString().substring(12));
+          result.add(todayDeals[i]);
       }
+      return result;
     }
-    return null;
   }
+
+  // List<Map<String,dynamic>> getDeals(){
+  //   Map<String, dynamic> deals = managedLocal.deals;
+  //   List todayDeals;
+  //   String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
+  //   /// Checks if the place has discounts in the current weekday
+  //   if(deals.containsKey(currentWeekday) != true)
+  //     return null;
+  //   else {
+  //     todayDeals = deals[currentWeekday];
+  //     for(int i = 0 ; i< todayDeals.length; i++){
+  //       String startHour = todayDeals[i]['interval'].toString().substring(0,5);
+  //       String endHour = todayDeals[i]['interval'].toString().substring(6,11);
+  //       String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
+  //       print(startHour+endHour);
+
+  //       //print(DateTime.now().toLocal().toString());
+  //       //print(DateTime.now().toUtc().toString());
+  //       if(startHour.compareTo(currentTime) <=0 
+  //       && endHour.compareTo(currentTime) >=0)
+  //         return double.parse(todayDiscounts[i].toString().substring(12));
+  //     }
+  //   }
+  // }
+
+  
 
 /// TODO: FINISH SCANNING PROCESS
 /// 1) GET THE RIGHT DISCOUNTS FOR THE USER
@@ -189,8 +217,9 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       {
           'place_id' : managedLocal.id,
           'place_name' : managedLocal.name,
-          'date_start': FieldValue.serverTimestamp(), 
+          'date_start': FieldValue.serverTimestamp(),
           'discount': getDiscount(),
+          'deals': getDeals(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
           'score' : userData.data()['score'],
@@ -209,6 +238,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           'guest_name' : userData.data()['displayName'],
           'date_start': FieldValue.serverTimestamp(), 
           'discount': getDiscount(),
+          'deals': getDeals(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
           'retained_percentage': managedLocal.retainedPercentage,
@@ -222,6 +252,19 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       SetOptions(
         merge: true
       )
+    );
+
+    AnalyticsService().analytics.logEvent(
+      name: 'new_scan',
+      parameters: {
+        'place_name': managedLocal.name,
+        'place_id': managedLocal.id,
+        'date_start': FieldValue.serverTimestamp(),
+        'number_of_guests': numberOfGuests,
+        'reservation': false,
+        'discount': getDiscount(),
+        'deals': getDeals()
+      }
     );
     // scanResult.first.then((value) {
     //   if(value.docChanges.first.doc.data()['approved_by_user'] == true)

@@ -155,6 +155,7 @@ class AuthService{
       UserCredential result = await _auth.signInAnonymously();//.then((value){g.isNewUser = true;});
       g.isNewUser = true;
       //print(result);
+      AnalyticsService().analytics.logLogin(loginMethod: 'anonymous');
       return result;
     } catch(error){
       print(error);

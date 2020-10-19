@@ -80,6 +80,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 70,
         elevation: 0,
         backgroundColor: Theme.of(context).backgroundColor,
         leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.blueGrey,), onPressed: () => Navigator.pop(context)),

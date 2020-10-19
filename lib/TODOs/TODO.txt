@@ -50,10 +50,6 @@ Chelner:
 La rezervari:
 - Ora, zi, nr persoane
 
-Altele: 
--tutorialul (tudor)
--schimbat in romana 
-
 
 BONUS:
 - Adaugat limba engleza
