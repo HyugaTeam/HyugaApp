@@ -142,6 +142,7 @@ class AuthService{
         'photoURL' : user.photoURL,
         'display_name' : (user.displayName != null || user.isAnonymous == true) ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
         'score' : 0,
+        'date_registered': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true)
       );

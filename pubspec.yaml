@@ -11,7 +11,7 @@ description: Hyuga App - Find your ideal hangout location.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+2
+version: 1.0.0+4
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -88,13 +88,6 @@ flutter:
     - assets/images/empty-profile.png
     - assets/images/google-logo-icon.png
     - assets/images/hyuga-logo.png
-    - assets/gifs/first-slide.gif
-    - assets/gifs/second-slide.gif
-    - assets/gifs/third-slide.gif
-    - assets/gifs/fourth-slide.gif
-    - assets/gifs/fifth-slide.gif
-    - assets/images/gaseste_localul_perfect.png
-    - assets/images/reducerile_de_astazi.png
     - assets/images/stars.png
   
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1051,10 +1051,28 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               }
                             else if(widget.local.hasReservations == true){
                               //print("nu are rezervari");
-                              showDialog(context: context, builder: (newContext) => Provider(
-                                create: (context) => widget.local, 
-                                child: ReservationPanel(context:newContext))
-                              ).then((reservation) => reservation != null 
+                              showGeneralDialog(
+                                context: context,
+                                transitionDuration: Duration(milliseconds: 600),
+                                barrierLabel: "",
+                                barrierDismissible: true,
+                                transitionBuilder: (context,animation,secAnimation,child){
+                                  CurvedAnimation _anim = CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.bounceInOut,
+                                    reverseCurve: Curves.easeOutExpo
+                                  );
+                                  return ScaleTransition(
+                                    scale: _anim,
+                                    child: child
+                                  );
+                                },
+                                pageBuilder: (newContext,animation,secAnimation){
+                                  return Provider(
+                                    create: (context) => widget.local, 
+                                    child: ReservationPanel(context:newContext)
+                                  );
+                                }).then((reservation) => reservation != null 
                                 ? Scaffold.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
@@ -1076,9 +1094,14 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             SnackBar(
                               content: Text("Trebuie sa te loghezi pentru a face rezervari."),
                               action: SnackBarAction(
+                                textColor: Colors.white,
                                 label: "Log In", 
                                 onPressed: () async{
+
                                   await authService.signOut();
+                                  Navigator.popUntil(context, (Route route){
+                                    return route.isFirst ? true : false;
+                                  });
                                 }
                               ),
                             ),

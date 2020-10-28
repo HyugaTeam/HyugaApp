@@ -263,7 +263,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25,
-                                          letterSpacing: -0.5,
+                                          //letterSpacing: -0.5,
                                           color: Colors.white,
                                           shadows: [
                                             // Shadow(
@@ -303,8 +303,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                           //barrierColor: Colors.blueGrey.withOpacity(0.1),
                                           //barrierDismissible: true,
                                           transitionDuration: Duration(milliseconds: 1500),
+                                          //reverseTransitionDuration: Duration(milliseconds: 1500),
                                           transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
-                                            var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut);
+                                            var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut, reverseCurve: Curves.elasticInOut);
                                             //var _controller = AnimationController()
                                             return SlideTransition(
                                               child: child,
@@ -422,8 +423,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                           //barrierColor: Colors.blueGrey.withOpacity(0.1),
                                           //barrierDismissible: true,
                                           transitionDuration: Duration(milliseconds: 1500),
+                                          //reverseTransitionDuration: Duration(milliseconds: 1500),
                                           transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
-                                            var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut);
+                                            var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut, reverseCurve: Curves.elasticInOut);
                                             //var _controller = AnimationController()
                                             return SlideTransition(
                                               child: child,

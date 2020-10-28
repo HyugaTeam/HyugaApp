@@ -401,6 +401,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     elevation: 1,
                     disabledColor: Colors.grey[300],
                     color: Colors.orange[600],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                    // minWidth: 100,
                     child: Text("Rezerva"),
                     /// The callback invoked when the 'Rezerva' button is pressed
