@@ -97,7 +97,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
         return StreamBuilder<bool>(
           stream: QueryService.userLocationStream.stream,
           builder: (context, location) {
-            if(!location.hasData)
+            if(!location.hasData && queryingService.userLocation == null)
               return Scaffold(
                 body: Center(
                   child: Column(
