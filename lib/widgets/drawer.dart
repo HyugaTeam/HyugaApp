@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
+import 'package:hyuga_app/screens/drawer/ScanPlaceCode_Page.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -207,15 +208,21 @@ class ProfileDrawer extends StatelessWidget {
                               : Container();
                           }
                         ),
-                        // authService.currentUser.isManager == true ? 
-                        // ListTile(
-                        //   leading: FaIcon(FontAwesomeIcons.chartLine, color: Colors.blueGrey),
-                        //   title: Text('Admin Panel'),
-                        //   onTap: (){
-                        //     Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AdminPanel(); }));
-                        //   },
-                        // ) 
-                        // : Container(), 
+                        // The 'Activate table' button
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                            return authService.currentUser.isManager == null 
+                              ? ListTile(
+                                leading: FaIcon(FontAwesomeIcons.camera, color: Colors.blueGrey), 
+                                title: Text('Activeaza masa'), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScanPlaceCode(); }));
+                                }
+                              )
+                              : Container();
+                          }
+                        ),
                         Expanded(
                           child: Container(),
                         ),
