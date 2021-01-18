@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -14,7 +13,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ManagerQRScan extends StatefulWidget {
   ManagerQRScan(){
@@ -40,7 +40,9 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   TextEditingController _noOfGuestsTextController = new TextEditingController();
   GlobalKey<FormState> _tableNoFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> _noOfGuestsFormKey = GlobalKey<FormState>();
-
+  GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController _qrViewController;
+  PublishSubject<String> scanStream;
 
   _ManagerQRScanState(){
     _tableNumberTextController.addListener(() {
@@ -53,6 +55,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
   @override
   void initState(){
+    scanStream = PublishSubject<String>();
     initializeDateFormatting('ro',null);
     print("initialized format");
     super.initState();
@@ -74,31 +77,73 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       }
   }
 
-  Future<DocumentSnapshot> _scanQR() async{
-    try{
-      String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) {
-        print("GATA");
-        if(scanResult.type == ResultType.Cancelled)
-          return null;
-        return scanResult.rawContent;
-      });
-      DocumentReference ref = _db.collection('users').doc(qrResult); // a reference to the scanned user's profile
-      var refData = await ref.get();
-      print(uid);
-      if(qrResult == null || refData == null)
-        return null;
-      else
-        return refData;
-    } //on PlatformException
-    catch(error){
-      if(error.code == BarcodeScanner.cameraAccessDenied){
-        print("Camera access is denied");
-        setState(() {
-          cameraAccessDenied = true;
-        });
-      }
-    }
+  Widget scanQr(){
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          RaisedButton(
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            child: Text("Renunta"),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text("s")
+          ),
+          Expanded(
+            flex: 5,
+            child: QRView(
+              key: _qrKey, 
+              onQRViewCreated: _onQRViewCreated
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
+  void _onQRViewCreated(QRViewController controller){
+    this._qrViewController = controller;
+    _qrViewController.scannedDataStream.listen((scanResult) {
+      scanStream.add(scanResult);
+      print(scanResult);
+      // setState(() {
+      //   uid = scanResult;
+      // });
+      //Navigator.pop(context);
+    });  
+  }
+
+  // Future<DocumentSnapshot> _scanQR() async{
+  //   try{
+  //     String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) {
+  //       print("GATA");
+  //       if(scanResult.type == ResultType.Cancelled)
+  //         return null;
+  //       return scanResult.rawContent;
+  //     });
+  //     DocumentReference ref = _db.collection('users').doc(qrResult); // a reference to the scanned user's profile
+  //     var refData = await ref.get();
+  //     print(uid);
+  //     if(qrResult == null || refData == null)
+  //       return null;
+  //     else
+  //       return refData;
+  //   } //on PlatformException
+  //   catch(error){
+  //     if(error.code == BarcodeScanner.cameraAccessDenied){
+  //       print("Camera access is denied");
+  //       setState(() {
+  //         cameraAccessDenied = true;
+  //       });
+  //     }
+  //   }
+  // }
 
   int getLevel(int score){
     if(score != null){
@@ -296,34 +341,57 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
     managedLocal =  Provider.of<AsyncSnapshot<dynamic>>(context).data;
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: _scanQR(),
+    return StreamBuilder(
+      stream: scanStream,
       builder:(context,scanResult) {
         print(scanResult);
         if(!scanResult.hasData)
           return Scaffold(
-            body: Container(
-              child: Center(child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Ceva a mers gresit, incearca sa scanezi din nou!"),
-                  cameraAccessDenied
-                  ? RaisedButton(
-                    onPressed: (){
-                      Permission.camera.request().then((value) => setState((){
-                        cameraAccessDenied = value.isGranted;
-                      }));
-                    }, 
-                    child: Text("Permite acces camerei.")
-                  )
-                  : Container()
-                ],
-              ))
-            )
+            appBar: AppBar(
+              actions: [
+                RaisedButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  child: Text("Renunta"),
+                ),
+              ],
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: QRView(
+                    key: _qrKey, 
+                    onQRViewCreated: _onQRViewCreated
+                  ),
+                ),
+              ],
+            ),
           );
-        else if(scanResult.data.data()!= null){
+          // return Scaffold( // Something went wrong
+          //   body: Container(
+          //     child: Center(child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Text("Ceva a mers gresit, incearca sa scanezi din nou!"),
+          //         cameraAccessDenied
+          //         ? RaisedButton(
+          //           onPressed: (){
+          //             Permission.camera.request().then((value) => setState((){
+          //               cameraAccessDenied = value.isGranted;
+          //             }));
+          //           }, 
+          //           child: Text("Permite acces camerei.")
+          //         )
+          //         : Container()
+          //       ],
+          //     ))
+          //   )
+          // );
+        //return Container();
+        if(scanResult.data!= null){
           print("valid code///////");
-          uid = scanResult.data.id;
+          uid = scanResult.data;
           return Scaffold(
             body: Container(
               child: Column(
@@ -335,94 +403,93 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                   //   )
                   // ),
                   Dialog(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                              height: MediaQuery.of(context).size.height*0.5,
-                              width: MediaQuery.of(context).size.height*0.8,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "Introduceti numarul mesei:",
-                                      style: TextStyle(
-                                        fontSize: 20
-                                      ),
-                                    ),
-                                    Form(
-                                      key: _tableNoFormKey,
-                                      child: TextFormField(
-                                        onChanged: (input) => tableNumber = int.tryParse(input),
-                                        //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
-                                        onFieldSubmitted: (input) => _tableNoFormKey.currentState.validate(),
-                                        cursorColor: Colors.blueGrey,
-                                        keyboardType: TextInputType.number,
-                                        validator: (String input) => int.tryParse(input) == null 
-                                          ? "Numarul introdus nu este corect!"
-                                          : null,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(
-                                      "Introduceti numarul de oaspeti:",
-                                      style: TextStyle(
-                                        fontSize: 20
-                                      ),
-                                    ),
-                                    Form(
-                                      key: _noOfGuestsFormKey,
-                                      child: TextFormField(
-                                        onChanged: (input) => numberOfGuests = int.tryParse(input),
-                                        //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
-                                        onFieldSubmitted: (input) => _noOfGuestsFormKey.currentState.validate(),
-                                        cursorColor: Colors.blueGrey,
-                                        keyboardType: TextInputType.number,
-                                        validator: (String input) => int.tryParse(input) == null 
-                                          ? "Numarul introdus nu este corect!"
-                                          : null,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: MediaQuery.of(context).size.height*0.05,
-                                    ),
-                                    
-                                    ButtonBar(
-                                      children: [
-                                        RaisedButton(
-                                          color: Colors.blueGrey,
-                                          child: Text("Continua"),
-                                          onPressed: () async{
-                                            if(_tableNoFormKey.currentState.validate()){
-                                              addNewScan(scanResult.data,context).then((value)=> Navigator.pop(context,value));
-                                            }
-                                          }
-                                        ),
-                                        RaisedButton(
-                                          color: Colors.white,
-                                          child: Text("Renunta"),
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    // SizedBox(
-                                    //   height: MediaQuery.of(context).size.height*0.1
-                                    // ),
-                                    Expanded(
-                                      child:Container()
-                                    ),
-                                    // isLoading == true
-                                    // ? CircularProgressIndicator()
-                                    // : SizedBox(height: 6,)
-                                  ],
-                                )
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      height: MediaQuery.of(context).size.height*0.5,
+                      width: MediaQuery.of(context).size.height*0.8,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Introduceti numarul mesei:",
+                              style: TextStyle(
+                                fontSize: 20
                               ),
                             ),
-                          )
-                          
+                            Form(
+                              key: _tableNoFormKey,
+                              child: TextFormField(
+                                onChanged: (input) => tableNumber = int.tryParse(input),
+                                //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
+                                onFieldSubmitted: (input) => _tableNoFormKey.currentState.validate(),
+                                cursorColor: Colors.blueGrey,
+                                keyboardType: TextInputType.number,
+                                validator: (String input) => int.tryParse(input) == null 
+                                  ? "Numarul introdus nu este corect!"
+                                  : null,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              "Introduceti numarul de oaspeti:",
+                              style: TextStyle(
+                                fontSize: 20
+                              ),
+                            ),
+                            Form(
+                              key: _noOfGuestsFormKey,
+                              child: TextFormField(
+                                onChanged: (input) => numberOfGuests = int.tryParse(input),
+                                //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
+                                onFieldSubmitted: (input) => _noOfGuestsFormKey.currentState.validate(),
+                                cursorColor: Colors.blueGrey,
+                                keyboardType: TextInputType.number,
+                                validator: (String input) => int.tryParse(input) == null 
+                                  ? "Numarul introdus nu este corect!"
+                                  : null,
+                              ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height*0.05,
+                            ),
+                            
+                            ButtonBar(
+                              children: [
+                                RaisedButton(
+                                  color: Colors.blueGrey,
+                                  child: Text("Continua"),
+                                  onPressed: () async{
+                                    if(_tableNoFormKey.currentState.validate()){
+                                      addNewScan(scanResult.data,context).then((value)=> Navigator.pop(context,value));
+                                    }
+                                  }
+                                ),
+                                RaisedButton(
+                                  color: Colors.white,
+                                  child: Text("Renunta"),
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            ),
+                            // SizedBox(
+                            //   height: MediaQuery.of(context).size.height*0.1
+                            // ),
+                            Expanded(
+                              child:Container()
+                            ),
+                            // isLoading == true
+                            // ? CircularProgressIndicator()
+                            // : SizedBox(height: 6,)
+                          ],
+                        )
+                      ),
+                    ),
+                  )      
                   // AlertDialog(
                   //   title: Wrap(
                   //     children: <Widget>[
