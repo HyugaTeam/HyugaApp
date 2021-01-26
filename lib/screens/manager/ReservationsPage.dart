@@ -135,7 +135,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 onPressed: ()async {
                   Navigator.pop(context);
                   DocumentReference ref = reservation.reference;
-                  //DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
                   await ref.set(
                     {
                       "accepted": false
@@ -251,7 +250,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     shrinkWrap: true,
                     itemCount: pendingReservations.length,
                     itemBuilder: (context,index) => Dismissible(
-                      //key: Key(pendingReservations[index].toString()),
                       key: UniqueKey(),
                       background: Container( /// The background behind the ListTile containing the 'Accept' text
                         padding: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.7),
@@ -293,11 +291,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         );
                       },
                       child: ListTile(
-                        // trailing: Text(  // The guest's name
-                        //   pendingReservations[index].data()['guest_name'].length < 20
-                        //     ? pendingReservations[index].data()['guest_name']
-                        //     : pendingReservations[index].data()['guest_name'].substring(0,20)
-                        //   ),
                         trailing: Text(
                           "${DateFormat("dd-MMM").format(DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch))}"
                         ),
@@ -322,7 +315,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                 child: ClipOval(
                                   child: Container(
                                     alignment: Alignment.center,
-                                    //padding: EdgeInsets.only(bottom: 20),
                                     color: Colors.black,
                                     height: 7,
                                     width: 7
@@ -375,7 +367,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       height: 40,
                       child: Center(child: Text("Nu exista rezervari acceptate"))
                     );
-                  //print(DateFormat("Hm").format(DateTime.now()));
                   return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -417,7 +408,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       key: _formKey,
                                       child: TextFormField(
                                         onChanged: (input) => tableNumber = int.tryParse(input),
-                                        //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
                                         onFieldSubmitted: (input) => _formKey.currentState.validate(),
                                         cursorColor: Colors.blueGrey,
                                         keyboardType: TextInputType.number,
@@ -465,7 +455,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 SetOptions(merge: true)
                                               );
                                             /// Adds a new scanned code ONLY if there's and offer/discount in that interval
-                                            //if(acceptedReservations[index].data()['discount'] != 0){
                                               /// Add the new scanned code to the manager's collection
                                               
                                               Map<String, dynamic> placeScanData = {
@@ -486,10 +475,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               placeScanningRef.set(
                                                 placeScanData
                                               );
-                                              // QuerySnapshot otherDocs = await FirebaseFirestore.instance.collection('users')
-                                              // .doc(authService.currentUser.uid).collection('scan_history')
                                               /// Add the new scanned code to the user's collection
-                                              //Map<String,dynamic> userScanData = acceptedReservations[index].data();
                                               Map<String,dynamic> userScanData = {
                                                 "accepted": true,
                                                 "approved_by_user": null,
@@ -508,11 +494,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               userScanningRef.set(
                                                 userScanData
                                               );
-                                            //}
                                               print("gata");
-                                              // DocumentReference newScanRef = FirebaseFirestore.instance.collection(
-                                              //   ''
-                                              // )
                                               AnalyticsService().analytics.logEvent(
                                                 name: 'new_scan',
                                                 parameters: {
@@ -539,9 +521,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         )
                                       ],
                                     ),
-                                    // SizedBox(
-                                    //   height: MediaQuery.of(context).size.height*0.1
-                                    // ),
                                     Expanded(
                                       child:Container()
                                     ),
@@ -562,21 +541,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                               duration: Duration(seconds: 5),
                             )
                           );
-                          // Navigator.pop(context);
-                          // DocumentReference ref = pendingReservations[index].reference;
-                          // DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
-                          // ref.set(
-                          //   {
-                          //     "accepted": true
-                          //   },
-                          //   SetOptions(merge: true)
-                          // );
-                          // scaffoldKey.currentState.showSnackBar(
-                          //   SnackBar(
-                          //     backgroundColor: Colors.orange[600],
-                          //     content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - H:mm").format(date)}")
-                          //   )
-                          // );
                         }
                       ),
                       title: RichText(

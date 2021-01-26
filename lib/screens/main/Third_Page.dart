@@ -16,7 +16,6 @@ import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
-import 'package:hyuga_app/services/uber_service.dart' ;
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -28,27 +27,6 @@ class ThirdPageGenerator{
     List<dynamic> args = settings.arguments;
     Local local = args[0];  // This is the first argument(The 'Local')
     bool onlyDiscounts = args[1]; // This is the second argument(whether it shows only discounts or not)
-    // return PageRouteBuilder(
-    //   opaque: false,
-    //   //barrierColor: Colors.white.withOpacity(0.1),
-    //   transitionDuration: Duration(milliseconds: 200),
-    //   transitionsBuilder: (context,animation,secondAnimation,child){
-    //     var _animation = CurvedAnimation(parent: animation, curve: Curves.bounceIn);
-    //     return ScaleTransition(
-    //       child: child,
-    //       scale: Tween<double>(
-    //         begin: 0,
-    //         end: 1
-    //       ).animate(_animation),
-    //     );
-    //   },
-    //   pageBuilder: (context,animation,secondAnimation){
-    //     return ThirdPage(
-    //       local: local,
-    //       onlyDiscounts: onlyDiscounts
-    //     );
-    //   }
-    // );
     return MaterialPageRoute(
       builder: (_) => ThirdPage(
         local: local,
@@ -64,7 +42,6 @@ class ThirdPage extends StatefulWidget {
 
   final Local local;
   final bool onlyDiscounts;
-  //final Future<Image> size;
   
   ThirdPage({this.local,this.onlyDiscounts}){
     
@@ -89,18 +66,6 @@ class ThirdPage extends StatefulWidget {
         }
       );
     }
-
-    // if(this.onlyDiscounts == null) /// This path is followed if the user visits the Place from the Second Page
-    //   AnalyticsService().analytics.logViewItem(
-    //     itemId: local.id, 
-    //     itemName: local.name,
-    //     itemCategory: "${g.whereList[g.selectedWhere]}_${g.whatList[g.selectedWhere][g.selectedWhat]}_${g.howManyList[g.selectedHowMany]}_${g.ambianceList[g.selectedAmbiance]}_${g.areaList[g.selectedArea]}",
-    //   );
-    // else AnalyticsService().analytics.logViewItem( /// ----""----- from the 'Only Discounts' Page
-    //   itemId: local.id, 
-    //   itemName: local.name,
-    //   itemCategory: "only_discounts",
-    // );
   }
 
   @override
@@ -151,20 +116,13 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
 
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
       List<Uint8List> listOfImages = [];
-      //int pictureIndex = 1;
       try{
-        
-        //do{
-          //print('///////////////////'+'$fileName'+'_$pictureIndex.jpg');
-          //await storageRef.child('$fileName'+'_$pictureIndex.jpg')
           await storageRef.child('$fileName'+'_1.jpg')
           .getData(maxSize).then((data){
             imageFile = data;
             }
           );
           listOfImages.add(imageFile);
-          //pictureIndex++;
-        //}while(pictureIndex<2);
 
         await storageRef.child('$fileName'+'_m.jpg')
           .getData(maxSize).then((data){
@@ -175,7 +133,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
         return listOfImages;
       }
       catch(error){
-      //print('///////////////////////////////$error');
         return null;
       }
   }
@@ -303,7 +260,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
   void initState(){
-    //print(widget.local.reference.toString());
     if(widget.local.deals != null)
       if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
         isOfferExpanded = widget.local
@@ -350,11 +306,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 new SliverAppBar(
-                  // stretchTriggerOffset: 30,
-                  // onStretchTrigger: (){
-                  //     return Future.delayed(Duration(seconds: 1)).then((s)=>print("stretch-triggered"));
-                  // },
-                  // stretch: true,
                   title: Opacity(
                       opacity: titleOpacity,
                       child: Center(
@@ -369,7 +320,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         future: widget.local.image,
                         builder: (context,imgSnapshot){
                           if(widget.local.finalImage == null)
-                          //if(!imgSnapshot.hasData)
                             return Container(
                               width: 400,
                               height: 200,
@@ -399,9 +349,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
             },
             body: Container(
               child: ListView(
-                // controller: ScrollController(
-                //   keepScrollOffset: false
-                // ),
                 physics: ScrollPhysics(),
                 children: [
                   Column(
@@ -495,7 +442,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   zoom: 15
                                 ),
                                 myLocationEnabled: true,
-                                //trafficEnabled: true,
                                 markers: {
                                   Marker(
                                     markerId: MarkerId('0'),
@@ -512,7 +458,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             zoom: 15
                           ),
                           myLocationEnabled: true,
-                          //trafficEnabled: true,
                           markers: {
                             Marker(
                               markerId: MarkerId('0'),
@@ -534,10 +479,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           Container( 
                             width: 100,
                             height: 30,
-                            // decoration: BoxDecoration(
-                            //   color: Colors.black,
-                            //   //borderRadius: BorderRadius.circular(20)
-                            // ),
                             child: RaisedButton(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)
@@ -596,7 +537,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   // &product_id=a1111c8c-c720-46c3-8534-2fcdd730040d",
                                   true
                                 );
-                                //await UberService().getRide();
                               },
                             ),
                           ),
@@ -637,7 +577,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         }).toList(),
                         onChanged: (value){
                           setState((){
-                            //print(weekdays.keys.toList().indexOf(value));
                             _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
                             if(widget.local.deals != null)
                               if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
@@ -664,7 +603,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             ),
                             SizedBox(height: 10,),
                             AnimatedContainer(
-                              //key: UniqueKey(),
                               duration: Duration(milliseconds: 200),
                               height: dealWidgetHeight,
                               child: ListView.separated(
@@ -680,29 +618,18 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   return Container(
                                     height: 120,
                                     width: 180,
-                                    //width: MediaQuery.of(context).size.width*0.3,
                                     constraints: BoxConstraints(maxHeight: 100),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: [
-                                        // BoxShadow(
-                                        //   offset: Offset(0,0)
-                                        // )
                                       ]
-                                      //color: Colors.orange[600],
                                     ),
                                     child: 
-                                    //Container()
                                     ExpansionCard(
                                       key: key,
                                       borderRadius: 20,
                                       backgroundColor: Colors.orange[600],
                                       margin: EdgeInsets.zero,
-                                      // background: Container(
-                                      //   height: double.infinity,
-                                      //   width: double.infinity,
-                                      //   color: Colors.orange[600],
-                                      // ),
                                       title: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -732,7 +659,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                           child: Text(
                                             widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
                                             style: TextStyle(
-                                              //fontWeight: FontWeight.bold
                                             ),
                                           ),
                                         )
@@ -747,42 +673,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                         else dealWidgetHeight = 180;
                                         }
                                       ),
-                                    // ),
-                                      ),
-                                  // Container(
-                                  //   //height: 30,
-                                  //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                                  //   constraints: BoxConstraints(
-                                  //     maxWidth: MediaQuery.of(context).size.width*0.4
-                                  //   ),
-                                  //   decoration: BoxDecoration(
-                                  //     color: Colors.orange[600],
-                                  //     borderRadius: BorderRadius.circular(10)
-                                  //   ),
-                                  //   child: Center(
-                                  //     child: Column(
-                                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                                  //       mainAxisAlignment: MainAxisAlignment.center,
-                                  //       children: [
-                                  //         Text(
-                                  //           widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
-                                  //           style: TextStyle(
-                                  //             fontSize: 15,
-                                  //             color: Colors.white,
-                                  //             fontWeight: FontWeight.bold
-                                  //           )
-                                  //         ),
-                                  //         // Text(
-                                  //         //   widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
-                                  //         //   style: TextStyle(
-                                  //         //       fontSize: 12
-                                  //         //   )
-                                  //         // ),
-                                  //       ],
-                                  //     )
-                                  //   ),
-                                  // ),
-                              );}
+                                    ),
+                                  );
+                                }
                               )
                             ),
                           ],
@@ -817,7 +710,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               Container(
                                 height: 100,
                                 child: ListView.separated(
-                                  //shrinkWrap: true,
                                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                   scrollDirection: Axis.horizontal,
                                   itemCount: widget.local.discounts != null ?  
@@ -864,16 +756,17 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                 color: Colors.orange[600],
                                                 borderRadius: BorderRadius.circular(25)
                                               ),
-                                              child: Text(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                                      [index].substring(0,5) 
-                                                      +  ' - ' + 
-                                                      widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                                      [index].substring(6,11),
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        //fontFamily: 'Roboto'
-                                                      ),
-                                                    )  // A concatenation of the string representing the time interval
+                                              child: Text(
+                                                  widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                  [index].substring(0,5) 
+                                                  +  ' - ' + 
+                                                  widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                  [index].substring(6,11),
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  //fontFamily: 'Roboto'
+                                                ),
+                                              )  // A concatenation of the string representing the time interval
                                             ),
                                           ),
                                           Padding(
@@ -882,12 +775,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               '-'+int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
                                               .toString() + '%',
                                               /// Old computation for the Discount per level
-                                              //getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
                                               style: TextStyle(
                                                 fontSize: 20,
-                                                //fontFamily: 'Roboto'
                                               )
-                                              )
+                                            )
                                           )
                                         ],
                                       ),
@@ -1019,7 +910,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             value.docs.forEach((element) { 
                               if(element.data()['accepted'] == null || (element.data()['accepted'] == true && element.data()['claimed'] == null))
                                 ok = false;
-                              //print(element.data());
                             });
                             if(!ok){
                                 if(g.isSnackBarActive == true)
@@ -1034,15 +924,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text("Ai deja o rezervare."),
-                                        //   TextButton(
-                                        //     child: Text(
-                                        //       "Verifica aici"
-                                        //     ),
-                                        //     onPressed: (){
-                                        //       Scaffold.of(context).removeCurrentSnackBar();
-                                        //       Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
-                                        //     },
-                                        //   )
                                        ],
                                       ),
                                     ),
@@ -1050,7 +931,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 );
                               }
                             else if(widget.local.hasReservations == true){
-                              //print("nu are rezervari");
                               showGeneralDialog(
                                 context: context,
                                 transitionDuration: Duration(milliseconds: 600),
@@ -1128,144 +1008,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           }
                         ),
                       ),
-                      // Container(
-                      //   padding: EdgeInsets.only(top:30),
-                      //   child: FutureBuilder(
-                      //     future: _getImages(),
-                      //     builder:(context,snapshot){
-                      //       if(!snapshot.hasData){
-                      //         // data didn't load
-                      //         return Shimmer.fromColors(
-                      //           period: Duration(milliseconds: 1500),
-                      //           baseColor: Colors.grey[300],
-                      //           highlightColor: Colors.white,
-                      //           child: Container(
-                      //             height: 200,
-                      //             color: Colors.blueGrey,
-                      //           ),
-                      //         ); 
-                      //       }
-                      //       else {
-                      //         // data is loaded
-                      //         return ListView.separated(
-                      //           physics: NeverScrollableScrollPhysics(),
-                      //           shrinkWrap: true,
-                      //           itemCount: snapshot.data.length,
-                      //           separatorBuilder: (context,index){
-                      //             if(index == 0){ // Shows the discounts carrousel
-                      //               return widget.local.discounts != null && widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null
-                      //               ? ListTile(
-                      //                 title: Text("Discounts", style: TextStyle(fontWeight: FontWeight.bold),),
-                      //                 subtitle: Container(
-                      //                   height: 120,
-                      //                   child: ListView.builder(
-                      //                     itemExtent: 135, /// Added to add some space between the tiles
-                      //                     padding: EdgeInsets.all(10),
-                      //                     scrollDirection: Axis.horizontal,
-                      //                     itemCount: widget.local.discounts != null ?  
-                      //                                 (widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null? 
-                      //                                   widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()].length : 0): 
-                      //                                 0,
-                      //                     /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
-                      //                     /// the current weekday. If not, the field will be empty
-                      //                     itemBuilder: (BuildContext context, int index){
-                      //                       return Container(
-                      //                         width: 100,
-                      //                         height: 100,
-                      //                         child: Column(
-                      //                           children: <Widget>[
-                      //                             GestureDetector(
-                      //                               onTap: (){
-                      //                                 if(g.isSnackBarActive == false){
-                      //                                   g.isSnackBarActive = true;
-                      //                                   Scaffold.of(context).showSnackBar(
-                      //                                     SnackBar(
-                      //                                       content: Text(
-                      //                                         "Scan your code in your preferred time interval and receive the discount.",
-                      //                                         textAlign: TextAlign.center,
-                      //                                       ),
-                      //                                       backgroundColor: Colors.orange[600],
-                      //                                     )).closed.then((SnackBarClosedReason reason){
-                      //                                     g.isSnackBarActive = false;
-                      //                                   });
-                      //                                 }
-                      //                               },
-                      //                               child: Container(
-                      //                                 alignment: Alignment.center,
-                      //                                 height: 30,
-                      //                                 width: 120,
-                      //                                 decoration: BoxDecoration(
-                      //                                   boxShadow: [
-                      //                                     BoxShadow(
-                      //                                       color: Colors.black45, 
-                      //                                       offset: Offset(1.5,1),
-                      //                                       blurRadius: 2,
-                      //                                       spreadRadius: 0.2
-                      //                                     )
-                      //                                   ],
-                      //                                   color: Colors.orange[600],
-                      //                                   borderRadius: BorderRadius.circular(25)
-                      //                                 ),
-                      //                                 child: Text(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
-                      //                                         [index].substring(0,5) 
-                      //                                         + ' - ' + 
-                      //                                         widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()]
-                      //                                         [index].substring(6,11),
-                      //                                         style: TextStyle(
-                      //                                           fontSize: 16,
-                      //                                           fontFamily: 'Roboto'
-                      //                                         ),
-                      //                                       )  // A concatenation of the string representing the time interval
-                      //                               ),
-                      //                             ),
-                      //                             Padding(
-                      //                               padding: EdgeInsets.all(10),
-                      //                               child: Text(
-                                                      
-                      //                                 getDiscountForUser(double.parse(widget.local.discounts[DateFormat('EEEE').format(today).toLowerCase()][index].substring(12,14)))
-                      //                                 .toString() + '%',
-                      //                                 style: TextStyle(
-                      //                                   fontSize: 20,
-                      //                                   fontFamily: 'Roboto'
-                      //                                 )
-                      //                                 )
-                      //                             )
-                      //                           ],
-                      //                         ),
-                      //                       );
-                      //                     }
-                      //                   ),
-                      //                 )
-                      //               )
-                      //               : Padding(
-                      //                 padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      //                 child: Center(child: Text("Localul nu are astazi reduceri.")),
-                      //               );
-                      //             }
-                      //             else return Container();
-                      //           },
-                      //           // controller: ScrollController(
-                      //           //   keepScrollOffset: false
-                      //           // ),
-                      //           itemBuilder: (context,index){
-                      //             //print(snapshot.data.length);
-                      //             return Column(
-                      //               children: <Widget>[
-                      //                 Image.memory(snapshot.data[index]),
-                      //                 index == snapshot.data.length-1 ? Container() : Container(height: 20)
-                      //               ],
-                      //             );
-                                  
-                      //           },
-                      //         );
-                      //       }
-                      //     }
-                      //   )
-                      // )
                       SizedBox(
                         height: 20,
                       ),
-                      
                   ],
                 )
               ]

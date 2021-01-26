@@ -21,12 +21,7 @@ class _HintsCarouselState extends State<HintsCarousel> with TickerProviderStateM
       vsync: this,
       duration: Duration(milliseconds: 3000),
     )..addListener(() {
-      //print(_controller.value);
-      // if(_controller.value < 0.1)
-      //   ok = 
-      //if(_controller.repeat())
       if(_controller.value > 0.9){
-        //print(_controller.value);
         setState(() {
           index = 1-index;
         });
@@ -35,7 +30,6 @@ class _HintsCarouselState extends State<HintsCarousel> with TickerProviderStateM
       }
       
     });
-    //..repeat();
     _animation = Tween<Offset>(
       begin: Offset(-10,0),
       end: Offset(10,0)

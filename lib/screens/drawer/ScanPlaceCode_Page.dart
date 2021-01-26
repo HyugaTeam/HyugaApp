@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 /// Singleton class user by 'ScanPlaceCode' widget
@@ -29,7 +30,7 @@ class ScanPlaceCode extends StatelessWidget {
             icon: Icon(Icons.arrow_back),
             splashColor: Theme.of(context).highlightColor,
             onPressed: (){
-              ScanPlaceCodeService().scanCode();
+              Navigator.pop(context);
             },
           ),
           //alignment: Alignment(0,-0.7),
@@ -42,7 +43,23 @@ class ScanPlaceCode extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: Center(child: Text("Camera context comes here")),
+        // child: Center(child: Text("Camera context comes here")),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(onPressed: () async{
+                DatabaseReference ref = FirebaseDatabase.instance.reference().child('test');
+                await ref.set({
+                  "value": 1
+                });
+                // ref.onValue.listen((event) {
+                //   print(event.snapshot.value);
+                // });
+              })
+            ],
+          ),
+        ),
       ),
     );
   }

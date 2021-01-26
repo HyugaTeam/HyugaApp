@@ -11,12 +11,6 @@ import 'package:intl/intl.dart';
 
 class SeatingInterface extends StatefulWidget {
 
-  // Map<String,dynamic> place;
-
-  // void getPlaceData() async{
-  //   Firebase
-  // }
-
   final DocumentSnapshot place;
   SeatingInterface({this.place}){
     //getPlaceData()
@@ -55,7 +49,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
   }
 
   Future<Local> getPlaceData() async{
-    //print(widget.place.data()['place_id']);
     DocumentSnapshot placeData = await FirebaseFirestore.instance
     .collection('locals_bucharest').doc(widget.place.data()['place_id']).get();
     print(placeData.data());
@@ -70,7 +63,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
         result += element['title'] + " - ";
         result += element['content']+'\n\n';
       });
-    //result.pad
     return result == "" ? "Nicio oferta" : "";
     
   }
@@ -223,7 +215,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                 if(!place.hasData)
                   return Center(child: CircularProgressIndicator());
                 else {
-                  //place.data.image.then((image) => setState(() => placeImage = image));
                   return Stack(
                   alignment: AlignmentDirectional.topCenter,
                   children: [
@@ -247,21 +238,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                         color: Colors.orange[600],
                       ),
                     ),
-                    // Positioned(
-                    //   bottom: 0,
-                    //   child: Container(
-                    //     width: 400,
-                    //     height: 200,
-                    //     child: FutureBuilder(
-                    //       future: place.data.image,
-                    //       builder: (context, image){
-                    //         if(!image.hasData)
-                    //           return Container();
-                    //         else return image.data;
-                    //       }
-                    //     ),
-                    //   ),
-                    // ),
                     Positioned( // The text about the place
                       top: 0,
                       child: Container(
@@ -293,19 +269,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                         ),
                       ),
                     ),
-                    // Container(
-                    //   alignment: Alignment.bottomCenter,
-                    //   //color: Colors.blueGrey,
-                    //   width: double.infinity,
-                    //   height: 30,
-                    //   child: Text(
-                    //     "hyuga",
-                    //     style: TextStyle(
-                    //       fontSize: 18,
-                    //       //backgroundColor: Colors.blueGrey
-                    //     ),
-                    //   ),
-                    // ),
                     DraggableScrollableSheet(
                       initialChildSize: 0.25,
                       maxChildSize: 0.8,
@@ -322,7 +285,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                               children: [
                                 Container(// The place's image
                                   constraints: BoxConstraints(
-                                   // maxWidth: 250,
                                     maxHeight: 400
                                   ),
                                   child: AspectRatio( 
@@ -367,11 +329,9 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                         ),
                                         WidgetSpan(
                                           alignment: PlaceholderAlignment.middle,
-                                          //baseline: TextBaseline.alphabetic,
                                           child: ClipOval(
                                             child: Container(
                                               alignment: Alignment.center,
-                                              //padding: EdgeInsets.only(bottom: 20),
                                               color: Colors.black,
                                               height: 7,
                                               width: 7
@@ -436,11 +396,9 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                         ),
                                         WidgetSpan(
                                           alignment: PlaceholderAlignment.middle,
-                                          //baseline: TextBaseline.alphabetic,
                                           child: ClipOval(
                                             child: Container(
                                               alignment: Alignment.center,
-                                              //padding: EdgeInsets.only(bottom: 20),
                                               color: Colors.black,
                                               height: 7,
                                               width: 7

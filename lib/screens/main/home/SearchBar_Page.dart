@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/HintsCarouselAnimation.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 
 class SearchBarPage extends StatefulWidget {
   @override
@@ -94,8 +94,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(),
-                      //HintsCarousel()
+                      LoadingAnimation(),
                     ],
                   );
               else if(result.data.length == 0) 
@@ -166,9 +165,7 @@ class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAlive
             SizedBox(width: 10,),
             Container( // The name
               width: MediaQuery.of(context).size.width*0.65,
-              //padding: EdgeInsets.only(bottom: 10),
               child: Wrap(
-                //direction: Axis.vertical,
                 alignment: WrapAlignment.start,
                 runAlignment: WrapAlignment.start,
                 children: [

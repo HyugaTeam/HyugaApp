@@ -16,7 +16,6 @@ class MainMenuButton extends StatefulWidget {
     name: this.name,
     options: this.options,
     buttonText: this.buttonText,
-    //changeText: this.changeText
   );
 }
 
@@ -29,7 +28,6 @@ class MainMenuButtonState extends State<MainMenuButton>{
   String buttonText;
   Color buttonColor = Colors.white;
   Color textColor = Colors.black;
-  //Function(int) changeText;
 
   void initState(){
     super.initState();
@@ -77,10 +75,8 @@ class MainMenuButtonState extends State<MainMenuButton>{
             child: Container(
               padding: EdgeInsets.only(
                 top: _getPosition().dy - 30,
-                //left: MediaQuery.of(context).size.width-
                 left: _getPosition().dx,
                 right: _getPosition().dx,
-                //bottom: _getPosition().dy
               ),
               child: OptionsDropButton(
                   options: name == 'What?' ? g.whatListTranslation[g.selectedWhere] : options,
@@ -100,16 +96,6 @@ class MainMenuButtonState extends State<MainMenuButton>{
     if(name == 'What?'){
       print("SUNTEM PE WHAT");
       whereButtonChanged = HomeButtonsController.whereButton;
-      // whereButtonChanged.listen((index) {
-      //   print("se schimba whatul" + this.mounted.toString());
-      //   if(index != g.selectedWhere)
-      //     setState((){
-      //       g.selectedWhat = null;
-      //       buttonText = name;
-      //       buttonColor = Colors.white;
-      //       textColor = Colors.black;
-      //     });
-      // });
     }
   }
   
@@ -130,12 +116,10 @@ class MainMenuButtonState extends State<MainMenuButton>{
             Container(
               height: 50,
               key: _key,
-              //key: name != "What?" ? _key : whatKey,
               child: ButtonTheme(
                   minWidth: 310,
                   height: 50,
                   child: RaisedButton.icon(
-                      //padding: EdgeInsets.all(0),
                       animationDuration: Duration(
                         milliseconds: 100
                       ),
@@ -173,10 +157,10 @@ class MainMenuButtonState extends State<MainMenuButton>{
                             ),
                       ),
                       icon: Icon(
-                        Icons.arrow_drop_down, //changed
-                        size: 52, //added
+                        Icons.arrow_drop_down,
+                        size: 52,
                         color: Colors.orange[600],
-                      ), //added
+                      ), 
                     )
               )
             ),

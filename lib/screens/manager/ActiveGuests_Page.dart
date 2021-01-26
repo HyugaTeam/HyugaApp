@@ -81,21 +81,6 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                     fontSize: 20
                                   ),
                                 ),
-                                // RichText(
-                                //   text: TextSpan(
-                                //     children: [ 
-                                //       TextSpan( 
-                                //         text: "Reducerea care trebuie aplicata: " +
-                                //           (activeGuestsList[index].data()['discount'] != 0
-                                //           ? "${activeGuestsList[index].data()['discount']}%"
-                                //           : "0%"),
-                                //         style: TextStyle(
-                                //           fontSize: 20
-                                //         ),
-                                //       ),
-                                //     ]
-                                //   )
-                                // ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.05),
                                 Text(
                                   "Introduceti valoarea bonului:",
@@ -113,7 +98,6 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                   key: _formKey,
                                   child: TextFormField(
                                     onChanged: (input) => receiptTotal = int.tryParse(input),
-                                    //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
                                     onFieldSubmitted: (input) => _formKey.currentState.validate(),
                                     cursorColor: Colors.blueGrey,
                                     keyboardType: TextInputType.number,
@@ -163,9 +147,6 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                     )
                                   ],
                                 ),
-                                // SizedBox(
-                                //   height: MediaQuery.of(context).size.height*0.1
-                                // ),
                                 Expanded(
                                   child:Container()
                                 ),
@@ -187,21 +168,6 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                           }
                         }
                       );
-                      // Navigator.pop(context);
-                      // DocumentReference ref = pendingReservations[index].reference;
-                      // DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
-                      // ref.set(
-                      //   {
-                      //     "accepted": true
-                      //   },
-                      //   SetOptions(merge: true)
-                      // );
-                      // scaffoldKey.currentState.showSnackBar(
-                      //   SnackBar(
-                      //     backgroundColor: Colors.orange[600],
-                      //     content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - H:mm").format(date)}")
-                      //   )
-                      // );
                     }
                   ),
                   title: Text("Masa numarul ${activeGuestsList[index].data()['table_number']}"),

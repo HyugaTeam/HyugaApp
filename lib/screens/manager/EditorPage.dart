@@ -27,8 +27,6 @@ class _EditorPageState extends State<EditorPage> {
   Map<String,dynamic> changesMap;
   File _unsavedProfileImage;
   String _unsavedProfileImagePath = "";
-  String _unsavedTimeInterval = "";
-  GlobalKey<ScaffoldState> _scaffoldKey;
 
   /// A method which builds the TextController for 'Name' & 'DeTscription' fields
   TextEditingController buildTextController(String field){
@@ -162,10 +160,10 @@ class _EditorPageState extends State<EditorPage> {
   }
 
   Future<void> saveChanges(ManagedLocal place) async{
-    Firestore _db = Firestore.instance;
-    DocumentReference placeRef = _db.collection('locals_bucharest').document(place.id);
+    FirebaseFirestore _db = FirebaseFirestore.instance;
+    DocumentReference placeRef = _db.collection('locals_bucharest').doc(place.id);
     
-    placeRef.setData(
+    placeRef.set(
       {
         'name': place.name,
         'description': place.description,
@@ -176,7 +174,7 @@ class _EditorPageState extends State<EditorPage> {
       )
     );
     FirebaseStorage storage = FirebaseStorage.instance;
-    Reference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');
+    StorageReference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');
     if(_unsavedProfileImage != null)
       photoRef.putFile(_unsavedProfileImage);
     
@@ -191,14 +189,12 @@ class _EditorPageState extends State<EditorPage> {
     temporaryChanges.profile.forEach((key, value) { temporaryListOfProfiles.add([key,value]); }); // NOT IN USE
 
     return Scaffold(
-      //key: _scaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
         width: 200,
         height: 40,
         child: FloatingActionButton(
           backgroundColor: areThereChanges == false ? Colors.blueGrey: Colors.orange[600],
-          //backgroundColor: floatingButtonColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30)
           ),
@@ -248,15 +244,12 @@ class _EditorPageState extends State<EditorPage> {
                     ),
                     maxLength: 200,
                     onChanged: (name){
-                      //setState(() {
                         areThereChanges = true;
                         temporaryChanges.name = name;
-                      //});
                     },
                     controller: buildTextController('name'),
                     onSubmitted: (String changedName) => setState((){
                       print(areThereChanges);
-                      //floatingButtonColor = Colors.orange[600];
                       areThereChanges = true;
                       temporaryChanges.name = changedName;
                     }),
@@ -277,16 +270,10 @@ class _EditorPageState extends State<EditorPage> {
                 ),
                 subtitle: Container(
                   child: TextField(
-                    // minLines: 1,
-                    // maxLines: 2,
-                    // style: TextStyle(
-                    // ),
                     maxLength: 400,
                     onChanged: (description){
-                      //setState(() {
                         areThereChanges = true;
                         temporaryChanges.description = description;
-                      //});
                     },
                     controller: buildTextController('description'),
                     onSubmitted: (String changedDescription) => setState((){
@@ -309,24 +296,6 @@ class _EditorPageState extends State<EditorPage> {
                     ),
                   ),
                 ),
-                // subtitle: Container(
-                //   padding: EdgeInsets.only(right: 50),
-                //   child: DropdownButton(
-                //     hint: Text("<selecteaza>"),
-                //     ///onTap: ,
-                //     items: [
-                //       DropdownMenuItem(
-                //         value: 1,
-                //         child: Text("1")
-                //       ),
-                //       DropdownMenuItem(
-                //         value:  2,
-                //         child: Text("2")
-                //       )
-                //     ], 
-                //     onChanged: null
-                //   )
-                // )
                 subtitle: Container(
                   padding: EdgeInsets.only(right : 30),
                   child: RaisedButton.icon(
@@ -346,8 +315,6 @@ class _EditorPageState extends State<EditorPage> {
                       builder: (context){
                         List<dynamic> availableCapacities = [1,2,3,4,5,6,7,8,"9+"];
                         return SizedBox(
-                          //height: availableCapacities.length*50.toDouble(),
-                          //color: Colors.transparent,
                             child: Center(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -355,13 +322,11 @@ class _EditorPageState extends State<EditorPage> {
                                   color: Colors.grey[300]
                                 ),
                                 alignment: Alignment.center,
-                                //color: Colors.grey[300],
                                 height: 500,
                                 width: 300,
                                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
                                 child: Column(
                                   children: <Widget>[
-                                    //Text("Capacitate"),
                                     ListView.builder(
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
@@ -399,76 +364,7 @@ class _EditorPageState extends State<EditorPage> {
                       })),
                   ),
                 )
-              )
-              ,
-              // ListTile(
-              //   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-              //   title: Text(
-              //     "Tipul localului",
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.bold
-              //     ),
-              //   ),
-              //   subtitle: Container(
-              //       child: Padding(
-              //         padding: const EdgeInsets.only(top: 8.0),
-              //         child: Wrap(
-              //           runSpacing: 7,
-              //           spacing: 10,
-              //           //textDirection: ,
-              //           children: temporaryListOfProfiles.map((e) => 
-              //             Container(
-                            
-              //               height: 30,
-              //               width: 120,
-              //               decoration: BoxDecoration(
-              //                 boxShadow: [
-              //                   BoxShadow(
-              //                     color: Colors.black45, 
-              //                     offset: Offset(1.5,1),
-              //                     blurRadius: 2,
-              //                     spreadRadius: 0.2
-              //                   )
-              //                 ],
-              //                 color: Colors.orange[600],
-              //                 borderRadius: BorderRadius.circular(25)
-              //               ),
-              //               child: Row(
-              //                 mainAxisAlignment: MainAxisAlignment.center,
-              //                 crossAxisAlignment: CrossAxisAlignment.center,
-              //                 children: <Widget>[
-              //                   Text(
-              //                     e[0].toString() + ": " + e[1].toString(),
-              //                     style: TextStyle(
-              //                       fontSize: 10,
-              //                       fontWeight: FontWeight.bold
-              //                     ),
-              //                   ),
-              //                   SizedBox( // The 'X' icon
-              //                     width: 20,
-              //                     height: 40,
-              //                     child: IconButton(
-              //                       iconSize: 20,
-              //                       focusColor: Colors.black,
-              //                       //splashColor: Colors.black,
-              //                       highlightColor: Colors.black,
-              //                       icon: Icon(Icons.close), 
-              //                       onPressed: (){
-              //                         setState(() {
-              //                           temporaryChanges.profile.remove(e[0]);
-              //                         });
-              //                       }
-              //                     ),
-              //                   )
-              //                 ],
-              //               ),
-              //             )
-              //           ).toList(),
-              //         ),
-              //       )
-
-              //     ),
-              // )
+              ),
               ListTile(
                 title: Text(
                   "Poza de profil",
@@ -525,7 +421,6 @@ class _EditorPageState extends State<EditorPage> {
                           bottom: 0,
                           right: 0,
                           child: Container(
-                            //alignment: Alignment.center,
                             width: 40,
                             height: 40,
                             child: RaisedButton(  /// The 'Pick an Image' Button
@@ -563,107 +458,6 @@ class _EditorPageState extends State<EditorPage> {
                 ),
                 
               ),
-              // ListTile( // The Discount Schedule set up
-              //   title: Text(
-              //     "Program Reduceri",
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.bold,
-              //       fontSize: 20
-              //     ),
-              //   ),
-              //   subtitle: Column(
-              //     children: <Widget>[
-              //       CalendarDatePicker(
-              //         initialDate: DateTime.now(), 
-              //         firstDate: DateTime.now(), 
-              //         lastDate: DateTime(
-              //           DateTime.now().year,
-              //           DateTime.now().month,
-              //           DateTime.now().day+7
-              //         ), 
-              //         onDateChanged: (dateTime){
-              //           showTimePicker(
-              //             context: context, 
-              //             initialTime: TimeOfDay.now()
-              //           ).then((value) => setState((){
-              //             if(value != null)
-              //               _unsavedTimeInterval = value.format(context);
-              //           }));
-              //         }
-              //       ),
-              //       Text(
-              //         _unsavedTimeInterval
-              //       )
-              //     ],
-              //   ),
-              // ),
-              // ListTile(  // Tipul localului
-              //   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-              //   title: Text(
-              //     "Tipul localului",
-              //     style: TextStyle(
-              //       fontWeight: FontWeight.bold
-              //     ),
-              //   ),
-              //   subtitle: Container(
-              //     child: Padding(
-              //       padding: const EdgeInsets.only(top: 8.0),
-              //       child: Wrap(
-              //         runSpacing: 7,
-              //         spacing: 10,
-              //         //textDirection: ,
-              //         children: temporaryListOfProfiles.map((e) => 
-              //           Container(
-              //             height: 30,
-              //             width: 120,
-              //             decoration: BoxDecoration(
-              //               boxShadow: [
-              //                 BoxShadow(
-              //                   color: Colors.black45, 
-              //                   offset: Offset(1.5,1),
-              //                   blurRadius: 2,
-              //                   spreadRadius: 0.2
-              //                 )
-              //               ],
-              //               color: Colors.orange[600],
-              //               borderRadius: BorderRadius.circular(25)
-              //             ),
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //               crossAxisAlignment: CrossAxisAlignment.center,
-              //               children: <Widget>[
-              //                 Text(
-              //                   e[0].toString() + ": " + e[1].toString(),
-              //                   style: TextStyle(
-              //                     fontSize: 10,
-              //                     fontWeight: FontWeight.bold
-              //                   ),
-              //                 ),
-              //                 SizedBox( // The 'X' icon
-              //                   width: 20,
-              //                   height: 40,
-              //                   child: IconButton(
-              //                     padding: EdgeInsets.zero,
-              //                     iconSize: 20,
-              //                     focusColor: Colors.black,
-              //                     //splashColor: Colors.black,
-              //                     highlightColor: Colors.black,
-              //                     icon: Icon(Icons.close), 
-              //                     onPressed: (){
-              //                       setState(() {
-              //                         temporaryChanges.profile.remove(e[0]);
-              //                       });
-              //                     }
-              //                   ),
-              //                 )
-              //               ],
-              //             ),
-              //           )
-              //         ).toList(),
-              //       ),
-              //     )
-              //   ),
-              // ),
               SizedBox(
                 height: 100
               )

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 /// This Stateful Widget handles all the Firebase Push Notification service
@@ -33,13 +32,6 @@ class MessagingService{
       }
     );
   }
-
-// @override
-//   Widget build(BuildContext context) {
-//     return Container(
-      
-//     );
-//   }
 }
 
 MessagingService messagingService = MessagingService();

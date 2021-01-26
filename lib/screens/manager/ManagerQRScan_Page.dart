@@ -1,27 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/managed_local.dart';
-import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/widgets/LevelProgressBar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ManagerQRScan extends StatefulWidget {
-  ManagerQRScan(){
-    // textController.addListener(() { 
-    //   receiptValue = double.parse(textController.value.text);
-    // });
-  }  
+  ManagerQRScan();
 
   @override
   _ManagerQRScanState createState() => _ManagerQRScanState();
@@ -112,38 +102,8 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     _qrViewController.scannedDataStream.listen((scanResult) {
       scanStream.add(scanResult);
       print(scanResult);
-      // setState(() {
-      //   uid = scanResult;
-      // });
-      //Navigator.pop(context);
     });  
   }
-
-  // Future<DocumentSnapshot> _scanQR() async{
-  //   try{
-  //     String qrResult = await BarcodeScanner.scan().then((ScanResult scanResult) {
-  //       print("GATA");
-  //       if(scanResult.type == ResultType.Cancelled)
-  //         return null;
-  //       return scanResult.rawContent;
-  //     });
-  //     DocumentReference ref = _db.collection('users').doc(qrResult); // a reference to the scanned user's profile
-  //     var refData = await ref.get();
-  //     print(uid);
-  //     if(qrResult == null || refData == null)
-  //       return null;
-  //     else
-  //       return refData;
-  //   } //on PlatformException
-  //   catch(error){
-  //     if(error.code == BarcodeScanner.cameraAccessDenied){
-  //       print("Camera access is denied");
-  //       setState(() {
-  //         cameraAccessDenied = true;
-  //       });
-  //     }
-  //   }
-  // }
 
   int getLevel(int score){
     if(score != null){
@@ -159,6 +119,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         return 4;
       else return 5; // level 5/
     }
+    return null;
   }
 
   // Gets the current discount percentage
@@ -176,9 +137,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         String endHour = todayDiscounts[i].toString().substring(6,11);
         String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
         print(startHour+endHour);
-
-        //print(DateTime.now().toLocal().toString());
-        //print(DateTime.now().toUtc().toString());
         if(startHour.compareTo(currentTime) <=0 
         && endHour.compareTo(currentTime) >=0)
           return int.parse(todayDiscounts[i].toString().substring(12,14));
@@ -202,9 +160,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         String endHour = todayDeals[i]['interval'].toString().substring(6,11);
         String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
         print(startHour+endHour);
-
-        //print(DateTime.now().toLocal().toString());
-        //print(DateTime.now().toUtc().toString());
         if(startHour.compareTo(currentTime) <=0 
         && endHour.compareTo(currentTime) >=0)
           result.add(todayDeals[i]);
@@ -212,30 +167,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       return result;
     }
   }
-
-  // List<Map<String,dynamic>> getDeals(){
-  //   Map<String, dynamic> deals = managedLocal.deals;
-  //   List todayDeals;
-  //   String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
-  //   /// Checks if the place has discounts in the current weekday
-  //   if(deals.containsKey(currentWeekday) != true)
-  //     return null;
-  //   else {
-  //     todayDeals = deals[currentWeekday];
-  //     for(int i = 0 ; i< todayDeals.length; i++){
-  //       String startHour = todayDeals[i]['interval'].toString().substring(0,5);
-  //       String endHour = todayDeals[i]['interval'].toString().substring(6,11);
-  //       String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
-  //       print(startHour+endHour);
-
-  //       //print(DateTime.now().toLocal().toString());
-  //       //print(DateTime.now().toUtc().toString());
-  //       if(startHour.compareTo(currentTime) <=0 
-  //       && endHour.compareTo(currentTime) >=0)
-  //         return double.parse(todayDiscounts[i].toString().substring(12));
-  //     }
-  //   }
-  // }
 
   
 
@@ -255,9 +186,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     DocumentReference userRef = _db.collection('users').doc(userData.id).collection('scan_history').doc();
     DocumentReference placeRef = _db.collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals').doc(managedLocal.id).collection('scanned_codes').doc();
-    String docName = userData.id;
-    int usersLevel = getLevel(userData.data()['score']);
-    //Stream<QuerySnapshot> scanResult = _db.collection('users').doc(authService.currentUser.uid).collection('scan_history').snapshots().skip(1);
     await userRef.set(
       {
           'place_id' : managedLocal.id,
@@ -311,28 +239,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         'deals': getDeals()
       }
     );
-    // scanResult.first.then((value) {
-    //   if(value.docChanges.first.doc.data()['approved_by_user'] == true)
-    //     ok = true;
-    // }
-    // );
-
-    //incrementUserScore(userData.documentID);
-
-    //Set data about the scanned code in the database
-    // DocumentReference newScannedCodeRef = _db.collection('users')
-    // .doc(authService.currentUser.uid).collection('managed_locals')
-    // .doc(managedLocal.id).collection('scanned_codes').doc();
-    // newScannedCodeRef.set({
-    //   'guest_id' : userData.documentID,
-    //   'date': DateTime.now().toUtc(),
-    //   'applied_discount': getAppliedDiscount(),
-    //   'retained_percentage': 5,
-    //   'score' : userData.data['score'] + 1,
-    //   'total' : tableNumber,
-    //   'guest_name' : userData.data()['name'],
-    //   'approved_by_user' : true
-    // });
     return ok;
   }
 
@@ -368,27 +274,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
               ],
             ),
           );
-          // return Scaffold( // Something went wrong
-          //   body: Container(
-          //     child: Center(child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Text("Ceva a mers gresit, incearca sa scanezi din nou!"),
-          //         cameraAccessDenied
-          //         ? RaisedButton(
-          //           onPressed: (){
-          //             Permission.camera.request().then((value) => setState((){
-          //               cameraAccessDenied = value.isGranted;
-          //             }));
-          //           }, 
-          //           child: Text("Permite acces camerei.")
-          //         )
-          //         : Container()
-          //       ],
-          //     ))
-          //   )
-          // );
-        //return Container();
         if(scanResult.data!= null){
           print("valid code///////");
           uid = scanResult.data;
@@ -397,11 +282,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  // Center(
-                  //   child: Text(
-                  //     scanResult.data.data['displayName']
-                  //   )
-                  // ),
                   Dialog(
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -421,7 +301,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                               key: _tableNoFormKey,
                               child: TextFormField(
                                 onChanged: (input) => tableNumber = int.tryParse(input),
-                                //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
                                 onFieldSubmitted: (input) => _tableNoFormKey.currentState.validate(),
                                 cursorColor: Colors.blueGrey,
                                 keyboardType: TextInputType.number,
@@ -443,7 +322,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                               key: _noOfGuestsFormKey,
                               child: TextFormField(
                                 onChanged: (input) => numberOfGuests = int.tryParse(input),
-                                //onChanged: (input) => setState(()=>tableNumber = int.tryParse(input)),
                                 onFieldSubmitted: (input) => _noOfGuestsFormKey.currentState.validate(),
                                 cursorColor: Colors.blueGrey,
                                 keyboardType: TextInputType.number,
@@ -476,80 +354,14 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                                 )
                               ],
                             ),
-                            // SizedBox(
-                            //   height: MediaQuery.of(context).size.height*0.1
-                            // ),
                             Expanded(
                               child:Container()
                             ),
-                            // isLoading == true
-                            // ? CircularProgressIndicator()
-                            // : SizedBox(height: 6,)
                           ],
                         )
                       ),
                     ),
-                  )      
-                  // AlertDialog(
-                  //   title: Wrap(
-                  //     children: <Widget>[
-                  //       Text("Reducerea care trebuie aplicata:", style: TextStyle(fontWeight: FontWeight.bold)),
-                  //       Text(getAppliedDiscount().toString(),style: TextStyle(fontWeight: FontWeight.bold))
-                  //     ],
-                  //   ),
-                  //   content: Text("Introduceti numarul mesei"),
-                  //   actionsPadding: EdgeInsets.only(right: 20),
-                  //   actions: <Widget>[
-                  //     Column(
-                  //       children: <Widget>[
-                  //         Row(
-                  //           children: <Widget>[
-                  //             Container(
-                  //               height: 100,
-                  //               width: 200,
-                  //               child: TextField(
-                  //                 controller: textController,
-                  //                 keyboardType: TextInputType.number,
-                  //                 onSubmitted: (String str){
-                  //                   setState((){tableNumber = int.parse(str);});
-                  //                 },
-                  //               ),
-                  //             ),
-                  //             Text(
-                  //               "Lei"
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         RaisedButton(
-                  //           child: Text(
-                  //             "GATA",
-                  //             style: TextStyle(
-                  //               fontWeight: FontWeight.bold
-                  //             )
-                  //           ),
-                  //           onPressed: () {
-                  //             tryToSendDataToUser(scanResult.data, context);
-                  //             showDialog(context: context, builder: (context){
-                  //                 return FutureBuilder(
-                  //                   future: Future<bool>.delayed(Duration(milliseconds: 1500)).then((value) { Navigator.pop(context); }),
-                  //                   builder:(context,finished){ 
-                  //                     if(!finished.hasData)
-                  //                       return AlertDialog(
-                  //                         title: Text(
-                  //                           "Cod scanat cu succes!"
-                  //                         ),
-                  //                         content: FaIcon(FontAwesomeIcons.checkCircle, color: Colors.green,),
-                  //                       );
-                  //                       return Container();
-                  //                   });
-                  //               }).then((value) { Navigator.pop(context); });
-                  //           } 
-                  //         )
-                  //       ],
-                  //     ),
-                      
-                  //   ],
-                  // )
+                  )
                 ],
               )
             )
@@ -558,7 +370,6 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         else return Scaffold(
           body: Center(child: Text("Invalid code", style:  TextStyle( fontSize: 20))),
         );
-      
       }
     );
   }

@@ -56,3 +56,12 @@ BONUS:
 
 Uber
 - Access token: JA.VUNmGAAAAAAAEgASAAAABwAIAAwAAAAAAAAAEgAAAAAAAAH4AAAAFAAAAAAADgAQAAQAAAAIAAwAAAAOAAAAzAAAABwAAAAEAAAAEAAAAMT5PXDDut-7w_xwFyCUGG2nAAAAYNvXzElo-C0OSsravy2aiF-TSnWllvBlQziVeudZxTmjCSRb7iws6TvEZXHXs_q0lCNIGPS7QasEhMWpfV4ZGaIClqf5RkXRRlDLjvmYoSd8K4CumFhOmiBkxtjYwBfgDYSkvi7V1Ka1vTuESByYlZrCk6vKvB8nkPWM4PDt-9L4RsOjvGP8Rd4piBtWTTGL2_7YzfoANobF53SGHpGi2RIcjA7-C0MADAAAAI_xXb_XwnItqlF44iQAAABiMGQ4NTgwMy0zOGEwLTQyYjMtODA2ZS03YTRjZjhlMTk2ZWU
+
+
+Flutter versions:
+-Laptop: 12.01.2021 - 1.23.0
+
+-La restaurantele nepartenere sa apara ca sunt nepartenere
+-plati+tips pentru mesele scanate in restaurante
+-daca vii in local prin rezervare, chelnerul iti activeaza masa(ca pana acum) din aplicatie dupa care poti comanda
+-daca vii fara rezervare in local, scanezi codul de la masa, dupa care poti comanda

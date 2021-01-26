@@ -13,9 +13,6 @@ class ManagedLocal{
   Map<String,dynamic> analytics;
   Map<String,dynamic> schedule;
   int maturity;
-  /// analytics field should contain:
-  /// all_time_income
-  /// 
 
   ManagedLocal(
     {

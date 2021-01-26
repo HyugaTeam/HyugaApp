@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
 
 class ScannedLocalsPage extends StatefulWidget {
@@ -32,7 +31,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
         future: getScanHistory(),
         builder:(context, scanHistory){ 
           if(!scanHistory.hasData)
-            return Scaffold(appBar: AppBar(),body: Center(child: CircularProgressIndicator()),);
+            return Scaffold(appBar: AppBar(),body: Center(child: LoadingAnimation()),);
           else if(scanHistory.data == 0)
             return Scaffold(appBar: AppBar(),body: Center(child: Text("Nu ai nicio scanare. \n Incepe sa scanezi pentru a revendica reduceri!"),));
           else
@@ -117,7 +116,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           left: 25,
                                           bottom: 25,
                                           width: 300,
-                                          //height: 300,
                                           child: Text(
                                             scanHistory.data[index]['place_name'], 
                                             style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
@@ -202,12 +200,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                           child: Container(
-                          // constraints: BoxConstraints(
-                          //   maxHeight: 225,
-                          //   maxWidth: 400,
-                          // ),
-                          // height: 300,
-                          // width: 105,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
@@ -220,10 +212,8 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                             ],
                           ),
                           child: Stack(
-                            //alignment: Alignment.center,
                             children: [
                               Container( // The background image of the List Tile
-                                  //padding: EdgeInsets.only(top: 20),
                                   height: 225,
                                   width: 400,
                                   child: FutureBuilder(
@@ -246,7 +236,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                   ),
                                 ),
                               Positioned(
-                                //width: MediaQuery.of(context).size.width*0.8,
                                 height: 300,
                                 bottom: 15,
                                 left: 15,
@@ -261,7 +250,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         child: Row(
                                           
                                           mainAxisAlignment: MainAxisAlignment.start,
-                                          //spacing: MediaQuery.of(context).size.width*0.05,  
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Container(
@@ -270,7 +258,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                                   maxWidth: MediaQuery.of(context).size.width*0.6,
                                                 ),
                                                 child: Text(
-                                                  //"Trattoria Buongiorno Covaci",
                                                   scanHistory.data[index]['place_name'],
                                                   style: TextStyle(
                                                     wordSpacing: 0.1,
@@ -287,7 +274,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                             ),
                                             ClipOval(
                                               child: Container(
-                                                //padding: EdgeInsets.only(bottom: 20),
                                                 color: Colors.white,
                                                 height: 7,
                                                 width: 7
@@ -326,21 +312,6 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           ),
                                         ),
                                       ),
-                                      // Container(
-                                      //   child: Wrap(
-                                      //     crossAxisAlignment: WrapCrossAlignment.center,
-                                      //     children: [
-                                      //       Text(
-                                      //         "Total: "+scanHistory.data[index]['total'].toString()+"RON",
-                                      //         style: TextStyle(
-                                      //           fontSize: 20,
-                                      //           color: Colors.white,
-                                      //           fontWeight: FontWeight.bold
-                                      //         ),
-                                      //       )
-                                      //     ]
-                                      //   )
-                                      // ),
                                       Container(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(

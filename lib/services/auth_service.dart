@@ -14,7 +14,6 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 //A class which handles the sign-in process
 class AuthService{
 
-  // instance of the Firebase Authantication system
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FacebookLogin _facebookLogin = FacebookLogin();
@@ -36,7 +35,6 @@ class AuthService{
             DocumentReference ref = _db.collection('users').doc(value.uid);
             ref.get().then((DocumentSnapshot docSnap) {
               if(docSnap != null && docSnap.data() != null){
-                //print(docSnap.data);
                 if(docSnap.data().containsKey('manager') == true)
                   currentUser.isManager = docSnap.data()['manager'];
                 else 
@@ -60,7 +58,6 @@ class AuthService{
   }
   
   Stream<QuerySnapshot> get seatingStatus {
-    //print("loading seating status");
     if(currentUser != null)
       if(currentUser.isAnonymous != true)
         return _db.collection('users').doc(currentUser.uid)
@@ -79,9 +76,6 @@ class AuthService{
     if(user!= null)
       AnalyticsService().setUserProperties(user.uid);
 
-    //authService.signOut();
-
-    //print(user.isAnonymous);
     return user != null 
     ? OurUser(
       uid: user.uid,
@@ -103,7 +97,6 @@ class AuthService{
 
   //auth change user stream
   Stream<OurUser> get user{
-    //print(_auth.onAuthStateChanged.first.whenComplete(() => print("first\n")).toString() + " din stream");
     return (_auth.authStateChanges()
       .map(_ourUserFromFirebaseUser));
   }
@@ -121,7 +114,6 @@ class AuthService{
           'token' : fcmToken,
           'date_created' : FieldValue.serverTimestamp(),
           'platform' : g.isIOS == true? 'ios' : 'android'
-          //'registration_token' : fcmToken
         },
         //SetOptions(merge: true)
       );
@@ -153,9 +145,8 @@ class AuthService{
   // sign in anonimously
   Future signInAnon() async{
     try{
-      UserCredential result = await _auth.signInAnonymously();//.then((value){g.isNewUser = true;});
+      UserCredential result = await _auth.signInAnonymously();
       g.isNewUser = true;
-      //print(result);
       AnalyticsService().analytics.logLogin(loginMethod: 'anonymous');
       return result;
     } catch(error){
@@ -169,14 +160,12 @@ class AuthService{
     try{
       final result = await _facebookLogin.logIn(['email']);
       User user;
-      //_facebookLogin.loginBehavior = FacebookLoginBehavior.nativeOnly;
       switch(result.status){
         case FacebookLoginStatus.loggedIn:
           final AuthCredential credential = FacebookAuthProvider.credential(
             result.accessToken.token
           );
           
-          //final vari = _auth.fetchSignInMethodsForEmail(email: result.accessToken.userId);
           dynamic authResult =  await _auth.signInWithCredential(credential);
           user = authResult.user;
 
@@ -213,11 +202,9 @@ class AuthService{
         updateUserData(user,'google');
       
       AnalyticsService().analytics.logLogin(loginMethod: 'google');
-      //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
       print(error);
-      //handleAuthError(error);
       return(error);
     }
   }
@@ -260,7 +247,6 @@ class AuthService{
       if(user != null)
         updateUserData(user);
       AnalyticsService().analytics.logLogin(loginMethod: 'email_and_password');
-      //return _ourUserFromFirebaseUser(user);
     }
     catch(error){
       print(error);
@@ -273,7 +259,6 @@ class AuthService{
   Future registerWithEmailAndPassword(String email, String password) async{
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      //FirebaseUser user = result.user;
       if(result.user != null)
         updateUserData(result.user,'email_and_password');
       return result;
@@ -287,14 +272,10 @@ class AuthService{
   // sign out
   Future signOut() async{
     try{
-      //DocumentReference ref  = _db.collection('users').reference().document((await authService.user.last).uid);
-      //await ref.delete();
       await _auth.signOut();
       
     }
     catch(error){
-      //print(error.toString());
-      //handleAuthError(error);
       return(error);
     }
   }

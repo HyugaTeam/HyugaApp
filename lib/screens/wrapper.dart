@@ -3,6 +3,7 @@ import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/authenticate/authenticate.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/widgets/SlideShow_Intro.dart';
 import 'package:provider/provider.dart';
 import 'main/home.dart';
@@ -16,47 +17,18 @@ class Wrapper extends StatelessWidget {
 
     final user = Provider.of<OurUser>(context);
     print(user.toString() + 'din provider');
-    // if(g.isStarting){
-    //   return FutureBuilder(
-    //     future: Future.delayed(Duration(seconds: 5)).then((value){return true;}),
-    //     builder:(context,ss){
-    //     g.isStarting = false;
-    //       if(!ss.hasData)
-    //         return Container(
-    //           child: Scaffold(
-    //             appBar: AppBar(title: Text("STARTING")),
-    //             body: Center(
-    //               child: CircularProgressIndicator()
-    //             ),
-    //           ),
-    //         );
-    //       else 
-    //         if(user != null)
-    //           return Home(); 
-    //         else
-    //           return Authenticate();
-    //     }
-    //   );
-    // }
-    // else
       if(user != null)
         return StreamBuilder(
           stream: authService.loading,
           builder: (context, snapshot) {
             if(!snapshot.hasData && authService.isLoading == null)
-              return Scaffold(body: Center(child: CircularProgressIndicator(),),);
+              return Scaffold(body: Center(child: LoadingAnimation(),),);
             else if(authService.currentUser.isManager == true)
               return AdminPanel();
             else if(g.isNewUser)
               return SlideShowIntro();
             else
               return Home();
-            // if(!snapshot.hasData || (snapshot.hasData && snapshot.data == true))
-            //   return Scaffold(body: Center(child: CircularProgressIndicator(),),);
-            // else if(snapshot.data == false && authService.currentUser.isManager == true)
-            //   return AdminPanel();
-            // else
-            //   return Home();
           }
         ); 
       else

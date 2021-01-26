@@ -12,7 +12,6 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> with TickerProviderStateMixin {
 
-  //final AuthService authService = AuthService();
   String email;
   String password;
   bool formVisibility = false;
@@ -26,15 +25,11 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   @override
   void initState() {
     _scrollController = ScrollController();
-    // _scrollController.addListener(() {
-    //   if(_scrollController)
-    // });
     super.initState();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    //_animation = Animation
     _animation = CurvedAnimation(
       parent: _controller, 
       curve: Curves.elasticInOut
@@ -66,7 +61,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller.dispose();
     super.dispose();
   }
@@ -100,7 +94,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
       ),
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
-        //backgroundColor: Colors.white,
         body: Builder(
           builder: (context) {
             _controller.forward();
@@ -158,13 +151,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                         }
                       )
                     ),
-
-                    // DropdownButton<Widget>(
-                    //   value: Text("Continue with email"),
-                    //   onChanged: (Widget widget) => setState(() => ),
-                    // ),
-                    
-                    //SizedBox(height:40),
                     SizedBox(height: 20),
                     MaterialButton(   /// Continue with Google button
                       shape: ContinuousRectangleBorder(
@@ -182,7 +168,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Image.asset('assets/images/google-logo-icon.png',width: 24,),
-                            //Container(width: 80,),
                             Text("Continua prin Google"),
                           ],
                         ),
@@ -210,7 +195,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
-                            //Container(width: 80,),
                             Text("Continua prin Facebook"),
                           ],
                         ),
@@ -297,7 +281,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 margin: EdgeInsets.symmetric(
                                   vertical: 10,
                                 ),
-                                //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
                                 child: Container(  // The form for Email+Password sign-in method
                                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
                                 child: Form(
@@ -318,9 +301,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           labelText: 'Email',
                                           hoverColor: Colors.blue
                                         ),
-                                        // controller: TextEditingController(
-                                        //   text: "asjdasjd",
-                                        // ),
                                         onChanged: (value){
                                           setState(()=> email = value);
                                         }
@@ -355,13 +335,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           children: <Widget>[
                                             Text("Nu ai cont?"),
                                             Container(
-                                              // constraints: BoxConstraints(
-                                              //   minWidth: 40,
-                                              //   maxWidth: 50,
-                                              //   minHeight: 20,
-                                              //   maxHeight: 20 
-                                              // ),
-                                              //padding: EdgeInsets.only(top: 10,bottom: 10, left: 20),
                                               child: InkWell(   /// "Register with Email" button
                                                 child: Text(
                                                   "Inregistare",
@@ -369,8 +342,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                     color: Colors.orange[600]
                                                   ),
                                                 ),
-                                                //splashColor: Colors.transparent,
-                                                //focusColor: Colors.transparent,
                                                 highlightColor: Colors.transparent,
                                                 onTap: (){
                                                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>Register()));

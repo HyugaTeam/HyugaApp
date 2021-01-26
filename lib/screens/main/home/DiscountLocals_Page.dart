@@ -56,23 +56,8 @@ class _DiscountLocalsPageState extends State<DiscountLocalsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
-        // appBar: AppBar(
-        //   iconTheme: IconThemeData(
-        //     color: Colors.black,Î
-        //     size: 30
-        //   ),
-        //   elevation: 0,
-        //   backgroundColor: Colors.transparent,
-        //   leading: IconButton(
-        //     icon: Icon(Icons.arrow_back),
-        //     onPressed: (){
-        //       Navigator.pop(context);
-        //     }
-        //   ),
-        // ),
         drawer: ProfileDrawer(),
         backgroundColor: Theme.of(context).backgroundColor,
-        //body: Locals(onlyWithDiscounts: true,)
         body: NestedScrollView(
             controller: _scrollController,
             headerSliverBuilder: (context, innerBoxIsScrolled) {

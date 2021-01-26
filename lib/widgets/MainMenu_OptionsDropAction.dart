@@ -5,11 +5,10 @@ import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 /// Use g.'name of variable' to access a global variable (they are declared in a separate file)
 
 class OptionsDropButton extends StatefulWidget {
-  @override
+
   final String question;
   final List<String> options;
   final Offset sizeOfButton;
-  //final MainMenuButton button;
   final button;
   OptionsDropButton({this.options, this.sizeOfButton, this.question,this.button});
   _OptionsDropButtonState createState() => _OptionsDropButtonState(
@@ -68,7 +67,6 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
                     style: TextStyle(
                         fontFamily: 'Comfortaa',
                         fontSize: 21.5,
-                        //fontWeight: FontWeight.bold
                     ),
                   ),
               );

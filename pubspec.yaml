@@ -58,7 +58,8 @@ dependencies:
   permission_handler: ^5.0.1+1
   expansion_card: ^0.1.0
   qr_code_scanner: ^0.0.13
-
+  animations: ^1.1.2
+  firebase_database: ^4.1.0
 
   
 

@@ -9,8 +9,7 @@ import 'package:hyuga_app/screens/main/home/SearchBar_Page.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/HintsCarouselAnimation.dart';
-import 'package:hyuga_app/widgets/MainMenu_Button.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:rxdart/rxdart.dart';
@@ -51,7 +50,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   ProfileDrawer _drawer = ProfileDrawer();
 
-  Widget _animatedWidget;
   Size _topWidgetSize;
   Size _bottomWidgetSize;
 
@@ -62,7 +60,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _topWidgetSize = Size(500,0);
     _bottomWidgetSize = Size(500,0);
@@ -71,54 +68,36 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    //_animation = Animation
     _animation = CurvedAnimation(
       parent: _controller, 
       curve: Curves.elasticInOut
     );
-    //_controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    //initWidget(context);_controller.forward();
-
     return StreamBuilder(
       stream: authService.seatingStatus,
       builder: (context, ss) {
-        //print(authService.currentUser.isAnonymous.toString() + "ANONIM");
       if(authService.currentUser.isAnonymous != true)
         if(!ss.hasData) // Checks if the user is seated or not
           return Scaffold(body: Center(child: CircularProgressIndicator(),));
         else if(ss.data.docs.length == 1 )
           return SeatingInterface(place: ss.data.docs[0]);
-      //else
         return StreamBuilder<bool>(
           stream: QueryService.userLocationStream.stream,
           builder: (context, location) {
             if(!location.hasData && queryingService.userLocation == null)
               return Scaffold(
                 body: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(
-                        height: 10
-                      ),
-                      HintsCarousel()
-                    ],
-                  ),
+                  child: SpinningLogo(),
                 )
               );
             else if(location.data == false)
               return Scaffold(body: Container(
                 padding: EdgeInsets.only(left: 30),
                 child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
@@ -191,12 +170,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               ),
               body: Builder(
                 builder: (context) {
-                  //_controller.reset();
                   _controller.forward();
                   return ScaleTransition(
                     scale: _animation,
                     child: Stack(// used a builder for the context
-                    //mainAxisAlignment: MainAxisAlignment.center,
                     alignment: Alignment.center,
                     children: <Widget>[
                       Column( // The Two Options Widget
@@ -207,17 +184,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               duration: Duration(milliseconds: 1000),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  // image: DecorationImage(
-                                  //   fit: BoxFit.fitHeight,
-                                  //   image: AssetImage(
-                                  //     'assets/images/gaseste_localul_perfect.png'
-                                  //   )
-                                  // ),
                                   gradient: LinearGradient(
                                     begin: Alignment.bottomLeft,
                                     end: Alignment.bottomRight,
-                                    //focalRadius: 1,
-                                    //focal: Alignment.bottomLeft,
                                     transform: GradientRotation(2),
                                     colors: [
                                       Colors.orange[500],
@@ -225,7 +194,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                     ]
                                   )
                                 ),
-                                //color: Colors.orange[600],
                                 width: double.infinity,
                                 height: _topWidgetSize.height,
                                 child: MaterialButton(
@@ -236,19 +204,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Container(
-                                        // decoration: ShapeDecoration(
-                                        //   shape: CircleBorder(),
-                                        //   shadows: [
-                                        //     BoxShadow(
-                                        //       offset: Offset(1, 1),
-                                        //       blurRadius: 0.5
-                                        //     ),
-                                        //     BoxShadow(
-                                        //       offset: Offset(-1, 1),
-                                        //       blurRadius: 0.5
-                                        //     ),
-                                        //   ]
-                                        // ),
                                         child: Image(
                                           filterQuality: FilterQuality.high,
                                           image: AssetImage(
@@ -263,24 +218,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25,
-                                          //letterSpacing: -0.5,
                                           color: Colors.white,
                                           shadows: [
-                                            // Shadow(
-                                            //   offset: Offset(1, 1),
-                                            //   blurRadius: 0.5
-                                            // ),
-                                            // Shadow(
-                                            //   offset: Offset(-1, 1),
-                                            //   blurRadius: 0.5
-                                            // ),
-                                            // Shadow(
-                                            //   offset: Offset(1, -1),
-                                            //   blurRadius: 0.5
-                                            // ),
-                                            // Shadow(
-                                            //   offset: Offset(-1, -1)
-                                            // ),
                                           ]
                                         ),
                                       ),
@@ -289,9 +228,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                   onPressed: (){
                                     setState(() {
                                       print(_topWidgetSize.height);
-                                      //_topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.9);
-                                      //_bottomWidgetSize = Size(500,MediaQuery.of(context).size.height*0.1);
-                                      //Future.delayed(Duration(milliseconds: 500)).then((value) => _topWidgetSize = Size(500,MediaQuery.of(context).size.height*0.9));
                                     });
                                     AnalyticsService().analytics.logEvent(
                                       name: 'find_perfect_escape',
@@ -300,13 +236,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         context, 
                                         PageRouteBuilder(
                                           opaque: false,
-                                          //barrierColor: Colors.blueGrey.withOpacity(0.1),
-                                          //barrierDismissible: true,
                                           transitionDuration: Duration(milliseconds: 1500),
-                                          //reverseTransitionDuration: Duration(milliseconds: 1500),
                                           transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
                                             var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut, reverseCurve: Curves.elasticInOut);
-                                            //var _controller = AnimationController()
                                             return SlideTransition(
                                               child: child,
                                               position: Tween<Offset>(
@@ -314,11 +246,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                                 end: Offset(0,0)
                                               ).animate(_animation)
                                             );
-                                            // return ScaleTransition(
-                                            //   alignment: Alignment.topCenter,
-                                            //   scale: animation,
-                                            //   child: child
-                                            // );
                                           },
                                           pageBuilder: (context, Animation<double> animation, Animation<double> secondAnimation){
                                             return QuestionsSearch();
@@ -327,12 +254,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                       ).then(
                                         (value) =>g.resetSearchParameters()
                                       );
-                                    // setState(() {
-                                    //   print("Gaseste localul perfect");
-                                    //   //_animatedWidget = QuestionsSearch();
-                                    //   //_animatedWidget = Text("Da");
-                                    //   _topWidgetSize = Size(double.infinity,MediaQuery.of(context).size.height);
-                                    // });
                                   }
                                 ),
                               ),
@@ -346,14 +267,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               vsync: this,
                               duration: Duration(milliseconds: 1000),
                               child: Container(
-                                //color: Colors.blueGrey,
                                 decoration: BoxDecoration(
-                                  // image: DecorationImage(
-                                  //   fit: BoxFit.fitHeight,
-                                  //   image: AssetImage(
-                                  //     'assets/images/reducerile_de_astazi.png'
-                                  //   )
-                                  // ),
                                   gradient: LinearGradient(
                                     begin: Alignment.topRight,
                                     end: Alignment.topLeft,
@@ -366,7 +280,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                 ),
                                 width: double.infinity,
                                 height: _bottomWidgetSize.height,
-                                //height: MediaQuery.of(context).size.height*0.5,
                                 child: MaterialButton(
                                   color: Colors.blueGrey.withOpacity(0.6),
                                   splashColor: Colors.black26,
@@ -388,31 +301,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                           letterSpacing: -0.5,
                                           color: Colors.white,
                                           shadows: [
-                                            // Shadow(
-                                            //   offset: Offset(1, 1),
-                                            //   blurRadius: 0.5
-                                            // ),
-                                            // Shadow(
-                                            //   offset: Offset(-1, 1),
-                                            //   blurRadius: 0.5
-                                            // ),
-                                            // Shadow(
-                                            //   offset: Offset(1, -1),
-                                            //   blurRadius: 0.5
-                                            // ),
-                                            // Shadow(
-                                            //   offset: Offset(-1, -1)
-                                            // ),
                                           ]
                                         ),
                                       ),
                                     ],
                                   ),
                                   onPressed: (){
-                                    //setState(() {
-                                      // print("Reducerile de astazi");
-                                      // _animatedWidget = DiscountLocalsPage();
-                                      //_bottomWidgetSize = Size(600,MediaQuery.of(context).size.height);
                                       AnalyticsService().analytics.logEvent(
                                         name: 'highest_discounts',
                                       );
@@ -420,13 +314,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         context, 
                                         PageRouteBuilder(
                                           opaque: false,
-                                          //barrierColor: Colors.blueGrey.withOpacity(0.1),
-                                          //barrierDismissible: true,
                                           transitionDuration: Duration(milliseconds: 1500),
-                                          //reverseTransitionDuration: Duration(milliseconds: 1500),
                                           transitionsBuilder: (context, Animation<double> animation, Animation<double> secondAnimation, Widget child){
                                             var _animation = CurvedAnimation(parent: animation, curve: Curves.elasticInOut, reverseCurve: Curves.elasticInOut);
-                                            //var _controller = AnimationController()
                                             return SlideTransition(
                                               child: child,
                                               position: Tween<Offset>(
@@ -462,7 +352,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           ),
                         )
                       ),
-                      //ScaleTransition(scale: _animation, child: FlutterLogo(size: 150,))
                     ]
                 ),
                   );

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -46,19 +47,10 @@ class ReservationsHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //title: Text(itemCount == null? "" : itemCount.toString()+" rezervari"),
         backgroundColor: Colors.blueGrey,
       ),
       body: ListView(
         children: [
-          // Container(  /// Get upcoming reservations
-          //   padding: EdgeInsets.symmetric(
-          //     horizontal: MediaQuery.of(context).size.width*0.05,
-          //     vertical: MediaQuery.of(context).size.height*0.01
-          //   ),
-          //   color: Colors.grey[300],
-          //   child: Text("Istoric rezervari"),
-          // ),
           FutureBuilder(
             future: getUpcomingReservations(),
             builder: (context,reservation){
@@ -81,7 +73,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                       ),
                     ),
                     Container( /// Get future reservations
-                      //margin: EdgeInsets.only(top: 40),
                       color: Colors.blueGrey.withOpacity(0.5),
                       height: 200,
                       width: 200,
@@ -150,13 +141,8 @@ class ReservationsHistoryPage extends StatelessWidget {
                             child: Container(
                               width: MediaQuery.of(context).size.width*0.75,
                               child: Wrap(
-                                //mainAxisAlignment: MainAxisAlignment.start,
-                                //mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    // constraints: BoxConstraints(
-                                    //   maxWidth: 300
-                                    // ),
                                     child: Text(
                                       reservation.data['place_name'],
                                       style: TextStyle(
@@ -179,7 +165,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                   ),
                                   ClipOval(
                                     child: Container(
-                                      //padding: EdgeInsets.only(bottom: 20),
                                       color: Colors.white,
                                       height: 7,
                                       width: 7
@@ -224,7 +209,7 @@ class ReservationsHistoryPage extends StatelessWidget {
               future: getPastReservations(),
               builder:(context, reservationsHistory){ 
                 if(!reservationsHistory.hasData)
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingAnimation());
                 else if(reservationsHistory.data.length == 0)
                   return Center(
                     child: Column(
@@ -311,7 +296,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               left: 25,
                                               bottom: 25,
                                               width: 300,
-                                              //height: 300,
                                               child: Text(
                                                 reservationsHistory.data[index]['place_name'], 
                                                 style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
@@ -391,12 +375,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30),
                               child: Container(
-                              // constraints: BoxConstraints(
-                              //   maxHeight: 225,
-                              //   maxWidth: 400,
-                              // ),
-                              // height: 300,
-                              // width: 105,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [
@@ -409,10 +387,8 @@ class ReservationsHistoryPage extends StatelessWidget {
                                 ],
                               ),
                               child: Stack(
-                                //alignment: Alignment.center,
                                 children: [
                                   Container( // The background image of the List Tile
-                                      //padding: EdgeInsets.only(top: 20),
                                       height: 225,
                                       width: 400,
                                       child: FutureBuilder(
@@ -435,7 +411,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                       ),
                                     ),
                                   Positioned(
-                                    //width: MediaQuery.of(context).size.width*0.8,
                                     height: 300,
                                     bottom: 15,
                                     left: 15,
@@ -450,7 +425,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             child: Row(
                                               
                                               mainAxisAlignment: MainAxisAlignment.start,
-                                              //spacing: MediaQuery.of(context).size.width*0.05,  
                                               crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Container(
@@ -476,7 +450,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                 ),
                                                 ClipOval(
                                                   child: Container(
-                                                    //padding: EdgeInsets.only(bottom: 20),
                                                     color: Colors.white,
                                                     height: 7,
                                                     width: 7
@@ -487,7 +460,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                 ),
                                                 reservationsHistory.data[index]['total'] != null
                                                 ? Flexible(
-                                                  //width: MediaQuery.of(context).size.width*0.23,
                                                   child: Text(
                                                     reservationsHistory.data[index]['total'] == reservationsHistory.data[index]['total'].toInt()
                                                       ? reservationsHistory.data[index]['total'].toInt().toString()+" RON"
@@ -516,32 +488,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                          // Container(
-                                          //   child: Wrap(
-                                          //     crossAxisAlignment: WrapCrossAlignment.center,
-                                          //     children: [
-                                          //       Text(
-                                          //         "Total: "+scanHistory.data[index]['total'].toString()+"RON",
-                                          //         style: TextStyle(
-                                          //           fontSize: 20,
-                                          //           color: Colors.white,
-                                          //           fontWeight: FontWeight.bold
-                                          //         ),
-                                          //       )
-                                          //     ]
-                                          //   )
-                                          // ),
-                                          /// The Discount received on the reservation
-                                          // Container(
-                                          //   padding: const EdgeInsets.only(top: 5),
-                                          //   child: Text(
-                                          //     "Discount: "+ reservationsHistory.data[index]['discount'].toString() + '%',
-                                          //     style: TextStyle(
-                                          //       fontSize: 17,
-                                          //       color: Colors.blueGrey
-                                          //     )
-                                          //   )
-                                          // ),
                                           Container(
                                             padding: const EdgeInsets.only(top: 5),
                                             child: Text(

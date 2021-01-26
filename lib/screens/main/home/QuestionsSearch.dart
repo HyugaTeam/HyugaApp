@@ -88,10 +88,8 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
       extendBodyBehindAppBar: true,
       body: Builder(
         builder:(context) => Container(
-          //height: 650,
           color: Theme.of(context).backgroundColor,
           constraints: BoxConstraints(
-            //maxHeight: 350,
             minWidth: MediaQuery.of(context).size.width
           ),
           alignment: Alignment(0, 0),
@@ -121,13 +119,6 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
                     onPressed: () async {
                       if (checkOptions()) {
                         Navigator.pushNamed(context, '/second');
-                        // g.placesList = [];
-                        // Navigator.pushNamed(context, '/loading');
-                        // QueryService().queryForLocals().then((data) {
-                        //   Navigator.pushReplacementNamed(
-                        //       context, '/second');
-                        // });
-                        // print(g.placesList);
                       } 
                       else {
                         if(g.isSnackBarActive == false){

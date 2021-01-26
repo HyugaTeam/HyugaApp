@@ -28,10 +28,8 @@ class _InkWrapper extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              //splashFactory: null,
               highlightColor: highlightColor,
               splashColor: splashColor,
-              //radius: 60,   //poate arata bine
               onTap: onTap,
             ),
           ),
@@ -45,7 +43,6 @@ class _InkWrapper extends StatelessWidget {
 
 ///The rendered element in the 'Places' List on the Second Page
 class PlaceListProfile extends StatefulWidget {
-  //final String _image;
 
   final GeoPoint location;
   final Future<Image> image;
@@ -54,7 +51,7 @@ class PlaceListProfile extends StatefulWidget {
   final String distance;
   final int price;
   final VoidCallback onTap;
-  double discount = 0; //TREBUIE UN IF PENTRU discount 0
+  double discount = 0;
   Image finalImage;
   final Local place;
 
@@ -88,7 +85,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      //color: Colors.blue,
       width: 400.0,
       height: 310,
       child: Stack(
@@ -96,7 +92,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
         children: <Widget>[
           Positioned(
             bottom: 4,
-            //bottom: 20.0,
             child: Container(
               height: 120.0,
               width: 355.0,
@@ -108,7 +103,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
               child: Container(
                 padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width*0.025, 
-                  //right: MediaQuery.of(context).size.width*0.03, 
                   top: 10, 
                   bottom: widget.name.length < 20? 5 : 0
                 ),
@@ -142,37 +136,8 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                                   letterSpacing: 1.2),
                             ),
                           ),
-                          //  FutureBuilder(
-                          //    future: address,
-                          //    builder:(context,  AsyncSnapshot<String> address){
-                          //      if(!address.hasData)
-                          //        return Container(
-                          //          child: Text('')
-                          //        );
-                          //      else
-                          //        return Text(
-                          //          address.data,
-                          //          style: TextStyle(
-                          //            color: Colors.white,
-                          //            shadows: [
-                          //              Shadow(
-                          //                offset: Offset(0.7, 1),
-                          //                color: Colors.black,
-                          //              ),
-                          //              Shadow(
-                          //                offset: Offset(-0.5, 0.7),
-                          //                color: Colors.black,
-                          //              ),
-                          //            ],
-                          //            fontWeight: FontWeight.w600,
-                          //            fontStyle: FontStyle.italic,
-                          //          ),
-                          //        );
-                          //      },
-                          //  ),
                         ]),
                     Container(
-                      //margin: EdgeInsets.only(right: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -190,7 +155,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           ),
                           Container(
                             alignment: Alignment.bottomCenter,
-                            //padding: EdgeInsets.only(left: 30,top: 8),
                             constraints:
                                 BoxConstraints(maxWidth: 40, maxHeight: 20),
                             child: ListView.builder(
@@ -198,7 +162,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                               shrinkWrap: true,
                               itemCount: widget.price,
                               itemBuilder: (context, costIndex) {
-                                //return FaIcon(FontAwesomeIcons.dollarSign, color: Colors.lightGreenAccent, size: 16,);
                                 return Text(
                                   '\$',
                                   style: TextStyle(
@@ -251,9 +214,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           child: FutureBuilder(
                               future: widget.image,
                               builder: (context, img) {
-                                //return img.data;
                                 if(widget.finalImage == null)
-                                //if (!img.hasData)
                                   return Container(
                                     width: 400,
                                     height: 200,
@@ -267,25 +228,11 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                                   return Container(
                                     color: Colors.transparent, 
                                     child: widget.finalImage
-                                    //child: img.data
                                   );
                               }),
                         ),
                       ),
-//                  child: Image(
-//                    height: 220.0,
-//                    width: 325.0,
-//                    image: AssetImage(_image),
-//                    fit: BoxFit.cover, //look into this
-//                  ),
                       onTap: widget.onTap
-                      // onTap: (){
-                      //   Navigator.pushNamed(
-                      //     context,
-                      //     '/third',
-                      //     arguments: [locals.data[index],widget.onlyWithDiscounts]
-                      // );
-                      // },
                     ),
                 ),
               ),
@@ -307,7 +254,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           backgroundColor: Colors.orange[600],
                           onPressed: () {
                             if (g.isSnackBarActive == false) {
-                              //g.isSnackBarActive = true;
                               Scaffold.of(widget.scaffoldContext)
                                   .showSnackBar(SnackBar(
                                     duration: Duration(seconds: 5),
@@ -323,7 +269,6 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           child: Text(
                             '-' + widget.discount.toInt().toString() + '%',
                             style: TextStyle(
-                              //fontSize: 20,
                               color: Colors.white,
                               shadows: [Shadow(offset: Offset(1.0, 1.0))],
                               fontWeight: FontWeight.w600

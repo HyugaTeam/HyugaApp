@@ -17,7 +17,7 @@ class QueryService{
 
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
-  static final Reference storageRef = storage.ref();
+  static final StorageReference storageRef = storage.ref();
   static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
   static LocationData _userLocation ;
   
@@ -44,7 +44,6 @@ class QueryService{
         Local newLocal = Local(
           id: localsMap[i]['id'],
           name: localsMap[i]['name'],
-          //imageUrl: localsMap[i]['imageUrl'],
           description: localsMap[i]['description'],
           location: localsMap[i]['location']
         );
@@ -92,14 +91,11 @@ class QueryService{
     }
 
     if(selectedAmbiance != null)
-      //return Firestore.instance.collection('locals_bucharest')
       return _db.collection('locals_bucharest')
           .where('ambiance',isEqualTo: selectedAmbiance)
-          //.where('score.lemonade',isGreaterThan: null)///////////////
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
           .get();
     else
-      //return Firestore.instance.collection('locals_bucharest')
       return _db.collection('locals_bucharest')
           .where('capacity',isGreaterThanOrEqualTo: selectedHowMany)
           .get();
@@ -110,7 +106,6 @@ class QueryService{
     if (collectionName == 'Board Games')
       collectionName = 'board_games';
     else collectionName = collectionName.toLowerCase();
-    //return Firestore.instance
     return _db
     .collection('_$collectionName').orderBy('score',descending: true)
     .get();
@@ -122,7 +117,6 @@ class QueryService{
       int maxSize = 10*1024*1024;
       String pathName = 'photos/europe/bucharest/$fileName';
       print(pathName);
-      //var storageRef = FirebaseStorage.instance.ref().child(pathName);
       var storageRef = storage.ref().child(pathName);
       imageFile = await storageRef.child('$fileName'+'_profile.jpg').getData(maxSize);
       return Image.memory(
@@ -157,7 +151,6 @@ class QueryService{
       try{
         
         do{
-          //print('///////////////////'+'$fileName'+'_$pictureIndex.jpg');
           await storageRef.child('$fileName'+'_$pictureIndex.jpg')
           .getData(maxSize).then((data){
             imageFile = data;
@@ -176,7 +169,6 @@ class QueryService{
         return listOfImages;
       }
       catch(error){
-      //print('///////////////////////////////$error');
         return null;
       }
   }
@@ -186,7 +178,6 @@ class QueryService{
 
     Location location = new Location();
     bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
     LocationData position;
 
     _serviceEnabled = await location.serviceEnabled();
@@ -196,17 +187,6 @@ class QueryService{
         return null;
       }
     }
-
-    // _permissionGranted = await location.hasPermission();
-    // if (_permissionGranted == PermissionStatus.denied) {
-    //   _permissionGranted = await location.requestPermission();
-    //   if (_permissionGranted != PermissionStatus.granted) {
-    //     return null;
-    //   }
-    // }
-
-    //g.locationPermissionGranted = true;
-
     try {
       position = await location.getLocation();
       userLocationStream.add(true);
@@ -217,76 +197,6 @@ class QueryService{
     }
     return position;
 
-  }
-  // Old method, no longer in user
-  Future queryForLocals() async{
-
-    // Position userLocation = await getUserLocation();
-    // Position userLocation ;
-    // getUserLocation().then((value)=>userLocation = value);
-    // Position localLocation;
-    // print(userLocation);
-
-    // QuerySnapshot queriedSnapshotByWhat = await getDataByWhat(g.whatList[g.selectedWhere][g.selectedWhat]);
-    // List<String> listOfQueriedDocuments = [];  // a list of the ID's from the query
-    
-    // for(int i = 0 ; i < queriedSnapshotByWhat.documents.length ; i++){
-    //   listOfQueriedDocuments.add(queriedSnapshotByWhat
-    //                             .documents[i].documentID);
-    // }// creates a list of IDs from the collection queried by 'What'
-    // Set<String> queriedDocumentsByWhat = listOfQueriedDocuments.toSet();
-    
-    // // A snapshot of the documents ('Ambiance' and 'How Many')
-    // QuerySnapshot queriedSnapshotByAmbAndHM = await getDataByHowManyAndAmbiance();
-    // listOfQueriedDocuments.clear();
-    // for(int i = 0 ; i < queriedSnapshotByAmbAndHM.documents.length ; i++){
-    //   listOfQueriedDocuments.add(queriedSnapshotByAmbAndHM
-    //                             .documents[i].documentID);
-    // }// creates a list of IDs from the collection queried by 'Amb and HM'
-    // Set<String> queriedDocumentsByAmbAndHM = listOfQueriedDocuments.toSet();
-    
-    // listOfQueriedDocuments.clear();
-    // listOfQueriedDocuments = 
-    // queriedDocumentsByAmbAndHM.intersection(queriedDocumentsByWhat).toList();
-    // //listOfQueriedDocuments.sort((x,y)=>x.)
-    // for(int i = 0 ; i < listOfQueriedDocuments.length; i++){
-        
-    //     var db = await _db
-    //             .collection('locals_bucharest')
-    //             .document(listOfQueriedDocuments[i])
-    //             .get();
-        
-    //     if(userLocation!=null && g.selectedArea==0){
-    //         localLocation = Position(
-    //           latitude: db.data['location'].latitude,
-    //           longitude: db.data['location'].longitude
-    //         );
-    //         Distance distance = Distance();
-    //         double fromAtoB = distance.as(
-    //           LengthUnit.Meter,
-    //           LatLng(localLocation.latitude, localLocation.longitude),
-    //           LatLng(userLocation.latitude, userLocation.longitude)
-    //           );
-    //         //if(fromAtoB > 1000)
-    //          // return;
-    //         print(fromAtoB);
-    //     }
-    //     Image img = await getImage(db.documentID);
-    //     g.placesList.add(Local(
-    //       description: db.data['description'],
-    //       id: db.documentID,
-    //       score: (await Firestore.instance
-    //       .collection(getCollectionName(
-    //         g.whatList[g.selectedWhere][g.selectedWhat]))
-    //         .document(db.documentID).get()).data['score'],
-    //       //image: img,
-    //       cost: db.data['cost'],
-    //       name: db.data['name'],
-    //       location: db.data['location'],
-    //       )
-    //     );
-    // }
-    // g.placesList.sort((y,x)=>x.score.compareTo(y.score));
   }
  
   double getLocalLocation(LengthUnit unit, GeoPoint location){
@@ -319,20 +229,9 @@ class QueryService{
   }
 
   Local docSnapToLocal(DocumentSnapshot doc){
-
-    // var profileImage = Image.network(
-    //   'https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/photos%2Feurope%2Fbucharest%2Facuarela_bistro%2Facuarela_bistro_profile.jpg?alt=media&token=cee42f66-d71d-4493-8e9a-b4ed509110b9',
-    //   frameBuilder: (context,child,index,loaded) => Shimmer(
-    //   gradient: LinearGradient(colors: [Colors.grey, Colors.white]),
-    //   child: Container(),
-    // ),
-    // errorBuilder: (context,obj,stackTrace){return Container(child: Center(child: Text('smth went wrong'),),);},
-    // );
-    //Future<Address> address;
     Future<String> address;
 
     var profileImage = getImage(doc.id);
-    //var images = _getImages(doc.documentID);
     Map<String, dynamic> placeData = doc.data();
 
     return Local(
@@ -345,7 +244,6 @@ class QueryService{
       description: placeData['description'],
       capacity: placeData['capacity'],
       discounts: placeData['discounts'],
-      //images: images,
       address: address,
       reference: placeData.containsKey('manager_reference') ? placeData['manager_reference']: null,
       schedule: placeData.containsKey('schedule') ? placeData['schedule']: null,

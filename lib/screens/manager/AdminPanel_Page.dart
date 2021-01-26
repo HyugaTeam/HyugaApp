@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
-import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/manager/ActiveGuests_Page.dart';
 import 'package:hyuga_app/screens/manager/AnalysisPage.dart';
 import 'package:hyuga_app/screens/manager/EditorPage.dart';

@@ -3,29 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/screens/drawer/ScanPlaceCode_Page.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
-import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
 
-// class ProgressColorAnimation extends Animation{
-//   @override
-//   void addStatusListener(){
-
-//   }
-// }
-
 class ProfileDrawer extends StatelessWidget {
-
-
-  // double _progress;
-  //  ProfileDrawer(){
-  //    try{
-  //     _progress = authService.currentUser.score.toDouble() / (authService.currentUser.getLevel()*500);
-  //    }
-  //    catch(error){
-  //      print(error);
-  //    }
-  //  }
   String username = "" ;
   ProfileDrawer(){
     if(authService.currentUser.displayName != null)
@@ -36,19 +17,6 @@ class ProfileDrawer extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    
-    String _progress;
-    try{
-      if(authService.currentUser.score >=2500)
-        _progress = '2500 / ' + (authService.currentUser.getLevel()*500).toString();
-      else
-        _progress = authService.currentUser.score.toString() + ' / ' + (authService.currentUser.getLevel()*500).toString();
-    }
-    catch(error){
-      _progress = '';
-    }
-    
-
     return Drawer(
         child: StreamBuilder( 
           stream: authService.user,
@@ -77,9 +45,6 @@ class ProfileDrawer extends StatelessWidget {
                                   child: Image.network(
                                     authService.currentUser.photoURL != null? authService.currentUser.photoURL : '',
                                     width: 50,
-                                    // frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
-                                    //   return child;
-                                    // },
                                     loadingBuilder: (context, child, loadingProgress){
                                       if(loadingProgress == null)
                                         return child;
@@ -88,7 +53,6 @@ class ProfileDrawer extends StatelessWidget {
                                             ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                                             : null,
                                       );
-                                      //return child;
                                     },
                                     errorBuilder: (context, error, stacktrace){
                                       print(authService.currentUser.photoURL);
@@ -110,61 +74,12 @@ class ProfileDrawer extends StatelessWidget {
                               )
                             ]
                           ),
-                          Container(
-                            padding: EdgeInsets.only(right: 15),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                // REMOVED LEVEL TEMPORARILY
-                                // Text(
-                                //   "Level " + authService.currentUser.getLevel().toString(),
-                                //   style: TextStyle(
-                                //     fontSize: 20,
-                                //     color: Colors.orange[600],
-                                //     shadows: [Shadow(
-                                //       color: Colors.black,
-                                //       blurRadius: 1.5,
-                                //       offset: Offset(1,1)
-                                //     )]
-                                //   ),
-                                // ),
-                                // Stack(
-                                //   alignment: Alignment.center,
-                                //   children: [
-                                //     Container( // User's progress indicator for level
-                                //       padding: EdgeInsets.only(top: 10),
-                                //       width: 120,
-                                //       height: 25,
-                                //       child: LinearProgressIndicator(
-                                //         valueColor: AlwaysStoppedAnimation(Colors.orange[600]),
-                                //         //valueColor: C,
-                                //         value: authService.currentUser.score.toDouble() 
-                                //       ),
-                                //     ),
-                                //     Container( // Text (some sort of ratio) with User's score / necessary score for the next level
-                                //       alignment: Alignment.center,
-                                //       margin: EdgeInsets.only(top:12),
-                                //       //padding: EdgeInsets.only(top: 10),
-                                //       width: 100,
-                                //       height: 20,
-                                //       child: Text(
-                                //         _progress
-                                //       ),
-                                //     )
-                                //   ]
-                                // )
-                                
-                              ],
-                            ),
-                          )
                         ],
                       ),
                     ),
                   ),
                   Expanded(
                     child: Column(
-                      //physics: NeverScrollableScrollPhysics(), // used to disable scroll
-                     // padding: EdgeInsets.zero,
                       children: <Widget>[
                         /// Either shows the 'Scan History' button or nothing depending on the user's 'manager' property
                         StreamBuilder<bool>(
@@ -306,18 +221,12 @@ class ProfileDrawer extends StatelessWidget {
                         await authService.signOut();
                         if(authService.user == null)
                           print("Daskhfjghfjsdf");
-                        //Navigator.of(context).push<Route>(MaterialPageRoute(builder: (context) => SignIn() ));
                       },
                     ),
                   ),
                   Expanded(
                     child: Container(),
                   ),
-                  // Container(
-                  //   child: Text(
-                  //     "Pentru o experienta ideala, va rugam sa va inregistrati."
-                  //   ),
-                  // )
                 ],
               );
           }

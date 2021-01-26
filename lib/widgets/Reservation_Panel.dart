@@ -48,7 +48,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
       result += element['title'] + " - " + element['interval'] + '\n';
       result += element['content']+'\n\n';
     });
-    //result.pad
     return result;
   }
 
@@ -57,11 +56,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
     super.initState();
     _noOfPeopleScrollController = ScrollController(initialScrollOffset: MediaQuery.of(widget.context).size.width*0.16);
     _dayScrollController = ScrollController();
-    (_selectedHour-1.6)*93.toDouble();
     _hourScrollController = ScrollController(initialScrollOffset: 0);
-    // _dayScrollController.addListener(() {
-    //   print(_dayScrollController.offset);
-    // });
   }
 
   /// Initiate the time schedule for this widget
@@ -86,7 +81,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
     List hourAndDiscount = place.discounts[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
-    //print(hourAndDiscount.length);
     for(int i = 0; i< hourAndDiscount.length; i++)
       if(selectedHour.compareTo(hourAndDiscount[i].substring(0,5))>= 0 &&
       selectedHour.compareTo(hourAndDiscount[i].substring(6,11))< 0)
@@ -102,7 +96,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
     List hourAndDiscount = place.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
-    //print(hourAndDiscount.length);
     List<Map<String,dynamic>> deals = <Map<String,dynamic>>[];
     if(hourAndDiscount != null)
       for(int i = 0; i< hourAndDiscount.length; i++)
@@ -127,10 +120,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
       ),
       child: Dialog(
         child: Container(
-            // constraints: BoxConstraints(
-            //   maxHeight: MediaQuery.of(context).size.height*0.8,
-            //   maxWidth: 500
-            // ),
             color: Colors.white,
               width: double.infinity,
               height: MediaQuery.of(context).size.height*0.65,
@@ -170,7 +159,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                             _selectedNoOfPeople = index;
                           });
                           _noOfPeopleScrollController.animateTo(
-                            //_selectedNoOfPeople*30+MediaQuery.of(widget.context).size.width*0.2, 
                             (_selectedNoOfPeople-2)*68.toDouble() - 6,
                             duration: Duration(milliseconds: 500), 
                             curve: Curves.ease
@@ -209,7 +197,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           });
 
                           _dayScrollController.animateTo(
-                            //_selectedNoOfPeople*30+MediaQuery.of(widget.context).size.width*0.2, 
                             (_selectedDay-1)*93.toDouble(),
                             duration: Duration(milliseconds: 500), 
                             curve: Curves.ease
@@ -255,16 +242,13 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       padding: EdgeInsets.symmetric(horizontal: 10,),
                       scrollDirection: Axis.horizontal,
                       itemCount: placeSchedule != null
-                      //?3
                         ? hourDiff * 2 + minDiff 
-                        //? 3//(int.parse(startHour) - int.parse(endHour))*4
                         : 0,
                       separatorBuilder: (context,index)=>SizedBox(width: 10,),
                       itemBuilder: (context,index) {
                         GlobalKey _tooltipKey = GlobalKey();
                         int discount = getDiscountForHour(index);
                         List<Map<String,dynamic>> deals = getDealsForHour(index);
-                        //print(discount);
                         return  GestureDetector(
                         onTap: (){
                           if(hour.add(Duration(minutes: index*30)).compareTo(DateTime.now()) < 0 && _selectedDay == 0){
@@ -299,7 +283,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               print(_selectedDate);
                             });
                             _hourScrollController.animateTo(
-                              //_selectedNoOfPeople*30+MediaQuery.of(widget.context).size.width*0.2, 
                               (_selectedHour-1.6)*93.toDouble(),
                               duration: Duration(milliseconds: 500), 
                               curve: Curves.ease
@@ -351,7 +334,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                       decoration: BoxDecoration(
                                         color: Colors.blueGrey,
                                         borderRadius: BorderRadius.circular(30)
-                                        //shape: BoxShape.circle
                                       ),
                                       child: Icon(
                                         Icons.local_offer,
@@ -375,7 +357,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                   decoration: BoxDecoration(
                                     color: Colors.blueGrey,
                                     borderRadius: BorderRadius.circular(30)
-                                    //shape: BoxShape.circle
                                   ),
                                   child: Text(
                                     "-$discount%",
@@ -402,7 +383,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     disabledColor: Colors.grey[300],
                     color: Colors.orange[600],
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                   // minWidth: 100,
                     child: Text("Rezerva"),
                     /// The callback invoked when the 'Rezerva' button is pressed
                     onPressed: _selectedDate == null? null : () async{
@@ -441,14 +421,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'place_reservation_ref': placeReservationRef
                         }
                       );
-                      
-                      // await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
-                      // .set(
-                      //   {
-                      //     'upcoming_reservation': true,
-                      //   },
-                      //   SetOptions(merge: true)
-                      // );
                       setState(() {
                         _isProgressIndicatorVisible = false;
                       });
@@ -473,7 +445,6 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   Visibility(
                     visible: _isProgressIndicatorVisible,
                     child: LinearProgressIndicator(minHeight: 8,
-                      //backgroundColor: Colors.blueGrey
                     ),
                   )
                 ],

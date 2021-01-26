@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
-import 'package:hyuga_app/globals/Global_Variables.dart' as g;
-import 'package:provider/provider.dart';
 
 class LoadingScreen extends StatelessWidget {
 

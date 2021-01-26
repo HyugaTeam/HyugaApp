@@ -1,4 +1,3 @@
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/screens/manager/ScannedCodesHistoryPage.dart';
@@ -16,14 +15,6 @@ class AnalysisPage extends StatelessWidget {
       body: Container(
         child: ListView(
           children: <Widget>[
-            // ListTile(
-            //   //dense: true,
-            //   contentPadding: EdgeInsets.symmetric(horizontal: 50),
-            //   title: Text("Vizualizari in timp real"),
-            //   //leading: Text("leading"),
-            //   subtitle: Text("(ultimele 14 zile)"),
-            //   trailing: Text("119")
-            // ),
             SizedBox(height: 20,),
             Center(
               child: Text(

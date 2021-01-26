@@ -40,7 +40,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _animationController = AnimationController(
       vsync: this,
@@ -124,16 +123,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  // Center(
-                                  //   child: Container(
-                                  //     decoration: BoxDecoration(
-                                  //         color: Colors.white,
-                                  //         borderRadius: BorderRadius.circular(32)),
-                                  //     child: Image(
-                                  //       image: AssetImage('assets/infinitea.jpg'),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                   SizedBox(height: 30.0),
                                   Align(
                                     widthFactor: 10,
@@ -154,7 +143,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                   ),
                                   SizedBox(
                                     height: 30.0,
-                                  ), // de ce nu face asta
+                                  ),
                                   Text(
                                     'Completeaza cele 5 intrebari scurte:\n+ tipul de local\n+ specificul dorit\n+ numarul de persoane\n+ atmosfera\n+ distanta fata de tine',
                                     style: TextStyle(
@@ -175,11 +164,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      // child: Image(
-                                      //   image: AssetImage(
-                                      //     'assets/gifs/first-slide.gif'
-                                      //   ),
-                                      // ),
                                       child: Image.network(
                                         "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
                                         ,loadingBuilder: (context, child, loadingProgress){
@@ -190,7 +174,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                                 ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                                                 : null,
                                           );
-                                          //return child;
                                         },
                                       )
                                     ),
@@ -204,11 +187,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  // Center(
-                                  //   child: Image(
-                                  //     image: AssetImage('assets/infinitea.jpg'),
-                                  //   ),
-                                  // ),
                                   SizedBox(height: 30.0),
                                   Align(
                                     widthFactor: 10,
@@ -229,7 +207,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                   ),
                                   SizedBox(height: 10.0),
                                   Text(
-                                    //'Cauta cerculetul portocaliu!           El semnalizeaza REDUCERILE!',
                                     "Toate reducerile si ofertele speciale sunt la un click distanta.",
                                     style: TextStyle(
                                       fontFamily: 'Comfortaa',
@@ -245,7 +222,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                   ),
                                   SizedBox(height: 20),
                                   Text(
-                                    //'Atunci cand vezi un cerculet portocaliu in coltul unui restaurant inseamna ca poti primi reduceri de pana la 40% sau oferte speciale!\nPentru a vedea exact discountul intra pe profilul localului!',
                                     "Fiecare cerculet portocaliu indica reducerea de astazi din local.\nExploreaza lista pentru a gasi OFERTA care ti se potriveste.",
                                     style: TextStyle(
                                       fontFamily: 'Comfortaa',
@@ -265,11 +241,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      // child: Image(
-                                      //   image: AssetImage(
-                                      //     'assets/gifs/second-slide.gif'
-                                      //   ),
-                                      // ),
                                       child: Image.network(
                                         "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Fsecond-slide.gif?alt=media&token=cf46f90d-7d05-4e89-a0ad-f292332e238b"
                                         ,loadingBuilder: (context, child, loadingProgress){
@@ -280,7 +251,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                                 ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                                                 : null,
                                           );
-                                          //return child;
                                         },
                                       )
                                     ),
@@ -294,22 +264,11 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  // Center(
-                                  //   child: Image(
-                                  //     image: AssetImage('assets/infinitea.jpg'),
-                                  //   ),
-                                  // ),
-                                  //SizedBox(height: 15,),
                                   SizedBox(
                                     width: 150,
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      // child: Image(
-                                      //   image: AssetImage(
-                                      //     'assets/gifs/third-slide.gif'
-                                      //   ),
-                                      // ),
                                       child: Image.network(
                                         "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Fthird-slide.gif?alt=media&token=7fbf622c-35ef-41dc-a36a-c2bdbf8be157"
                                       )
@@ -454,9 +413,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                           ),
                                         ]
                                       )
-                                      //'Cum primesti reducerea?\nVarianta 2:',
-                                      
-                                      //textAlign: TextAlign.center,
                                     ),
                                   ),
                                   SizedBox(
@@ -464,11 +420,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      // child: Image(
-                                      //   image: AssetImage(
-                                      //     'assets/gifs/fourth-slide.gif'
-                                      //   ),
-                                      // ),
                                       child: Image.network(
                                         "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffourth-slide.gif?alt=media&token=16c7d364-2a8d-483e-b9bc-40ff87ac7004"
                                         ,loadingBuilder: (context, child, loadingProgress){
@@ -479,12 +430,10 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                                 ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                                                 : null,
                                           );
-                                          //return child;
                                         },
                                       )
                                     ),
                                   ),
-                                  //SizedBox(height: 40.0),
                                   SizedBox(height: 15.0),
                                   Text(
                                     'Fa o rezervare intr-unul din localurile partenere',
@@ -550,11 +499,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      // child: Image(
-                                      //   image: AssetImage(
-                                      //     'assets/gifs/fifth-slide.gif'
-                                      //   ),
-                                      // ),
                                       child: Image.network(
                                         "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffifth-slide.gif?alt=media&token=4b71d43f-3c9a-4e2c-8e8a-d1b2010be379"
                                         ,loadingBuilder: (context, child, loadingProgress){
@@ -565,12 +509,10 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                                 ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
                                                 : null,
                                           );
-                                          //return child;
                                         },
                                       )
                                     ),
                                   ),
-                                  //SizedBox(height: 40.0),
                                   SizedBox(height: 15.0),
                                   Text(
                                     //'Salveaza localurile preferate pentru a le putea accesa oricand la sectiunea "FAVORITE". Vezi unde este locatia exact prin Google Maps si comanda un Uber! Vizualizeaza menu-ul complet prin aplicatie!\nSi multe altele!',
@@ -605,7 +547,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                 widthFactor: null,
                                 alignment: FractionalOffset.bottomRight,
                                 child: FlatButton(
-                                  //padding: EdgeInsets.only(right: 0),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
                                   splashColor: Colors.orange[600],
@@ -656,7 +597,6 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                 onTap: () {
                   g.isNewUser = false;
                   authService.loading.add(false);
-                  //Navigator.pu
                 } ,
                 child: Center(
                   child: Padding(

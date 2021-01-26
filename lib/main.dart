@@ -7,7 +7,6 @@ import 'package:hyuga_app/screens/main/home.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/screens/LoadingScreen.dart';
 import 'package:hyuga_app/screens/main/Second_Page.dart';
 import 'package:hyuga_app/services/message_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
@@ -24,7 +23,6 @@ void main() async{
   
   g.isIOS = Platform.isIOS == true? true : false;
   queryingService = QueryService();
-  //queryingService.getUserLocation().then((value) { print("LOCATIA ESTE" + value.toString());  print("LOCATIA SE TERMINA");});
   MessagingService().requestNotificationPermissions();
   
   runApp(StreamProvider<OurUser>.value( 
@@ -47,11 +45,9 @@ void main() async{
 
           '/': (context) => Home(),
 
-          'loading/wrapper/': (context) => LoadingScreen(),
+          'loading/wrapper/': (context) => Wrapper(),
 
           '/second': (context) => SecondPage(),
-
-          //'/third': (context) => ThirdPageGenerator.generateRoute(settings)
         }, 
         // Route generator (designed for the Third Page only)
         onGenerateRoute: ThirdPageGenerator.generateRoute,
@@ -83,7 +79,6 @@ void main() async{
           accentColor: Colors.blueGrey,
           fontFamily: 'Comfortaa'
         ),
-        //home: Home()
       ),
     )
   );
