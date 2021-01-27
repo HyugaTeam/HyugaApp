@@ -94,7 +94,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      LoadingAnimation(),
+                      SpinningLogo(),
                     ],
                   );
               else if(result.data.length == 0) 

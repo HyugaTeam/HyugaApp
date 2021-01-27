@@ -83,7 +83,7 @@ class _LocalsState extends State<Locals> {
       future: widget.onlyWithDiscounts != true? queryingService.fetch(false) : queryingService.fetchOnlyDiscounts(),
       builder:(context,locals){
         if(!locals.hasData)
-          return Center(child: LoadingAnimation(),);
+          return Center(child: SpinningLogo (),);
         else if(locals.data.length == 0)
           return Center(
             child: Text("Ne pare rau, dar nu exista rezultate.\nIncearca sa cauti altceva.")

@@ -562,7 +562,17 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      DropdownButton( /// 'Select the Day' widget
+                      widget.local.hasReservations != true
+                      ? Text(
+                        "Localul nu este partener",
+                        style: TextStyle(
+                          fontSize: 18
+                        ),
+                      )
+                      :
+                      Column(
+                        children: [
+                        DropdownButton( /// 'Select the Day' widget
                         value: weekdays.keys.toList()[_selectedWeekday-1],
                         items: weekdays.keys
                         .map((String weekday) {
@@ -621,11 +631,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                     constraints: BoxConstraints(maxHeight: 100),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                      ]
                                     ),
-                                    child: 
-                                    ExpansionCard(
+                                    child: ExpansionCard(
                                       key: key,
                                       borderRadius: 20,
                                       backgroundColor: Colors.orange[600],
@@ -665,7 +672,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                       ],
                                       onExpansionChanged: (expanded) => setState((){
                                         isOfferExpanded[index] = expanded;
-                                        print(isOfferExpanded);
                                         bool allClosed = true;
                                         isOfferExpanded.forEach((element) {if(element) allClosed = false;});
                                         if(allClosed)
@@ -690,7 +696,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       ),
                       Divider(
                         thickness: 3,
-                      ),           
+                      ),
                       // The 'Discounts' Widget
                       widget.local.discounts != null && widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
                         ? Container(
@@ -799,6 +805,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             )
                           ),
                         ),
+                        ]
+                      ),
                       // The 'Second Image'      
                       Container(
                         padding: EdgeInsets.only(top:30),
@@ -820,174 +828,179 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ), 
                       SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        color: Colors.blueGrey.withOpacity(0.3),
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Center(
-                          child: Text(
-                            "Program:"
-                          ),
-                        )
-                      ),
-                      widget.local.schedule != null
-                      ? Container( // The 'Schedule'
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: weekdays.keys.map((String key) => Column(
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8),
-                                  child: Text(weekdays[key].substring(0,2))
-                                ),
-                                Text(
-                                  widget.local.schedule[key.toLowerCase()].substring(0,5),
-                                ),
-                                Text(
-                                  widget.local.schedule[key.toLowerCase()].substring(6,11),
-                                )
-                              ],
-                            ),
-                          ).toList()
-                        )
-                      )
-                      : Container(),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            RaisedButton(
-                              highlightElevation: 3,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)
-                              ),
-                              color:Colors.blueGrey,
-                              child: Text(
-                                "Meniu",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              onPressed: (){
-                                _launchInBrowser(widget.local.menu);
-                              }
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width*0.3,
-                              child: Text(
-                                widget.local.hasOpenspace == true
-                                ? "Terasa: Da"
-                                : "Terasa: Nu"
-                              ),
-                            )
-                          ],
-                        )
-                      ),
-                      RaisedButton(
-                        color: Colors.orange[600],
-                        highlightElevation: 3,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
+                          height: 15,
                         ),
-                        child: Text(
-                          "Rezerva o masa",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
+                      widget.local.hasReservations != true 
+                      ? Container() // An empty widget
+                      :Column(
+                        children : [
+                        Container(
+                          color: Colors.blueGrey.withOpacity(0.3),
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Center(
+                            child: Text(
+                              "Program:"
+                            ),
+                          )
                         ),
-                        onPressed: () async{
-                        if(!authService.currentUser.isAnonymous){
-                        if(widget.local.hasReservations == true){
-                          await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
-                          .collection('reservations_history')
-                          .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
-                            print(value.docs.length);
-                            bool ok = true;
-                            /// Checks if there are any upcoming unclaimed reservations
-                            value.docs.forEach((element) { 
-                              if(element.data()['accepted'] == null || (element.data()['accepted'] == true && element.data()['claimed'] == null))
-                                ok = false;
-                            });
-                            if(!ok){
-                                if(g.isSnackBarActive == true)
-                                  Scaffold.of(context).removeCurrentSnackBar();
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: MaterialButton(
-                                      onPressed: (){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ReservationsHistoryPage()));
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text("Ai deja o rezervare."),
-                                       ],
-                                      ),
-                                    ),
+                        widget.local.schedule != null
+                        ? Container( // The 'Schedule'
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: weekdays.keys.map((String key) => Column(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(weekdays[key].substring(0,2))
+                                  ),
+                                  Text(
+                                    widget.local.schedule[key.toLowerCase()].substring(0,5),
+                                  ),
+                                  Text(
+                                    widget.local.schedule[key.toLowerCase()].substring(6,11),
                                   )
-                                );
-                              }
-                            else if(widget.local.hasReservations == true){
-                              showGeneralDialog(
-                                context: context,
-                                transitionDuration: Duration(milliseconds: 600),
-                                barrierLabel: "",
-                                barrierDismissible: true,
-                                transitionBuilder: (context,animation,secAnimation,child){
-                                  CurvedAnimation _anim = CurvedAnimation(
-                                    parent: animation,
-                                    curve: Curves.bounceInOut,
-                                    reverseCurve: Curves.easeOutExpo
-                                  );
-                                  return ScaleTransition(
-                                    scale: _anim,
-                                    child: child
-                                  );
-                                },
-                                pageBuilder: (newContext,animation,secAnimation){
-                                  return Provider(
-                                    create: (context) => widget.local, 
-                                    child: ReservationPanel(context:newContext)
-                                  );
-                                }).then((reservation) => reservation != null 
-                                ? Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
-                                  )
-                                )
-                                : null
-                              ); 
-                            }
-                          });
-                          }
-                        else Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Localul nu accepta rezervari")
-                            )
-                          );
-                        }
-                      else if(authService.currentUser.isAnonymous == true)
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Trebuie sa te loghezi pentru a face rezervari."),
-                              action: SnackBarAction(
-                                textColor: Colors.white,
-                                label: "Log In", 
-                                onPressed: () async{
-
-                                  await authService.signOut();
-                                  Navigator.popUntil(context, (Route route){
-                                    return route.isFirst ? true : false;
-                                  });
+                                ],
+                              ),
+                            ).toList()
+                          )
+                        )
+                        : Container(),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              RaisedButton(
+                                highlightElevation: 3,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)
+                                ),
+                                color:Colors.blueGrey,
+                                child: Text(
+                                  "Meniu",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                onPressed: (){
+                                  _launchInBrowser(widget.local.menu);
                                 }
                               ),
+                              Container(
+                                width: MediaQuery.of(context).size.width*0.3,
+                                child: Text(
+                                  widget.local.hasOpenspace == true
+                                  ? "Terasa: Da"
+                                  : "Terasa: Nu"
+                                ),
+                              )
+                            ],
+                          )
+                        ),
+                        RaisedButton(
+                          color: Colors.orange[600],
+                          highlightElevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Text(
+                            "Rezerva o masa",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold
                             ),
-                          );
-                      }
-                      
+                          ),
+                          onPressed: () async{
+                          if(!authService.currentUser.isAnonymous){
+                          if(widget.local.hasReservations == true){
+                            await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
+                            .collection('reservations_history')
+                            .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
+                              print(value.docs.length);
+                              bool ok = true;
+                              /// Checks if there are any upcoming unclaimed reservations
+                              value.docs.forEach((element) { 
+                                if(element.data()['accepted'] == null || (element.data()['accepted'] == true && element.data()['claimed'] == null))
+                                  ok = false;
+                              });
+                              if(!ok){
+                                  if(g.isSnackBarActive == true)
+                                    Scaffold.of(context).removeCurrentSnackBar();
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: MaterialButton(
+                                        onPressed: (){
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ReservationsHistoryPage()));
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text("Ai deja o rezervare."),
+                                        ],
+                                        ),
+                                      ),
+                                    )
+                                  );
+                                }
+                              else if(widget.local.hasReservations == true){
+                                showGeneralDialog(
+                                  context: context,
+                                  transitionDuration: Duration(milliseconds: 600),
+                                  barrierLabel: "",
+                                  barrierDismissible: true,
+                                  transitionBuilder: (context,animation,secAnimation,child){
+                                    CurvedAnimation _anim = CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.bounceInOut,
+                                      reverseCurve: Curves.easeOutExpo
+                                    );
+                                    return ScaleTransition(
+                                      scale: _anim,
+                                      child: child
+                                    );
+                                  },
+                                  pageBuilder: (newContext,animation,secAnimation){
+                                    return Provider(
+                                      create: (context) => widget.local, 
+                                      child: ReservationPanel(context:newContext)
+                                    );
+                                  }).then((reservation) => reservation != null 
+                                  ? Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                                    )
+                                  )
+                                  : null
+                                ); 
+                              }
+                            });
+                            }
+                          else Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Localul nu accepta rezervari")
+                              )
+                            );
+                          }
+                        else if(authService.currentUser.isAnonymous == true)
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Trebuie sa te loghezi pentru a face rezervari."),
+                                action: SnackBarAction(
+                                  textColor: Colors.white,
+                                  label: "Log In", 
+                                  onPressed: () async{
+
+                                    await authService.signOut();
+                                    Navigator.popUntil(context, (Route route){
+                                      return route.isFirst ? true : false;
+                                    });
+                                  }
+                                ),
+                              ),
+                            );
+                          }
+                        ),
+                        ]
                       ),
                       Container( // Third Image
                         padding: EdgeInsets.only(top:30),

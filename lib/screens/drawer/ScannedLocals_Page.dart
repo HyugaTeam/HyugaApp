@@ -96,7 +96,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                             future: placeImage,
                                             builder: (context,img){
                                               if(!img.hasData)
-                                                return CircularProgressIndicator();
+                                                return SpinningLogo();
                                               else
                                                 return img.data;
                                             }

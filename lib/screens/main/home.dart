@@ -82,41 +82,56 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
       builder: (context, ss) {
       if(authService.currentUser.isAnonymous != true)
         if(!ss.hasData) // Checks if the user is seated or not
-          return Scaffold(body: Center(child: CircularProgressIndicator(),));
+          return Scaffold(body: Center(child: SpinningLogo(),));
         else if(ss.data.docs.length == 1 )
           return SeatingInterface(place: ss.data.docs[0]);
-        return StreamBuilder<bool>(
-          stream: QueryService.userLocationStream.stream,
-          builder: (context, location) {
-            if(!location.hasData && queryingService.userLocation == null)
-              return Scaffold(
-                body: Center(
-                  child: SpinningLogo(),
-                )
-              );
-            else if(location.data == false)
-              return Scaffold(body: Container(
-                padding: EdgeInsets.only(left: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/hyuga-logo.png',
-                      width:50
-                    ),
-                    SizedBox(height: 40,),
-                    Text(
-                      "Hyuga nu are acces la locatie :( \n Va rugam sa permiteti accesul din setari.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ],
-                ),
-              ));
-         else {
+        // return StreamBuilder<bool>(
+        //   stream: QueryService.userLocationStream.stream,
+        //   builder: (context, hasLocation) {
+        //     bool prevData;
+        //     QueryService.userLocationStream.stream.last.then((prevData) => prevData = prevData);
+        //     if(!hasLocation.hasData && queryingService.userLocation == null)
+        //       return Scaffold(
+        //         body: Center(
+        //           child: SpinningLogo(),
+        //         )
+        //       );
+        //     else if(hasLocation.data == false || prevData == false) // Permission for location denied
+        //       return Scaffold(body: Container(
+        //         padding: EdgeInsets.only(left: 30),
+        //         child: Column(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: [
+        //             Image.asset(
+        //               'assets/images/hyuga-logo.png',
+        //               width:50
+        //             ),
+        //             SizedBox(height: 40,),
+        //             RichText(
+        //               textAlign: TextAlign.center,
+        //               text: TextSpan(
+        //                 children: [
+        //                   TextSpan(
+        //                     text: "Hyuga nu are acces la locatie :(\n"
+
+        //                   ),
+        //                   TextSpan(
+        //                     text: "Va rugam sa permiteti accesul din setari."
+        //                   )                          
+        //                 ],
+        //                 style: TextStyle(
+        //                   fontFamily: 'Comfortaa',
+        //                   fontSize: 16,
+        //                   color: Colors.black,
+        //                   fontWeight: FontWeight.bold
+        //                 )
+        //               ),
+                      
+        //             ),
+        //           ],
+        //         ),
+        //       ));
+         //else {
             return Scaffold(
               extendBodyBehindAppBar: true,
               backgroundColor: Theme.of(context).backgroundColor,
@@ -358,11 +373,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 } 
               ),
             );
-            }
+           // }
             
           }
         );
      }
-    );
+    //);
   }
-}
+// }

@@ -7,6 +7,7 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
 
 class SeatingInterface extends StatefulWidget {
@@ -213,7 +214,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
               future: getPlaceData(),
               builder: (context, place) {
                 if(!place.hasData)
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: SpinningLogo());
                 else {
                   return Stack(
                   alignment: AlignmentDirectional.topCenter,

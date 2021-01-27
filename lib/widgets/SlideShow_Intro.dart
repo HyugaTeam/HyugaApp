@@ -13,6 +13,12 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
   final int _numPages = 5;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
+  Image _secondSlideGIF;
+  Image _thirdSlideGIF;
+  Image _fourthSlideGIF;
+  Image _fifthSlideGIF;
+  Image _firstSlideGIF; 
+
 
   List<Widget> _buildPageIndicator() {
     List<Widget> list = [];
@@ -41,6 +47,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
   @override
   void initState() {
     super.initState();
+    _fetchGIFs();
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300)
@@ -164,18 +171,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      child: Image.network(
-                                        "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
-                                        ,loadingBuilder: (context, child, loadingProgress){
-                                          if(loadingProgress == null)
-                                            return child;
-                                          return CircularProgressIndicator(
-                                            value: loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                                : null,
-                                          );
-                                        },
-                                      )
+                                      child: _firstSlideGIF
                                     ),
                                   )
                                 ],
@@ -241,18 +237,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      child: Image.network(
-                                        "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Fsecond-slide.gif?alt=media&token=cf46f90d-7d05-4e89-a0ad-f292332e238b"
-                                        ,loadingBuilder: (context, child, loadingProgress){
-                                          if(loadingProgress == null)
-                                            return child;
-                                          return CircularProgressIndicator(
-                                            value: loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                                : null,
-                                          );
-                                        },
-                                      )
+                                      child: _secondSlideGIF
                                     ),
                                   )
                                 ],
@@ -269,9 +254,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      child: Image.network(
-                                        "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Fthird-slide.gif?alt=media&token=7fbf622c-35ef-41dc-a36a-c2bdbf8be157"
-                                      )
+                                      child: _thirdSlideGIF
                                     ),
                                   ),
                                   SizedBox(height: 30.0),
@@ -420,18 +403,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      child: Image.network(
-                                        "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffourth-slide.gif?alt=media&token=16c7d364-2a8d-483e-b9bc-40ff87ac7004"
-                                        ,loadingBuilder: (context, child, loadingProgress){
-                                          if(loadingProgress == null)
-                                            return child;
-                                          return CircularProgressIndicator(
-                                            value: loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                                : null,
-                                          );
-                                        },
-                                      )
+                                      child: _fourthSlideGIF
                                     ),
                                   ),
                                   SizedBox(height: 15.0),
@@ -499,18 +471,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     height: 270,
                                     child: ClipRect(
                                       clipper: MyClipper(),
-                                      child: Image.network(
-                                        "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffifth-slide.gif?alt=media&token=4b71d43f-3c9a-4e2c-8e8a-d1b2010be379"
-                                        ,loadingBuilder: (context, child, loadingProgress){
-                                          if(loadingProgress == null)
-                                            return child;
-                                          return CircularProgressIndicator(
-                                            value: loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                                : null,
-                                          );
-                                        },
-                                      )
+                                      child: _fifthSlideGIF
                                     ),
                                   ),
                                   SizedBox(height: 15.0),
@@ -615,6 +576,69 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
               ),
             )
           : Text(''),
+    );
+  }
+
+  void _fetchGIFs(){
+    _firstSlideGIF = Image.network(
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+      ,loadingBuilder: (context, child, loadingProgress){
+        if(loadingProgress == null)
+          return child;
+        return CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              : null,
+        );
+      },
+    );
+_secondSlideGIF = Image.network(
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+      ,loadingBuilder: (context, child, loadingProgress){
+        if(loadingProgress == null)
+          return child;
+        return CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              : null,
+        );
+      },
+    );
+    _thirdSlideGIF = Image.network(
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+      ,loadingBuilder: (context, child, loadingProgress){
+        if(loadingProgress == null)
+          return child;
+        return CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              : null,
+        );
+      },
+    );
+    _fourthSlideGIF = Image.network(
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+      ,loadingBuilder: (context, child, loadingProgress){
+        if(loadingProgress == null)
+          return child;
+        return CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              : null,
+        );
+      },
+    );
+    _fifthSlideGIF = Image.network(
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+      ,loadingBuilder: (context, child, loadingProgress){
+        if(loadingProgress == null)
+          return child;
+        return CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              : null,
+        );
+      },
     );
   }
 }
