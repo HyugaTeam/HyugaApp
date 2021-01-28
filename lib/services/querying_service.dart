@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
@@ -13,29 +14,73 @@ import 'package:rxdart/rxdart.dart';
 // Class responsible for the whole querying service for locals
 // This class acts as a singleton
 class QueryService{
-
-
+  
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final StorageReference storageRef = storage.ref();
   static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
+  PublishSubject<bool> locationEnabledStream = PublishSubject<bool>();
   static LocationData _userLocation ;
   
+  static final QueryService _instance = new QueryService._privateConstructor();
+
+  factory QueryService(){
+    return _instance;
+  }
+
+  /// The actual constructor of the class
+  QueryService._privateConstructor(){
+    checkAndRequestForLocationService();
+    locationEnabledStream.listen((value) {print(value.toString()+ " locationenabledStream");});
+    //getUserLocation().then((value) => _userLocation = value);
+    Location.instance.changeSettings(
+      interval: 10000
+    );
+  }
+
   /// A getter for the user's location
   LocationData get userLocation{
     return _userLocation;
   }
 
-  QueryService(){
-    getUserLocation().then((value) => _userLocation = value);
-    Location.instance.changeSettings(
-      interval: 10000
-    );
-    Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
-      _userLocation = instantUserLocation;
+  // Checks if the locations is enabled, then ask for enabling the location, then ACTUALLY gets the location
+  void checkAndRequestForLocationService() async{
+    bool _serviceEnabled = await Location.instance.serviceEnabled();
+    if(!_serviceEnabled){
+      print("cere serviciu");
+      bool result = await Location.instance.requestService();
+      if(!result)
+        return locationEnabledStream.add(false);
+    }
+    locationEnabledStream.add(true);
+    try {
+      PermissionStatus result = await Location.instance.requestPermission();
+      if(result == PermissionStatus.denied || result == PermissionStatus.deniedForever)
+        throw(PlatformException(code: result == PermissionStatus.denied ? "PERMISSION_DENIED" : "PERMISSION_DENIED_NEVER_ASK"));
+      //askPermission();
+      await Location.instance.getLocation();
       userLocationStream.add(true);
-    });
+      Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
+        print(instantUserLocation);
+        _userLocation = instantUserLocation;
+        userLocationStream.add(true);
+      });
+    }
+    catch(error){
+      if(error.code == "PERMISSION_DENIED_NEVER_ASK" || error.code == "PERMISSION_DENIED")
+        userLocationStream.add(false);
+      
+    }
   }
+
+  void askPermission() async{
+    PermissionStatus result = await Location.instance.requestPermission();
+    if(result == PermissionStatus.granted)
+      checkAndRequestForLocationService();
+  }
+  
+
+  
 
   // Method that converts a map of Firebase Locals to OUR Locals
   List<Local> toLocal(var localsMap){
@@ -176,26 +221,27 @@ class QueryService{
   // Asks for permission and gets the User's location 
   Future<LocationData> getUserLocation() async{
 
-    Location location = new Location();
-    bool _serviceEnabled;
-    LocationData position;
+    // Location location = new Location();
+    // LocationData position;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return null;
-      }
-    }
-    try {
-      position = await location.getLocation();
-      userLocationStream.add(true);
-    }
-    catch(error){
-      if(error.code == "PERMISSION_DENIED_NEVER_ASK" || error.code == "PERMISSION_DENIED")
-        userLocationStream.add(false);
-    }
-    return position;
+    
+    // //bool _serviceEnabled;
+    // // _serviceEnabled = await location.serviceEnabled();
+    // // if (!_serviceEnabled) {
+    // //   locationEnabledStream.add(false);
+    // // }
+    // // else locationEnabledStream.add(true);
+
+    // try {
+    //   position = await location.getLocation();
+    //   userLocationStream.add(true);
+    // }
+    // catch(error){
+    //   if(error.code == "PERMISSION_DENIED_NEVER_ASK" || error.code == "PERMISSION_DENIED")
+    //     userLocationStream.add(false);
+      
+    // }
+    // return position;
 
   }
  
