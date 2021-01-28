@@ -66,7 +66,7 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
                     options[index],
                     style: TextStyle(
                         fontFamily: 'Comfortaa',
-                        fontSize: 21.5,
+                        fontSize: 21*(1/MediaQuery.of(context).textScaleFactor),
                     ),
                   ),
               );

@@ -127,8 +127,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                           children: <Widget>[
                             Padding( /// First Slide
                               padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: ListView(
+                                //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(height: 30.0),
                                   Align(
@@ -180,8 +180,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                             //---------------------------------END OF SLIDE ONE--------------------------------------
                             Padding( /// Second Slide
                               padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: ListView(
+                                //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(height: 30.0),
                                   Align(
@@ -246,8 +246,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                             //---------------------------------END OF SLIDE TWO--------------------------------------
                             Padding( /// Third Slide
                               padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: ListView(
+                                //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(
                                     width: 150,
@@ -345,8 +345,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                             //---------------------------------END OF SLIDE THREE--------------------------------------
                             Padding( /// Fourth Slide
                               padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: ListView(
+                                //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(height: 15.0),
                                   Align(
@@ -442,8 +442,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                             //---------------------------------END OF SLIDE FOUR--------------------------------------
                             Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: ListView(
+                                //crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(height: 30.0),
                                   Align(

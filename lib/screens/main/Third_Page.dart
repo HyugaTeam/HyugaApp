@@ -643,7 +643,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                         children: [
                                           Text(
                                             widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
-                                            style: TextStyle(color: Colors.black,fontSize: 13, fontWeight: FontWeight.bold),
+                                            style: TextStyle(color: Colors.black,fontSize: 13*(1/MediaQuery.of(context).textScaleFactor), fontWeight: FontWeight.bold),
                                           ),
                                           Divider(
                                             thickness: 2
@@ -654,7 +654,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                             widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
                                             [index]['interval'].substring(6,11),
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
                                               color: Colors.black
                                             ),
                                           )  // 
@@ -666,6 +666,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                           child: Text(
                                             widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
                                             style: TextStyle(
+                                              fontSize: 14*(1/MediaQuery.of(context).textScaleFactor),
                                             ),
                                           ),
                                         )
@@ -769,7 +770,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                   widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
                                                   [index].substring(6,11),
                                                 style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
                                                   //fontFamily: 'Roboto'
                                                 ),
                                               )  // A concatenation of the string representing the time interval

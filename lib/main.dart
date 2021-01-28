@@ -27,57 +27,60 @@ void main() async{
   
   runApp(StreamProvider<OurUser>.value( 
       value: authService.user,
-      child: MaterialApp(
-        /// Locales aren't used yet
-        // supportedLocales: [
-        //   Locale('en','US'),
-        //   Locale('ro','RO')
-        // ],
-        // localizationsDelegates: [
-        //   GlobalWidgetsLocalizations.delegate,
-        //   GlobalMaterialLocalizations.delegate
-        // ],
-        debugShowCheckedModeBanner: false,
-        debugShowMaterialGrid: false,
-        initialRoute: 'wrapper/',
-        routes: {
-          'wrapper/': (context) => Wrapper(),
+      child: StreamProvider<bool>.value(
+        value: queryingService.locationEnabledStream.stream,
+        child: MaterialApp(
+          /// Locales aren't used yet
+          // supportedLocales: [
+          //   Locale('en','US'),
+          //   Locale('ro','RO')
+          // ],
+          // localizationsDelegates: [
+          //   GlobalWidgetsLocalizations.delegate,
+          //   GlobalMaterialLocalizations.delegate
+          // ],
+          debugShowCheckedModeBanner: false,
+          debugShowMaterialGrid: false,
+          initialRoute: 'wrapper/',
+          routes: {
+            'wrapper/': (context) => Wrapper(),
 
-          '/': (context) => Home(),
+            '/': (context) => Home(),
 
-          'loading/wrapper/': (context) => Wrapper(),
+            'loading/wrapper/': (context) => Wrapper(),
 
-          '/second': (context) => SecondPage(),
-        }, 
-        // Route generator (designed for the Third Page only)
-        onGenerateRoute: ThirdPageGenerator.generateRoute,
+            '/second': (context) => SecondPage(),
+          }, 
+          // Route generator (designed for the Third Page only)
+          onGenerateRoute: ThirdPageGenerator.generateRoute,
 
-        navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
+          navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
 
-        theme: ThemeData(
-          inputDecorationTheme: InputDecorationTheme(
-            labelStyle: TextStyle(
-              color: Colors.white
+          theme: ThemeData(
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: TextStyle(
+                color: Colors.white
+              ),
+              suffixStyle: TextStyle(
+                color: Colors.white
+              )
             ),
-            suffixStyle: TextStyle(
-              color: Colors.white
-            )
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: Colors.orange[600]
+            ),
+            appBarTheme: AppBarTheme(
+              color: Colors.blueGrey,
+            ),
+            textTheme: TextTheme(
+              subtitle2: TextStyle(
+                color: Colors.black
+              ) 
+            ),
+            highlightColor: Colors.orange[600],
+            backgroundColor: Colors.white,
+            accentColor: Colors.blueGrey,
+            fontFamily: 'Comfortaa'
           ),
-          snackBarTheme: SnackBarThemeData(
-            backgroundColor: Colors.orange[600]
-          ),
-          appBarTheme: AppBarTheme(
-            color: Colors.blueGrey,
-          ),
-          textTheme: TextTheme(
-            subtitle2: TextStyle(
-              color: Colors.black
-            ) 
-          ),
-          highlightColor: Colors.orange[600],
-          backgroundColor: Colors.white,
-          accentColor: Colors.blueGrey,
-          fontFamily: 'Comfortaa'
         ),
       ),
     )

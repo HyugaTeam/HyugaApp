@@ -150,7 +150,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                       label: Text(
                         buttonText,
                         style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 28*(1/MediaQuery.of(context).textScaleFactor) ,
                             color: textColor,
                             letterSpacing: -1,
                             fontFamily: 'Comfortaa'

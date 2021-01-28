@@ -93,54 +93,75 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
             minWidth: MediaQuery.of(context).size.width
           ),
           alignment: Alignment(0, 0),
-          child: Column(
-            /// Replaced 'Stack' with 'Column' for the Buttons
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              SizedBox(height: MediaQuery.of(context).size.height*0.01,),
-              listOfButtons[0],
-              listOfButtons[1],
-              listOfButtons[2],
-              listOfButtons[3],
-              listOfButtons[4],
-              Container(/// The 'Search' Button
-                padding: EdgeInsets.symmetric(),
-                child: Center(
-                  child: MaterialButton(
-                    highlightColor: Colors.transparent,
-                    color: Colors.blueGrey,
-                    splashColor: Colors.orange[600],
-                    minWidth: 120,
-                    height: 44,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Icon(Icons.search, color: Colors.white),
-                    onPressed: () async {
-                      if (checkOptions()) {
-                        Navigator.pushNamed(context, '/second');
-                      } 
-                      else {
-                        if(g.isSnackBarActive == false){
-                        print("incomplet");
-                          g.isSnackBarActive = true;
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                              'Selecteaza fiecare camp.',
-                              textAlign: TextAlign.center,
-                            ),
-                            backgroundColor: Colors.orange[600],
-                          )).closed.then((SnackBarClosedReason reason){
-                            g.isSnackBarActive = false;
-                          });
+          child: Theme(
+            data: ThemeData(
+              textTheme: TextTheme(
+                headline1: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor*0.5*15
+                ),
+                 headline2: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor*0.5*15
+                ),
+                 headline3: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor*0.5*15
+                ),
+                 headline4: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor*0.5*15
+                ),
+                 headline5: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor*0.5*15
+                )
+              )
+            ),
+                      child: Column(
+              /// Replaced 'Stack' with 'Column' for the Buttons
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+                listOfButtons[0],
+                listOfButtons[1],
+                listOfButtons[2],
+                listOfButtons[3],
+                listOfButtons[4],
+                Container(/// The 'Search' Button
+                  padding: EdgeInsets.symmetric(),
+                  child: Center(
+                    child: MaterialButton(
+                      highlightColor: Colors.transparent,
+                      color: Colors.blueGrey,
+                      splashColor: Colors.orange[600],
+                      minWidth: 120,
+                      height: 44,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Icon(Icons.search, color: Colors.white),
+                      onPressed: () async {
+                        if (checkOptions()) {
+                          Navigator.pushNamed(context, '/second');
+                        } 
+                        else {
+                          if(g.isSnackBarActive == false){
+                          print("incomplet");
+                            g.isSnackBarActive = true;
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                'Selecteaza fiecare camp.',
+                                textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Colors.orange[600],
+                            )).closed.then((SnackBarClosedReason reason){
+                              g.isSnackBarActive = false;
+                            });
+                          }
                         }
                       }
-                    }
-                  )
+                    )
+                  ),
                 ),
-              ),
-              
-            ],
+                
+              ],
+            ),
           ),
         ),
       ),
