@@ -21,6 +21,7 @@ class Local{
   final String menu; // A link to a webpage containing the Place's menu
   final bool hasOpenspace;
   final bool hasReservations;
+  final bool isPartner;
   Image finalImage;
 
   Local({
@@ -40,7 +41,8 @@ class Local{
     this.deals,
     this.menu,
     this.hasOpenspace,
-    this.hasReservations
+    this.hasReservations,
+    this.isPartner
   }){
     image.then((image) => finalImage = image);
   }

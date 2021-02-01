@@ -74,6 +74,7 @@ class Wrapper extends StatelessWidget {
           builder: (context, hasLocation) {
             bool prevData;
             QueryService.userLocationStream.stream.last.then((prevData) => prevData = prevData);
+            print(hasLocation.hasData.toString() + " hasData");
             if(!hasLocation.hasData && queryingService.userLocation == null)
               return Scaffold(
                 body: Center(
@@ -135,7 +136,7 @@ class Wrapper extends StatelessWidget {
                     stream: authService.loading,
                     builder: (context, snapshot) {
                       if(!snapshot.hasData && authService.isLoading == null)
-                        return Scaffold(body: Center(child: LoadingAnimation(),),);
+                        return Scaffold(body: Center(child: SpinningLogo(),),);
                       else if(authService.currentUser.isManager == true)
                         return AdminPanel();
                       else if(g.isNewUser)

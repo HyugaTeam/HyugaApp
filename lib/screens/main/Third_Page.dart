@@ -89,9 +89,15 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   AnimationController _animationController;
   Animation<double> _animation;
 
+  GlobalKey _reservationButtonKey = GlobalKey();
+
   ScrollController _scrollController = ScrollController(
     keepScrollOffset: true,
     initialScrollOffset: 0
+  );
+  ScrollPhysics _scrollPhysics = ScrollPhysics();
+  ScrollController _listViewScrollController = ScrollController(
+
   );
   double dealWidgetHeight = 80;
   List<bool> isOfferExpanded;
@@ -279,6 +285,11 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       curve: Curves.elasticInOut
     );
 
+    // _listViewScrollController.attach(ScrollPosition(
+    //   context: ScrollContext(),
+    //   physics: ScrollP
+    // ));
+
     _scrollController.addListener(() {
       setState(() {
         if(_scrollController.offset<197){
@@ -303,6 +314,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
           _animationController.forward();
           return NestedScrollView(
             controller: _scrollController,
+            physics: _scrollPhysics,
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 new SliverAppBar(
@@ -349,7 +361,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
             },
             body: Container(
               child: ListView(
-                physics: ScrollPhysics(),
+               // controller: _listViewScrollController,
+               // physics: ScrollPhysics(parent: _scrollPhysics),
+                //physics: NeverScrollableScrollPhysics(parent: _scrollPhysics),
                 children: [
                   Column(
                     children: <Widget>[
@@ -562,7 +576,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      widget.local.hasReservations != true
+                      (widget.local.isPartner != null) 
                       ? Text(
                         "Localul nu este partener",
                         style: TextStyle(
@@ -605,7 +619,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                ),
                                 SizedBox(
                                   width: 150
                                 )
@@ -690,9 +707,26 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       )
                       : Padding(
                         padding: const EdgeInsets.symmetric(vertical: 30.0),
-                        child: Center(child: Text(
-                          "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} oferte.", 
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                ),
+                                SizedBox(
+                                  width: 150
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 10,),
+                            Center(child: Text(
+                              "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} oferte.", 
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+                            ),
+                          ],
                         ),
                       ),
                       Divider(
@@ -734,19 +768,30 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                         children: <Widget>[
                                           GestureDetector(
                                             onTap: (){
-                                              if(g.isSnackBarActive == false){
-                                                g.isSnackBarActive = true;
-                                                Scaffold.of(context).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                    backgroundColor: Colors.orange[600],
-                                                  )).closed.then((SnackBarClosedReason reason){
-                                                  g.isSnackBarActive = false;
-                                                });
-                                              }
+                                              // RenderBox object = _reservationButtonKey.currentContext.findRenderObject();
+                                              // var size = object.localToGlobal(Offset.zero);
+                                              // print(size.dy+1000);
+                                              // _listViewScrollController.animateTo(
+                                              //   size.dy,
+                                              //   curve: Curves.linear,
+                                              //   duration: Duration(milliseconds: 300)
+                                              // ).then(
+                                              //   (value) {
+                                                  if(g.isSnackBarActive == false){
+                                                    g.isSnackBarActive = true;
+                                                    Scaffold.of(context).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                        backgroundColor: Colors.orange[600],
+                                                      )).closed.then((SnackBarClosedReason reason){
+                                                      g.isSnackBarActive = false;
+                                                    });
+                                                  }
+                                               // }
+                                              //);
                                             },
                                             child: Container(
                                               alignment: Alignment.center,
@@ -799,11 +844,25 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         )
                         : Padding(
                           padding: const EdgeInsets.symmetric(vertical: 30.0),
-                          child: Center(
-                            child: Text(
-                              "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} reduceri.", 
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            )
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("Reduceri", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                  ),
+                                  SizedBox(width: MediaQuery.of(context).size.width*0.2,)
+                                ],
+                              ),
+                              Center(
+                                child: Text(
+                                  "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} reduceri.", 
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                )
+                              ),
+                            ],
                           ),
                         ),
                         ]
@@ -900,6 +959,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           )
                         ),
                         RaisedButton(
+                          key: _reservationButtonKey,
                           color: Colors.orange[600],
                           highlightElevation: 3,
                           shape: RoundedRectangleBorder(

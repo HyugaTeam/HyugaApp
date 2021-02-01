@@ -57,7 +57,13 @@ class QueryService{
       PermissionStatus result = await Location.instance.requestPermission();
       if(result == PermissionStatus.denied || result == PermissionStatus.deniedForever)
         throw(PlatformException(code: result == PermissionStatus.denied ? "PERMISSION_DENIED" : "PERMISSION_DENIED_NEVER_ASK"));
-      //askPermission();
+      // PermissionStatus res = await Location.instance.hasPermission();
+      // print(res.toString() + "res");
+      // if(res == PermissionStatus.denied || res == PermissionStatus.deniedForever){
+      //   print("sssssssssssssssssssss");
+      //   userLocationStream.add(false);
+      //   return askPermission();
+      // }
       await Location.instance.getLocation();
       userLocationStream.add(true);
       Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
@@ -296,7 +302,8 @@ class QueryService{
       deals: placeData.containsKey('deals') ? placeData['deals']: null,
       menu: placeData.containsKey('menu') ? placeData['menu']: null,
       hasOpenspace: placeData.containsKey('open_space') ? placeData['open_space']: null,
-      hasReservations: placeData.containsKey('reservations') ? placeData['reservations']: null
+      hasReservations: placeData.containsKey('reservations') ? placeData['reservations']: null,
+      isPartner: placeData.containsKey('partner') ? placeData['partner']: null
     );
   }
 
