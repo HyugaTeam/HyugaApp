@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
               children: <Widget>[
                 SizedBox(height: 200),
                 Text(
-                  'Register',
+                  'Inregistrare',
                   style: TextStyle(
                     fontFamily: 'Comfortaa',
                     fontSize: 40
@@ -78,7 +78,7 @@ class _RegisterState extends State<Register> {
                         TextFormField(
                           validator: (input) => input.length < 6 ? "Your password must have at least 6 characters" : null,
                           decoration: InputDecoration(
-                            labelText: 'Password',
+                            labelText: 'Parola',
                             fillColor: Colors.orange[600]
                           ),
                           obscureText: true,
@@ -90,6 +90,8 @@ class _RegisterState extends State<Register> {
                         RaisedButton(
                           elevation: 0,
                           highlightElevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          color: Theme.of(context).highlightColor,
                           child: Text("Sign up"),
                           onPressed: () async{
                             if(_formKey.currentState.validate()){
