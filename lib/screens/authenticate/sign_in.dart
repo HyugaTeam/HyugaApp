@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,27 +37,32 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
     );
   }
 
-  void handleAuthError(BuildContext context, signInResult){
-
-    void showErrorSnackBar(String message){
-      if(g.isSnackBarActive == false){
-        g.isSnackBarActive = true;
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-          )
-        ).closed.then((reason) => g.isSnackBarActive = false);
-
-      }
+  void showErrorSnackBar(BuildContext context, String message){
+    if(g.isSnackBarActive == true){
+      Scaffold.of(context).removeCurrentSnackBar();
     }
+    if(g.isSnackBarActive == false){
+      g.isSnackBarActive = true;
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(context).highlightColor,
+        )
+      ).closed.then((reason) => g.isSnackBarActive = false);
+    }
+  }
+  void handleAuthError(BuildContext context, FirebaseAuthException signInResult){
+    print("code"+signInResult.code);
+    if(signInResult.code == 'user-not-found')
+      showErrorSnackBar(context, "Emailul si parola sunt gresite");
     if(signInResult.code == 'ERROR_INVALID_CREDENTIAL')
-      showErrorSnackBar( "Bad credentials! The selected sign-up option is invalid!");
+      showErrorSnackBar(context, "Bad credentials! The selected sign-up option is invalid!");
     if(signInResult.code == 'ERROR_USER_DISABLED') 
-      showErrorSnackBar( "The entered email is invalid!");
+      showErrorSnackBar(context, "The entered email is invalid!");
     if(signInResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 
-      showErrorSnackBar("The entered email is already in use! Try another sign-in method.");
+      showErrorSnackBar(context, "The entered email is already in use! Try another sign-in method.");
     if(signInResult.code == "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")
-      showErrorSnackBar("The email used is already used by another account.");
+      showErrorSnackBar(context, "The email used is already used by another account.");
 }
 
   @override
@@ -302,7 +308,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           hoverColor: Colors.blue
                                         ),
                                         onChanged: (value){
-                                          setState(()=> email = value);
+                                          setState(()=> email = value.trim());
                                         }
                                       ),
                                       SizedBox(height: 20),
@@ -321,11 +327,12 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                         
                                         child: Text("Log in"),
                                         onPressed: () async{
-                                          print(email);
-                                          print(password);
                                           dynamic signInResult = await authService.signInWithEmailAndPassword(email, password);
-                                          if(signInResult.runtimeType == PlatformException) 
-                                            handleAuthError(context, signInResult);
+                                          //print(signInResult.runtimeType);
+                                          if(signInResult.runtimeType == FirebaseAuthException) {
+                                            FirebaseAuthException authException = signInResult;
+                                            handleAuthError(context, authException);
+                                          }
                                         },
                                       ),
                                       Container(

@@ -16,9 +16,9 @@ class ScannedCodesHistoryPage extends StatelessWidget {
         child: ListView.builder(
           itemCount: _managedLocal.analytics['scanned_codes'].length,
           itemBuilder: (context,index) => ListTile(
-            title: Text("Data: " + 
+            title: Text("Data:   " + 
             DateTime.fromMillisecondsSinceEpoch(
-            _managedLocal.analytics['scanned_codes'][index]['date'].millisecondsSinceEpoch, isUtc: true)
+            _managedLocal.analytics['scanned_codes'][index]['date_start'].millisecondsSinceEpoch, isUtc: true)
             .toLocal().toString()
             ),
             subtitle: Text("Suma: "+_managedLocal.analytics['scanned_codes'][index]['total'].toString()),

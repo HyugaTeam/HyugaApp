@@ -242,7 +242,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       return null; // if nothing else happens
   }
 
-  Future<void> _launchInBrowser(String url, [bool universalLinks = false]) async {
+  Future<void> _launchInBrowser(BuildContext context, String url, [bool universalLinks = false]) async {
     if (await canLaunch(url)) {
       await launch(
         url,
@@ -251,8 +251,15 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
         forceWebView: false,
         headers: <String, String>{'my_header_key': 'my_header_value'},
       );
-    } else {
-      throw 'Could not launch $url';
+    } else if(!universalLinks){
+      Scaffold.of(context).removeCurrentSnackBar();
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Meniul nu este disponibil"
+          )
+        )
+      );
     }
   }
   
@@ -535,6 +542,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 +"a1111c8c-c720-46c3-8534-2fcdd730040d"
                                 ;
                                 _launchInBrowser(
+                                  context,
                                   deeplink,
                                   //"https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
                                   // "https://m.uber.com/ul/
@@ -576,7 +584,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      (widget.local.isPartner != null) 
+                      !widget.local.isPartner
                       ? Text(
                         "Localul nu este partener",
                         style: TextStyle(
@@ -890,9 +898,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       SizedBox(
                           height: 15,
                         ),
-                      widget.local.hasReservations != true 
-                      ? Container() // An empty widget
-                      :Column(
+                      //widget.local.hasReservations != true 
+                      //? Container() // An empty widget
+                      //:
+                      Column(
                         children : [
                         Container(
                           color: Colors.blueGrey.withOpacity(0.3),
@@ -944,7 +953,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   ),
                                 ),
                                 onPressed: (){
-                                  _launchInBrowser(widget.local.menu);
+                                  _launchInBrowser(context, widget.local.menu);
                                 }
                               ),
                               Container(

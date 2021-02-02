@@ -128,20 +128,21 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     List todayDiscounts;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
     /// Checks if the place has discounts in the current weekday
-    if(discounts.containsKey(currentWeekday) != true)
-      return null;
-    else {
-      todayDiscounts = discounts[currentWeekday];
-      for(int i = 0 ; i< todayDiscounts.length; i++){
-        String startHour = todayDiscounts[i].toString().substring(0,5);
-        String endHour = todayDiscounts[i].toString().substring(6,11);
-        String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
-        print(startHour+endHour);
-        if(startHour.compareTo(currentTime) <=0 
-        && endHour.compareTo(currentTime) >=0)
-          return int.parse(todayDiscounts[i].toString().substring(12,14));
+    if(discounts != null)
+      if(discounts.containsKey(currentWeekday) != true)
+        return null;
+      else {
+        todayDiscounts = discounts[currentWeekday];
+        for(int i = 0 ; i< todayDiscounts.length; i++){
+          String startHour = todayDiscounts[i].toString().substring(0,5);
+          String endHour = todayDiscounts[i].toString().substring(6,11);
+          String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
+          print(startHour+endHour);
+          if(startHour.compareTo(currentTime) <=0 
+          && endHour.compareTo(currentTime) >=0)
+            return int.parse(todayDiscounts[i].toString().substring(12,14));
+        }
       }
-    }
     return 0;
   }
 
@@ -150,22 +151,24 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     List todayDeals;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
     /// Checks if the place has deals in the current weekday
-    if(deals.containsKey(currentWeekday) != true)
-      return null;
-    else {
-      todayDeals = deals[currentWeekday];
-      List<Map<String,dynamic>> result = <Map<String,dynamic>>[];
-      for(int i = 0 ; i< todayDeals.length; i++){
-        String startHour = todayDeals[i]['interval'].toString().substring(0,5); 
-        String endHour = todayDeals[i]['interval'].toString().substring(6,11);
-        String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
-        print(startHour+endHour);
-        if(startHour.compareTo(currentTime) <=0 
-        && endHour.compareTo(currentTime) >=0)
-          result.add(todayDeals[i]);
+    if(deals != null)
+      if(deals.containsKey(currentWeekday) != true)
+        return null;
+      else {
+        todayDeals = deals[currentWeekday];
+        List<Map<String,dynamic>> result = <Map<String,dynamic>>[];
+        for(int i = 0 ; i< todayDeals.length; i++){
+          String startHour = todayDeals[i]['interval'].toString().substring(0,5); 
+          String endHour = todayDeals[i]['interval'].toString().substring(6,11);
+          String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
+          print(startHour+endHour);
+          if(startHour.compareTo(currentTime) <=0 
+          && endHour.compareTo(currentTime) >=0)
+            result.add(todayDeals[i]);
+        }
+        return result;
       }
-      return result;
-    }
+    return null;
   }
 
   
@@ -256,11 +259,18 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           return Scaffold(
             appBar: AppBar(
               actions: [
-                RaisedButton(
+                MaterialButton(
+                  color: Colors.transparent,
+                  elevation: 0,
                   onPressed: (){
                     Navigator.pop(context);
                   },
-                  child: Text("Renunta"),
+                  child: Text(
+                    "Renunta",  
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
               ],
             ),
