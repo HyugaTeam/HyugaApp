@@ -158,7 +158,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                           ),
                         ),
                       )).then((value) {
-                          if (value == null) {
+                          if (value != null) {
                             Scaffold.of(context).removeCurrentSnackBar();
                             Scaffold.of(context).showSnackBar(
                               SnackBar(
@@ -171,7 +171,11 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                     }
                   ),
                   title: Text("Masa numarul ${activeGuestsList[index].data()['table_number']}"),
-                  subtitle: Text(activeGuestsList[index].data()['guest_name']),
+                  subtitle: Text(
+                    activeGuestsList[index].data()['guest_name'] != null
+                    ? activeGuestsList[index].data()['guest_name']
+                    : "Necunoscut"
+                  ),
                 ),
                 separatorBuilder: (context,index) => Divider(
                   thickness: 2,

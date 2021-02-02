@@ -180,10 +180,11 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 /// ...WITH THE 'OK' FLAG SET TO 'NO'
 
 
-  Future<bool> addNewScan(DocumentSnapshot userData,context)async {
+  Future<bool> addNewScan(String userId,context)async {
     
     bool ok = false; // This decides whether the scan process has been approved by the user or not
-    DocumentReference userRef = _db.collection('users').doc(userData.id).collection('scan_history').doc();
+    DocumentSnapshot userDoc = await _db.collection('users').doc(userId).get();
+    DocumentReference userRef = _db.collection('users').doc(userDoc.id).collection('scan_history').doc();
     DocumentReference placeRef = _db.collection('users').doc(authService.currentUser.uid)
     .collection('managed_locals').doc(managedLocal.id).collection('scanned_codes').doc();
     await userRef.set(
@@ -195,7 +196,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
           'deals': getDeals(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
-          'score' : userData.data()['score'],
+          'score' : userDoc.data()['score'],
           'approved_by_user' : null,
           'reservation' : false,
           'reservation_ref' : null,
@@ -207,15 +208,15 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     );
     await placeRef.set(
       {
-          'guest_id' : userData.id,
-          'guest_name' : userData.data()['displayName'],
+          'guest_id' : userDoc.id,
+          'guest_name' : userDoc.data()['displayName'] != null ? userDoc.data()['displayName'] : userDoc.data()['display_name'],
           'date_start': FieldValue.serverTimestamp(), 
           'discount': getDiscount(),
           'deals': getDeals(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
           'retained_percentage': managedLocal.retainedPercentage,
-          'score' : userData.data()['score'],
+          'score' : userDoc.data()['score'],
           'table_number' : tableNumber,
           'approved_by_user' : null,
           'reservation' : false,
@@ -250,7 +251,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     return StreamBuilder(
       stream: scanStream,
       builder:(context,scanResult) {
-        print(scanResult);
+        print(scanResult.data);
         if(!scanResult.hasData)
           return Scaffold(
             appBar: AppBar(
@@ -274,7 +275,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
               ],
             ),
           );
-        if(scanResult.data!= null){
+        if(scanResult.data != null){
           print("valid code///////");
           uid = scanResult.data;
           return Scaffold(

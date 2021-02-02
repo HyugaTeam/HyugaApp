@@ -174,7 +174,7 @@ class _EditorPageState extends State<EditorPage> {
       )
     );
     FirebaseStorage storage = FirebaseStorage.instance;
-    StorageReference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');
+    Reference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');
     if(_unsavedProfileImage != null)
       photoRef.putFile(_unsavedProfileImage);
     
