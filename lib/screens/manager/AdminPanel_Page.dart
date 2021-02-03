@@ -44,7 +44,7 @@ class AdminPanel extends StatelessWidget {
 
     DateTime today = DateTime.now().toLocal();
     QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
-    .collection('managed_locals').doc(placeID).collection('scanned_codes').where('approved_by_user',isEqualTo: true).get();
+    .collection('managed_locals').doc(placeID).collection('scanned_codes').get();
     double allTimeIncome = 0;
     int allTimeGuests = 0;
     double thirtyDaysIncome = 0;
@@ -63,7 +63,7 @@ class AdminPanel extends StatelessWidget {
       allTimeGuests += element.data()['number_of_guests'];
       if(today.difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
         thirtyDaysIncome += element.data()['total'];
-        thirtyDaysGuests += element.data()['numberOfGuests'];
+        thirtyDaysGuests += element.data()['number_of_guests'];
       }
       if(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 && (element.data()['discount'] != 0 || element.data()['deal'] != null))
         currentBillTotal += element.data()['total'] * retainedPercentage; 
@@ -147,7 +147,7 @@ class AdminPanel extends StatelessWidget {
                 actions: [IconButton(
                   icon: Icon(Icons.camera_alt),
                   iconSize: 30,
-                  tooltip: "Scan a code",
+                  tooltip: "Scaneaza un cod si activeaza o masa",
                   highlightColor: Colors.white30,
                   color: Theme.of(context).highlightColor,
                   onPressed: () async {

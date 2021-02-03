@@ -21,6 +21,7 @@ class _RegisterState extends State<Register> {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
+          backgroundColor: Theme.of(context).highlightColor,
         )
       ).closed.then((value) => g.isSnackBarActive = false);
     }
@@ -99,12 +100,13 @@ class _RegisterState extends State<Register> {
                               print(password);
                               dynamic registerResult = await authService.registerWithEmailAndPassword(email, password);
                               //print(registerResult.toString());
-                              if(registerResult is PlatformException){
-                                if(registerResult.code == 'ERROR_WEAK_PASSWORD')
+                              if(registerResult.runtimeType == FirebaseAuthException){
+                                FirebaseAuthException authException = registerResult;
+                                if(authException.code == 'weak-password')
                                   showErrorSnackBar(context, "The password is too weak!");
-                                if(registerResult.code == 'ERROR_INVALID_EMAIL') 
+                                if(authException.code == 'invalid-email') 
                                   showErrorSnackBar(context, "The entered email is invalid!");
-                                if(registerResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 
+                                if(authException.code == 'email-already-in-use') 
                                   showErrorSnackBar(context, "The entered email is already in use! Try another email or sign-in method.");
                               }
                               else if(registerResult is UserCredential){ // not actually an error, but that's the name of the method
