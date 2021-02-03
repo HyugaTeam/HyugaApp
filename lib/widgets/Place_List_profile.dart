@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -54,6 +55,7 @@ class PlaceListProfile extends StatefulWidget {
   double discount = 0;
   Image finalImage;
   final Local place;
+  final Map<String,dynamic> deals;
 
   final BuildContext scaffoldContext;
 
@@ -67,7 +69,8 @@ class PlaceListProfile extends StatefulWidget {
       this.onTap,
       this.discount,
       this.scaffoldContext,
-      this.place
+      this.place,
+      this.deals
       }){
         image.then((image) => finalImage = image);
       }
@@ -242,7 +245,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
               // The maximum discount bubble
               right: MediaQuery.of(context).size.width*0.5-min(200,MediaQuery.of(context).size.width*0.5),
               top: 0,
-              child: widget.discount != null
+              child: widget.deals != null
                   ? Container(
                       width: 70,
                       height: 70,
@@ -250,33 +253,70 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                       child: Transform.scale(
                         scale: 1.25,
                         child: FloatingActionButton(
-                          heroTag: widget.name+'_button',
+                          heroTag: widget.name+'_dealsButton',
                           backgroundColor: Colors.orange[600],
                           onPressed: () {
                             if (g.isSnackBarActive == false) {
+                              g.isSnackBarActive = true;
                               Scaffold.of(widget.scaffoldContext)
                                   .showSnackBar(SnackBar(
                                     duration: Duration(seconds: 5),
                                     backgroundColor: Colors.orange[600],
                                     content: Text(
-                                      "Reducerea maxima de astazi, intra pe restaurant pentru mai multe detalii"
+                                      "Localul are astazi oferte, intra pentru mai multe detalii"
                                     ),
                                   ))
                                   .closed
                                   .then((value) => g.isSnackBarActive = false);
                             }
                           },
-                          child: Text(
-                            '-' + widget.discount.toInt().toString() + '%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              shadows: [Shadow(offset: Offset(1.0, 1.0))],
-                              fontWeight: FontWeight.w600
-                            ),
-                          ),
+                          child: FaIcon(
+                            FontAwesomeIcons.award,
+                            size: 28,
+                          )
                         ),
                       ))
                   : Container()),
+          Positioned(
+              // The maximum discount bubble
+              right: MediaQuery.of(context).size.width*0.5-min(200,MediaQuery.of(context).size.width*0.5),
+              top: 0,
+              child: widget.discount != null
+              ? Container(
+                width: 70,
+                height: 70,
+                alignment: Alignment.center,
+                child: Transform.scale(
+                  scale: 1.25,
+                  child: FloatingActionButton(
+                    heroTag: widget.name+'_discountButton',
+                    backgroundColor: Colors.orange[600],
+                    onPressed: () {
+                      if (g.isSnackBarActive == false) {
+                        g.isSnackBarActive = true;
+                        Scaffold.of(widget.scaffoldContext)
+                            .showSnackBar(SnackBar(
+                              duration: Duration(seconds: 5),
+                              backgroundColor: Colors.orange[600],
+                              content: Text(
+                                "Reducerea maxima de astazi, intra pe restaurant pentru mai multe detalii"
+                              ),
+                            ))
+                            .closed
+                            .then((value) => g.isSnackBarActive = false);
+                      }
+                    },
+                    child: Text(
+                      '-' + widget.discount.toInt().toString() + '%',
+                      style: TextStyle(
+                        color: Colors.white,
+                        shadows: [Shadow(offset: Offset(1.0, 1.0))],
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
+                ))
+              : Container()),
         ],
       ),
     );

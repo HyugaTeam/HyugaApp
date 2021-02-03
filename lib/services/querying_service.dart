@@ -17,7 +17,7 @@ class QueryService{
   
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
-  static final Reference storageRef = storage.ref();
+  static final StorageReference storageRef = storage.ref();
   static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
   PublishSubject<bool> locationEnabledStream = PublishSubject<bool>();
   static LocationData _userLocation ;
@@ -386,28 +386,39 @@ class QueryService{
       print(
         element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
       );
-      if(onlyDiscountLocals == true && (
-        element.data()['discounts'] == null || ( element.data()['discounts'] != null &&
-        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null )))
-        result = false;
+      if(onlyDiscountLocals == true 
+        && (element.data()['discounts'] == null || ( element.data()['discounts'] != null &&
+        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null ))
+        && (element.data()['deals'] == null || ( element.data()['deals'] != null &&
+        element.data()['deals'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null ))){
+          print(result.toString() + "result");
+          result = false;
+        }
       return result;
     })
     .map(docSnapToLocal)).toList();
   }
 
   Future fetchOnlyDiscounts() async{
-      QuerySnapshot locals = await _db.collection('locals_bucharest')
-      .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}').get();
-      return (locals.docs
-    .where((element){
-      bool result = true;
-      
-      if(element.data()['discounts'] != null)
-      print(
-        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
-      );
-      return result;
-    }) 
+    Future<QuerySnapshot> localsWithDiscounts = _db.collection('locals_bucharest')
+    .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}')
+    .get();
+    Future<QuerySnapshot> localsWithDeals = _db.collection('locals_bucharest')
+    .orderBy('deals.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}')
+    .get();
+    List<DocumentSnapshot> locals = new List();
+    await Future.wait(
+      [
+        localsWithDiscounts,
+        localsWithDeals
+      ]).then((List<QuerySnapshot> result) {
+        Set<DocumentSnapshot> docs1 = result[0].docs.toSet();
+        Set<DocumentSnapshot> docs2 = result[1].docs.toSet();
+        locals = docs1.union(docs2).difference(docs1).toList();
+        // docs1.forEach((doc) => locals.add(doc));
+      }
+    );
+    return (locals
     .map(docSnapToLocal)).toList();
   }
 

@@ -576,7 +576,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      (widget.local.isPartner != null) 
+                      (widget.local.isPartner == null) 
                       ? Text(
                         "Localul nu este partener",
                         style: TextStyle(

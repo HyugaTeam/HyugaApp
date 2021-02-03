@@ -58,7 +58,7 @@ class _LocalsState extends State<Locals> {
     _discounts.firstWhere((element) => element['maxim']);
   }
 
-  double getMaxDiscountForUser(Local local){
+  double getMaxDiscountForToday(Local local){
 
     if(local.discounts != null)
       if(local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null){
@@ -106,7 +106,7 @@ class _LocalsState extends State<Locals> {
                 double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
                 PlaceListProfile place = PlaceListProfile(
                   scaffoldContext: context,
-                  name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForUser(local),
+                  name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
                   distance: lengthInMeter > 1000 
                   ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
                   + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
