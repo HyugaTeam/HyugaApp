@@ -406,7 +406,7 @@ class QueryService{
     Future<QuerySnapshot> localsWithDeals = _db.collection('locals_bucharest')
     .orderBy('deals.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}')
     .get();
-    List<DocumentSnapshot> locals = new List();
+    Set<DocumentSnapshot> locals = new Set();
     await Future.wait(
       [
         localsWithDiscounts,
@@ -414,8 +414,15 @@ class QueryService{
       ]).then((List<QuerySnapshot> result) {
         Set<DocumentSnapshot> docs1 = result[0].docs.toSet();
         Set<DocumentSnapshot> docs2 = result[1].docs.toSet();
-        locals = docs1.union(docs2).difference(docs1).toList();
-        // docs1.forEach((doc) => locals.add(doc));
+        docs1.forEach(
+          (elem) {
+            docs2.removeWhere((doc)=> doc.id == elem.id);
+            locals.add(elem);
+          } 
+        );
+        docs2.forEach(
+          (elem) => locals.add(elem)
+        );
       }
     );
     return (locals
