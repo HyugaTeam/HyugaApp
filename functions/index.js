@@ -11,6 +11,27 @@ admin.initializeApp();
 const db = admin.firestore();
 const fcm = admin.messaging();
 
+// admin.auth()
+// .listUsers()
+// .then((result) => {
+//   // return console.log(result.users);
+//   return result.users.forEach(element => {
+//     if(element.providerData.length === 0){
+//       console.log(element.uid);
+//       return admin.auth().deleteUser(element.uid)
+//       .then(() =>{
+//           return console.log("STERS");
+//       })
+//       .catch((error) => {
+//         return console.log("EROARE LA STERGERE");
+//       });
+//     }
+//   });
+// })
+// .catch((error) => {
+//   return console.log('Error fetching user data:', error);
+// });
+
 exports.sendReservationNotification = functions.firestore
     .document('users/{user}/managed_locals/{managed_local}/reservations/{reservation}')
     .onCreate(async (docSnapshot,context) => {
