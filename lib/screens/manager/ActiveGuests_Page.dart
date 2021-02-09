@@ -74,7 +74,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                               children: [
                                 Text(
                                   "Reducerea care trebuie aplicata: " +
-                                    (activeGuestsList[index].data()['discount'] != 0
+                                    (activeGuestsList[index].data()['discount'] != null && activeGuestsList[index].data()['discount'] != 0
                                     ? "${activeGuestsList[index].data()['discount']}%"
                                     : "0%"),
                                   style: TextStyle(
@@ -158,7 +158,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                           ),
                         ),
                       )).then((value) {
-                          if (value != null) {
+                          if (value != null && value != false) {
                             Scaffold.of(context).removeCurrentSnackBar();
                             Scaffold.of(context).showSnackBar(
                               SnackBar(

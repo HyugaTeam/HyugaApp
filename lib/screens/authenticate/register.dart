@@ -103,11 +103,11 @@ class _RegisterState extends State<Register> {
                               if(registerResult.runtimeType == FirebaseAuthException){
                                 FirebaseAuthException authException = registerResult;
                                 if(authException.code == 'weak-password')
-                                  showErrorSnackBar(context, "The password is too weak!");
+                                  showErrorSnackBar(context, "Parola este prea slaba");
                                 if(authException.code == 'invalid-email') 
-                                  showErrorSnackBar(context, "The entered email is invalid!");
+                                  showErrorSnackBar(context, "Emailul este invalid");
                                 if(authException.code == 'email-already-in-use') 
-                                  showErrorSnackBar(context, "The entered email is already in use! Try another email or sign-in method.");
+                                  showErrorSnackBar(context, "Emailul este deja folosit.");
                               }
                               else if(registerResult is UserCredential){ // not actually an error, but that's the name of the method
                                 showErrorSnackBar(context, 'Registered succesfully!');

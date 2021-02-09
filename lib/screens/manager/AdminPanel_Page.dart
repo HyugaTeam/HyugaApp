@@ -44,7 +44,7 @@ class AdminPanel extends StatelessWidget {
 
     DateTime today = DateTime.now().toLocal();
     QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
-    .collection('managed_locals').doc(placeID).collection('scanned_codes').get();
+    .collection('managed_locals').doc(placeID).collection('scanned_codes').where("is_active", isEqualTo: false).get();
     double allTimeIncome = 0;
     int allTimeGuests = 0;
     double thirtyDaysIncome = 0;
@@ -57,16 +57,20 @@ class AdminPanel extends StatelessWidget {
     else maturityMonth = (today.month-12)%12 - 1;
     DateTime emissionDate = DateTime(today.year, maturityMonth,maturityDay);
     DateTime maturityDate = DateTime(today.year, (maturityMonth + 1) % 12, (maturityDay-1)%31);
-
     scannedCodes.docs.forEach((element) {
-      allTimeIncome += element.data()['total'];
-      allTimeGuests += element.data()['number_of_guests'];
-      if(today.difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
-        thirtyDaysIncome += element.data()['total'];
-        thirtyDaysGuests += element.data()['number_of_guests'];
+      if(!element.data()["is_active"]){
+        allTimeIncome += element.data()['total'];
+        allTimeGuests += element.data()['number_of_guests'];
+        if(today.difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
+          thirtyDaysIncome += element.data()['total'];
+          thirtyDaysGuests += element.data()['number_of_guests'];
+        }
+        if(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 
+          && 
+          (element.data()['discount'] != 0 || element.data()['deal'] != null)
+        )
+        currentBillTotal += element.data()['total'] * retainedPercentage;
       }
-      if(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 && (element.data()['discount'] != 0 || element.data()['deal'] != null))
-        currentBillTotal += element.data()['total'] * retainedPercentage; 
     });
     Map<String,dynamic> result = {};
     result.addAll(
@@ -93,23 +97,22 @@ class AdminPanel extends StatelessWidget {
     .collection('managed_locals')
     .get())
     .docs.first;
-
     String placeDocumentID = placeData.id;
-    print(placeDocumentID);
-    print(placeData.data()['retained_percentage']);
     Map<String,dynamic> analytics = {};
+        print("START");
+
     analytics.addAll(await _getPlaceAnalytics(
       placeDocumentID, 
       placeData.data()['maturity'],
       placeData.data()['retained_percentage']
     ));
-    
-    print("start");
+        print("START");
+
     DocumentSnapshot placeDocument = await FirebaseFirestore.instance
     .collection('locals_bucharest')
     .doc(placeDocumentID)
     .get();
-    print(placeDocument.data);
+    print("START");
     _managedLocal = ManagedLocal( 
       id: placeDocumentID,
       name: placeDocument.data()['name'],
@@ -126,8 +129,9 @@ class AdminPanel extends StatelessWidget {
       schedule: placeDocument.data()['schedule'],
       maturity: placeData.data()['maturity']
     );
-    print(_managedLocal.retainedPercentage);
+    print("END");
     return _managedLocal;
+    
   }
 
   @override

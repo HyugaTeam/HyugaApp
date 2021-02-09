@@ -202,6 +202,21 @@ class _ReservationsPageState extends State<ReservationsPage> {
   );
   }
 
+  String dealsToString(List<Map<String, dynamic>> deals){
+      String result = "";
+      if(deals != null){
+        for(int i = 0; i < deals.length; i++){
+          result += i.toString() + ": ";
+          result += deals[i]['title'] + " ";
+          result += deals[i]['content'] + " ";
+          result += deals[i]['interval'] + " ";
+          result += ", ";
+        }
+        return result;
+      }
+      return "";
+    }
+
   /// Used while reservations are being fetched
   bool isLoading = false;
 
@@ -495,19 +510,22 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 userScanData
                                               );
                                               print("gata");
-                                              AnalyticsService().analytics.logEvent(
-                                                name: 'new_scan',
-                                                parameters: {
-                                                  'place_name': _managedLocal.name,
-                                                  'place_id': _managedLocal.id,
-                                                  "date_claimed": FieldValue.serverTimestamp(),
-                                                  'date_start': acceptedReservations[index].data()['date_start'],
-                                                  'number_of_guests': acceptedReservations[index].data()['number_of_guests'],
-                                                  'reservation': true,
-                                                  'discount': acceptedReservations[index].data()['discount'],
-                                                  'deals': acceptedReservations[index].data()['deals']
-                                                }
-                                              );
+                                              try{
+                                                AnalyticsService().analytics.logEvent(
+                                                  name: 'new_scan',
+                                                  parameters: {
+                                                    'place_name': _managedLocal.name,
+                                                    'place_id': _managedLocal.id,
+                                                    "date_claimed": FieldValue.serverTimestamp().toString(),
+                                                    'date_start': acceptedReservations[index].data()['date_start'],
+                                                    'number_of_guests': acceptedReservations[index].data()['number_of_guests'],
+                                                    'reservation': true,
+                                                    'discount': acceptedReservations[index].data()['discount'],
+                                                    'deals': dealsToString(acceptedReservations[index].data()['deals'])
+                                                  }
+                                                );
+                                              }
+                                              catch(err){}
                                               Navigator.pop(context);
                                             }
                                           },

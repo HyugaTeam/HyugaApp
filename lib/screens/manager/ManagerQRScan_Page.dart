@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -122,6 +123,21 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     return null;
   }
 
+  String dealsToString(List<Map<String, dynamic>> deals){
+      String result = "";
+      if(deals != null){
+        for(int i = 0; i < deals.length; i++){
+          result += i.toString() + ": ";
+          result += deals[i]['title'] + " ";
+          result += deals[i]['content'] + " ";
+          result += deals[i]['interval'] + " ";
+          result += ", ";
+        }
+        return result;
+      }
+      return "";
+    }
+
   // Gets the current discount percentage
   int getDiscount(){
     Map<String, dynamic> discounts = managedLocal.discounts;
@@ -130,7 +146,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     /// Checks if the place has discounts in the current weekday
     if(discounts != null)
       if(discounts.containsKey(currentWeekday) != true)
-        return null;
+        return 0;
       else {
         todayDiscounts = discounts[currentWeekday];
         for(int i = 0 ; i< todayDiscounts.length; i++){
@@ -153,7 +169,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     /// Checks if the place has deals in the current weekday
     if(deals != null)
       if(deals.containsKey(currentWeekday) != true)
-        return null;
+        return [];
       else {
         todayDeals = deals[currentWeekday];
         List<Map<String,dynamic>> result = <Map<String,dynamic>>[];
@@ -168,7 +184,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         }
         return result;
       }
-    return null;
+    return [];
   }
 
   
@@ -231,18 +247,21 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       )
     );
 
-    AnalyticsService().analytics.logEvent(
-      name: 'new_scan',
-      parameters: {
-        'place_name': managedLocal.name,
-        'place_id': managedLocal.id,
-        'date_start': FieldValue.serverTimestamp(),
-        'number_of_guests': numberOfGuests,
-        'reservation': false,
-        'discount': getDiscount(),
-        'deals': getDeals()
-      }
-    );
+    try{
+      AnalyticsService().analytics.logEvent(
+        name: 'new_scan',
+        parameters: {
+          'place_name': managedLocal.name,
+          'place_id': managedLocal.id,
+          'date_start': FieldValue.serverTimestamp.toString(),
+          'number_of_guests': numberOfGuests,
+          'reservation': false,
+          'discount': getDiscount(),
+          'deals': dealsToString(getDeals())
+        }
+      );
+    }
+    catch(err){}
     return ok;
   }
 

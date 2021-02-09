@@ -5,7 +5,7 @@ class ManagedLocal{
   String description;
   int cost;
   int capacity;
-  int retainedPercentage;
+  double retainedPercentage;
   String ambiance;
   Map<String,dynamic> profile;
   Map<String,dynamic> discounts;

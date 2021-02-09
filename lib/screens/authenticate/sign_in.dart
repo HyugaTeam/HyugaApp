@@ -54,15 +54,15 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   void handleAuthError(BuildContext context, FirebaseAuthException signInResult){
     print("code"+signInResult.code);
     if(signInResult.code == 'user-not-found')
-      showErrorSnackBar(context, "Emailul si parola sunt gresite");
-    if(signInResult.code == 'ERROR_INVALID_CREDENTIAL')
-      showErrorSnackBar(context, "Bad credentials! The selected sign-up option is invalid!");
+      showErrorSnackBar(context, "Combinatia email+parola este gresita");
+    if(signInResult.code == 'wrong-password')
+      showErrorSnackBar(context, "Parola este gresita");
     if(signInResult.code == 'ERROR_USER_DISABLED') 
-      showErrorSnackBar(context, "The entered email is invalid!");
-    if(signInResult.code == 'ERROR_EMAIL_ALREADY_IN_USE') 
+      showErrorSnackBar(context, "unknown");
+    if(signInResult.code == 'A aparut o eroare, incearca din nou') 
       showErrorSnackBar(context, "The entered email is already in use! Try another sign-in method.");
-    if(signInResult.code == "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")
-      showErrorSnackBar(context, "The email used is already used by another account.");
+    if(signInResult.code == "invalid-email")
+      showErrorSnackBar(context, "Emailul este gresit");
 }
 
   @override

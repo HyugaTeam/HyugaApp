@@ -18,10 +18,10 @@ class ScannedCodesHistoryPage extends StatelessWidget {
           itemBuilder: (context,index) => ListTile(
             title: Text("Data:   " + 
             DateTime.fromMillisecondsSinceEpoch(
-            _managedLocal.analytics['scanned_codes'][index]['date_start'].millisecondsSinceEpoch, isUtc: true)
+            _managedLocal.analytics['scanned_codes'][index].data()['date_start'].millisecondsSinceEpoch, isUtc: true)
             .toLocal().toString()
             ),
-            subtitle: Text("Suma: "+_managedLocal.analytics['scanned_codes'][index]['total'].toString()),
+            subtitle: Text("Suma: "+_managedLocal.analytics['scanned_codes'][index].data()['total'].toString()),
           ),
         )
       ),
