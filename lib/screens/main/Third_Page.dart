@@ -836,7 +836,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               .toString() + '%',
                                               /// Old computation for the Discount per level
                                               style: TextStyle(
-                                                fontSize: 20,
+                                                fontSize: 20*(1/MediaQuery.of(context).textScaleFactor),
                                               )
                                             )
                                           )
