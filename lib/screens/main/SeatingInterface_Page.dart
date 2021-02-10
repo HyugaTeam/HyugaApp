@@ -57,14 +57,14 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
     return place;
   }
   
-  String formatDeals(List<Map<String,dynamic>> deals){
+  String formatDeals(List deals){
     String result = "";
     if(deals != null)
       deals.forEach((element) {
         result += element['title'] + " - ";
         result += element['content']+'\n\n';
       });
-    return result == "" ? "Nicio oferta" : "";
+    return result == "" ? "Nicio oferta" : result;
     
   }
 
@@ -353,29 +353,30 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                      Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          "Oferte disponibile\n",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold
-                                          )
-                                        ),
-                                        Container(
-                                          child: ClipOval(
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              color: Colors.black,
-                                              height: 7,
-                                              width: 7
-                                            ),
+                                        RaisedButton(
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                          color: Theme.of(context).highlightColor,
+                                          child: Text(
+                                            "Oferte disponibile",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold
+                                            )
                                           ),
+                                          onPressed: (){
+                                            showDialog(
+                                              context: context, 
+                                              builder: (context) => AlertDialog(
+                                                content: Text(
+                                                  '\n' + formatDeals(widget.place.data()['deals']),
+                                                  style: TextStyle(
+                                                    fontSize: 16
+                                                  )
+                                                ),
+                                              )
+                                            );
+                                          },
                                         ),
-                                        Text(
-                                           '\n' + formatDeals(widget.place.data()['deals']),
-                                          style: TextStyle(
-                                            fontSize: 16
-                                          )
-                                        )
                                       ]
                                     ),
                                 ),
@@ -392,7 +393,6 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                           text: "Ora de inceput   ",
                                           style: TextStyle(
                                             fontSize: 20,
-                                            
                                           )
                                         ),
                                         WidgetSpan(
@@ -427,7 +427,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                     : "00:00:00",
                                     style: TextStyle(
                                       color: Colors.orange[600],
-                                      fontSize: 35,
+                                      fontSize: 35*(1/MediaQuery.of(context).textScaleFactor),
                                       fontWeight: FontWeight.bold
                                     ),
                                   )
