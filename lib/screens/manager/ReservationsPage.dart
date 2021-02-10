@@ -203,19 +203,19 @@ class _ReservationsPageState extends State<ReservationsPage> {
   }
 
   String dealsToString(List<Map<String, dynamic>> deals){
-      String result = "";
-      if(deals != null){
-        for(int i = 0; i < deals.length; i++){
-          result += i.toString() + ": ";
-          result += deals[i]['title'] + " ";
-          result += deals[i]['content'] + " ";
-          result += deals[i]['interval'] + " ";
-          result += ", ";
-        }
-        return result;
+    String result = "";
+    if(deals != null){
+      for(int i = 0; i < deals.length; i++){
+        result += i.toString() + ": ";
+        result += deals[i]['title'] + " ";
+        result += deals[i]['content'] + " ";
+        result += deals[i]['interval'] + " ";
+        result += ", ";
       }
-      return "";
+      return result;
     }
+    return "";
+  }
 
   /// Used while reservations are being fetched
   bool isLoading = false;

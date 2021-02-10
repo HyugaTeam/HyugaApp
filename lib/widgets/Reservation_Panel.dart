@@ -51,6 +51,21 @@ class _ReservationPanelState extends State<ReservationPanel> {
     return result;
   }
 
+  String dealsToString(List<Map<String, dynamic>> deals){
+    String result = "";
+    if(deals != null){
+      for(int i = 0; i < deals.length; i++){
+        result += i.toString() + ": ";
+        result += deals[i]['title'] + " ";
+        result += deals[i]['content'] + " ";
+        result += deals[i]['interval'] + " ";
+        result += ", ";
+      }
+      return result;
+    }
+    return "";
+  }
+
   @override
   void initState() {
     super.initState();
@@ -429,11 +444,11 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         parameters: {
                           'place_name': place.name,
                           'place_id': place.id,
-                          'date_created': FieldValue.serverTimestamp(),
-                          'date_start': Timestamp.fromDate(_selectedDate),
+                          'date_created': DateTime.now().toLocal().toString(),
+                          'date_start': Timestamp.fromDate(_selectedDate).toString(),
                           'number_of_guests': _selectedNoOfPeople,
                           'discount': _selectedDiscount,
-                          'deals': _selectedDeals
+                          'deals': _selectedDeals != null && _selectedDeals != [] ? true : false
                         }
                       );
                       Navigator.pop(context, {'place_name': place.name, 'hour': DateFormat('HH:mm').format(_selectedDate.toLocal())});

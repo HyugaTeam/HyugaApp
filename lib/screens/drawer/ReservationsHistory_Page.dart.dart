@@ -50,6 +50,7 @@ class ReservationsHistoryPage extends StatelessWidget {
         backgroundColor: Colors.blueGrey,
       ),
       body: ListView(
+        shrinkWrap: true,
         children: [
           FutureBuilder(
             future: getUpcomingReservations(),
