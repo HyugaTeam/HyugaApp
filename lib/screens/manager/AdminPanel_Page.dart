@@ -57,6 +57,7 @@ class AdminPanel extends StatelessWidget {
     else maturityMonth = (today.month-12)%12 - 1;
     DateTime emissionDate = DateTime(today.year, maturityMonth,maturityDay);
     DateTime maturityDate = DateTime(today.year, (maturityMonth + 1) % 12, (maturityDay-1)%31);
+    print("START");
     scannedCodes.docs.forEach((element) {
       if(!element.data()["is_active"]){
         allTimeIncome += element.data()['total'];
@@ -72,6 +73,7 @@ class AdminPanel extends StatelessWidget {
         currentBillTotal += element.data()['total'] * retainedPercentage;
       }
     });
+    print("START12");
     Map<String,dynamic> result = {};
     result.addAll(
       {
@@ -85,6 +87,7 @@ class AdminPanel extends StatelessWidget {
         "maturity_date": maturityDate
       }
     );
+    print(result);
     return result;
   }
 
@@ -99,36 +102,40 @@ class AdminPanel extends StatelessWidget {
     .docs.first;
     String placeDocumentID = placeData.id;
     Map<String,dynamic> analytics = {};
-        print("START");
+        print("START1");
 
     analytics.addAll(await _getPlaceAnalytics(
       placeDocumentID, 
       placeData.data()['maturity'],
       placeData.data()['retained_percentage']
     ));
-        print("START");
+        print("START2");
 
     DocumentSnapshot placeDocument = await FirebaseFirestore.instance
     .collection('locals_bucharest')
     .doc(placeDocumentID)
     .get();
-    print("START");
-    _managedLocal = ManagedLocal( 
-      id: placeDocumentID,
-      name: placeDocument.data()['name'],
-      description: placeDocument.data()['description'],
-      cost: placeDocument.data()['cost'],
-      capacity: placeDocument.data()['capacity'],
-      ambiance: placeDocument.data()['ambiance'],
-      profile: placeDocument.data()['profile'],
-      discounts: placeDocument.data()['discounts'],
-      deals: placeDocument.data()['deals'],
-      analytics: analytics,
-      reservations: placeDocument.data()['reservations'],
-      retainedPercentage: placeData.data()['retained_percentage'],
-      schedule: placeDocument.data()['schedule'],
-      maturity: placeData.data()['maturity']
-    );
+    print("START3");
+    print("");
+    try{
+      _managedLocal = ManagedLocal( 
+        id: placeDocumentID,
+        name: placeDocument.data()['name'],
+        description: placeDocument.data()['description'],
+        cost: placeDocument.data()['cost'],
+        capacity: placeDocument.data()['capacity'],
+        ambiance: placeDocument.data()['ambiance'],
+        profile: placeDocument.data()['profile'],
+        discounts: placeDocument.data()['discounts'],
+        deals: placeDocument.data()['deals'],
+        analytics: analytics,
+        reservations: placeDocument.data()['reservations'],
+        retainedPercentage: double.tryParse(placeData.data()['retained_percentage'].toString()),
+        schedule: placeDocument.data()['schedule'],
+        maturity: placeData.data()['maturity']
+      );
+    }
+    catch(err){print(err);}
     print("END");
     return _managedLocal;
     
