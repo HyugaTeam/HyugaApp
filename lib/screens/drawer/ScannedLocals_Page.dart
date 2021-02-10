@@ -316,7 +316,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                       Container(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
-                                          scanHistory.data[index]['discount'] != 0
+                                          scanHistory.data[index]['discount'] != 0 && scanHistory.data[index]['discount'] != null
                                           ? "Reducere: "+ scanHistory.data[index]['discount'].toString() + "%"
                                           : "Fara reducere",
                                           style: TextStyle(
