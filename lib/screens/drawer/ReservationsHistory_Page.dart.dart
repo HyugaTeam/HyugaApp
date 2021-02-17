@@ -462,8 +462,8 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                 reservationsHistory.data[index]['total'] != null
                                                 ? Flexible(
                                                   child: Text(
-                                                    reservationsHistory.data[index]['total'] == reservationsHistory.data[index]['total'].toInt()
-                                                      ? reservationsHistory.data[index]['total'].toInt().toString()+" RON"
+                                                    reservationsHistory.data[index]['total'] == reservationsHistory.data[index]['total'].toDouble()
+                                                      ? reservationsHistory.data[index]['total'].toDouble().toString()+" RON"
                                                       : reservationsHistory.data[index]['total'] +" RON",
                                                     style: TextStyle(
                                                       fontSize: 20,

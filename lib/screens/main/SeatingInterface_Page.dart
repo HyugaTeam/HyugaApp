@@ -57,7 +57,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
     return place;
   }
   
-  String formatDeals(List<Map<String,dynamic>> deals){
+  String formatDeals(List deals){
     String result = "";
     if(deals != null)
       deals.forEach((element) {

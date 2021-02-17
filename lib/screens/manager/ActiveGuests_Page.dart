@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/managed_local.dart';
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 
 class ActiveGuestsPage extends StatefulWidget {
@@ -60,12 +61,12 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                     ),
                     onPressed: (){
                       GlobalKey<FormState> _formKey = GlobalKey();
-                      int receiptTotal;
+                      double receiptTotal;
                       bool isLoading = false;
                       showDialog(context: context, builder: (context) => Dialog(
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                          height: MediaQuery.of(context).size.height*0.5,
+                          height: MediaQuery.of(context).size.height*0.6,
                           width: MediaQuery.of(context).size.height*0.8,
                           child: Center(
                             child: Column(
@@ -97,11 +98,11 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                 Form(
                                   key: _formKey,
                                   child: TextFormField(
-                                    onChanged: (input) => receiptTotal = int.tryParse(input),
+                                    onChanged: (input) => receiptTotal = double.tryParse(input),
                                     onFieldSubmitted: (input) => _formKey.currentState.validate(),
                                     cursorColor: Colors.blueGrey,
                                     keyboardType: TextInputType.number,
-                                    validator: (String input) => double.tryParse(input) == null 
+                                    validator: (String input) => double.tryParse(input) == null || input == null
                                       ? "Numarul introdus nu este corect!"
                                       : null,
                                   ),
@@ -121,7 +122,8 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                             {
                                             "total": receiptTotal,
                                             "is_active": false,
-                                            "date_end" : FieldValue.serverTimestamp()
+                                            "date_end" : FieldValue.serverTimestamp(),
+                                            "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
                                             },
                                             SetOptions(merge: true)
                                           );
@@ -130,7 +132,8 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                             {
                                             "total": receiptTotal,
                                             "is_active": false,
-                                            "date_end" : FieldValue.serverTimestamp()
+                                            "date_end" : FieldValue.serverTimestamp(),
+                                            "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
                                             },
                                             SetOptions(merge: true)
                                           );

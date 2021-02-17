@@ -71,7 +71,6 @@ class AuthService{
 
   // create user object based on FirebaseUser
   OurUser _ourUserFromFirebaseUser(User user){
-    
     /// Added in order to set the User ID property for the Google Analytics Service
     if(user!= null)
       AnalyticsService().setUserProperties(user.uid);

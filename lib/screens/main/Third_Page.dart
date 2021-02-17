@@ -99,7 +99,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   ScrollController _listViewScrollController = ScrollController(
 
   );
-  double dealWidgetHeight = 80;
+  double dealWidgetHeight = 100;
   List<bool> isOfferExpanded;
   final double localLongitude,localLatitude;
   List<Uint8List> listOfImages;
@@ -420,6 +420,268 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           )
                         ),
                       ),
+                      SizedBox(height: 15,),
+                      !widget.local.isPartner
+                      ? Text(
+                        "Localul nu este partener",
+                        style: TextStyle(
+                          fontSize: 18
+                        ),
+                      )
+                      :
+                      Column(
+                        children: [
+                          DropdownButton( /// 'Select the Day' widget
+                            value: weekdays.keys.toList()[_selectedWeekday-1],
+                            items: weekdays.keys
+                            .map((String weekday) {
+                              return DropdownMenuItem(
+                                value: weekday,
+                                child: Text(
+                                  weekday != DateFormat("EEEE").format(today)
+                                  ? weekdays[weekday] 
+                                  : "Astazi - "+  weekdays[weekday] 
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value){
+                              setState((){
+                                _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
+                                if(widget.local.deals != null)
+                                  if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
+                                    isOfferExpanded = widget.local
+                                      .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                      .map<bool>((key) => false).toList();
+                              });
+                            }
+                          ),
+                          widget.local.discounts != null && widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                          ||
+                          widget.local.deals != null && widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                          ? Column( // The place has EITHER 'Discounts' or 'Deals'
+                            children: [
+                              // The 'Deals' Widget
+                              widget.local.deals != null && widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                              ? Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                        ),
+                                        SizedBox(
+                                          width: 150
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 10,),
+                                    AnimatedContainer(
+                                      //color: Colors.orange[600],
+                                      duration: Duration(milliseconds: 200),
+                                      height: dealWidgetHeight,
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.all(10),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: widget.local.deals != null ?  
+                                                    (widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
+                                                      widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
+                                                    0,
+                                        separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
+                                        itemBuilder: (context,index) {
+                                          ValueKey key = ValueKey(index);
+                                          return Container(
+                                            height: 120,
+                                            width: 180,
+                                            constraints: BoxConstraints(maxHeight: 100),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: ExpansionCard(
+                                              trailing: FaIcon(
+                                                FontAwesomeIcons.qrcode,
+                                                color: Colors.black
+                                              ),
+                                              key: key,
+                                              borderRadius: 20,
+                                              backgroundColor: Colors.orange[600],
+                                              margin: EdgeInsets.zero,
+                                              title: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
+                                                    style: TextStyle(color: Colors.black,fontSize: 13*(1/MediaQuery.of(context).textScaleFactor), fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Divider(
+                                                    thickness: 2
+                                                  ),
+                                                  Text(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                    [index]['interval'].substring(0,5) 
+                                                    +  ' - ' + 
+                                                    widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                    [index]['interval'].substring(6,11),
+                                                    style: TextStyle(
+                                                      fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
+                                                      color: Colors.black
+                                                    ),
+                                                  )  // 
+                                                ],
+                                              ),
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
+                                                    style: TextStyle(
+                                                      fontSize: 14*(1/MediaQuery.of(context).textScaleFactor),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                              onExpansionChanged: (expanded) => setState((){
+                                                isOfferExpanded[index] = expanded;
+                                                bool allClosed = true;
+                                                isOfferExpanded.forEach((element) {if(element) allClosed = false;});
+                                                if(allClosed)
+                                                  dealWidgetHeight = 100;
+                                                else dealWidgetHeight = 180;
+                                                }
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      )
+                                    ),
+                                  ],
+                                ),
+                              )
+                              : Container(),
+                              // The 'Discounts' Widget
+                              widget.local.discounts != null && widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                                ? Container(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Reduceri", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                          ),
+                                          SizedBox(width: MediaQuery.of(context).size.width*0.2,)
+                                        ],
+                                      ),
+                                      Container(
+                                        height: 100,
+                                        child: ListView.separated(
+                                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.local.discounts != null ?  
+                                                      (widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
+                                                        widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
+                                                      0,
+                                          separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
+                                          /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
+                                          /// the current weekday. If not, the field will be empty
+                                          itemBuilder: (BuildContext context, int index){
+                                            return Container(
+                                              width: MediaQuery.of(context).size.width*0.35,
+                                              height: 100,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  GestureDetector(
+                                                    onTap: (){
+                                                      // RenderBox object = _reservationButtonKey.currentContext.findRenderObject();
+                                                      // var size = object.localToGlobal(Offset.zero);
+                                                      // print(size.dy+1000);
+                                                      // _listViewScrollController.animateTo(
+                                                      //   size.dy,
+                                                      //   curve: Curves.linear,
+                                                      //   duration: Duration(milliseconds: 300)
+                                                      // ).then(
+                                                      //   (value) {
+                                                          if(g.isSnackBarActive == false){
+                                                            g.isSnackBarActive = true;
+                                                            Scaffold.of(context).showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
+                                                                  textAlign: TextAlign.center,
+                                                                ),
+                                                                backgroundColor: Colors.orange[600],
+                                                              )).closed.then((SnackBarClosedReason reason){
+                                                              g.isSnackBarActive = false;
+                                                            });
+                                                          }
+                                                      // }
+                                                      //);
+                                                    },
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.black45, 
+                                                            offset: Offset(-1,1),
+                                                            blurRadius: 2,
+                                                            spreadRadius: 0.2
+                                                          )
+                                                        ],
+                                                        color: Colors.orange[600],
+                                                        borderRadius: BorderRadius.circular(25)
+                                                      ),
+                                                      child: Text(
+                                                          widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                          [index].substring(0,5) 
+                                                          +  ' - ' + 
+                                                          widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                          [index].substring(6,11),
+                                                        style: TextStyle(
+                                                          fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
+                                                          //fontFamily: 'Roboto'
+                                                        ),
+                                                      )  // A concatenation of the string representing the time interval
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(10),
+                                                    child: Text(
+                                                      '-'+int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
+                                                      .toString() + '%',
+                                                      /// Old computation for the Discount per level
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                      )
+                                                    )
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        ),
+                                      ),
+                                      
+                                    ],
+                                  ),
+                                )
+                                : Container()
+                            ]
+                          )
+                      : Padding( // The place has NEITHER 'Discounts' or 'Deals'
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} oferte sau reduceri.", 
+                        ),
+                      )
+                      ]
+                      ),
                       Container( // 'Description '
                         alignment: Alignment(-0.9, 0),
                         padding: EdgeInsets.only(top:20),
@@ -584,297 +846,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      !widget.local.isPartner
-                      ? Text(
-                        "Localul nu este partener",
-                        style: TextStyle(
-                          fontSize: 18
-                        ),
-                      )
-                      :
-                      Column(
-                        children: [
-                        DropdownButton( /// 'Select the Day' widget
-                        value: weekdays.keys.toList()[_selectedWeekday-1],
-                        items: weekdays.keys
-                        .map((String weekday) {
-                          return DropdownMenuItem(
-                            value: weekday,
-                            child: Text(
-                              weekday != DateFormat("EEEE").format(today)
-                              ? weekdays[weekday] 
-                              : "Astazi - "+  weekdays[weekday] 
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value){
-                          setState((){
-                            _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
-                            if(widget.local.deals != null)
-                              if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
-                                isOfferExpanded = widget.local
-                                  .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                  .map<bool>((key) => false).toList();
-                          });
-                        }
-                      ),
-                      // The 'Deals' Widget
-                      widget.local.deals != null && widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
-                      ? Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                ),
-                                SizedBox(
-                                  width: 150
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 200),
-                              height: dealWidgetHeight,
-                              child: ListView.separated(
-                                padding: EdgeInsets.all(10),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: widget.local.deals != null ?  
-                                            (widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
-                                              widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
-                                            0,
-                                separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
-                                itemBuilder: (context,index) {
-                                  ValueKey key = ValueKey(index);
-                                  return Container(
-                                    height: 120,
-                                    width: 180,
-                                    constraints: BoxConstraints(maxHeight: 100),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ExpansionCard(
-                                      key: key,
-                                      borderRadius: 20,
-                                      backgroundColor: Colors.orange[600],
-                                      margin: EdgeInsets.zero,
-                                      title: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
-                                            style: TextStyle(color: Colors.black,fontSize: 13*(1/MediaQuery.of(context).textScaleFactor), fontWeight: FontWeight.bold),
-                                          ),
-                                          Divider(
-                                            thickness: 2
-                                          ),
-                                          Text(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                            [index]['interval'].substring(0,5) 
-                                            +  ' - ' + 
-                                            widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                            [index]['interval'].substring(6,11),
-                                            style: TextStyle(
-                                              fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
-                                              color: Colors.black
-                                            ),
-                                          )  // 
-                                        ],
-                                      ),
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'],
-                                            style: TextStyle(
-                                              fontSize: 14*(1/MediaQuery.of(context).textScaleFactor),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                      onExpansionChanged: (expanded) => setState((){
-                                        isOfferExpanded[index] = expanded;
-                                        bool allClosed = true;
-                                        isOfferExpanded.forEach((element) {if(element) allClosed = false;});
-                                        if(allClosed)
-                                          dealWidgetHeight = 80;
-                                        else dealWidgetHeight = 180;
-                                        }
-                                      ),
-                                    ),
-                                  );
-                                }
-                              )
-                            ),
-                          ],
-                        ),
-                      )
-                      : Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                ),
-                                SizedBox(
-                                  width: 150
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 10,),
-                            Center(child: Text(
-                              "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} oferte.", 
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        thickness: 3,
-                      ),
-                      // The 'Discounts' Widget
-                      widget.local.discounts != null && widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
-                        ? Container(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Reduceri", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                  ),
-                                  SizedBox(width: MediaQuery.of(context).size.width*0.2,)
-                                ],
-                              ),
-                              Container(
-                                height: 100,
-                                child: ListView.separated(
-                                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: widget.local.discounts != null ?  
-                                              (widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
-                                                widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
-                                              0,
-                                  separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10,),
-                                  /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
-                                  /// the current weekday. If not, the field will be empty
-                                  itemBuilder: (BuildContext context, int index){
-                                    return Container(
-                                      width: MediaQuery.of(context).size.width*0.35,
-                                      height: 100,
-                                      child: Column(
-                                        children: <Widget>[
-                                          GestureDetector(
-                                            onTap: (){
-                                              // RenderBox object = _reservationButtonKey.currentContext.findRenderObject();
-                                              // var size = object.localToGlobal(Offset.zero);
-                                              // print(size.dy+1000);
-                                              // _listViewScrollController.animateTo(
-                                              //   size.dy,
-                                              //   curve: Curves.linear,
-                                              //   duration: Duration(milliseconds: 300)
-                                              // ).then(
-                                              //   (value) {
-                                                  if(g.isSnackBarActive == false){
-                                                    g.isSnackBarActive = true;
-                                                    Scaffold.of(context).showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
-                                                          textAlign: TextAlign.center,
-                                                        ),
-                                                        backgroundColor: Colors.orange[600],
-                                                      )).closed.then((SnackBarClosedReason reason){
-                                                      g.isSnackBarActive = false;
-                                                    });
-                                                  }
-                                               // }
-                                              //);
-                                            },
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black45, 
-                                                    offset: Offset(-1,1),
-                                                    blurRadius: 2,
-                                                    spreadRadius: 0.2
-                                                  )
-                                                ],
-                                                color: Colors.orange[600],
-                                                borderRadius: BorderRadius.circular(25)
-                                              ),
-                                              child: Text(
-                                                  widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                                  [index].substring(0,5) 
-                                                  +  ' - ' + 
-                                                  widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
-                                                  [index].substring(6,11),
-                                                style: TextStyle(
-                                                  fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
-                                                  //fontFamily: 'Roboto'
-                                                ),
-                                              )  // A concatenation of the string representing the time interval
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: Text(
-                                              '-'+int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
-                                              .toString() + '%',
-                                              /// Old computation for the Discount per level
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                              )
-                                            )
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                ),
-                              ),
-                              
-                            ],
-                          ),
-                        )
-                        : Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Reduceri", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                                  ),
-                                  SizedBox(width: MediaQuery.of(context).size.width*0.2,)
-                                ],
-                              ),
-                              Center(
-                                child: Text(
-                                  "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} reduceri.", 
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                )
-                              ),
-                            ],
-                          ),
-                        ),
-                        ]
-                      ),
                       // The 'Second Image'      
                       Container(
                         padding: EdgeInsets.only(top:30),

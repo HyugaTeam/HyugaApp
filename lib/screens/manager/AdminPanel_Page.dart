@@ -57,23 +57,23 @@ class AdminPanel extends StatelessWidget {
     else maturityMonth = (today.month-12)%12 - 1;
     DateTime emissionDate = DateTime(today.year, maturityMonth,maturityDay);
     DateTime maturityDate = DateTime(today.year, (maturityMonth + 1) % 12, (maturityDay-1)%31);
-    print("START");
     scannedCodes.docs.forEach((element) {
       if(!element.data()["is_active"]){
-        allTimeIncome += element.data()['total'];
+        allTimeIncome += element.data()['total'] == null? 0 : element.data()['total'];
         allTimeGuests += element.data()['number_of_guests'];
         if(today.difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
-          thirtyDaysIncome += element.data()['total'];
+          thirtyDaysIncome += element.data()['total'] == null? 0 : element.data()['total'];
           thirtyDaysGuests += element.data()['number_of_guests'];
         }
         if(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 
           && 
-          (element.data()['discount'] != 0 || element.data()['deal'] != null)
-        )
-        currentBillTotal += element.data()['total'] * retainedPercentage;
+          (element.data()['discount'] != 0 || element.data()['deals'] != [])
+        ){
+          currentBillTotal += (element.data()['total'] == null? 0 : element.data()['total']);
+        }
       }
     });
-    print("START12");
+    currentBillTotal *= retainedPercentage/100;
     Map<String,dynamic> result = {};
     result.addAll(
       {
@@ -87,7 +87,6 @@ class AdminPanel extends StatelessWidget {
         "maturity_date": maturityDate
       }
     );
-    print(result);
     return result;
   }
 

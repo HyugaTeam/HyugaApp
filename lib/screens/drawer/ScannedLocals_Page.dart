@@ -286,8 +286,8 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                             scanHistory.data[index]['total'] != null
                                             ? Flexible(
                                               child: Text(
-                                                scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toInt()
-                                                  ? scanHistory.data[index]['total'].toInt().toString()+" RON"
+                                                scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toDouble()
+                                                  ? scanHistory.data[index]['total'].toDouble().toString()+" RON"
                                                   : scanHistory.data[index]['total'] +" RON",
                                                 style: TextStyle(
                                                   fontSize: 20,

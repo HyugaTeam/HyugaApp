@@ -11,7 +11,7 @@ description: Hyuga App - Find your ideal hangout location.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+6
+version: 1.0.0+7
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -60,6 +60,7 @@ dependencies:
   qr_code_scanner: ^0.0.13
   animations: ^1.1.2
   firebase_database: ^4.1.0
+  facebook_app_events: ^0.9.0
 
   
 

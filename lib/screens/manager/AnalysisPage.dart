@@ -77,7 +77,7 @@ class AnalysisPage extends StatelessWidget {
             ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 50),
                 title: Text("Valoare"),
-                trailing: Text(_managedLocal.analytics['current_bill_total'].toString()+"\nRON")
+                trailing: Text(_managedLocal.analytics['current_bill_total'].toStringAsFixed(2)+"\nRON")
             ),
             ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 50),
