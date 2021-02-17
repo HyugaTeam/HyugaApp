@@ -25,7 +25,7 @@ class UserQRCode extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
               child: Text(
-                "Acesta este codul tau unic. \nScaneaza-l pentru a primi discounturi!",
+                "Acesta este codul tau unic. \nSolicita scanarea codului tau la venirea in local pentru a revendica reducerea.",
                 style: TextStyle(
                   fontFamily: 'Comfortaa',
                   fontSize: 17,

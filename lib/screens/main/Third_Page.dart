@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
+import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
@@ -501,9 +502,15 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               borderRadius: BorderRadius.circular(10),
                                             ),
                                             child: ExpansionCard(
-                                              trailing: FaIcon(
-                                                FontAwesomeIcons.qrcode,
-                                                color: Colors.black
+                                              trailing: GestureDetector(
+                                                onTap: (){
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserQRCode(context)));
+                                                },
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.qrcode,
+                                                  color: Colors.black,
+                                                  size: 26,
+                                                ),
                                               ),
                                               key: key,
                                               borderRadius: 20,
@@ -606,21 +613,22 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                       //   duration: Duration(milliseconds: 300)
                                                       // ).then(
                                                       //   (value) {
-                                                          if(g.isSnackBarActive == false){
-                                                            g.isSnackBarActive = true;
-                                                            Scaffold.of(context).showSnackBar(
-                                                              SnackBar(
-                                                                content: Text(
-                                                                  "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
-                                                                  textAlign: TextAlign.center,
-                                                                ),
-                                                                backgroundColor: Colors.orange[600],
-                                                              )).closed.then((SnackBarClosedReason reason){
-                                                              g.isSnackBarActive = false;
-                                                            });
-                                                          }
+                                                          // if(g.isSnackBarActive == false){
+                                                          //   g.isSnackBarActive = true;
+                                                          //   Scaffold.of(context).showSnackBar(
+                                                          //     SnackBar(
+                                                          //       content: Text(
+                                                          //         "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
+                                                          //         textAlign: TextAlign.center,
+                                                          //       ),
+                                                          //       backgroundColor: Colors.orange[600],
+                                                          //     )).closed.then((SnackBarClosedReason reason){
+                                                          //     g.isSnackBarActive = false;
+                                                          //   });
+                                                          // }
                                                       // }
                                                       //);
+                                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
                                                     },
                                                     child: Container(
                                                       alignment: Alignment.center,
@@ -776,6 +784,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               ),
                               color: Colors.black,
                               onPressed: () async{
+                                AnalyticsService().analytics.logEvent(
+                                  name: "check_uber",
+                                );
                                 LatLng pickup = LatLng(
                                   queryingService.userLocation.latitude, 
                                   queryingService.userLocation.longitude
