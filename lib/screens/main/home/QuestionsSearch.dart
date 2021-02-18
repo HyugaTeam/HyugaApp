@@ -137,7 +137,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
                       ),
                       child: Icon(Icons.search, color: Colors.white),
                       onPressed: () async {
-                        if (checkOptions()) {
+                        if (g.selectedWhat != null && g.selectedWhere != null) {
                           Navigator.pushNamed(context, '/second');
                         } 
                         else {
@@ -146,7 +146,7 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
                             g.isSnackBarActive = true;
                             Scaffold.of(context).showSnackBar(SnackBar(
                               content: Text(
-                                'Selecteaza fiecare camp.',
+                                'Selecteaza Categoria si Specificul.',
                                 textAlign: TextAlign.center,
                               ),
                               backgroundColor: Colors.orange[600],

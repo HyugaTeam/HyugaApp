@@ -309,12 +309,10 @@ class QueryService{
 
   // Handles the whole process of querying
   Future fetch(bool onlyDiscountLocals) async{
-    
     if(g.selectedArea == 0 && _userLocation == null){
       _userLocation = await getUserLocation();
       print("DONE-----------");
     }
-    print(onlyDiscountLocals);
     String selectedAmbiance;
     int selectedHowMany;
     switch (g.selectedAmbiance) {
@@ -326,40 +324,47 @@ class QueryService{
         break;
       default: selectedAmbiance = null;
     }
-
-    switch (g.selectedHowMany) {
-      case 0:
-        selectedHowMany = 1;
-        break;
-      case 1:
-        selectedHowMany = 2;
-        break;
-      case 2:
-        selectedHowMany = 4;
-        break;
-      case 3:
-        selectedHowMany = 6;
-        break;
-      default: selectedHowMany = 9;
-    }
+    if(g.selectedHowMany != null)
+      switch (g.selectedHowMany) {
+        case 0:
+          selectedHowMany = 1;
+          break;
+        case 1:
+          selectedHowMany = 2;
+          break;
+        case 2:
+          selectedHowMany = 4;
+          break;
+        case 3:
+          selectedHowMany = 6;
+          break;
+        default: selectedHowMany = 9;
+      }
+    else selectedHowMany = 0;
     QuerySnapshot locals;
-    print(g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase());
-
-    if(selectedAmbiance != null)  // query by 'ambiance' if selected
-      locals = await _db.collection('locals_bucharest')
-      .where('ambiance', isEqualTo: selectedAmbiance)
-      .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
-      .get();
-    else // ignore 'ambiance' field if not selected
-     locals = await _db.collection('locals_bucharest') 
-     .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
-     .get();
-    
-    print(locals.docs.length);
-    locals.docs.forEach( (element) {
-      print("\nsaddas"+ element.data().toString());  
-    });
-
+    if(g.selectedWhere != null)
+      if(g.selectedWhat != null) {
+        if(selectedAmbiance != null)  // query by 'ambiance' if selected
+          locals = await _db.collection('locals_bucharest')
+          .where('ambiance', isEqualTo: selectedAmbiance)
+          .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
+          .get();
+        else // ignore 'ambiance' field if not selected
+          locals = await _db.collection('locals_bucharest') 
+          .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
+          .get();
+        
+        print(locals.docs.length);
+        locals.docs.forEach( (element) {
+          print("\nsaddas"+ element.data().toString());  
+        });
+      }
+      else {
+        locals = await _db.collection('locals_bucharest')
+        .get();
+      }
+    print("AJUNGE");
+    //print(locals.docs);
     return (locals.docs
     .where((element){
       bool result = true;
@@ -380,6 +385,18 @@ class QueryService{
           result = false;
         print(fromAtoB);
       }
+      // if(g.selectedWhat == null && g.selectedWhere != null)
+      //   if(element.data().containsKey("profile")){
+      //   bool tempResult = false;
+      //   for(int i = 0; i < g.whatList[g.selectedWhere].length; i++){
+      //     print(g.whatList[g.selectedWhere][i].toLowerCase());
+      //     print(element.data()['profile'].containsKey('${g.whatList[g.selectedWhere][i].toLowerCase()}'));
+      //     if(element.data()['profile'].containsKey('${g.whatList[g.selectedWhere][i].toLowerCase()}'))
+      //       tempResult = true;
+      //   }
+      //   result = tempResult;
+      // }
+      print(result.toString() + "   RESULT");
       if(element.data()['capacity'] < selectedHowMany)
         result = false;
       if(element.data()['discounts'] != null)
@@ -394,6 +411,7 @@ class QueryService{
           print(result.toString() + "result");
           result = false;
         }
+        print(element.data());
       return result;
     })
     .map(docSnapToLocal)).toList();
@@ -425,6 +443,7 @@ class QueryService{
         );
       }
     );
+    print("TERMINAT");
     return (locals
     .map(docSnapToLocal)).toList();
   }
