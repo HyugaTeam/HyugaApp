@@ -47,139 +47,175 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
             return Container(
               child: ListView.separated(
                 itemCount: activeGuestsList.length,
-                itemBuilder: (context,index) => ListTile(
-                  trailing: OutlineButton(
-                    highlightedBorderColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)
-                    ),
-                    borderSide: BorderSide(
-                      color: Colors.orange[600]
-                    ),
-                    child: Text(
-                      "Incheie bon",
-                    ),
-                    onPressed: (){
-                      GlobalKey<FormState> _formKey = GlobalKey();
-                      double receiptTotal;
-                      bool isLoading = false;
-                      showDialog(context: context, builder: (context) => Dialog(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                          height: MediaQuery.of(context).size.height*0.6,
-                          width: MediaQuery.of(context).size.height*0.8,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Reducerea care trebuie aplicata: " +
-                                    (activeGuestsList[index].data()['discount'] != null && activeGuestsList[index].data()['discount'] != 0
-                                    ? "${activeGuestsList[index].data()['discount']}%"
-                                    : "0%"),
-                                  style: TextStyle(
-                                    fontSize: 20
-                                  ),
-                                ),
-                                SizedBox(height: MediaQuery.of(context).size.height*0.05),
-                                Text(
-                                  "Introduceti valoarea bonului:",
-                                  style: TextStyle(
-                                    fontSize: 20
-                                  ),
-                                ),
-                                Text(
-                                  "(cu reducerea deja aplicata)",
-                                  style: TextStyle(
-                                    fontSize: 17
-                                  ),
-                                ),
-                                Form(
-                                  key: _formKey,
-                                  child: TextFormField(
-                                    onChanged: (input) => receiptTotal = double.tryParse(input),
-                                    onFieldSubmitted: (input) => _formKey.currentState.validate(),
-                                    cursorColor: Colors.blueGrey,
-                                    keyboardType: TextInputType.number,
-                                    validator: (String input) => double.tryParse(input) == null || input == null
-                                      ? "Numarul introdus nu este corect!"
-                                      : null,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: MediaQuery.of(context).size.height*0.05,
-                                ),
-                                ButtonBar(
-                                  children: [
-                                    RaisedButton(
-                                      color: Colors.blueGrey,
-                                      child: Text("Continua"),
-                                      onPressed: (){
-                                        if(_formKey.currentState.validate()){
-                                          DocumentReference placeRef = activeGuestsList[index].reference;
-                                          placeRef.set(
-                                            {
-                                            "total": receiptTotal,
-                                            "is_active": false,
-                                            "date_end" : FieldValue.serverTimestamp(),
-                                            "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
-                                            },
-                                            SetOptions(merge: true)
-                                          );
-                                          DocumentReference userRef = activeGuestsList[index].data()['user_scan_ref'];
-                                          userRef.set(
-                                            {
-                                            "total": receiptTotal,
-                                            "is_active": false,
-                                            "date_end" : FieldValue.serverTimestamp(),
-                                            "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
-                                            },
-                                            SetOptions(merge: true)
-                                          );
-                                          Navigator.pop(context,true);
-                                        }
-                                      },
-                                    ),
-                                    RaisedButton(
-                                      color: Colors.white,
-                                      child: Text("Renunta"),
-                                      onPressed: (){
-                                        Navigator.pop(context,false);
-                                      },
-                                    )
-                                  ],
-                                ),
-                                Expanded(
-                                  child:Container()
-                                ),
-                                isLoading == true
-                                ? CircularProgressIndicator()
-                                : SizedBox(height: 6,)
-                              ],
-                            )
-                          ),
-                        ),
-                      )).then((value) {
-                          if (value != null && value != false) {
-                            Scaffold.of(context).removeCurrentSnackBar();
-                            Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Masa a fost finalizata!"),
-                              )
-                            );
-                          }
-                        }
-                      );
+                itemBuilder: (context,index) { 
+                  Stream<String> time = Stream.periodic(
+                    Duration(milliseconds: 1000),
+                    (i){
+                      Timestamp dateStart = activeGuestsList[index].data()['date_claimed'] == null ? activeGuestsList[index].data()['date_start'] : activeGuestsList[index].data()['date_claimed'];
+                      Duration duration = DateTime.now().toLocal().difference(DateTime.fromMillisecondsSinceEpoch(dateStart.millisecondsSinceEpoch));
+                      String hours = duration.inHours< 10 ? '0'+duration.inHours.toString() : duration.inHours.toString();
+                      String minutes = duration.inMinutes%60 < 10 ? '0'+(duration.inMinutes%60).toString(): (duration.inMinutes%60).toString();
+                      String seconds = duration.inSeconds%60 < 10 ? '0'+(duration.inSeconds%60).toString() : (duration.inSeconds%60).toString();
+                      return 
+                        hours +':'+
+                        minutes.toString()+':'+
+                        seconds.toString(); 
                     }
-                  ),
-                  title: Text("Masa numarul ${activeGuestsList[index].data()['table_number']}"),
-                  subtitle: Text(
-                    activeGuestsList[index].data()['guest_name'] != null
-                    ? activeGuestsList[index].data()['guest_name']
-                    : "Necunoscut"
-                  ),
-                ),
+                  );
+                
+                  return ListTile(
+                    trailing: OutlineButton(
+                      highlightedBorderColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)
+                      ),
+                      borderSide: BorderSide(
+                        color: Colors.orange[600]
+                      ),
+                      child: Text(
+                        "Incheie bon",
+                      ),
+                      onPressed: (){
+                        GlobalKey<FormState> _formKey = GlobalKey();
+                        double receiptTotal;
+                        bool isLoading = false;
+                        showDialog(context: context, builder: (context) => Dialog(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                            height: MediaQuery.of(context).size.height*0.6,
+                            width: MediaQuery.of(context).size.height*0.8,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Reducerea care trebuie aplicata: " +
+                                      (activeGuestsList[index].data()['discount'] != null && activeGuestsList[index].data()['discount'] != 0
+                                      ? "${activeGuestsList[index].data()['discount']}%"
+                                      : "0%"),
+                                    style: TextStyle(
+                                      fontSize: 20
+                                    ),
+                                  ),
+                                  SizedBox(height: MediaQuery.of(context).size.height*0.05),
+                                  Text(
+                                    "Introduceti valoarea bonului:",
+                                    style: TextStyle(
+                                      fontSize: 20
+                                    ),
+                                  ),
+                                  Text(
+                                    "(cu reducerea deja aplicata)",
+                                    style: TextStyle(
+                                      fontSize: 17
+                                    ),
+                                  ),
+                                  Form(
+                                    key: _formKey,
+                                    child: TextFormField(
+                                      onChanged: (input) => receiptTotal = double.tryParse(input),
+                                      onFieldSubmitted: (input) => _formKey.currentState.validate(),
+                                      cursorColor: Colors.blueGrey,
+                                      keyboardType: TextInputType.number,
+                                      validator: (String input) => double.tryParse(input) == null || input == null
+                                        ? "Numarul introdus nu este corect!"
+                                        : null,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height*0.05,
+                                  ),
+                                  ButtonBar(
+                                    children: [
+                                      RaisedButton(
+                                        color: Colors.blueGrey,
+                                        child: Text("Continua"),
+                                        onPressed: (){
+                                          if(_formKey.currentState.validate()){
+                                            DocumentReference placeRef = activeGuestsList[index].reference;
+                                            placeRef.set(
+                                              {
+                                              "total": receiptTotal,
+                                              "is_active": false,
+                                              "date_end" : FieldValue.serverTimestamp(),
+                                              "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
+                                              },
+                                              SetOptions(merge: true)
+                                            );
+                                            DocumentReference userRef = activeGuestsList[index].data()['user_scan_ref'];
+                                            userRef.set(
+                                              {
+                                              "total": receiptTotal,
+                                              "is_active": false,
+                                              "date_end" : FieldValue.serverTimestamp(),
+                                              "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
+                                              },
+                                              SetOptions(merge: true)
+                                            );
+                                            Navigator.pop(context,true);
+                                          }
+                                        },
+                                      ),
+                                      RaisedButton(
+                                        color: Colors.white,
+                                        child: Text("Renunta"),
+                                        onPressed: (){
+                                          Navigator.pop(context,false);
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child:Container()
+                                  ),
+                                  isLoading == true
+                                  ? CircularProgressIndicator()
+                                  : SizedBox(height: 6,)
+                                ],
+                              )
+                            ),
+                          ),
+                        )).then((value) {
+                            if (value != null && value != false) {
+                              Scaffold.of(context).removeCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Masa a fost finalizata!"),
+                                )
+                              );
+                            }
+                          }
+                        );
+                      }
+                    ),
+                    title: Text("Masa numarul ${activeGuestsList[index].data()['table_number']}"),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          activeGuestsList[index].data()['guest_name'] != null
+                          ? activeGuestsList[index].data()['guest_name']
+                          : "Necunoscut"
+                        ),
+                        StreamBuilder(
+                          stream: time,
+                          builder: (context, currentTime) =>
+                          Text(
+                            currentTime.hasData 
+                            ? currentTime.data
+                            : "00:00:00",
+                            style: TextStyle(
+                              color: Colors.orange[600],
+                              fontSize: 18*(1/MediaQuery.of(context).textScaleFactor),
+                              fontWeight: FontWeight.bold
+                            ),
+                          )
+                        )
+                      ],
+                    ),
+                  );
+                },
                 separatorBuilder: (context,index) => Divider(
                   thickness: 2,
                 ),
