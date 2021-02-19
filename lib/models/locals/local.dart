@@ -22,6 +22,8 @@ class Local{
   final bool hasOpenspace;
   final bool hasReservations;
   final bool isPartner;
+  final bool preferPhone;
+  final int phoneNumber;
   Image finalImage;
 
   Local({
@@ -42,7 +44,9 @@ class Local{
     this.menu,
     this.hasOpenspace,
     this.hasReservations,
-    this.isPartner
+    this.isPartner,
+    this.preferPhone,
+    this.phoneNumber
   }){
     image.then((image) => finalImage = image);
   }

@@ -303,7 +303,9 @@ class QueryService{
       menu: placeData.containsKey('menu') ? placeData['menu']: null,
       hasOpenspace: placeData.containsKey('open_space') ? placeData['open_space']: null,
       hasReservations: placeData.containsKey('reservations') ? placeData['reservations']: null,
-      isPartner: placeData.containsKey('partner') ? placeData['partner']: false
+      isPartner: placeData.containsKey('partner') ? placeData['partner']: false,
+      preferPhone: placeData.containsKey('prefer_phone') ? placeData['prefer_phone'] : null,
+      phoneNumber: placeData.containsKey('phone_number') ? placeData['phone_number'] : null,
     );
   }
 

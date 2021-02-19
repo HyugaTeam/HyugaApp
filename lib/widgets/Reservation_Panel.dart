@@ -96,10 +96,11 @@ class _ReservationPanelState extends State<ReservationPanel> {
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
     List hourAndDiscount = place.discounts[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
-    for(int i = 0; i< hourAndDiscount.length; i++)
-      if(selectedHour.compareTo(hourAndDiscount[i].substring(0,5))>= 0 &&
-      selectedHour.compareTo(hourAndDiscount[i].substring(6,11))< 0)
-        return int.tryParse(hourAndDiscount[i].substring(12,14));
+    if(hourAndDiscount != null)
+      for(int i = 0; i< hourAndDiscount.length; i++)
+        if(selectedHour.compareTo(hourAndDiscount[i].substring(0,5))>= 0 &&
+        selectedHour.compareTo(hourAndDiscount[i].substring(6,11))< 0)
+          return int.tryParse(hourAndDiscount[i].substring(12,14));
     return 0;
   }
 
@@ -110,13 +111,13 @@ class _ReservationPanelState extends State<ReservationPanel> {
           (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
-    List hourAndDiscount = place.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    List hourAndDeals = place.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
     List<Map<String,dynamic>> deals = <Map<String,dynamic>>[];
-    if(hourAndDiscount != null)
-      for(int i = 0; i< hourAndDiscount.length; i++)
-        if(selectedHour.compareTo(hourAndDiscount[i]['interval'].substring(0,5))>= 0 &&
-          selectedHour.compareTo(hourAndDiscount[i]['interval'].substring(6,11))< 0)
-          deals.add(hourAndDiscount[i]);
+    if(hourAndDeals != null)
+      for(int i = 0; i< hourAndDeals.length; i++)
+        if(selectedHour.compareTo(hourAndDeals[i]['interval'].substring(0,5))>= 0 &&
+          selectedHour.compareTo(hourAndDeals[i]['interval'].substring(6,11))< 0)
+          deals.add(hourAndDeals[i]);
     return deals;
   }
 
@@ -338,6 +339,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                     tooltip.ensureTooltipVisible();
                                   },
                                   child: Tooltip(
+                                    preferBelow: false,
                                     margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.2),
                                     padding: EdgeInsets.only(left: 20, right: 20, top: 30),
                                     key: _tooltipKey,

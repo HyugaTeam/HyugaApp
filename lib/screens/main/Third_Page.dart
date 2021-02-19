@@ -110,40 +110,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     _selectedWeekday = today.weekday;
     print(_selectedWeekday);
   }
-
-  //Deprecated
-  //Queries for the other images
-  Future<List<Uint8List>> _getImages() async{
-
-      Uint8List imageFile;
-      int maxSize = 6*1024*1024;
-      String fileName = widget.local.id;
-      String pathName = 'photos/europe/bucharest/$fileName';
-      
-
-      var storageRef = FirebaseStorage.instance.ref().child(pathName);
-      List<Uint8List> listOfImages = [];
-      try{
-          await storageRef.child('$fileName'+'_1.jpg')
-          .getData(maxSize).then((data){
-            imageFile = data;
-            }
-          );
-          listOfImages.add(imageFile);
-
-        await storageRef.child('$fileName'+'_m.jpg')
-          .getData(maxSize).then((data){
-            imageFile = data;
-            }
-          );
-          listOfImages.add(imageFile);
-        return listOfImages;
-      }
-      catch(error){
-        return null;
-      }
-  }
-
+  
   Future<Image> _getFirstImage() async{
     Uint8List imageFile;
     int maxSize = 6*1024*1024;
@@ -243,6 +210,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       return null; // if nothing else happens
   }
 
+  // Launches both Uber app and Place's Menu
   Future<void> _launchInBrowser(BuildContext context, String url, [bool universalLinks = false]) async {
     if (await canLaunch(url)) {
       await launch(
@@ -262,6 +230,15 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
         )
       );
     }
+  }
+
+  Future<void> dialPhoneNumber(int phoneNumber) async{
+    String url = "tel:+$phoneNumber";   
+    if (await canLaunch(url)) {
+       await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }   
   }
   
   /// Deprecated
@@ -994,37 +971,41 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                     )
                                   );
                                 }
-                              else if(widget.local.hasReservations == true){
-                                showGeneralDialog(
-                                  context: context,
-                                  transitionDuration: Duration(milliseconds: 600),
-                                  barrierLabel: "",
-                                  barrierDismissible: true,
-                                  transitionBuilder: (context,animation,secAnimation,child){
-                                    CurvedAnimation _anim = CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.bounceInOut,
-                                      reverseCurve: Curves.easeOutExpo
-                                    );
-                                    return ScaleTransition(
-                                      scale: _anim,
-                                      child: child
-                                    );
-                                  },
-                                  pageBuilder: (newContext,animation,secAnimation){
-                                    return Provider(
-                                      create: (context) => widget.local, 
-                                      child: ReservationPanel(context:newContext)
-                                    );
-                                  }).then((reservation) => reservation != null 
-                                  ? Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                              else if(widget.local.hasReservations == true)
+                                if(widget.local.preferPhone == true) {
+                                  dialPhoneNumber(widget.local.phoneNumber);
+                                }
+                                else {
+                                  showGeneralDialog(
+                                    context: context,
+                                    transitionDuration: Duration(milliseconds: 600),
+                                    barrierLabel: "",
+                                    barrierDismissible: true,
+                                    transitionBuilder: (context,animation,secAnimation,child){
+                                      CurvedAnimation _anim = CurvedAnimation(
+                                        parent: animation,
+                                        curve: Curves.bounceInOut,
+                                        reverseCurve: Curves.easeOutExpo
+                                      );
+                                      return ScaleTransition(
+                                        scale: _anim,
+                                        child: child
+                                      );
+                                    },
+                                    pageBuilder: (newContext,animation,secAnimation){
+                                      return Provider(
+                                        create: (context) => widget.local, 
+                                        child: ReservationPanel(context:newContext)
+                                      );
+                                    }).then((reservation) => reservation != null 
+                                    ? Scaffold.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                                      )
                                     )
-                                  )
-                                  : null
-                                ); 
-                              }
+                                    : null
+                                  ); 
+                                }
                             });
                             }
                           else Scaffold.of(context).showSnackBar(
