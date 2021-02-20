@@ -481,7 +481,23 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                             child: ExpansionCard(
                                               trailing: GestureDetector(
                                                 onTap: (){
-                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserQRCode(context)));
+                                                  if(authService.currentUser.isAnonymous == true)
+                                                    Scaffold.of(context).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text("Trebuie sa te loghezi pentru a beneficia de reduceri."),
+                                                          action: SnackBarAction(
+                                                            textColor: Colors.white,
+                                                            label: "Log In", 
+                                                            onPressed: () async{
+                                                              await authService.signOut();
+                                                              Navigator.popUntil(context, (Route route){
+                                                                return route.isFirst ? true : false;
+                                                              });
+                                                            }
+                                                          ),
+                                                        ),
+                                                      );
+                                                  else Navigator.push(context, MaterialPageRoute(builder: (context) => UserQRCode(context)));
                                                 },
                                                 child: FaIcon(
                                                   FontAwesomeIcons.qrcode,
@@ -605,7 +621,24 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                           // }
                                                       // }
                                                       //);
-                                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
+                                                      if(authService.currentUser.isAnonymous == true)
+                                                        Scaffold.of(context).showSnackBar(
+                                                            SnackBar(
+                                                              content: Text("Trebuie sa te loghezi pentru a beneficia de reduceri."),
+                                                              action: SnackBarAction(
+                                                                textColor: Colors.white,
+                                                                label: "Log In", 
+                                                                onPressed: () async{
+
+                                                                  await authService.signOut();
+                                                                  Navigator.popUntil(context, (Route route){
+                                                                    return route.isFirst ? true : false;
+                                                                  });
+                                                                }
+                                                              ),
+                                                            ),
+                                                          );
+                                                      else Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
                                                     },
                                                     child: Container(
                                                       alignment: Alignment.center,
