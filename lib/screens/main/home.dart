@@ -204,15 +204,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                     end: Alignment.bottomRight,
                                     transform: GradientRotation(2),
                                     colors: [
-                                      Colors.orange[500],
-                                      Colors.orange[800]
+                                      Colors.blueGrey[600],
+                                      Colors.blueGrey[700]
                                     ]
                                   )
                                 ),
                                 width: double.infinity,
                                 height: _topWidgetSize.height,
                                 child: MaterialButton(
-                                  color: Colors.orange[600].withOpacity(0.2),
+                                  color: Colors.blueGrey.withOpacity(0.2),
                                   splashColor: Colors.black26,
                                   highlightColor: Colors.black12,
                                   child: Column(
@@ -288,15 +288,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                     end: Alignment.topLeft,
                                     transform: GradientRotation(2),
                                     colors: [
-                                      Colors.blueGrey[600],
-                                      Colors.blueGrey[700]
+                                      Colors.orange[500],
+                                      Colors.orange[800]
                                     ]
                                   )
                                 ),
                                 width: double.infinity,
                                 height: _bottomWidgetSize.height,
                                 child: MaterialButton(
-                                  color: Colors.blueGrey.withOpacity(0.6),
+                                  color: Colors.orange[600].withOpacity(0.6),
                                   splashColor: Colors.black26,
                                   highlightColor: Colors.black12,
                                   child: Column(

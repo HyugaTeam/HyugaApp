@@ -24,6 +24,7 @@ class Local{
   final bool isPartner;
   final bool preferPhone;
   final int phoneNumber;
+  final String tipMessage;
   Image finalImage;
 
   Local({
@@ -46,7 +47,8 @@ class Local{
     this.hasReservations,
     this.isPartner,
     this.preferPhone,
-    this.phoneNumber
+    this.phoneNumber,
+    this.tipMessage
   }){
     image.then((image) => finalImage = image);
   }

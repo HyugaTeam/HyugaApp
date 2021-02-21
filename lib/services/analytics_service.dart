@@ -1,8 +1,15 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/foundation.dart' as Foundation;
 
 class AnalyticsService{
   final FirebaseAnalytics analytics = FirebaseAnalytics();
+
+  AnalyticsService(){
+    Foundation.kDebugMode
+    ? analytics.setAnalyticsCollectionEnabled(false)
+    : analytics.setAnalyticsCollectionEnabled(true);
+  }
   
   FirebaseAnalyticsObserver getAnalyticsObserver() => FirebaseAnalyticsObserver(analytics: analytics);
 
