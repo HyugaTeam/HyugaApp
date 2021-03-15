@@ -124,20 +124,20 @@ class ProfileDrawer extends StatelessWidget {
                           }
                         ),
                         // The 'Activate table' button
-                        // StreamBuilder<bool>(
-                        //   stream: authService.loading.stream,
-                        //   builder: (context, snapshot) {
-                        //     return authService.currentUser.isManager == null 
-                        //       ? ListTile(
-                        //         leading: FaIcon(FontAwesomeIcons.camera, color: Colors.blueGrey), 
-                        //         title: Text('Activeaza masa'), 
-                        //         onTap: (){
-                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScanPlaceCode(); }));
-                        //         }
-                        //       )
-                        //       : Container();
-                        //   }
-                        // ),
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                            return authService.currentUser.isManager == null 
+                              ? ListTile(
+                                leading: FaIcon(FontAwesomeIcons.camera, color: Colors.blueGrey), 
+                                title: Text('Activeaza masa'), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScanPlaceCode(context: context,); }));
+                                }
+                              )
+                              : Container();
+                          }
+                        ),
                         Expanded(
                           child: Container(),
                         ),

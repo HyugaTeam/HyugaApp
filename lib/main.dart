@@ -21,7 +21,7 @@ void main() async{
   await Firebase.initializeApp();
   print("LOCATIA INCEPE");
   
-  g.isIOS = Platform.isIOS == true? true : false;
+  // g.isIOS = Platform.isIOS == true? true : false;
   queryingService = QueryService();
   MessagingService().requestNotificationPermissions();
   

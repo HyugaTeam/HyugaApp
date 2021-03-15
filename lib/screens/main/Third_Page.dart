@@ -399,35 +399,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      widget.local.tipMessage != null
-                      ? Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.exclamationCircle,
-                              size: 18,
-                            ),
-                            SizedBox(width: 6,),
-                            Container(
-                              width: MediaQuery.of(context).size.width*0.8,
-                              child: Wrap(
-                                children: [
-                                  Text(
-                                    widget.local.tipMessage,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                      : Container(),
                       !widget.local.isPartner
                       ? Text(
                         "Localul nu este partener",
@@ -480,37 +451,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text("Oferte", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                                         ),
-                                        RaisedButton(
-                                          color: Colors.white,
-                                          elevation: 1,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30)
-                                          ),
-                                          onPressed: (){
-                                            if(authService.currentUser.isAnonymous == true)
-                                                Scaffold.of(context).showSnackBar(
-                                                    SnackBar(
-                                                      content: Text("Trebuie sa te loghezi pentru a beneficia de reduceri."),
-                                                      action: SnackBarAction(
-                                                        textColor: Colors.white,
-                                                        label: "Log In", 
-                                                        onPressed: () async{
-                                                          await authService.signOut();
-                                                          Navigator.popUntil(context, (Route route){
-                                                            return route.isFirst ? true : false;
-                                                          });
-                                                        }
-                                                      ),
-                                                    ),
-                                                  );
-                                              else Navigator.push(context, MaterialPageRoute(builder: (context) => UserQRCode(context)));
-                                          },
-                                            child: FaIcon(
-                                              FontAwesomeIcons.qrcode,
-                                              color: Colors.black,
-                                              size: 26,
-                                            ),
-                                        ),
                                         SizedBox(
                                           width: 150
                                         )
@@ -539,6 +479,16 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               borderRadius: BorderRadius.circular(10),
                                             ),
                                             child: ExpansionCard(
+                                              trailing: GestureDetector(
+                                                onTap: (){
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserQRCode(context)));
+                                                },
+                                                child: FaIcon(
+                                                  FontAwesomeIcons.qrcode,
+                                                  color: Colors.black,
+                                                  size: 26,
+                                                ),
+                                              ),
                                               key: key,
                                               borderRadius: 20,
                                               backgroundColor: Colors.orange[600],
@@ -655,24 +605,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                           // }
                                                       // }
                                                       //);
-                                                      if(authService.currentUser.isAnonymous == true)
-                                                        Scaffold.of(context).showSnackBar(
-                                                            SnackBar(
-                                                              content: Text("Trebuie sa te loghezi pentru a beneficia de reduceri."),
-                                                              action: SnackBarAction(
-                                                                textColor: Colors.white,
-                                                                label: "Log In", 
-                                                                onPressed: () async{
-
-                                                                  await authService.signOut();
-                                                                  Navigator.popUntil(context, (Route route){
-                                                                    return route.isFirst ? true : false;
-                                                                  });
-                                                                }
-                                                              ),
-                                                            ),
-                                                          );
-                                                      else Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
+                                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
                                                     },
                                                     child: Container(
                                                       alignment: Alignment.center,
@@ -733,6 +666,29 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       )
                       ]
+                      ),
+                      Container( // 'Description '
+                        alignment: Alignment(-0.9, 0),
+                        padding: EdgeInsets.only(top:20),
+                        child: Text(
+                          'Descriere',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12
+                          ),
+                        )
+                      ),
+                      Container( // Description text
+                        alignment: Alignment(-0.8, 0),
+                        
+                        padding: EdgeInsets.only(top:15,bottom: 15,left:10,right:5),
+                        child: Text(
+                          widget.local.description==null? 'wrong':widget.local.description,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic
+                          ),
+                        )
                       ),
                       Container( // Google Map
                         height: 150,
@@ -876,29 +832,6 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             else return image.data;
                           }
                         ),
-                      ),
-                      Container( // 'Description '
-                        alignment: Alignment(-0.9, 0),
-                        padding: EdgeInsets.only(top:20),
-                        child: Text(
-                          'Descriere',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12
-                          ),
-                        )
-                      ),
-                      Container( // Description text
-                        alignment: Alignment(-0.8, 0),
-                        
-                        padding: EdgeInsets.only(top:15,bottom: 15,left:10,right:5),
-                        child: Text(
-                          widget.local.description==null? 'wrong':widget.local.description,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontStyle: FontStyle.italic
-                          ),
-                        )
                       ),
                       SizedBox(height: 15,),
                       // The 'Second Image'      
