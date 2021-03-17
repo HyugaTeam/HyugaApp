@@ -89,15 +89,15 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Reducerea care trebuie aplicata: " +
-                                      (activeGuestsList[index].data()['discount'] != null && activeGuestsList[index].data()['discount'] != 0
-                                      ? "${activeGuestsList[index].data()['discount']}%"
-                                      : "0%"),
-                                    style: TextStyle(
-                                      fontSize: 20
-                                    ),
-                                  ),
+                                  // Text(
+                                  //   "Reducerea care trebuie aplicata: " +
+                                  //     (activeGuestsList[index].data()['discount'] != null && activeGuestsList[index].data()['discount'] != 0
+                                  //     ? "${activeGuestsList[index].data()['discount']}%"
+                                  //     : "0%"),
+                                  //   style: TextStyle(
+                                  //     fontSize: 20
+                                  //   ),
+                                  // ),
                                   SizedBox(height: MediaQuery.of(context).size.height*0.05),
                                   Text(
                                     "Introduceti valoarea bonului:",
