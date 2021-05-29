@@ -8,6 +8,7 @@ import 'package:hyuga_app/screens/main/home/QuestionsSearch.dart';
 import 'package:hyuga_app/screens/main/home/SearchBar_Page.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/screens/main/UserQRScan_Page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -55,6 +56,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   Animation<double> _animation;
   AnimationController _controller;
+
+  double _animatedButtonWidth = 70;
 
 
 
@@ -137,10 +140,44 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               backgroundColor: Theme.of(context).backgroundColor,
               key: _drawerKey,
               drawer: _drawer,
+              floatingActionButton: AnimatedContainer(
+                // width: _animatedButtonWidth,
+                duration: Duration(milliseconds: 300),
+                child: GestureDetector(
+                  // onLongPress: (){
+                  //   setState(() {
+                  //     _animatedButtonWidth = 200;     
+                  //   });
+                  // },
+                  // onLongPressEnd: (detail){
+                  //   setState(() {
+                  //     _animatedButtonWidth = 70;     
+                  //   });
+                  // },
+                  child: FloatingActionButton(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: 30,
+                    ),
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ScanReceipt()));
+                    },                
+                  ),
+                ),
+              ),
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 toolbarHeight: 70,
+                centerTitle: true,
+                // title: IconButton(
+                //   icon: Icon(
+                //     Icons.camera_alt,
+                //     size: 40,
+                //   ),
+                //   onPressed: (){},
+                // ),
                 leading: IconButton(
                   icon: Icon(Icons.menu),
                   iconSize: 20,
@@ -234,8 +271,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25,
                                           color: Colors.white,
-                                          shadows: [
-                                          ]
                                         ),
                                       ),
                                     ],
@@ -315,10 +350,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                           fontSize: 25,
                                           letterSpacing: -0.5,
                                           color: Colors.white,
-                                          shadows: [
-                                          ]
                                         ),
                                       ),
+                                      SizedBox(height: 30)
                                     ],
                                   ),
                                   onPressed: (){

@@ -44,6 +44,8 @@ class _ScanPlaceCodeState extends State<ScanPlaceCode> {
 
   final ImagePicker _picker = ImagePicker();
 
+  
+
   void findReceiptTotal(String text){
     int index = text.indexOf("TOTAL");
     print(index);
@@ -115,7 +117,6 @@ class _ScanPlaceCodeState extends State<ScanPlaceCode> {
               }
             )
           );
-
         }
       }
     );
