@@ -17,7 +17,7 @@ class QueryService{
   
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
-  static final StorageReference storageRef = storage.ref();
+  static final Reference storageRef = storage.ref();
   static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
   PublishSubject<bool> locationEnabledStream = PublishSubject<bool>();
   static LocationData _userLocation ;
@@ -306,6 +306,7 @@ class QueryService{
       isPartner: placeData.containsKey('partner') ? placeData['partner']: false,
       preferPhone: placeData.containsKey('prefer_phone') ? placeData['prefer_phone'] : null,
       phoneNumber: placeData.containsKey('phone_number') ? placeData['phone_number'] : null,
+      tipMessage: placeData.containsKey('tip_message') ? placeData['tip_message'] : null,
     );
   }
 

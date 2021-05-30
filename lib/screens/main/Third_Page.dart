@@ -11,6 +11,7 @@ import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/widgets/DiscountHeroPage.dart';
 import 'package:hyuga_app/widgets/Reservation_Panel.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
@@ -562,7 +563,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                         ],
                                       ),
                                       Container(
-                                        height: 100,
+                                        height: 110,
                                         child: ListView.separated(
                                           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                                           scrollDirection: Axis.horizontal,
@@ -574,79 +575,124 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                           /// ^^^ This comparison checks if in the 'discounts' Map field imported from Firebase exist any discounts related to 
                                           /// the current weekday. If not, the field will be empty
                                           itemBuilder: (BuildContext context, int index){
-                                            return Container(
-                                              width: MediaQuery.of(context).size.width*0.35,
-                                              height: 100,
-                                              child: Column(
-                                                children: <Widget>[
-                                                  GestureDetector(
-                                                    onTap: (){
-                                                      // RenderBox object = _reservationButtonKey.currentContext.findRenderObject();
-                                                      // var size = object.localToGlobal(Offset.zero);
-                                                      // print(size.dy+1000);
-                                                      // _listViewScrollController.animateTo(
-                                                      //   size.dy,
-                                                      //   curve: Curves.linear,
-                                                      //   duration: Duration(milliseconds: 300)
-                                                      // ).then(
-                                                      //   (value) {
-                                                          // if(g.isSnackBarActive == false){
-                                                          //   g.isSnackBarActive = true;
-                                                          //   Scaffold.of(context).showSnackBar(
-                                                          //     SnackBar(
-                                                          //       content: Text(
-                                                          //         "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
-                                                          //         textAlign: TextAlign.center,
-                                                          //       ),
-                                                          //       backgroundColor: Colors.orange[600],
-                                                          //     )).closed.then((SnackBarClosedReason reason){
-                                                          //     g.isSnackBarActive = false;
-                                                          //   });
-                                                          // }
-                                                      // }
-                                                      //);
-                                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
-                                                    },
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      height: 30,
-                                                      decoration: BoxDecoration(
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.black45, 
-                                                            offset: Offset(-1,1),
-                                                            blurRadius: 2,
-                                                            spreadRadius: 0.2
-                                                          )
-                                                        ],
-                                                        color: Colors.orange[600],
-                                                        borderRadius: BorderRadius.circular(25)
-                                                      ),
-                                                      child: Text(
+                                            return Hero(
+                                              tag: "discounts"+index.toString(),
+                                              
+                                              child: Container(
+                                                width: MediaQuery.of(context).size.width*0.35,
+                                                height: 110,
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    GestureDetector(
+                                                      onTap: (){
+                                                        // RenderBox object = _reservationButtonKey.currentContext.findRenderObject();
+                                                        // var size = object.localToGlobal(Offset.zero);
+                                                        // print(size.dy+1000);
+                                                        // _listViewScrollController.animateTo(
+                                                        //   size.dy,
+                                                        //   curve: Curves.linear,
+                                                        //   duration: Duration(milliseconds: 300)
+                                                        // ).then(
+                                                        //   (value) {
+                                                            // if(g.isSnackBarActive == false){
+                                                            //   g.isSnackBarActive = true;
+                                                            //   Scaffold.of(context).showSnackBar(
+                                                            //     SnackBar(
+                                                            //       content: Text(
+                                                            //         "Vino in local si scaneaza codul sau fa o rezervare in intervalul dorit pentru a primi reducerea.",
+                                                            //         textAlign: TextAlign.center,
+                                                            //       ),
+                                                            //       backgroundColor: Colors.orange[600],
+                                                            //     )).closed.then((SnackBarClosedReason reason){
+                                                            //     g.isSnackBarActive = false;
+                                                            //   });
+                                                            // }
+                                                        // }
+                                                        //);
+                                                        //Navigator.push(context, MaterialPageRoute(builder: (context)=>UserQRCode(context)));
+                                                          showGeneralDialog(
+                                                            context: context,
+                                                            transitionDuration: Duration(milliseconds: 200),
+                                                            barrierLabel: "",
+                                                            barrierDismissible: true,
+                                                            // transitionBuilder: (context,animation,secAnimation,child){
+                                                            //   CurvedAnimation _anim = CurvedAnimation(
+                                                            //     parent: animation,
+                                                            //     curve: Curves.bounceInOut,
+                                                            //     reverseCurve: Curves.easeOutExpo
+                                                            //   );
+                                                            //   return ScaleTransition(
+                                                            //     scale: _anim,
+                                                            //     child: child
+                                                            //   );
+                                                            // },
+                                                            pageBuilder: (context, anim, secAnim) => DiscountHeroPage(
+                                                              heroTag: "discounts"+index.toString(),
+                                                              interval: widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                                  [index].substring(0,5) 
+                                                                  +  ' - ' + 
+                                                                  widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                                  [index].substring(6,11),
+                                                              discount: int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14)),
+                                                            )
+                                                          );
+                                                          // Navigator.push(context, MaterialPageRoute(
+                                                          //   builder: (context) => 
+                                                          //   DiscountHeroPage(
+                                                          //     heroTag: "discounts"+index.toString(),
+                                                          //     interval: widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                          //         [index].substring(0,5) 
+                                                          //         +  ' - ' + 
+                                                          //         widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                                          //         [index].substring(6,11),
+                                                          //     discount: int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14)),
+                                                          //   )
+                                                          // ));
+                                                        
+                                                      },
+                                                      child: Container(
+                                                        padding: EdgeInsets.symmetric(vertical: 5),
+                                                        alignment: Alignment.center,
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors.black45, 
+                                                              offset: Offset(-1,1),
+                                                              blurRadius: 2,
+                                                              spreadRadius: 0.2
+                                                            )
+                                                          ],
+                                                          color: Colors.orange[600],
+                                                          borderRadius: BorderRadius.circular(25)
+                                                        ),
+                                                        child: Text(
                                                           widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
                                                           [index].substring(0,5) 
                                                           +  ' - ' + 
                                                           widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
                                                           [index].substring(6,11),
-                                                        style: TextStyle(
-                                                          fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
-                                                          //fontFamily: 'Roboto'
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: 16*(1/MediaQuery.of(context).textScaleFactor),
+                                                            //fontFamily: 'Roboto'
                                                         ),
-                                                      )  // A concatenation of the string representing the time interval
+                                                          ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Text(
-                                                      '-'+int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
-                                                      .toString() + '%',
-                                                      /// Old computation for the Discount per level
-                                                      style: TextStyle(
-                                                        fontSize: 20,
+                                                    Padding(
+                                                      padding: EdgeInsets.all(10),
+                                                      child: Text(
+                                                        '-'+int.parse(widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index].substring(12,14))
+                                                        .toString() + '%',
+                                                        /// Old computation for the Discount per level
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                        )
                                                       )
                                                     )
-                                                  )
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             );
                                           }
