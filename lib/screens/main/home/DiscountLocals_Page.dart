@@ -59,31 +59,32 @@ class _DiscountLocalsPageState extends State<DiscountLocalsPage> {
         drawer: ProfileDrawer(),
         backgroundColor: Theme.of(context).backgroundColor,
         body: NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  centerTitle: true,
-                  title: Text(
-                    'hyuga',
-                    style: TextStyle(
-                      fontFamily: 'Comfortaa',
-                      fontSize: 25
-                    ),
+          controller: _scrollController,
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                centerTitle: true,
+                title: Text(
+                  'hyuga',
+                  style: TextStyle(
+                    fontFamily: 'Comfortaa',
+                    fontSize: 25
                   ),
-                  backgroundColor: Colors.blueGrey,
-                  pinned: false,
-                  floating: true,
-                  forceElevated: innerBoxIsScrolled,
-                  leading: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                )
-              ];
-            },
-            body: Locals(onlyWithDiscounts: true,
+                ),
+                backgroundColor: Colors.blueGrey,
+                pinned: false,
+                floating: true,
+                forceElevated: innerBoxIsScrolled,
+                leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+              )
+            ];
+          },
+          body: Locals(
+            onlyWithDiscounts: true,
           )
         )
       );

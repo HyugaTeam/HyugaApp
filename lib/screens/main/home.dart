@@ -140,32 +140,32 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               backgroundColor: Theme.of(context).backgroundColor,
               key: _drawerKey,
               drawer: _drawer,
-              floatingActionButton: AnimatedContainer(
-                // width: _animatedButtonWidth,
-                duration: Duration(milliseconds: 300),
-                child: GestureDetector(
-                  // onLongPress: (){
-                  //   setState(() {
-                  //     _animatedButtonWidth = 200;     
-                  //   });
-                  // },
-                  // onLongPressEnd: (detail){
-                  //   setState(() {
-                  //     _animatedButtonWidth = 70;     
-                  //   });
-                  // },
-                  child: FloatingActionButton(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 30,
-                    ),
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ScanReceipt()));
-                    },                
-                  ),
-                ),
-              ),
+              // floatingActionButton: AnimatedContainer(
+              //   // width: _animatedButtonWidth,
+              //   duration: Duration(milliseconds: 300),
+              //   child: GestureDetector(
+              //     // onLongPress: (){
+              //     //   setState(() {
+              //     //     _animatedButtonWidth = 200;     
+              //     //   });
+              //     // },
+              //     // onLongPressEnd: (detail){
+              //     //   setState(() {
+              //     //     _animatedButtonWidth = 70;     
+              //     //   });
+              //     // },
+              //     child: FloatingActionButton(
+              //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              //       child: Icon(
+              //         Icons.camera_alt,
+              //         size: 30,
+              //       ),
+              //       onPressed: (){
+              //         Navigator.push(context, MaterialPageRoute(builder: (context)=> ScanReceipt()));
+              //       },                
+              //     ),
+              //   ),
+              // ),
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,

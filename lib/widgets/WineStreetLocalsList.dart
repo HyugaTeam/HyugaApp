@@ -8,16 +8,16 @@ import 'package:latlong/latlong.dart';
 import 'Place_List_profile.dart';
 
 /// A class which renders the list of queried locals
-class Locals extends StatefulWidget {
+class WineStreetLocals extends StatefulWidget {
 
   // Used by the DiscountLocals_Page in order to obtain only the Places with Discounts 
   final bool onlyWithDiscounts;
-  Locals({this.onlyWithDiscounts});
+  WineStreetLocals({this.onlyWithDiscounts});
   @override
-  _LocalsState createState() => _LocalsState();
+  _WineStreetLocalsState createState() => _WineStreetLocalsState();
 }
 
-class _LocalsState extends State<Locals> {
+class _WineStreetLocalsState extends State<WineStreetLocals> {
 
   DateTime today = DateTime.now().toLocal();
   static const List<Map<String, Object>> _discounts = [
@@ -86,44 +86,45 @@ class _LocalsState extends State<Locals> {
           return Center(child: SpinningLogo (),);
         else if(locals.data.length == 0)
           return Center(
-            child: Text("Ne pare rau, dar nu exista rezultate.\nIncearca sa cauti altceva.")
+            child: Text("Ne pare rau, dar nu exista rezultate.")
           );
           else return RefreshIndicator(
             displacement: 50,
             onRefresh: refresh,
             child: Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(
-              left: 5,
-              right: 5
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(), 
-              itemCount: locals.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                Local local = locals.data[index];
-                double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
-                double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
-                PlaceListProfile place = PlaceListProfile(
-                  scaffoldContext: context,
-                  name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
-                  distance: lengthInMeter > 1000 
-                  ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
-                  + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
-                  :'0.' + ((lengthInMeter/100%10).toInt()).toString()
-                  ,onTap: (){
-                  Navigator.pushNamed(
-                    context,
-                    '/third',
-                    arguments: [local,widget.onlyWithDiscounts]
+              //color: Colors.white,
+              padding: EdgeInsets.only(
+                left: 5,
+                right: 5
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                //physics: const AlwaysScrollableScrollPhysics(), 
+                itemCount: locals.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Local local = locals.data[index];
+                  double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
+                  double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
+                  PlaceListProfile place = PlaceListProfile(
+                    scaffoldContext: context,
+                    name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
+                    distance: lengthInMeter > 1000 
+                    ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
+                    + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
+                    :'0.' + ((lengthInMeter/100%10).toInt()).toString()
+                    ,onTap: (){
+                    Navigator.pushNamed(
+                      context,
+                      '/third',
+                      arguments: [local,widget.onlyWithDiscounts]
+                    );
+                  },
                   );
-                },
-                );
-                 return place;
-              }
-            )
-          ),
+                  return place;
+                }
+              )
+            ),
         );
       }
     );

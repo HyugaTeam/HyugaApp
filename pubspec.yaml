@@ -64,6 +64,9 @@ dependencies:
   square_in_app_payments: ^1.5.1
   # firebase_ml_vision: ^0.10.0
   google_ml_kit: ^0.0.3+1
+  sliding_up_panel: ^1.0.2	
+
+
 
   
 # Commented

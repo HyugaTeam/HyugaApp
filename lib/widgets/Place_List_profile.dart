@@ -100,7 +100,8 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
               width: 355.0,
               decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.black38),
-                color: Colors.blueGrey,
+                color: Theme.of(context).accentColor,
+                //color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Container(
