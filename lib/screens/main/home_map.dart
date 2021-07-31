@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:hyuga_app/widgets/WineStreetLocalsList.dart';
+import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -34,6 +35,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   PanelController _panelController = PanelController();
 
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
+  ProfileDrawer _drawer = ProfileDrawer();
 
   @override
   void initState(){
@@ -44,44 +46,44 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
     Container(
       decoration: BoxDecoration(
         // color: whiteColor,
-        // borderRadius: BorderRadius.only(
-        //   topLeft: Radius.elliptical(210, 50),
-        //   topRight: Radius.elliptical(210, 50)
-        // )
-        //  
+        borderRadius: BorderRadius.only(
+          topLeft: topLeftPanelCornerRadius,
+          topRight: topRightPanelCornerRadius
+        )
+         
       ),
-      height: MediaQuery.of(context).size.height,
       child: ListView(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         controller: controller,
         children: [
           SizedBox(height: 10,),
-          GestureDetector(
+          GestureDetector( /// The slide-up button
             child: Center(
               child: Container(
                 padding: EdgeInsets.all(10),
                 height: 5,
                 width: 30,
                 decoration: BoxDecoration(
-                  color: darkWhiteColor,
+                  color: Color(0xFF70545c),
                   borderRadius: BorderRadius.circular(12)
                 ),
               ),
             ),
-            onTap: (){
+            onTap: (){ // Doesn't work for some reason
               print("sdal");
-              if(_panelController.isPanelOpen)
+              if(_panelController.isPanelClosed)
                 _panelController.open();
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 25),
             child: Text(
               "Reducerile de azi",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20
+                fontSize: 20,
+                color: Colors.white
               ),
             ),
           ),
@@ -97,8 +99,8 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
         bottomRight: Radius.elliptical(210, 50)
       )            
     ),
-    backgroundColor: darkWhiteColor,
-    elevation: 0,
+    backgroundColor: Theme.of(context).accentColor,
+    elevation: 2,
     toolbarHeight: 70,
     centerTitle: true,
     title: Opacity(
@@ -108,7 +110,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
       ),
     ),
     leading: IconButton(
-      padding: EdgeInsets.only(bottom: 20),
+      padding: EdgeInsets.only(bottom: 20, left: 30),
       icon: Icon(Icons.menu),
       iconSize: 20,
       color: Colors.white,
@@ -120,7 +122,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
     ),
     actions: <Widget>[
       IconButton(
-        padding: EdgeInsets.only(bottom: 20),
+        padding: EdgeInsets.only(bottom: 20, right: 30),
         splashColor: Colors.white.withOpacity(0.8),
         highlightColor: Colors.white.withOpacity(0.2),
         icon: FaIcon(FontAwesomeIcons.search, size: 18),
@@ -157,6 +159,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
     return StreamBuilder(
       stream: authService.seatingStatus,
       builder: (context, ss) {
+      if(authService.currentUser.isAnonymous != true)
         if(!ss.hasData) // Checks if the user is seated or not
           return Scaffold(body: Center(child: SpinningLogo(),));
         else if(ss.data.docs.length == 1 )
@@ -164,6 +167,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
         return Scaffold(
           extendBodyBehindAppBar: true,
           key: _drawerKey,
+          drawer: _drawer,
           appBar: buildAppBar(),
           //bottomNavigationBar: BottomAppBar(),
           body: Builder(
@@ -172,7 +176,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
               return Container(
                 child: SlidingUpPanel(
                   controller: _panelController,
-                  color: whiteColor,
+                  color: Theme.of(context).accentColor,
                   parallaxEnabled: true,
                   borderRadius: BorderRadius.only(
                     topLeft: topLeftPanelCornerRadius,

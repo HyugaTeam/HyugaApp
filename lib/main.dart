@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/screens/main/home.dart';
+import 'package:hyuga_app/screens/main/home_map.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -45,7 +46,7 @@ void main() async{
           routes: {
             'wrapper/': (context) => Wrapper(),
 
-            '/': (context) => Home(),
+            '/': (context) => HomeMapPage(),
 
             'loading/wrapper/': (context) => Wrapper(),
 
@@ -69,16 +70,31 @@ void main() async{
               backgroundColor: Colors.orange[600]
             ),
             appBarTheme: AppBarTheme(
-              color: Colors.blueGrey,
+              color: Color(0xFFb78a97)
+              //color: Colors.blueGrey,
             ),
             textTheme: TextTheme(
               subtitle2: TextStyle(
                 color: Colors.black
               ) 
             ),
-            highlightColor: Colors.orange[600],
+            // highlightColor: Colors.orange[600],
+            // backgroundColor: Colors.white,
+            // accentColor: Colors.blueGrey,
+            // primaryColorDark: Colors.orange[600]
+
+            primaryColor: Color(0xFF600F2B),
+            //highlightColor: Color(0xFF600F2B),
+            highlightColor: Color(0xFFCFBA70),
             backgroundColor: Colors.white,
-            accentColor: Colors.blueGrey,
+            accentColor: Color(0xFFb78a97),
+            primaryColorDark: Color(0xFF600F2B),
+
+            // primaryColor: Color(0xFF600F2B),
+            // highlightColor: Color(0xFFb78a97),
+            // backgroundColor: Colors.white,
+            // accentColor: Color(0xFFCFBA70),
+            // primaryColorDark: Color(0xFF340808),
             fontFamily: 'Comfortaa'
           ),
         ),

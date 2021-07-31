@@ -1,5 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
@@ -72,6 +74,18 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
     return null;
   }
 
+  Future<List<Local>> places;
+
+  void getPlaces(){
+    places = queryingService.fetchOnlyDiscounts();
+  }
+
+  @override
+    void initState() {
+      super.initState();
+      getPlaces();
+    }
+
   Future refresh(){
     return Future((context as Element).reassemble);
     
@@ -80,7 +94,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.onlyWithDiscounts != true? queryingService.fetch(false) : queryingService.fetchOnlyDiscounts(),
+      future: places,
       builder:(context,locals){
         if(!locals.hasData)
           return Center(child: SpinningLogo (),);
@@ -88,44 +102,56 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
           return Center(
             child: Text("Ne pare rau, dar nu exista rezultate.")
           );
-          else return RefreshIndicator(
-            displacement: 50,
-            onRefresh: refresh,
-            child: Container(
-              //color: Colors.white,
-              padding: EdgeInsets.only(
-                left: 5,
-                right: 5
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                //physics: const AlwaysScrollableScrollPhysics(), 
-                itemCount: locals.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Local local = locals.data[index];
-                  double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
-                  double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
-                  PlaceListProfile place = PlaceListProfile(
-                    scaffoldContext: context,
-                    name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
-                    distance: lengthInMeter > 1000 
-                    ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
-                    + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
-                    :'0.' + ((lengthInMeter/100%10).toInt()).toString()
-                    ,onTap: (){
-                    Navigator.pushNamed(
-                      context,
-                      '/third',
-                      arguments: [local,widget.onlyWithDiscounts]
+          else return Container(
+            color: Colors.white,
+            //color: Colors.grey[50],
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              //physics: const AlwaysScrollableScrollPhysics(), 
+              itemCount: locals.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                Local local = locals.data[index];
+                double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
+                double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
+                PlaceListProfile place;
+                // PlaceListProfile place = PlaceListProfile(
+                //   scaffoldContext: context,
+                //   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
+                //   distance: lengthInMeter > 1000 
+                //   ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
+                //   + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
+                //   :'0.' + ((lengthInMeter/100%10).toInt()).toString()
+                //   ,onTap: (){
+                //   Navigator.pushNamed(
+                //     context,
+                //     '/third',
+                //     arguments: [local,widget.onlyWithDiscounts]
+                //   );
+                // },
+                // );
+                return OpenContainer(
+                  transitionDuration: Duration(milliseconds: 500),
+                  openBuilder: (context, f) => ThirdPage(
+                    local: local,
+                  ),
+                  closedBuilder: (context, f) {
+                    PlaceListProfile place = PlaceListProfile(
+                      scaffoldContext: context,
+                      name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
+                      distance: lengthInMeter > 1000 
+                      ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
+                      + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
+                      :'0.' + ((lengthInMeter/100%10).toInt()).toString()
+                      ,onTap: f
                     );
+                    return place;
                   },
-                  );
-                  return place;
-                }
-              )
+                );
+                //return place;
+              }
             ),
-        );
+          );
       }
     );
   }

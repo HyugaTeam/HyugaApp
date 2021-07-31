@@ -35,8 +35,8 @@ class _RegisterState extends State<Register> {
         snackBarTheme: SnackBarThemeData(
           backgroundColor: Colors.orange[600]
         ),
-        primaryColor: Colors.orange[600],
-        highlightColor: Colors.orange[600]
+        primaryColor: Theme.of(context).accentColor,
+        highlightColor: Theme.of(context).accentColor
       ),
         child: Scaffold(
         appBar: AppBar(
@@ -68,6 +68,7 @@ class _RegisterState extends State<Register> {
                         TextFormField(
                           validator: (input) => input.isEmpty ? "You must enter an email" : null,
                           decoration: InputDecoration(
+                            focusColor: Theme.of(context).accentColor,
                             labelText: 'Email',
                             hoverColor: Colors.orange[600]
                           ),

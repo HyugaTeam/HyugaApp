@@ -78,11 +78,11 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
 
     return Theme(
       data: ThemeData(
-        accentColor: Colors.blueGrey,
+        accentColor: Theme.of(context).accentColor,
         textTheme: TextTheme(
           button: TextStyle(
             fontSize: 15,
-            color: Colors.blueGrey,
+            color: Theme.of(context).accentColor,
             fontWeight: FontWeight.bold,
             fontFamily: 'Comfortaa'
           )
@@ -95,8 +95,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
             borderRadius: BorderRadius.circular(10)
           )
         ),
-        primaryColor: Colors.black45,
-        highlightColor: Colors.orange[600]
+        highlightColor: Colors.black45,
+        primaryColor: Theme.of(context).primaryColor
+        
+        //highlightColor: Colors.orange[600]
       ),
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -113,7 +115,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                     SizedBox(height: MediaQuery.of(context).size.height*0.1),
                     Center(
                       child: Image.asset(
-                        'assets/images/hyuga-logo.png',
+                        'assets/images/wine-street-logo.png',
+                        //'assets/images/hyuga-logo.png',
                         width: 80,
                       )
                     ),
@@ -122,30 +125,36 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                     ),
                     Center(
                       child: Text( // Hello text
-                        'hyuga',
+                      'wine street',
+                        //'hyuga',
                         style: TextStyle(
                           fontFamily: 'Comfortaa',
                           fontSize: 40
                         ),
                       ),
                     ),
-                    Center(
-                      child: Text(
-                        "Let's log in!",
-                      ),
-                    ),
+                    // Center(
+                    //   child: Text(
+                    //     "Let's log in!",
+                    //   ),
+                    // ),
                     Container(  // sign-in anonymously button
                       padding: EdgeInsets.symmetric(vertical:20,horizontal:95),
                       child: MaterialButton(
-                        splashColor: Colors.orange[100],
-                        color: Colors.orange[600],
+                        splashColor: Theme.of(context).accentColor,
+                        //splashColor: Colors.orange[100],
+                        color: Theme.of(context).accentColor,
                         minWidth: 150,
                         height: 35,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: Text(
-                          "Sari peste", style: TextStyle(fontSize: 13),
+                          "Sari peste", 
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white
+                          ),
                         ),
                         onPressed: () async{
                             dynamic signInResult = await authService.signInAnon(); // it either returns a user
@@ -344,9 +353,10 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             Container(
                                               child: InkWell(   /// "Register with Email" button
                                                 child: Text(
-                                                  "Inregistare",
+                                                  "Inregistrare",
                                                   style: TextStyle(
-                                                    color: Colors.orange[600]
+                                                    color: Theme.of(context).accentColor,
+                                                    fontWeight: FontWeight.bold
                                                   ),
                                                 ),
                                                 highlightColor: Colors.transparent,

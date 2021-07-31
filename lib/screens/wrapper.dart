@@ -8,6 +8,7 @@ import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/widgets/SlideShow_Intro.dart';
 import 'package:provider/provider.dart';
 import 'main/home.dart';
+import 'main/home_map.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 
@@ -142,7 +143,8 @@ class Wrapper extends StatelessWidget {
                       else if(g.isNewUser)
                         return SlideShowIntro();
                       else
-                        return Home();
+                        /// Changed for WineStreet
+                        return HomeMapPage();
                     }
                   ); 
                 else

@@ -14,7 +14,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Wine Street"
-        android:icon="@mipmap/hyuga">
+        android:icon="@mipmap/wine_street">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDNdhCM43QwuN5t98P282RENyCUQ7H9erw"/>
         <meta-data

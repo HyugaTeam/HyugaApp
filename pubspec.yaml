@@ -95,6 +95,9 @@ flutter:
     - assets/images/google-logo-icon.png
     - assets/images/hyuga-logo.png
     - assets/images/stars.png
+    - assets/images/wine-street-logo.png
+    - assets/images/wine-street-logo-pin.png
+    - assets/images/wine_icon1.png
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

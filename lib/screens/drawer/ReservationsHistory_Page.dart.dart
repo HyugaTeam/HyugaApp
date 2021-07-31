@@ -47,7 +47,7 @@ class ReservationsHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Theme.of(context).accentColor,
       ),
       body: ListView(
         shrinkWrap: true,

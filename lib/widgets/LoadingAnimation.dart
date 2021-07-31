@@ -45,11 +45,11 @@ class _SpinningLogoState extends State<SpinningLogo> with TickerProviderStateMix
     )..addListener(() {
       if(_animationController.value < 0.25 || _animationController.value > 0.75)
         setState(() {
-          _animationColor = Colors.orange[600];
+          _animationColor = Theme.of(context).accentColor;
         });
       else
         setState(() {
-            _animationColor = Colors.blueGrey;
+            _animationColor = Theme.of(context).primaryColor;
           
         });
     })
@@ -94,7 +94,8 @@ class _SpinningLogoState extends State<SpinningLogo> with TickerProviderStateMix
             top: 95,
           ),
           Positioned( // Hyuga Logo
-            child: Image.asset("assets/images/hyuga-logo.png", width: 40,),
+            child: Image.asset("assets/images/wine_icon1.png", width: 40, color: Theme.of(context).accentColor,),
+            //child: Image.asset("assets/images/hyuga-logo.png", width: 40,),
             left: 80,
             top: 80
           ),

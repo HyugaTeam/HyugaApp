@@ -6,6 +6,12 @@ import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'dart:math';
 
+/*
+  ----------- Wine Street update -----------
+  - changed the colors to WS colors
+
+*/
+
 //asta trebuie pusa intr-o clasa separata
 class _InkWrapper extends StatelessWidget {
   final Color splashColor;
@@ -88,7 +94,10 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
+      //color: Colors.grey[50],
+     // margin: EdgeInsets.only(bottom: 30),
       width: 400.0,
+      // height: 300,
       height: 310,
       child: Stack(
         alignment: Alignment.topCenter,
@@ -188,7 +197,9 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
               Container(
                 // The spacer between the Places
                 width: 400,
-                height: 35,
+                height: 35
+                //height: 20,
+                //color: Colors.grey[50],
               ),
               Container(
                 decoration: BoxDecoration(
@@ -205,10 +216,10 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                         blurRadius: 4.0),
                   ],
                 ),
-                child: ClipRRect(
+                child: ClipRRect( // The clipper around the image
                   borderRadius: BorderRadius.circular(20.0),
                   child: _InkWrapper(
-                      splashColor: Colors.orange[600].withOpacity(0.65),
+                      splashColor: Theme.of(context).highlightColor.withOpacity(0.3),
                       highlightColor: Colors.black.withOpacity(0.1),
                       child: Container(
                         width: min(325,MediaQuery.of(context).size.width*0.85),
@@ -216,24 +227,20 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                         child: Hero( /// The image Hero Widget
                           tag: widget.name,
                           child: FutureBuilder(
-                              future: widget.image,
-                              builder: (context, img) {
-                                if(widget.finalImage == null)
-                                  return Container(
-                                    width: 400,
-                                    height: 200,
-                                    child: Shimmer.fromColors(
-                                      child: Container(),
-                                      baseColor: Colors.white,
-                                      highlightColor: Colors.grey
-                                    ),
-                                  );
-                                else
-                                  return Container(
-                                    color: Colors.transparent, 
-                                    child: widget.finalImage
-                                  );
-                              }),
+                            future: widget.image,
+                            builder: (context, img) {
+                              if(img.hasData == null)
+                                return Container(
+                                  width: 400,
+                                  height: 200,
+                                  child: Container(),
+                                );
+                              else
+                                return Container(
+                                  child: img.data
+                                );
+                            }
+                          ),
                         ),
                       ),
                       onTap: widget.onTap
@@ -242,8 +249,8 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
               ),
             ],
           ),
-          Positioned(
-              // The maximum discount bubble
+          Positioned( // The maximum deal bubble
+              
               right: MediaQuery.of(context).size.width*0.5-min(200,MediaQuery.of(context).size.width*0.5),
               top: 0,
               child: widget.deals != null
@@ -255,14 +262,15 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                         scale: 1.25,
                         child: FloatingActionButton(
                           heroTag: widget.name+'_dealsButton',
-                          backgroundColor: Colors.orange[600],
+                          backgroundColor: Theme.of(context).primaryColor,
                           onPressed: () {
                             if (g.isSnackBarActive == false) {
                               g.isSnackBarActive = true;
                               Scaffold.of(widget.scaffoldContext)
                                   .showSnackBar(SnackBar(
                                     duration: Duration(seconds: 5),
-                                    backgroundColor: Colors.orange[600],
+                                    backgroundColor: Theme.of(context).highlightColor,
+                                    //backgroundColor: Colors.orange[600],
                                     content: Text(
                                       "Localul are astazi oferte, intra pentru mai multe detalii"
                                     ),
@@ -278,8 +286,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                         ),
                       ))
                   : Container()),
-          Positioned(
-              // The maximum discount bubble
+          Positioned( // The maximum discount bubble
               right: MediaQuery.of(context).size.width*0.5-min(200,MediaQuery.of(context).size.width*0.5),
               top: 0,
               child: widget.discount != null
@@ -291,14 +298,14 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                   scale: 1.25,
                   child: FloatingActionButton(
                     heroTag: widget.name+'_discountButton',
-                    backgroundColor: Colors.orange[600],
+                    backgroundColor: Theme.of(context).primaryColor,
                     onPressed: () {
                       if (g.isSnackBarActive == false) {
                         g.isSnackBarActive = true;
                         Scaffold.of(widget.scaffoldContext)
                             .showSnackBar(SnackBar(
                               duration: Duration(seconds: 5),
-                              backgroundColor: Colors.orange[600],
+                              backgroundColor: Theme.of(context).primaryColor,
                               content: Text(
                                 "Reducerea maxima de astazi, intra pe restaurant pentru mai multe detalii"
                               ),

@@ -51,6 +51,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 70,
+        backgroundColor: Theme.of(context).accentColor,
         title: Container(
           height: 50,
           padding: EdgeInsets.symmetric(horizontal: 10),

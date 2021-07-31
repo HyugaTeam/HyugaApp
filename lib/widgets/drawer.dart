@@ -28,7 +28,7 @@ class ProfileDrawer extends StatelessWidget {
                 children: <Widget>[
                   DrawerHeader(
                     padding: EdgeInsets.only(left: 15, bottom: 15),
-                    decoration: BoxDecoration(color: Colors.blueGrey),
+                    decoration: BoxDecoration(color: Theme.of(context).accentColor),
                     child: Container( 
                       width: MediaQuery.of(context).size.width,
                       child: Row(
@@ -86,7 +86,7 @@ class ProfileDrawer extends StatelessWidget {
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
                           return authService.currentUser.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Colors.blueGrey, size: 20,), 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Theme.of(context).accentColor, size: 20,), 
                                 title: Text('Istoric scanari'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
@@ -99,7 +99,7 @@ class ProfileDrawer extends StatelessWidget {
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
                           return authService.currentUser.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Colors.blueGrey, size: 20), 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Theme.of(context).accentColor, size: 20), 
                                 title: Text('Istoric rezervari'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
@@ -114,7 +114,7 @@ class ProfileDrawer extends StatelessWidget {
                           builder: (context, snapshot) {
                             return authService.currentUser.isManager == null 
                               ? ListTile(
-                                leading: FaIcon(FontAwesomeIcons.qrcode, color: Colors.blueGrey), 
+                                leading: FaIcon(FontAwesomeIcons.qrcode, color: Theme.of(context).accentColor), 
                                 title: Text('Codul meu'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(context); }));
@@ -148,7 +148,7 @@ class ProfileDrawer extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              color: Colors.orange[600],
+                              color: Theme.of(context).accentColor,
                               splashColor: Colors.deepOrangeAccent,
                               child: Text("Log out"),
                               onPressed: () async {
@@ -179,7 +179,7 @@ class ProfileDrawer extends StatelessWidget {
                 children: <Widget>[
                   DrawerHeader(
                     padding: EdgeInsets.only(left: 15, bottom: 15),
-                    decoration: BoxDecoration(color: Colors.blueGrey),
+                    decoration: BoxDecoration(color: Theme.of(context).accentColor),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -214,9 +214,15 @@ class ProfileDrawer extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      color: Colors.orange[600],
+                      color: Theme.of(context).accentColor,
                       splashColor: Colors.deepOrangeAccent,
-                      child: Text("Log in",style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        "Log in",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
+                      ),
                       onPressed: () async {
                         await authService.signOut();
                         if(authService.user == null)

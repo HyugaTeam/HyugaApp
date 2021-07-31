@@ -32,7 +32,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
         future: getScanHistory(),
         builder:(context, scanHistory){ 
           if(!scanHistory.hasData)
-            return Scaffold(appBar: AppBar(),body: Center(child: LoadingAnimation()),);
+            return Scaffold(appBar: AppBar(backgroundColor: Theme.of(context).accentColor,),body: Center(child: LoadingAnimation()),);
           else if(scanHistory.data == 0)
             return Scaffold(appBar: AppBar(),body: Center(child: Text("Nu ai nicio scanare. \n Incepe sa scanezi pentru a revendica reduceri!"),));
           else
@@ -40,7 +40,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
               extendBodyBehindAppBar: true,
               appBar: AppBar(
                 title: Text(itemCount == null? "" : itemCount.toString()+" scanari"),
-                backgroundColor: Colors.blueGrey,
+                backgroundColor: Theme.of(context).accentColor,
               ),
               body: Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.03, vertical: MediaQuery.of(context).size.width*0.05),

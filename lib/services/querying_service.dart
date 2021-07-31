@@ -17,7 +17,7 @@ class QueryService{
   
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
   static final FirebaseStorage storage = FirebaseStorage.instance;
-  static final Reference storageRef = storage.ref();
+  static final StorageReference storageRef = storage.ref();
   static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
   PublishSubject<bool> locationEnabledStream = PublishSubject<bool>();
   static LocationData _userLocation ;
@@ -420,7 +420,7 @@ class QueryService{
     .map(docSnapToLocal)).toList();
   }
 
-  Future fetchOnlyDiscounts() async{
+  Future<List<Local>> fetchOnlyDiscounts() async{
     Future<QuerySnapshot> localsWithDiscounts = _db.collection('locals_bucharest')
     .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}')
     .get();
