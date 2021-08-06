@@ -12,7 +12,7 @@ import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/screens/main/home/HomeMap.dart';
 
-/// The Alternativ Home Page for the WineStreet App
+/// The Alternative Home Page for the WineStreet App
 
 class HomeMapPage extends StatefulWidget {
   @override
