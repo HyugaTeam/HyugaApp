@@ -60,7 +60,7 @@ dependencies:
   qr_code_scanner: ^0.0.13
   animations: ^1.1.2
   firebase_database: ^4.1.0
-  facebook_app_events: ^0.9.0
+  #facebook_app_events: ^0.9.0
   square_in_app_payments: ^1.5.1
   # firebase_ml_vision: ^0.10.0
   google_ml_kit: ^0.0.3+1
