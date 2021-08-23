@@ -444,9 +444,16 @@ class QueryService{
         docs2.forEach(
           (elem) => locals.add(elem)
         );
+        /// Allows only the places that have the field 'partner' equal to true
+        locals.removeWhere(
+          (doc) => doc.data().containsKey("partner") == false
+          || (doc.data().containsKey("partner") == true && doc.data()["partner"] == false));
+        List localsCopy = locals.toList();
+        localsCopy.sort((doc1, doc2) => doc2.data()['cost'].compareTo(doc1.data()['cost']));
+        locals = localsCopy.toSet();
       }
     );
-    print("TERMINAT");
+    //print("TERMINAT");
     return (locals
     .map(docSnapToLocal)).toList();
   }

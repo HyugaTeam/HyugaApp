@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:hyuga_app/widgets/WineStreetLocalsList.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,21 +30,34 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   Color darkWhiteColor = Color(0xFFCFBA70);
   Color roseColor = Color(0xFFb78a97);
 
+  bool backButtonDismisses = false;
   double titleOpacity = 0.0;
   Radius topLeftPanelCornerRadius = Radius.elliptical(210, 50);
   Radius topRightPanelCornerRadius = Radius.elliptical(210, 50);
-  PanelController _panelController = PanelController();
 
+  PanelController _panelController = PanelController();
+  ScrollController _scrollController;
+  GlobalKey _listKey = GlobalKey();
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   ProfileDrawer _drawer = ProfileDrawer();
+  
+  void _initScrollController(ScrollController controller){
+    // if(_scrollController != null)
+    //   setState(() {
+    //     controller.addListener((){
+
+    //     });
+    //   });
+  }
 
   @override
   void initState(){
     super.initState();
   }
 
-  Widget buildSlidingPanel(ScrollController controller) =>
-    Container(
+  Widget buildSlidingPanel(ScrollController controller) {
+    _initScrollController(controller);
+    return Container(
       decoration: BoxDecoration(
         // color: whiteColor,
         borderRadius: BorderRadius.only(
@@ -53,6 +67,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
          
       ),
       child: ListView(
+        key: _listKey,
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         controller: controller,
@@ -79,7 +94,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 25),
             child: Text(
-              "Reducerile de azi",
+              "Ofertele de azi",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -91,7 +106,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
         ],
       ),
     );
-
+  }
   Widget buildAppBar() => AppBar(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
@@ -174,34 +189,58 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
             builder: (context){
               //_controller.forward();
               return Container(
-                child: SlidingUpPanel(
-                  controller: _panelController,
-                  color: Theme.of(context).accentColor,
-                  parallaxEnabled: true,
-                  borderRadius: BorderRadius.only(
-                    topLeft: topLeftPanelCornerRadius,
-                    topRight: topRightPanelCornerRadius
-                  ),
-                  minHeight: MediaQuery.of(context).size.height*0.1,  
-                  maxHeight: MediaQuery.of(context).size.height,
-                  panelBuilder: (scrollController) { 
-                    return buildSlidingPanel(scrollController);
+                child: WillPopScope(
+                  onWillPop: (){
+                    if(backButtonDismisses){
+                      _panelController.close();
+                      if(_scrollController != null)
+                        _scrollController.animateTo(
+                          0,
+                          duration: Duration(milliseconds: 0),
+                          curve: Curves.linear 
+                        );
+                      return  Future(() => false);  
+                    }
+                    return Future(() => true);
                   },
-                  onPanelSlide: (offset) =>
-                    setState(() {
-                      topLeftPanelCornerRadius = Radius.elliptical(
-                        (1-offset)*210, 50
-                      );
-                      topRightPanelCornerRadius = Radius.elliptical(
-                        (1-offset)*210, 50  
-                      );
-                      if(offset < 1)
-                        if(offset < 0.875)
-                          titleOpacity = 0;
-                        else titleOpacity = 1-(1-offset)*8;
-                      else titleOpacity = 1;
-                    }),
-                  body: HomeMap(),
+                  child: SlidingUpPanel(
+                    controller: _panelController,
+                    color: Theme.of(context).accentColor,
+                    parallaxEnabled: true,
+                    // onPanelOpened: (){
+                    //   setState(() {
+                    //     backButtonDismisses = true;                  
+                    //   });
+                    // },
+                    // onPanelClosed: (){
+                    //   setState(() {
+                    //     backButtonDismisses = false;                  
+                    //   });
+                    // },
+                    borderRadius: BorderRadius.only(
+                      topLeft: topLeftPanelCornerRadius,
+                      topRight: topRightPanelCornerRadius
+                    ),
+                    minHeight: MediaQuery.of(context).size.height*0.1,  
+                    maxHeight: MediaQuery.of(context).size.height,
+                    //panel: buildSlidingPanel(_scrollController),
+                    panelBuilder: (scrollController) => buildSlidingPanel(scrollController),
+                    onPanelSlide: (offset) =>
+                      setState(() {
+                        topLeftPanelCornerRadius = Radius.elliptical(
+                          (1-offset)*210, 50
+                        );
+                        topRightPanelCornerRadius = Radius.elliptical(
+                          (1-offset)*210, 50  
+                        );
+                        if(offset < 1)
+                          if(offset < 0.875)
+                            titleOpacity = 0;
+                          else titleOpacity = 1-(1-offset)*8;
+                        else titleOpacity = 1;
+                      }),
+                    body: HomeMap(),
+                  ),
                 ),
               );
             },
