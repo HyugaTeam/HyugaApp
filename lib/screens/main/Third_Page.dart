@@ -468,6 +468,11 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                             0,
                                   separatorBuilder: (BuildContext context, int index) => SizedBox(width: 20,),
                                   itemBuilder: (context,index) => OpenContainer(  
+                                    closedColor: Colors.transparent,
+                                    closedElevation: 0,
+                                    closedShape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero
+                                    ),
                                     openBuilder: (context, f) => DealItemPage(
                                       place:  this.widget.local,
                                       deal: Deal(
@@ -487,9 +492,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                           boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey.withOpacity(0.5),
-                                                spreadRadius: 5,
-                                                blurRadius: 7,
-                                                offset: Offset(0, 1), // changes position of shadow
+                                                spreadRadius: 0,
+                                                blurRadius: 0,
+                                                offset: Offset(0, 0), // changes position of shadow
                                               ),
                                           ]
                                         ),
