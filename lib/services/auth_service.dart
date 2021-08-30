@@ -126,7 +126,8 @@ class AuthService{
     await _saveDeviceToken(user.uid);
     if(document.data() == null){
       AnalyticsService().analytics.logSignUp(signUpMethod: credentialProvider);
-      g.isNewUser = true;
+      // Commented temporarly in order to skip the tutorial
+      //g.isNewUser = true;
       ref.set({
         'uid' : user.uid,
         'email' : user.email,
@@ -145,7 +146,8 @@ class AuthService{
   Future signInAnon() async{
     try{
       UserCredential result = await _auth.signInAnonymously();
-      g.isNewUser = true;
+      // Commented temporarly in order to skip the tutorial
+      //g.isNewUser = true;
       AnalyticsService().analytics.logLogin(loginMethod: 'anonymous');
       return result;
     } catch(error){
