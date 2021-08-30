@@ -28,7 +28,8 @@ class Wrapper extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/images/hyuga-logo.png',
+                    'assets/images/wine-street-logo.png',
+                    //'assets/images/hyuga-logo.png',
                     width:50
                   ),
                   SizedBox(height: 30,),
@@ -140,8 +141,8 @@ class Wrapper extends StatelessWidget {
                         return Scaffold(body: Center(child: SpinningLogo(),),);
                       else if(authService.currentUser.isManager == true)
                         return AdminPanel();
-                      else if(g.isNewUser)
-                        return SlideShowIntro();
+                      // else if(g.isNewUser)
+                      //   return SlideShowIntro();
                       else
                         /// Changed for WineStreet
                         return HomeMapPage();

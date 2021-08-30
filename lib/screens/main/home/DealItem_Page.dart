@@ -78,10 +78,10 @@ class _DealItemPageState extends State<DealItemPage> {
   }
 
   Color getDealColor(){
-    if(widget.deal.title.contains("alb"))
+    if(widget.deal.title.toLowerCase().contains("alb"))
       return Color(0xFFCFBA70);
       //return Theme.of(context).highlightColor;
-    else if(widget.deal.title.contains("roșu") || widget.deal.title.contains("rosu"))
+    else if(widget.deal.title.toLowerCase().contains("roșu") || widget.deal.title.toLowerCase().contains("rosu"))
       return Color(0xFF600F2B);
       //return Theme.of(context).primaryColor;
     else return Color(0xFFb78a97);
@@ -221,65 +221,120 @@ class _DealItemPageState extends State<DealItemPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        
-        backgroundColor: buttonColor,
-        isExtended: true,
-        onPressed: callback,
-        label: Container(
-          //width: 100,
-          child: Text(
-            buttonText, 
-            style: TextStyle(fontWeight: FontWeight.bold),
+      floatingActionButton: ButtonTheme(
+        highlightColor: Colors.grey[50].withOpacity(1),
+        child: FloatingActionButton.extended(
+          
+          elevation: 1,
+          backgroundColor: buttonColor,
+          splashColor: Colors.grey[50],
+          isExtended: true,
+          onPressed: callback,
+          label: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Text(
+              buttonText, 
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.black
-        ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        color: getDealColor(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 50,),
-            Transform.scale(
-              scale: 0.5,
-              child: Image.asset(
-                "assets/images/wine_icon1.png",
-                /// TODO
-                /// de pus culoarea specifica vinului din oferta
-                color: getDealColor(),
+            //SizedBox(height: 50,),
+            // Transform.scale(
+            //   scale: 0.5,
+            //   child: Image.asset(
+            //     "assets/images/wine_icon1.png",
+            //     /// TODO
+            //     /// de pus culoarea specifica vinului din oferta
+            //     color: getDealColor(),
+            //   ),
+            // ),
+            // Container(
+            //   width: double.infinity,
+            //   height: MediaQuery.of(context).size.height * 0.4,
+            //   decoration: BoxDecoration(
+            //     color: getDealColor,
+            //     borderRadius: BorderRadius.only(
+            //       bottomLeft: Radius.circular(30),
+            //       bottomRight: Radius.circular(30),
+            //     )
+            //   ),
+            // ),
+            Expanded(
+              child: Container(
+                child:  Transform.scale(
+                  scale: 0.5,
+                  child: Image.asset(
+                    "assets/images/wine_icon1.png",
+                    /// TODO
+                    /// de pus culoarea specifica vinului din oferta
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 40, left: 30, right: 30, bottom: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40)
+                ),
+                color: Colors.white,
+              ),
+              height: MediaQuery.of(context).size.height*0.6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Title
+                  Text(
+                    widget.deal.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  SizedBox(height: 40,),
+                  /// Description
+                  Text(
+                    widget.deal.content,
+                    //textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 17
+                    ),
+                  ),
+                  SizedBox(height: 80,),
+                  /// Interval
+                  Text(
+                    widget.deal.interval,
+                    //textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18
+                    ),
+                  ),
+                  Expanded(child: Container()),
+                  // MaterialButton(
+                  //   color: getDealColor(),
+                  //   onPressed: (){},
+                  //   child: Text(
+                  //     "REVENDICĂ"
+                  //   )
+                  // )
+                ],
               ),
             ),
-            Text(
-              widget.deal.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24
-              ),
-            ),
-            SizedBox(height: 40,),
-
-            Text(
-              widget.deal.content,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18
-              ),
-            ),
-            SizedBox(height: 80,),
-            Text(
-              widget.deal.interval,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18
-              ),
-            )
+            
           ],
         )
       )

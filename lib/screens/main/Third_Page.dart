@@ -253,6 +253,17 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   }
 
 
+  Color getDealColor(Deal deal){
+    if(deal.title.toLowerCase().contains("alb"))
+      return Color(0xFFCFBA70);
+      //return Theme.of(context).highlightColor;
+    else if(deal.title.toLowerCase().contains("roșu") || deal.title.toLowerCase().contains("rosu"))
+      return Color(0xFF600F2B);
+      //return Theme.of(context).primaryColor;
+    else return Color(0xFFb78a97);
+    //return Theme.of(context).accentColor;
+  }
+
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
   void initState(){
@@ -467,72 +478,77 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
                                             0,
                                   separatorBuilder: (BuildContext context, int index) => SizedBox(width: 20,),
-                                  itemBuilder: (context,index) => OpenContainer(  
-                                    closedColor: Colors.transparent,
-                                    closedElevation: 0,
-                                    closedShape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero
-                                    ),
-                                    openBuilder: (context, f) => DealItemPage(
-                                      place:  this.widget.local,
-                                      deal: Deal(
-                                        title: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'], 
-                                        content: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'], 
-                                        interval: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['interval']
+                                  itemBuilder: (context,index) { 
+                                    Deal deal = Deal(
+                                      title: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'], 
+                                      content: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'], 
+                                      interval: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['interval']
+                                    );
+                                    return OpenContainer(  
+                                      closedColor: Colors.transparent,
+                                      closedElevation: 0,
+                                      openElevation: 0,
+                                      closedShape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero
                                       ),
-                                      dealDayOfTheWeek: _selectedWeekday,
-                                    ),
-                                    closedBuilder: (context, f) => GestureDetector(
-                                      child: Container(
-                                        margin: EdgeInsets.all(7),
-                                        //padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: Colors.white,
-                                          boxShadow: [
+                                      openBuilder: (context, f) => DealItemPage(
+                                        place:  this.widget.local,
+                                        deal: deal,
+                                        dealDayOfTheWeek: _selectedWeekday,
+                                      ),
+                                      closedBuilder: (context, f) => GestureDetector(
+                                        child: Container(
+                                          margin: EdgeInsets.all(7),
+                                          //padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: Colors.white,
+                                            boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey.withOpacity(0.5),
                                                 spreadRadius: 0,
                                                 blurRadius: 0,
                                                 offset: Offset(0, 0), // changes position of shadow
                                               ),
-                                          ]
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                                              child: Container(
-                                                padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-                                                height: 50,
-                                                width: double.infinity,
-                                                color: Theme.of(context).accentColor,
-                                                child: Text(
-                                                  widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+                                            ]
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                                                child: Container(
+                                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                                                  height: 50,
+                                                  width: double.infinity,
+                                                  color: getDealColor(deal),
+                                                  //color: Theme.of(context).accentColor,
+                                                  child: Text(
+                                                    widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.all(10),
-                                              child: Text(
-                                                widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['interval'],
-                                                style: TextStyle(
-                                                  fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+                                              Container(
+                                                padding: EdgeInsets.all(10),
+                                                child: Text(
+                                                  widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['interval'],
+                                                  style: TextStyle(
+                                                    fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+                                                  )
                                                 )
                                               )
-                                            )
-                                          ],
+                                            ],
+                                          ),
+                                          height: 100,
+                                          width: 100,
                                         ),
-                                        height: 100,
-                                        width: 100,
+                                        onTap: f,
                                       ),
-                                      onTap: f,
-                                    ),
-                                  )
+                                    );
+                                  }
                                 ),
                               ),
                             ],
