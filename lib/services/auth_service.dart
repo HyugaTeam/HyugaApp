@@ -3,20 +3,22 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart'; // For exceptions library
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+//import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:rxdart/rxdart.dart'; 
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
 
 //A class which handles the sign-in process
 class AuthService{
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FacebookLogin _facebookLogin = FacebookLogin();
+  //final FacebookLogin _facebookLogin = FacebookLogin();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
@@ -159,33 +161,52 @@ class AuthService{
   // sign in method for Facebook
   Future signInWithFacebook() async{
     try{
-      final result = await _facebookLogin.logIn(['email']);
+      final AccessToken result = await FacebookAuth.instance.login(
+        permissions: ['email']
+      );
       User user;
-      switch(result.status){
-        case FacebookLoginStatus.loggedIn:
-          final AuthCredential credential = FacebookAuthProvider.credential(
-            result.accessToken.token
-          );
+      print(result);
+      final AuthCredential credential = FacebookAuthProvider.credential(
+        result.token
+      );
+      dynamic authResult = await _auth.signInWithCredential(credential);
+      user = authResult.user;
+      if(user != null){
+        updateUserData(user, 'facebook');
+        AnalyticsService().analytics.logLogin(loginMethod: 'facebook');
+      }      
+    }
+    catch(err){
+      print("FACEBOOK LOGIN ERROR: "+ err.toString());
+    }
+    // try{
+    //   final result = await _facebookLogin.logIn(['email']);
+    //   User user;
+    //   switch(result.status){
+    //     case FacebookLoginStatus.loggedIn:
+    //       final AuthCredential credential = FacebookAuthProvider.credential(
+    //         result.accessToken.token
+    //       );
           
-          dynamic authResult =  await _auth.signInWithCredential(credential);
-          user = authResult.user;
+    //       dynamic authResult =  await _auth.signInWithCredential(credential);
+    //       user = authResult.user;
 
-          break;
-        case FacebookLoginStatus.cancelledByUser:
-          print(result.status);
-          // TODO: Handle this case.
-          break;
-        case FacebookLoginStatus.error:
-          return PlatformException(code: 'ERROR_INVALID_CREDENTIAL');
-          break;
-      }
-      if(user!=null)
-        updateUserData(user,'facebook');
-      AnalyticsService().analytics.logLogin(loginMethod: 'facebook');
-    }
-    catch(error){
-      return error;
-    }
+    //       break;
+    //     case FacebookLoginStatus.cancelledByUser:
+    //       print(result.status);
+    //       // TODO: Handle this case.
+    //       break;
+    //     case FacebookLoginStatus.error:
+    //       return PlatformException(code: 'ERROR_INVALID_CREDENTIAL');
+    //       break;
+    //   }
+    //   if(user!=null)
+    //     updateUserData(user,'facebook');
+    //   AnalyticsService().analytics.logLogin(loginMethod: 'facebook');
+    // }
+    // catch(error){
+    //   return error;
+    // }
   }
 
   // sign in method for Google

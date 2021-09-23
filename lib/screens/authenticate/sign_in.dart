@@ -111,6 +111,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
               scale: _animation,
               child: Center(
                 child: ListView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: _scrollController,
                   //padding: EdgeInsets.symmetric(horizontal: 20),
                   children: <Widget>[
@@ -192,8 +193,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           ),
                           SizedBox(height: 20),
                           MaterialButton(   /// Continue with Google button
-                            shape: ContinuousRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                               side: BorderSide(
                                 width: 1,
                                 color: Colors.black26
@@ -219,8 +220,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           ),
                           SizedBox(height: 20),
                           MaterialButton(   /// Continue with Facebook button
-                            shape: ContinuousRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                               side: BorderSide(
                                 width: 1,
                                 color: Colors.black26
@@ -249,8 +250,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           : Container(),
                           g.isIOS   // checks if the platform on which the app is ran is IOS
                           ? MaterialButton(   /// Continue with AppleID button
-                            shape: ContinuousRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                               side: BorderSide(
                                 width: 1,
                                 color: Colors.black26
@@ -288,7 +289,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                             child: Column(
                               children: <Widget>[
                                 MaterialButton(  /// The 'Continue with email' button
-                                  shape: ContinuousRectangleBorder(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
                                     side: BorderSide.none
                                   ),
                                   minWidth: 360,
