@@ -35,7 +35,8 @@ dependencies:
   provider: ^4.0.5
   rxdart: ^0.24.0
   google_sign_in: ^4.4.4
-  flutter_facebook_login: ^3.0.0
+  #flutter_facebook_login: ^3.0.0
+  http: ^0.12.1
   qr_flutter: ^3.2.0
   firebase_analytics: ^5.0.16
   apple_sign_in: ^0.1.0 #available only for IOS
@@ -49,6 +50,7 @@ dependencies:
   square_in_app_payments: ^1.5.1
   google_ml_kit: ^0.0.3+1
   sliding_up_panel: ^1.0.2	
+  flutter_facebook_auth: ^1.0.2
 
 
 
