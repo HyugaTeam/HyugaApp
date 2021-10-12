@@ -1,9 +1,7 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Singleton class user by 'ScanPlaceCode' widget
@@ -22,7 +20,7 @@ class ScanPlaceCodeService {
 /// The Page through which the user scans the table code when arriving in the restaurant
 class ScanPlaceCode extends StatefulWidget {
 
-  BuildContext context;
+  final BuildContext context;
 
   ScanPlaceCode({this.context});
 

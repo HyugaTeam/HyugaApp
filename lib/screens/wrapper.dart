@@ -5,11 +5,8 @@ import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
-import 'package:hyuga_app/widgets/SlideShow_Intro.dart';
 import 'package:provider/provider.dart';
-import 'main/home.dart';
 import 'main/home_map.dart';
-import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 
 /// Wrapper for the Authentification Screen and the MainMenu Screen

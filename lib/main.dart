@@ -1,9 +1,7 @@
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
-import 'package:hyuga_app/screens/main/home.dart';
 import 'package:hyuga_app/screens/main/home_map.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
@@ -13,7 +11,6 @@ import 'package:hyuga_app/services/message_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 void main() async{
   

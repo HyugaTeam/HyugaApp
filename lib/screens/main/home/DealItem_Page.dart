@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/models/deal.dart';
-import 'package:hyuga_app/services/analytics_service.dart';
-import 'package:hyuga_app/services/auth_service.dart';
 import 'package:intl/intl.dart';
 
 

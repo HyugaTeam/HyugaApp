@@ -1,15 +1,10 @@
-import 'package:animations/animations.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hyuga_app/widgets/WineStreetLocalsList.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/main/SeatingInterface_Page.dart';
-import 'package:hyuga_app/screens/main/home/DiscountLocals_Page.dart';
 import 'package:hyuga_app/screens/main/home/SearchBar_Page.dart';
-import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/screens/main/home/HomeMap.dart';

@@ -8,7 +8,6 @@ import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/profile_image_hero.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 
@@ -19,11 +18,11 @@ class EditorPage extends StatefulWidget {
   _EditorPageState createState() => _EditorPageState();
 }
 
-class _EditorPageState extends State<EditorPage> {
+class _EditorPageState extends State<EditorPage> {  
 
   bool areThereChanges = false; // adds an UI interaction whenever a field is changed
   ManagedLocal temporaryChanges;
-  ManagedLocal unchangedData;
+  ManagedLocal unchangedData;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
   Map<String,dynamic> changesMap;
   File _unsavedProfileImage;
   String _unsavedProfileImagePath = "";
@@ -388,10 +387,7 @@ class _EditorPageState extends State<EditorPage> {
                                 return Container(
                                   width: 200,
                                   height: 200,
-                                  child: Shimmer.fromColors(child: Container(), 
-                                    baseColor: Colors.white, 
-                                    highlightColor: Colors.grey
-                                  ),
+                                  child: Container(),
                                 );
                               else
                                 return GestureDetector(

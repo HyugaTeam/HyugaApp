@@ -11,7 +11,7 @@ description: Hyuga App - Find your ideal hangout location.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+8
+version: 1.0.0+11
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -23,16 +23,12 @@ dependencies:
     sdk: flutter
   firebase_storage:
   image_picker: 0.6.7+12
-  shimmer: ^1.1.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   font_awesome_flutter: ^8.8.1  
   cupertino_icons: ^0.1.2
-  #firebase_auth: ^0.16.0
   firebase_auth: ^0.18.0+1
-  #cloud_firestore: ^0.13.4
   cloud_firestore: ^0.14.0+2
-  #geolocator: ^5.3.0
   location: ^3.0.2
   google_maps_flutter: ^0.5.24+1
   latlong: ^0.6.1
@@ -40,29 +36,17 @@ dependencies:
   rxdart: ^0.24.0
   google_sign_in: ^4.4.4
   flutter_facebook_login: ^3.0.0
-  http: ^0.12.1
   qr_flutter: ^3.2.0
-  #cloud_functions: ^0.5.0
-  charts_flutter: ^0.9.0
-  # for uber button(maybe)
-  curl: ^1.0.0
-  intl: ^0.16.1
   firebase_analytics: ^5.0.16
   apple_sign_in: ^0.1.0 #available only for IOS
   geocoder: ^0.2.1
-  photo_view: ^0.9.2
   url_launcher: ^5.5.1
   firebase_messaging: ^7.0.0
-  #firebase_core: ^0.5.0
-  #googleapis: ^0.55.0
-  permission_handler: ^5.0.1+1
   expansion_card: ^0.1.0
   qr_code_scanner: ^0.0.13
   animations: ^1.1.2
   firebase_database: ^4.1.0
-  #facebook_app_events: ^0.9.0
   square_in_app_payments: ^1.5.1
-  # firebase_ml_vision: ^0.10.0
   google_ml_kit: ^0.0.3+1
   sliding_up_panel: ^1.0.2	
 

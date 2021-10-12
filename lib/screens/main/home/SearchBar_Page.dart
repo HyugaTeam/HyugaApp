@@ -11,7 +11,7 @@ class SearchBarPage extends StatefulWidget {
 
 class _SearchBarPageState extends State<SearchBarPage> {
 
-  int _searchCount = 0;
+  //int _searchCount = 0;
   //Stream<List> _searchResult;
   String _keyword;
   TextEditingController _textController;
@@ -19,7 +19,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
   @override
   void initState() {
     super.initState();
-    _searchCount = 0;
+    //_searchCount = 0;
     _keyword = "";
     _textController = TextEditingController();
     //_searchResult = [];

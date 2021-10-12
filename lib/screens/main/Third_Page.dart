@@ -1,23 +1,19 @@
 import 'dart:typed_data';
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expansion_card/expansion_card.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
-import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/DiscountHeroPage.dart';
 import 'package:hyuga_app/widgets/Reservation_Panel.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:intl/intl.dart'; // ADDED FOR THE DATE FORMATTING SYSTEM
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:hyuga_app/screens/main/home/DealItem_Page.dart';
@@ -982,14 +978,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           future: _firstImage,
                           builder: (context, image){
                             if(!image.hasData){
-                              return Shimmer.fromColors(
-                                child: Container(
+                              return Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 300,
-                                ), 
-                                baseColor: Colors.white, 
-                                highlightColor: Colors.orange[600]
-                              );
+                                );
                             }
                             else return image.data;
                           }
@@ -1003,14 +995,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           future: _secondImage,
                           builder: (context, image){
                             if(!image.hasData){
-                              return Shimmer.fromColors(
-                                child: Container(
+                              return Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 300,
-                                ), 
-                                baseColor: Colors.white, 
-                                highlightColor: Colors.orange[600]
-                              );
+                                );
                             }
                             else return image.data;
                           }
@@ -1096,7 +1084,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             borderRadius: BorderRadius.circular(10)
                           ),
                           child: Text(
-                            "Rezerva o masa",
+                            "Rezervă o masă",
                             style: TextStyle(
                               fontWeight: FontWeight.bold
                             ),
@@ -1191,6 +1179,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                     });
                                   }
                                 ),
+                                backgroundColor: Theme.of(context).accentColor,
                               ),
                             );
                           }
@@ -1203,14 +1192,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           future: _thirdImage,
                           builder: (context, image){
                             if(!image.hasData){
-                              return Shimmer.fromColors(
-                                child: Container(
+                              return Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 300,
-                                ), 
-                                baseColor: Colors.white, 
-                                highlightColor: Colors.orange[600]
-                              );
+                                );
                             }
                             else return image.data;
                           }

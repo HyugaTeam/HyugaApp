@@ -4,7 +4,6 @@ import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ReservationsHistoryPage extends StatelessWidget {
 
@@ -88,11 +87,6 @@ class ReservationsHistoryPage extends StatelessWidget {
                                   return Container(
                                     width: 300,
                                     height: 200,
-                                    child: Shimmer.fromColors(
-                                      child: Container(),
-                                      baseColor: Colors.white,
-                                      highlightColor: Colors.grey
-                                    ),
                                   );
                                 else return image.data;
                               },

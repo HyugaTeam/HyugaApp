@@ -1,11 +1,7 @@
-import 'dart:typed_data';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
-import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 
 class WriteTextPainter  extends CustomPainter{

@@ -8,8 +8,6 @@ import 'package:hyuga_app/screens/main/home/QuestionsSearch.dart';
 import 'package:hyuga_app/screens/main/home/SearchBar_Page.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/screens/main/UserQRScan_Page.dart';
-import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/widgets/drawer.dart';
