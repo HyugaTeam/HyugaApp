@@ -106,6 +106,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
             color: Colors.white,
             //color: Colors.grey[50],
             child: ListView.builder(
+              padding: EdgeInsets.only(top: 20, bottom: 20),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               //physics: const AlwaysScrollableScrollPhysics(), 
@@ -114,7 +115,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
                 Local local = locals.data[index];
                 double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
                 double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
-                PlaceListProfile place;
+                //PlaceListProfile place;
                 // PlaceListProfile place = PlaceListProfile(
                 //   scaffoldContext: context,
                 //   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
@@ -131,6 +132,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
                 // },
                 // );
                 return OpenContainer(
+                  closedElevation: 0,
                   transitionDuration: Duration(milliseconds: 500),
                   openBuilder: (context, f) => ThirdPage(
                     local: local,

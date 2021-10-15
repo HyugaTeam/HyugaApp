@@ -206,13 +206,21 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                   borderRadius: BorderRadius.circular(20.0),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black54,
+                        color: Colors.black26,
                         offset: Offset(2.0, 2.0),
-                        blurRadius: 5.0),
+                        blurRadius: 2.0),
                     BoxShadow(
-                        color: Colors.black54,
+                        color: Colors.black26,
                         offset: Offset(-2.0, 2.0),
-                        blurRadius: 4.0),
+                        blurRadius: 2.0),
+                    BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(-2.0, -2.0),
+                        blurRadius: 2.0),
+                    BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(2.0, -2.0),
+                        blurRadius: 2.0),
                   ],
                 ),
                 child: ClipRRect( // The clipper around the image

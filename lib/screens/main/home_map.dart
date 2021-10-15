@@ -217,15 +217,15 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
               ),
             ),
             onTap: (){ // Doesn't work for some reason
-              print("sdal");
-              if(_panelController.isPanelClosed)
+              //print("sdal");
+              if(!_panelController.isPanelClosed)
                 _panelController.open();
             },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 25),
             child: Text(
-              "Ofertele de azi",
+              "Rezervă o masă",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -252,7 +252,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
     title: Opacity(
       opacity: titleOpacity,
       child: Center(
-        child: Text("Reducerile de azi"),
+        child: Text("Rezervă o masă"),
       ),
     ),
     leading: IconButton(
