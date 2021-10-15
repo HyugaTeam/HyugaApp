@@ -82,25 +82,25 @@ class ProfileDrawer extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         /// Either shows the 'Scan History' button or nothing depending on the user's 'manager' property
-                        StreamBuilder<bool>(
-                          stream: authService.loading.stream,
-                          builder: (context, snapshot) {
-                          return authService.currentUser.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Theme.of(context).accentColor, size: 20,), 
-                                title: Text('Istoric scanari'), 
-                                onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
-                                }
-                            )
-                            : Container();
-                          }
-                        ),
+                        // StreamBuilder<bool>(
+                        //   stream: authService.loading.stream,
+                        //   builder: (context, snapshot) {
+                        //   return authService.currentUser.isManager == null 
+                        //     ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Theme.of(context).accentColor, size: 20,), 
+                        //         title: Text('Istoric scanari'), 
+                        //         onTap: (){
+                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
+                        //         }
+                        //     )
+                        //     : Container();
+                        //   }
+                        // ),
                         StreamBuilder<bool>(
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
                           return authService.currentUser.isManager == null 
                             ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Theme.of(context).accentColor, size: 20), 
-                                title: Text('Istoric rezervari'), 
+                                title: Text('Istoric rezervări'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
                                 }
