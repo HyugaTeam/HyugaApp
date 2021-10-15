@@ -111,7 +111,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
               scale: _animation,
               child: Center(
                 child: ListView(
-                  physics: NeverScrollableScrollPhysics(),
+                  //physics: NeverScrollableScrollPhysics(),
                   controller: _scrollController,
                   //padding: EdgeInsets.symmetric(horizontal: 20),
                   children: <Widget>[
@@ -208,7 +208,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Image.asset('assets/images/google-logo-icon.png',width: 24,),
-                                  Text("Continua prin Google"),
+                                  Text("Continuă prin Google"),
                                 ],
                               ),
                             ),
@@ -235,7 +235,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
-                                  Text("Continua prin Facebook"),
+                                  Text("Continuă prin Facebook"),
                                 ],
                               ),
                             ),
@@ -266,7 +266,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 children: <Widget>[
                                   FaIcon(FontAwesomeIcons.apple, color: Colors.black,),
                                   //Container(width: 80,),
-                                  Text("Continua prin Apple"),
+                                  Text("Continuă prin Apple"),
                                 ],
                               ),
                             ),
@@ -280,18 +280,21 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                style: BorderStyle.solid,
-                                color: Colors.black26
-                              )
+                              // border: Border.all(
+                              //   width: 1,
+                              //   style: BorderStyle.solid,
+                              //   color: Colors.black26
+                              // )
                             ),
                             child: Column(
                               children: <Widget>[
                                 MaterialButton(  /// The 'Continue with email' button
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
-                                    side: BorderSide.none
+                                    side: BorderSide(
+                                      width: 1,
+                                      color: Colors.black26
+                                    )
                                   ),
                                   minWidth: 360,
                                   height: 50,
@@ -301,7 +304,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         FaIcon(FontAwesomeIcons.solidEnvelope, color:  Colors.blueGrey,),
-                                        Text("Continua prin email"),
+                                        Text("Continuă prin email"),
                                       ],
                                     ),
                                   ),
@@ -379,7 +382,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                   Container(
                                                     child: InkWell(   /// "Register with Email" button
                                                       child: Text(
-                                                        "Inregistrare",
+                                                        "Înregistrare",
                                                         style: TextStyle(
                                                           color: Theme.of(context).accentColor,
                                                           fontWeight: FontWeight.bold

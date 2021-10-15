@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
               children: <Widget>[
                 SizedBox(height: 200),
                 Text(
-                  'Inregistrare',
+                  'Înregistrare',
                   style: TextStyle(
                     fontFamily: 'Comfortaa',
                     fontSize: 40
