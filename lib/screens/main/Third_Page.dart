@@ -91,7 +91,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   AnimationController _animationController;
   Animation<double> _animation;
 
-  GlobalKey _reservationButtonKey = GlobalKey();
+  // GlobalKey _reservationButtonKey = GlobalKey();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   ScrollController _scrollController = ScrollController(
     keepScrollOffset: true,
@@ -225,6 +226,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       Scaffold.of(context).removeCurrentSnackBar();
       Scaffold.of(context).showSnackBar(
         SnackBar(
+          behavior: SnackBarBehavior.floating,
           content: Text(
             "Meniul nu este disponibil"
           )
@@ -301,9 +303,129 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     super.initState();
   }
 
+  Future _openReservationDialog(BuildContext context) async{
+    SnackBarBehavior _snackBarBehavior = SnackBarBehavior.floating;
+    if(!authService.currentUser.isAnonymous){
+      if(widget.local.hasReservations == true){
+        await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
+        .collection('reservations_history')
+        .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
+          print(value.docs.length);
+          bool ok = true;
+          /// Checks if there are any upcoming unclaimed reservations
+          value.docs.forEach((element) { 
+            if(element.data()['accepted'] == null || (element.data()['accepted'] == true && element.data()['claimed'] == null))
+              ok = false;
+          });
+          if(!ok){
+              if(g.isSnackBarActive == true)
+                Scaffold.of(context).removeCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  behavior: _snackBarBehavior,
+                  content: MaterialButton(
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ReservationsHistoryPage()));
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Ai deja o rezervare."),
+                    ],
+                    ),
+                  ),
+                )
+              );
+            }
+          else if(widget.local.hasReservations == true)
+            if(widget.local.preferPhone == true) {
+              dialPhoneNumber(widget.local.phoneNumber);
+            }
+            else {
+              showGeneralDialog(
+                context: context,
+                transitionDuration: Duration(milliseconds: 600),
+                barrierLabel: "",
+                barrierDismissible: true,
+                transitionBuilder: (context,animation,secAnimation,child){
+                  CurvedAnimation _anim = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.bounceInOut,
+                    reverseCurve: Curves.easeOutExpo
+                  );
+                  return ScaleTransition(
+                    scale: _anim,
+                    child: child
+                  );
+                },
+                pageBuilder: (newContext,animation,secAnimation){
+                  return Provider(
+                    create: (context) => widget.local, 
+                    child: ReservationPanel(context:newContext)
+                  );
+                }).then((reservation) => reservation != null 
+                ? Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    behavior: _snackBarBehavior,
+                    content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                  )
+                )
+                : null
+              ); 
+            }
+        });
+      }
+      else _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          behavior: _snackBarBehavior,
+          content: Text("Localul nu accepta rezervari")
+        ));
+      }
+      else if(authService.currentUser.isAnonymous == true)
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            behavior: _snackBarBehavior,
+            content: Text("Trebuie sa te loghezi pentru a face rezervari."),
+            action: SnackBarAction(
+              textColor: Colors.white,
+              label: "Log In", 
+              onPressed: () async{
+                await authService.signOut();
+                Navigator.popUntil(context, (Route route){
+                  return route.isFirst ? true : false;
+                });
+              }
+            ),
+            backgroundColor: Theme.of(context).accentColor,
+          ),
+        );
+  }
+
+  ///Method that builds the FAB widget with "rezervă o masă"
+  FloatingActionButton _buildFloatingActionButton(BuildContext context) => FloatingActionButton.extended(
+    elevation: 10,
+    shape: ContinuousRectangleBorder(),
+    backgroundColor: Theme.of(context).accentColor,
+    onPressed: () => _openReservationDialog(context),
+    label: Container(
+      width: MediaQuery.of(context).size.width,
+      child: Text(
+        "Rezervă o masă",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 17
+        ),
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _buildFloatingActionButton(context),
       drawer: ProfileDrawer(),
       extendBodyBehindAppBar: true,
       body: Builder(
@@ -395,7 +517,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 shrinkWrap: true,
                                 itemCount: widget.local.cost,
                                 itemBuilder: (context, costIndex){
-                                  return FaIcon(FontAwesomeIcons.dollarSign, color: Colors.orange[600],);
+                                  return FaIcon(FontAwesomeIcons.dollarSign, color: Theme.of(context).accentColor,);
                                 },
                               ),
                           )                      
@@ -406,7 +528,13 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         height: 2,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Colors.white,Colors.orange[600],Colors.white]
+                            colors: [
+                              Colors.white,
+                              Colors.orange[600],
+                              //Theme.of(context).accentColor,
+                              //Theme.of(context).primaryColor,
+                              Colors.white
+                            ]
                           )
                         ),
                       ),
@@ -1076,114 +1204,21 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             ],
                           )
                         ),
-                        RaisedButton(
-                          key: _reservationButtonKey,
-                          color: Colors.orange[600],
-                          highlightElevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Text(
-                            "Rezervă o masă",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          onPressed: () async{
-                          if(!authService.currentUser.isAnonymous){
-                          if(widget.local.hasReservations == true){
-                            await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
-                            .collection('reservations_history')
-                            .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
-                              print(value.docs.length);
-                              bool ok = true;
-                              /// Checks if there are any upcoming unclaimed reservations
-                              value.docs.forEach((element) { 
-                                if(element.data()['accepted'] == null || (element.data()['accepted'] == true && element.data()['claimed'] == null))
-                                  ok = false;
-                              });
-                              if(!ok){
-                                  if(g.isSnackBarActive == true)
-                                    Scaffold.of(context).removeCurrentSnackBar();
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: MaterialButton(
-                                        onPressed: (){
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ReservationsHistoryPage()));
-                                        },
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text("Ai deja o rezervare."),
-                                        ],
-                                        ),
-                                      ),
-                                    )
-                                  );
-                                }
-                              else if(widget.local.hasReservations == true)
-                                if(widget.local.preferPhone == true) {
-                                  dialPhoneNumber(widget.local.phoneNumber);
-                                }
-                                else {
-                                  showGeneralDialog(
-                                    context: context,
-                                    transitionDuration: Duration(milliseconds: 600),
-                                    barrierLabel: "",
-                                    barrierDismissible: true,
-                                    transitionBuilder: (context,animation,secAnimation,child){
-                                      CurvedAnimation _anim = CurvedAnimation(
-                                        parent: animation,
-                                        curve: Curves.bounceInOut,
-                                        reverseCurve: Curves.easeOutExpo
-                                      );
-                                      return ScaleTransition(
-                                        scale: _anim,
-                                        child: child
-                                      );
-                                    },
-                                    pageBuilder: (newContext,animation,secAnimation){
-                                      return Provider(
-                                        create: (context) => widget.local, 
-                                        child: ReservationPanel(context:newContext)
-                                      );
-                                    }).then((reservation) => reservation != null 
-                                    ? Scaffold.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
-                                      )
-                                    )
-                                    : null
-                                  ); 
-                                }
-                            });
-                            }
-                          else Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Localul nu accepta rezervari")
-                              )
-                            );
-                          }
-                        else if(authService.currentUser.isAnonymous == true)
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Trebuie sa te loghezi pentru a face rezervari."),
-                                action: SnackBarAction(
-                                  textColor: Colors.white,
-                                  label: "Log In", 
-                                  onPressed: () async{
-
-                                    await authService.signOut();
-                                    Navigator.popUntil(context, (Route route){
-                                      return route.isFirst ? true : false;
-                                    });
-                                  }
-                                ),
-                                backgroundColor: Theme.of(context).accentColor,
-                              ),
-                            );
-                          }
-                        ),
+                        // RaisedButton(
+                        //   //key: _reservationButtonKey,
+                        //   color: Colors.orange[600],
+                        //   highlightElevation: 3,
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(10)
+                        //   ),
+                        //   child: Text(
+                        //     "Rezervă o masă",
+                        //     style: TextStyle(
+                        //       fontWeight: FontWeight.bold
+                        //     ),
+                        //   ),
+                        //   onPressed: () => _openReservationDialog(context)
+                        // ),
                         ]
                       ),
                       Container( // Third Image

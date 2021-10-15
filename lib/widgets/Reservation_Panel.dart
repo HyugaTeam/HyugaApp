@@ -130,7 +130,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
     return Theme(
       data: ThemeData(
         highlightColor: Colors.orange[600],
-        accentColor: Colors.blueGrey,
+        accentColor: Theme.of(context).accentColor,
         textTheme: TextTheme(bodyText1: TextStyle(fontWeight: FontWeight.bold)),
         fontFamily: 'Comfortaa'
       ),
@@ -181,7 +181,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           );
                         },
                         child: Chip(
-                          backgroundColor: index == _selectedNoOfPeople ? Colors.orange[600]: Colors.grey[200],
+                          backgroundColor: index == _selectedNoOfPeople ? Theme.of(context).accentColor: Colors.grey[200],
                           labelPadding: EdgeInsets.symmetric(horizontal: 20),
                           label: Text((index+1).toString())
                         ),
@@ -221,7 +221,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         child: Opacity(
                           opacity: index == _selectedDay ? 1 : 1,
                           child: Chip(
-                            backgroundColor: index == _selectedDay ? Colors.orange[600]: Colors.grey[200],
+                            backgroundColor: index == _selectedDay ? Theme.of(context).accentColor: Colors.grey[200],
                             labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
                             label: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -250,7 +250,11 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     ),
                   ),
                   SizedBox(height: 13,),
-                  Container( /// Hours list
+                  /// Checks if the place has discounts available on the given day
+                  //! (place.discounts != null  || place.discounts.containsKey(DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase())) 
+                  //? Container()
+                  //:
+                   Container( /// Hours list
                     height: 60,
                     width: double.infinity,
                     child: ListView.separated(
