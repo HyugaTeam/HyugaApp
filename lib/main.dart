@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
@@ -11,6 +13,8 @@ import 'package:hyuga_app/services/message_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+
 
 void main() async{
   
@@ -19,7 +23,7 @@ void main() async{
   await Firebase.initializeApp();
   print("LOCATIA INCEPE");
   
-  // g.isIOS = Platform.isIOS == true? true : false;
+  g.isIOS = Platform.isIOS == true? true : false;
   queryingService = QueryService();
   MessagingService().requestNotificationPermissions();
   
