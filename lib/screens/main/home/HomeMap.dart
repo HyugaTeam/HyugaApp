@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
+import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 class WriteTextPainter  extends CustomPainter{
   @override
@@ -56,9 +57,14 @@ class _HomeMapState extends State<HomeMap> {
   Future<BitmapDescriptor> createCustomMarkerBitmap(String name) async {
 
     /// The 'size' field doesn't work for some reason
-    var pin = BitmapDescriptor.fromAssetImage(
+    var pin = 
+    g.isIOS ? BitmapDescriptor.fromAssetImage(
       ImageConfiguration(devicePixelRatio: 0, size: Size(50,50)), 
-      "assets/images/wine-street-logo-pin.png", 
+      "assets/images/pins/ios/wine-street-logo-pin.png", 
+    )
+    : BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(devicePixelRatio: 0, size: Size(50,50)), 
+      "assets/images/pins/android/wine-street-logo-pin.png", 
     );
     return pin;
 

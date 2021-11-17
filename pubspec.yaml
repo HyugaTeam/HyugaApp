@@ -47,7 +47,7 @@ dependencies:
   qr_code_scanner: ^0.0.13
   animations: ^1.1.2
   firebase_database: ^4.1.0
-  square_in_app_payments: ^1.5.1
+  #square_in_app_payments: ^1.5.1
   google_ml_kit: ^0.0.3+1
   sliding_up_panel: ^1.0.2	
   flutter_facebook_auth: ^1.0.2
@@ -82,7 +82,8 @@ flutter:
     - assets/images/hyuga-logo.png
     - assets/images/stars.png
     - assets/images/wine-street-logo.png
-    - assets/images/wine-street-logo-pin.png
+    - assets/images/pins/ios/wine-street-logo-pin.png
+    - assets/images/pins/android/wine-street-logo-pin.png
     - assets/images/wine_icon1.png
   
   # An image asset can refer to one or more resolution-specific "variants", see
