@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hyuga_app/widgets/WineStreetLocalsList.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -50,140 +51,147 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   void initState(){
     super.initState();
     // var _db = FirebaseFirestore.instance;
-    // var place1 = _db.collection("locals_bucharest").doc("martina_ristorante").get();
-    // //var place2 = _db.collection("locals_bucharest").doc("terasa_florilor").get();
-    // Future.wait(
-    //   [
-    //     place1,
-    //     //place2
-    //   ]
-    // ).then((rez){
-    //   //var deals1 = rez[0].data()['deals'];
-    //   var ref2 = _db.collection("locals_bucharest").doc("martina_ristorante");
-    //   ref2.set(
-    //     {
-    //       "deals": {
+    // var place1 = _db.collection("locals_bucharest").doc("trattoria_monza");
+    // place1.set(
+    //   {
+    //     "name": "Trattoria Monza",
+    //     "description": "",
+    //     "ambiance": "sf",
+    //     "capacity": 8,
+    //     "cost": 1,
+    //     "location": GeoPoint(44.42820390326188, 26.153841057899836),
+    //     "menu": "",
+    //     "partner": true,
+    //     "profile": {},
+    //     "reservations": true,
+    //     "schedule":{
+    //       "monday": "10:00-23:00",
+    //       "tuesday": "10:00-23:00",
+    //       "wednesday": "10:00-23:00",
+    //       "thursday": "10:00-23:00",
+    //       "friday": "10:00-23:00",
+    //       "saturday": "10:00-23:00",
+    //       "sunday": "10:00-23:00"
+    //     },
+    //     "deals": {
     //         "monday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin Alb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],
     //         "tuesday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin Alb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],"wednesday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin ALb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],"thursday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin Alb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],"friday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin Alb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],"saturday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin Alb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],"sunday": [
     //           {
     //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de Vin Alb Chardonnay Toso la consumație de minim 150 RON',
-    //             'interval': "09:00-00:00"
+    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de Vin Rosé Cerasuolo d'Abruzzo la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           },
     //           {
     //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de Vin Roșu Nero d'Avola la consumație de minim 150 RON",
-    //             'interval': "09:00-00:00"
+    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
+    //             'interval': "10:00-23:00"
     //           }
     //         ],
     //       }
-    //     },
-    //     SetOptions(
-    //       merge: true
-    //     )
-    //   );
-    // });
+    //   },
+    //   SetOptions(merge: true)
+    // );
   }
 
   Widget buildSlidingPanel(ScrollController controller) {

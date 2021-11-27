@@ -82,7 +82,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
       print(placeSchedule);
       startHour = placeSchedule[DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].substring(0,5);
       endHour = placeSchedule[DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].toString().substring(6,11);
-      hourDiff = int.parse(endHour.substring(0,2)) - int.parse(startHour.substring(0,2));
+      hourDiff = int.parse(endHour.substring(0,2)) + 24 - int.parse(startHour.substring(0,2));
       minDiff = endHour.substring(3,5) == '30' ? 1 : 0 ; /// In case the place has a delayed schedule
       hour = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, int.parse(startHour.substring(0,2)), int.parse(startHour.substring(3,5)));
     }
@@ -129,7 +129,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
 
     return Theme(
       data: ThemeData(
-        highlightColor: Colors.orange[600],
+        highlightColor: Theme.of(context).accentColor,
         accentColor: Theme.of(context).accentColor,
         textTheme: TextTheme(bodyText1: TextStyle(fontWeight: FontWeight.bold)),
         fontFamily: 'Comfortaa'
@@ -143,7 +143,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                 children: <Widget>[
                   SizedBox(height: 10,),
                   Text(
-                    "Rezerva o masa",
+                    "Rezervă o masă",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20
@@ -153,7 +153,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   Divider(thickness: 10,),
                   SizedBox(height: MediaQuery.of(context).size.height*0.03,),
                   Text(
-                    "Cate persoane?",
+                    "Câte persoane?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20
@@ -190,7 +190,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   ),
                   SizedBox(height: 15,),
                   Text(
-                    "In ce zi?",
+                    "În ce zi?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20
@@ -243,7 +243,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   ),
                   SizedBox(height: 15,),
                   Text(
-                    "La ce ora?",
+                    "La ce oră?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20
@@ -267,7 +267,8 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       separatorBuilder: (context,index)=>SizedBox(width: 10,),
                       itemBuilder: (context,index) {
                         GlobalKey _tooltipKey = GlobalKey();
-                        int discount = getDiscountForHour(index);
+                        int discount = 0;
+                        //int discount = getDiscountForHour(index);
                         List<Map<String,dynamic>> deals = getDealsForHour(index);
                         return  GestureDetector(
                         onTap: (){
@@ -276,10 +277,10 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               g.isSnackBarActive = true;
                               Scaffold.of(context).showSnackBar(SnackBar(
                                 content: Text(
-                                  'Aceasta ora este indisponibila pentru rezervare',
+                                  'Această oră este indisponibilă pentru rezervare',
                                   textAlign: TextAlign.center,
                                   ),
-                                  backgroundColor: Colors.orange[600],
+                                  backgroundColor: Theme.of(context).accentColor
                               )).closed.then((SnackBarClosedReason reason){
                                 g.isSnackBarActive = false;
                               });
@@ -289,7 +290,10 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           else {
                             _selectedHour = index;
                             String selectedHour =  
-                            hour.add(Duration(minutes: index*30)).hour.toString()
+                              (hour.add(Duration(minutes: index*30)).hour < 10 ?
+                              '0' + hour.add(Duration(minutes: index*30)).hour.toString()
+                              :
+                              hour.add(Duration(minutes: index*30)).hour.toString())
                                 + ":" +
                                   (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
                                   ? '00'
@@ -318,7 +322,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               Align(
                                 alignment: Alignment.center,
                                 child: Chip(
-                                  backgroundColor:  index == _selectedHour ? Colors.orange[600]: Colors.grey[200],
+                                  backgroundColor:  index == _selectedHour ? Theme.of(context).accentColor: Colors.grey[200],
                                   labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
                                   label: Text(
                                     hour.add(Duration(minutes: index*30)).hour.toString()
@@ -402,9 +406,14 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   RaisedButton(
                     elevation: 1,
                     disabledColor: Colors.grey[300],
-                    color: Colors.orange[600],
+                    color: Theme.of(context).accentColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    child: Text("Rezerva"),
+                    child: Text(
+                      "Rezervă",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                     /// The callback invoked when the 'Rezerva' button is pressed
                     onPressed: _selectedDate == null? null : () async{
                       print(_selectedDate);

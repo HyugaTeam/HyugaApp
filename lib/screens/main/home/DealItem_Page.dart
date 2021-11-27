@@ -44,7 +44,8 @@ class _DealItemPageState extends State<DealItemPage> {
                 children: [
                   SizedBox(height: 10,),
                   Text(
-                    "Odata ce revendici reducerea, aceasta mai este valabila doar dupa 24 de ore.",
+                    "Pentru a revendica reducerea, trebuie să faci o rezervare.",
+                    //"Odata ce revendici reducerea, aceasta mai este valabila doar dupa 24 de ore.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20
@@ -53,11 +54,16 @@ class _DealItemPageState extends State<DealItemPage> {
                   Spacer(),
                   MaterialButton(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    color: Theme.of(context).accentColor,
-                    child: Text("Ok!", style: TextStyle(color: Colors.white, fontSize: 16)),
+                    color: getDealColor(),
+                    child: Text("Rezervă", style: TextStyle(color: Colors.white, fontSize: 16)),
                     onPressed: () async{
-                      addNewScan();
-                      Navigator.pop(context);
+                      //addNewScan();
+                      // int routesPopped = 0;
+                      // Navigator.popUntil(context, (route){
+                      //   routesPopped += 1;
+                      //   return routesPopped == 3;
+                      // });
+                      Navigator.pop(context);Navigator.pop(context);
                     },
                   )
                 ],
@@ -69,7 +75,7 @@ class _DealItemPageState extends State<DealItemPage> {
     }
     else{
       buttonColor = Colors.grey[300];
-      buttonText = "INDISPONIBIL";
+      buttonText = "INDISPONIBIL";  
       callback = null;
     } 
     /// Initiate 'onPressed' method of the Floating Action Button
@@ -216,126 +222,134 @@ class _DealItemPageState extends State<DealItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ButtonTheme(
-        highlightColor: Colors.grey[50].withOpacity(1),
-        child: FloatingActionButton.extended(
-          
-          elevation: 1,
-          backgroundColor: buttonColor,
-          splashColor: Colors.grey[50],
-          isExtended: true,
-          onPressed: callback,
-          label: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: Text(
-              buttonText, 
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold),
+    return Theme(
+      data: ThemeData(
+        buttonTheme: ButtonThemeData(
+          highlightColor: Colors.red
+        )
+      ),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: ButtonTheme(
+          highlightColor: Colors.grey[50].withOpacity(1),
+          child: FloatingActionButton.extended(
+            
+            elevation: 1,
+            backgroundColor: buttonColor,
+            splashColor: Colors.grey[50],
+            isExtended: true,
+            onPressed: callback,
+            label: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Text(
+                buttonText, 
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),
-      ),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        color: getDealColor(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //SizedBox(height: 50,),
-            // Transform.scale(
-            //   scale: 0.5,
-            //   child: Image.asset(
-            //     "assets/images/wine_icon1.png",
-            //     /// TODO
-            //     /// de pus culoarea specifica vinului din oferta
-            //     color: getDealColor(),
-            //   ),
-            // ),
-            // Container(
-            //   width: double.infinity,
-            //   height: MediaQuery.of(context).size.height * 0.4,
-            //   decoration: BoxDecoration(
-            //     color: getDealColor,
-            //     borderRadius: BorderRadius.only(
-            //       bottomLeft: Radius.circular(30),
-            //       bottomRight: Radius.circular(30),
-            //     )
-            //   ),
-            // ),
-            Expanded(
-              child: Container(
-                child:  Transform.scale(
-                  scale: 0.5,
-                  child: Image.asset(
-                    "assets/images/wine_icon1.png",
-                    /// TODO
-                    /// de pus culoarea specifica vinului din oferta
-                    color: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          toolbarHeight: 73,
+        ),
+        body: Container(
+          color: getDealColor(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //SizedBox(height: 50,),
+              // Transform.scale(
+              //   scale: 0.5,
+              //   child: Image.asset(
+              //     "assets/images/wine_icon1.png",
+              //     /// TODO
+              //     /// de pus culoarea specifica vinului din oferta
+              //     color: getDealColor(),
+              //   ),
+              // ),
+              // Container(
+              //   width: double.infinity,
+              //   height: MediaQuery.of(context).size.height * 0.4,
+              //   decoration: BoxDecoration(
+              //     color: getDealColor,
+              //     borderRadius: BorderRadius.only(
+              //       bottomLeft: Radius.circular(30),
+              //       bottomRight: Radius.circular(30),
+              //     )
+              //   ),
+              // ),
+              Expanded(
+                child: Container(
+                  child:  Transform.scale(
+                    scale: 0.5,
+                    child: Image.asset(
+                      "assets/images/wine_icon1.png",
+                      /// TODO
+                      /// de pus culoarea specifica vinului din oferta
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              )
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 40, left: 30, right: 30, bottom: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40)
-                ),
-                color: Colors.white,
+                )
               ),
-              height: MediaQuery.of(context).size.height*0.6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// Title
-                  Text(
-                    widget.deal.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold
-                    ),
+              Container(
+                padding: EdgeInsets.only(top: 40, left: 30, right: 30, bottom: 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)
                   ),
-                  SizedBox(height: 40,),
-                  /// Description
-                  Text(
-                    widget.deal.content,
-                    //textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 17
+                  color: Colors.white,
+                ),
+                height: MediaQuery.of(context).size.height*0.6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Title
+                    Text(
+                      widget.deal.title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 80,),
-                  /// Interval
-                  Text(
-                    widget.deal.interval,
-                    //textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18
+                    SizedBox(height: 40,),
+                    /// Description
+                    Text(
+                      widget.deal.content,
+                      //textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17
+                      ),
                     ),
-                  ),
-                  Expanded(child: Container()),
-                  // MaterialButton(
-                  //   color: getDealColor(),
-                  //   onPressed: (){},
-                  //   child: Text(
-                  //     "REVENDICĂ"
-                  //   )
-                  // )
-                ],
+                    SizedBox(height: 80,),
+                    /// Interval
+                    Text(
+                      widget.deal.interval,
+                      //textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18
+                      ),
+                    ),
+                    Expanded(child: Container()),
+                    // MaterialButton(
+                    //   color: getDealColor(),
+                    //   onPressed: (){},
+                    //   child: Text(
+                    //     "REVENDICĂ"
+                    //   )
+                    // )
+                  ],
+                ),
               ),
-            ),
-            
-          ],
+              
+            ],
+          )
         )
-      )
+      ),
     );
   }
 }

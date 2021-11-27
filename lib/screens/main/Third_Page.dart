@@ -620,6 +620,42 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                         deal: deal,
                                         dealDayOfTheWeek: _selectedWeekday,
                                       ),
+              //                         onClosed: (value) {
+              //                           try{
+              //                             if(value.containsKey("new_reservation"))
+              //                               showGeneralDialog(
+              //   context: context,
+              //   transitionDuration: Duration(milliseconds: 600),
+              //   barrierLabel: "",
+              //   barrierDismissible: true,
+              //   transitionBuilder: (context,animation,secAnimation,child){
+              //     CurvedAnimation _anim = CurvedAnimation(
+              //       parent: animation,
+              //       curve: Curves.bounceInOut,
+              //       reverseCurve: Curves.easeOutExpo
+              //     );
+              //     return ScaleTransition(
+              //       scale: _anim,
+              //       child: child
+              //     );
+              //   },
+              //   pageBuilder: (newContext,animation,secAnimation){
+              //     return Provider(
+              //       create: (context) => widget.local, 
+              //       child: ReservationPanel(context:newContext)
+              //     );
+              //   }).then((reservation) => reservation != null 
+              //   ? Scaffold.of(context).showSnackBar(
+              //     SnackBar(
+              //       behavior: SnackBarBehavior.floating,
+              //       content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+              //     )
+              //   )
+              //   : null
+              // ); 
+              //                           }
+              //                           catch(e){}
+              //                         },
                                       closedBuilder: (context, f) => GestureDetector(
                                         child: Container(
                                           margin: EdgeInsets.all(7),
