@@ -420,52 +420,53 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       setState(() {
                         _isProgressIndicatorVisible = true;
                       });
-                      DocumentReference placeReservationRef = 
-                      place.reference.collection('reservations').doc();
-                      DocumentReference userReservationRef = FirebaseFirestore.instance.collection('users')
-                      .doc(authService.currentUser.uid).collection('reservations_history').doc();
-                      await placeReservationRef.set({
-                        'accepted': null,
-                        'date_created' : FieldValue.serverTimestamp(),
-                        'date_start': Timestamp.fromDate(_selectedDate),
-                        'guest_id' : authService.currentUser.uid,
-                        'guest_name' : authService.currentUser.displayName,
-                        'claimed' : null,
-                        'number_of_guests' : _selectedNoOfPeople + 1,
-                        'discount': _selectedDiscount,
-                        'deals': _selectedDeals,
-                        'user_reservation_ref' : userReservationRef
-                      });
+                      /* Commented because of an error (The method 'collection' was called on null.) */
+                      // DocumentReference placeReservationRef = 
+                      // place.reference.collection('reservations').doc();
+                      // DocumentReference userReservationRef = FirebaseFirestore.instance.collection('users')
+                      // .doc(authService.currentUser.uid).collection('reservations_history').doc();
+                      // await placeReservationRef.set({
+                      //   'accepted': null,
+                      //   'date_created' : FieldValue.serverTimestamp(),
+                      //   'date_start': Timestamp.fromDate(_selectedDate),
+                      //   'guest_id' : authService.currentUser.uid,
+                      //   'guest_name' : authService.currentUser.displayName,
+                      //   'claimed' : null,
+                      //   'number_of_guests' : _selectedNoOfPeople + 1,
+                      //   'discount': _selectedDiscount,
+                      //   'deals': _selectedDeals,
+                      //   'user_reservation_ref' : userReservationRef
+                      // }).whenComplete(() => print("GATA"));
                       
-                      await userReservationRef.set(
-                        {
-                          'accepted': null,
-                          'date_created' : FieldValue.serverTimestamp(),
-                          'date_start': Timestamp.fromDate(_selectedDate),
-                          'place_id' : place.id,
-                          'place_name' : place.name,
-                          'claimed' : null,
-                          'number_of_guests' : _selectedNoOfPeople + 1,
-                          'discount': _selectedDiscount,
-                          'deals': _selectedDeals,
-                          'place_reservation_ref': placeReservationRef
-                        }
-                      );
-                      setState(() {
-                        _isProgressIndicatorVisible = false;
-                      });
-                      AnalyticsService().analytics.logEvent(
-                        name: 'new_reservation',
-                        parameters: {
-                          'place_name': place.name,
-                          'place_id': place.id,
-                          'date_created': DateTime.now().toLocal().toString(),
-                          'date_start': Timestamp.fromDate(_selectedDate).toString(),
-                          'number_of_guests': _selectedNoOfPeople,
-                          'discount': _selectedDiscount,
-                          'deals': _selectedDeals != null && _selectedDeals != [] ? true : false
-                        }
-                      );
+                      // await userReservationRef.set(
+                      //   {
+                      //     'accepted': null,
+                      //     'date_created' : FieldValue.serverTimestamp(),
+                      //     'date_start': Timestamp.fromDate(_selectedDate),
+                      //     'place_id' : place.id,
+                      //     'place_name' : place.name,
+                      //     'claimed' : null,
+                      //     'number_of_guests' : _selectedNoOfPeople + 1,
+                      //     'discount': _selectedDiscount,
+                      //     'deals': _selectedDeals,
+                      //     'place_reservation_ref': placeReservationRef
+                      //   }
+                      // );
+                      // setState(() {
+                      //   _isProgressIndicatorVisible = false;
+                      // });
+                      // AnalyticsService().analytics.logEvent(
+                      //   name: 'new_reservation',
+                      //   parameters: {
+                      //     'place_name': place.name,
+                      //     'place_id': place.id,
+                      //     'date_created': DateTime.now().toLocal().toString(),
+                      //     'date_start': Timestamp.fromDate(_selectedDate).toString(),
+                      //     'number_of_guests': _selectedNoOfPeople,
+                      //     'discount': _selectedDiscount,
+                      //     'deals': _selectedDeals != null && _selectedDeals != [] ? true : false
+                      //   }
+                      // );
                       Navigator.pop(context, {'place_name': place.name, 'hour': DateFormat('HH:mm').format(_selectedDate.toLocal())});
                     },
                   ),

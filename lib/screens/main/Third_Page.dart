@@ -364,7 +364,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                     child: ReservationPanel(context:newContext)
                   );
                 }).then((reservation) => reservation != null 
-                ? Scaffold.of(context).showSnackBar(
+                ? _scaffoldKey.currentState.showSnackBar(
                   SnackBar(
                     behavior: _snackBarBehavior,
                     content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")

@@ -51,141 +51,141 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   void initState(){
     super.initState();
     // var _db = FirebaseFirestore.instance;
-    // var place1 = _db.collection("locals_bucharest").doc("trattoria_monza");
+    // var place1 = _db.collection("locals_bucharest").doc("mezzaluna");
     // place1.set(
     //   {
-    //     "name": "Trattoria Monza",
-    //     "description": "",
-    //     "ambiance": "sf",
-    //     "capacity": 8,
-    //     "cost": 1,
-    //     "location": GeoPoint(44.42820390326188, 26.153841057899836),
-    //     "menu": "",
-    //     "partner": true,
-    //     "profile": {},
-    //     "reservations": true,
-    //     "schedule":{
-    //       "monday": "10:00-23:00",
-    //       "tuesday": "10:00-23:00",
-    //       "wednesday": "10:00-23:00",
-    //       "thursday": "10:00-23:00",
-    //       "friday": "10:00-23:00",
-    //       "saturday": "10:00-23:00",
-    //       "sunday": "10:00-23:00"
-    //     },
+    //     // "name": "Bistropolitan",
+    //     // "description": "",
+    //     // "ambiance": "sf",
+    //     // "capacity": 4,
+    //     // "cost": 2,
+    //     // "location": GeoPoint(44.461167657999255, 26.094885473245107),
+    //     // "menu": "",
+    //     // "partner": true,
+    //     // "profile": {},
+    //     // "reservations": true,
+    //     // "schedule":{
+    //     //   "monday": "09:00-23:00",
+    //     //   "tuesday": "09:00-23:00",
+    //     //   "wednesday": "09:00-23:00",
+    //     //   "thursday": "09:00-23:00",
+    //     //   "friday": "09:00-23:00",
+    //     //   "saturday": "09:00-23:00",
+    //     //   "sunday": "09:00-23:00"
+    //     // },
     //     "deals": {
     //         "monday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],
     //         "tuesday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],"wednesday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],"thursday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],"friday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],"saturday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],"sunday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Rosé (pahar)",
+    //             'content': "La orice produs din gama de paste primești un pahar de vin rosé cramele Petro Vaselo",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Roșu (pahar)",
+    //             'content': "La orice fel principal primești un pahar de vin fiert cramele Cotnari",
+    //             'interval': "09:00-23:00"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'title': "Vin Alb (pahar)",
+    //             'content': "Îți oferim un Pahar de vin alb Avincis Cramposie Selectionata la o porție de Risotto Al Verde comandată",
+    //             'interval': "09:00-23:00"
     //           }
     //         ],
     //       }
