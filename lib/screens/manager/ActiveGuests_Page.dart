@@ -12,14 +12,14 @@ class ActiveGuestsPage extends StatefulWidget {
 
 class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
 
-  ManagedLocal _managedLocal;
+  ManagedLocal? _managedLocal;
 
-  List<QueryDocumentSnapshot> activeGuestsList = [];
+  List<QueryDocumentSnapshot>? activeGuestsList = [];
 
-  Stream activeGuestsStream(){
+  Stream<QuerySnapshot<Map<String, dynamic>>> activeGuestsStream(){
     FirebaseFirestore _db = FirebaseFirestore.instance;
-    return   _db.collection('users').doc(authService.currentUser.uid).collection('managed_locals')
-    .doc(_managedLocal.id).collection('scanned_codes')
+    return   _db.collection('users').doc(authService.currentUser!.uid).collection('managed_locals')
+    .doc(_managedLocal!.id).collection('scanned_codes')
     .where('is_active',isEqualTo: true)
     .snapshots();
   }
@@ -27,31 +27,33 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<dynamic>>(context).data;
+    _managedLocal = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data;
     
     return Scaffold(
-      body: StreamBuilder(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: activeGuestsStream(),
         builder: (context, ss) {
           if(!ss.hasData)
             return Center(
               child: CircularProgressIndicator(),
             );
-          else if(ss.data.docs.length == 0)
+          else if(ss.data!.docs.length == 0)
             return Container(
               height: 40,
               child: Center(child: Text("Nu exista mese active")),
             );
           else{
-            activeGuestsList = ss.data.docs;
+            activeGuestsList = ss.data!.docs;
             return Container(
               child: ListView.separated(
-                itemCount: activeGuestsList.length,
+                itemCount: activeGuestsList!.length,
                 itemBuilder: (context,index) { 
                   Stream<String> time = Stream.periodic(
                     Duration(milliseconds: 1000),
                     (i){
-                      Timestamp dateStart = activeGuestsList[index].data()['date_claimed'] == null ? activeGuestsList[index].data()['date_start'] : activeGuestsList[index].data()['date_claimed'];
+                      Timestamp dateStart = (activeGuestsList![index].data() as Map)['date_claimed'] == null 
+                      ? (activeGuestsList![index].data() as Map)['date_start'] 
+                      : (activeGuestsList![index].data() as Map)['date_claimed'];
                       Duration duration = DateTime.now().toLocal().difference(DateTime.fromMillisecondsSinceEpoch(dateStart.millisecondsSinceEpoch));
                       String hours = duration.inHours< 10 ? '0'+duration.inHours.toString() : duration.inHours.toString();
                       String minutes = duration.inMinutes%60 < 10 ? '0'+(duration.inMinutes%60).toString(): (duration.inMinutes%60).toString();
@@ -70,14 +72,14 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                         borderRadius: BorderRadius.circular(30)
                       ),
                       borderSide: BorderSide(
-                        color: Colors.orange[600]
+                        color: Colors.orange[600]!
                       ),
                       child: Text(
                         "Incheie bon",
                       ),
                       onPressed: (){
                         GlobalKey<FormState> _formKey = GlobalKey();
-                        double receiptTotal;
+                        double? receiptTotal;
                         bool isLoading = false;
                         showDialog(context: context, builder: (context) => Dialog(
                           child: Container(
@@ -115,10 +117,10 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                     key: _formKey,
                                     child: TextFormField(
                                       onChanged: (input) => receiptTotal = double.tryParse(input),
-                                      onFieldSubmitted: (input) => _formKey.currentState.validate(),
+                                      onFieldSubmitted: (input) => _formKey.currentState!.validate(),
                                       cursorColor: Colors.blueGrey,
                                       keyboardType: TextInputType.number,
-                                      validator: (String input) => double.tryParse(input) == null || input == null
+                                      validator: (String? input) => double.tryParse(input!) == null || input == null
                                         ? "Numarul introdus nu este corect!"
                                         : null,
                                     ),
@@ -132,24 +134,24 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                                         color: Colors.blueGrey,
                                         child: Text("Continua"),
                                         onPressed: (){
-                                          if(_formKey.currentState.validate()){
-                                            DocumentReference placeRef = activeGuestsList[index].reference;
+                                          if(_formKey.currentState!.validate()){
+                                            DocumentReference placeRef = activeGuestsList![index].reference;
                                             placeRef.set(
                                               {
                                               "total": receiptTotal,
                                               "is_active": false,
                                               "date_end" : FieldValue.serverTimestamp(),
-                                              "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
+                                              "location" : GeoPoint(queryingService.userLocation!.latitude!, queryingService.userLocation!.longitude!)
                                               },
                                               SetOptions(merge: true)
                                             );
-                                            DocumentReference userRef = activeGuestsList[index].data()['user_scan_ref'];
+                                            DocumentReference userRef = (activeGuestsList![index].data() as Map)['user_scan_ref'];
                                             userRef.set(
                                               {
                                               "total": receiptTotal,
                                               "is_active": false,
                                               "date_end" : FieldValue.serverTimestamp(),
-                                              "location" : GeoPoint(queryingService.userLocation.latitude, queryingService.userLocation.longitude)
+                                              "location" : GeoPoint(queryingService.userLocation!.latitude!, queryingService.userLocation!.longitude!)
                                               },
                                               SetOptions(merge: true)
                                             );
@@ -189,21 +191,21 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                         );
                       }
                     ),
-                    title: Text("Masa numarul ${activeGuestsList[index].data()['table_number']}"),
+                    title: Text("Masa numarul ${(activeGuestsList![index].data() as Map)['table_number']}"),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          activeGuestsList[index].data()['guest_name'] != null
-                          ? activeGuestsList[index].data()['guest_name']
+                          (activeGuestsList![index].data() as Map)['guest_name'] != null
+                          ? (activeGuestsList![index].data() as Map)['guest_name']
                           : "Necunoscut"
                         ),
-                        StreamBuilder(
+                        StreamBuilder<String>(
                           stream: time,
                           builder: (context, currentTime) =>
                           Text(
                             currentTime.hasData 
-                            ? currentTime.data
+                            ? currentTime.data!
                             : "00:00:00",
                             style: TextStyle(
                               color: Colors.orange[600],

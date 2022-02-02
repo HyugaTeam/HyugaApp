@@ -26,7 +26,7 @@ class ThirdPageGenerator{
 
   //Function which generates the ThirdPage
   static Route<dynamic> generateRoute(RouteSettings settings){
-    List<dynamic> args = settings.arguments;
+    List<dynamic> args = settings.arguments as List<dynamic>;
     Local local = args[0];  // This is the first argument(The 'Local')
     bool onlyDiscounts = args[1]; // This is the second argument(whether it shows only discounts or not)
     return MaterialPageRoute(
@@ -42,8 +42,8 @@ class ThirdPageGenerator{
 
 class ThirdPage extends StatefulWidget {
 
-  final Local local;
-  final bool onlyDiscounts;
+  final Local? local;
+  final bool? onlyDiscounts;
   
   ThirdPage({this.local,this.onlyDiscounts}){
     
@@ -52,18 +52,18 @@ class ThirdPage extends StatefulWidget {
       AnalyticsService().analytics.logEvent(
         name: 'view_place',
         parameters: {
-          "place_id": local.id,
-          "place_name": local.name,
+          "place_id": local!.id,
+          "place_name": local!.name,
           //"place_path": "${g.whereListTranslation[g.selectedWhere]}_${g.whatListTranslation[g.selectedWhere][g.selectedWhat]}_${g.howManyListTranslation[g.selectedHowMany]}_${g.ambianceListTranslation[g.selectedAmbiance]}_${g.areaListTranslation[g.selectedArea]}"
         }
-      ).then((value) => print(local.id+local.name));
+      ).then((value) => print(local!.id!+local!.name!));
     }
     else{
       AnalyticsService().analytics.logEvent(
         name: 'view_place',
         parameters: {
-          "place_id": local.id,
-          "place_name": local.name,
+          "place_id": local!.id,
+          "place_name": local!.name,
           "place_path": "only_discounts"
         }
       );
@@ -72,24 +72,24 @@ class ThirdPage extends StatefulWidget {
 
   @override
   _ThirdPageState createState() => _ThirdPageState(
-    localLongitude: local.location.longitude,
-    localLatitude: local.location.latitude
+    localLongitude: local!.location!.longitude,
+    localLatitude: local!.location!.latitude
   );
 }
 
 class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
 
-  Map<String,String> weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
-  Future<Image> _firstImage;
-  Future <Image> _secondImage;
-  Future <Image> _thirdImage;
-  DateTime today;
+  Map<String?,String> weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
+  Future<Image?>? _firstImage;
+  Future <Image?>? _secondImage;
+  Future <Image?>? _thirdImage;
+  late DateTime today;
   
   int _selectedWeekday = 0;
   double titleOpacity = 0.0;
 
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  Animation<double>? _animation;
 
   // GlobalKey _reservationButtonKey = GlobalKey();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -103,9 +103,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
 
   );
   double dealWidgetHeight = 100;
-  List<bool> isOfferExpanded;
-  final double localLongitude,localLatitude;
-  List<Uint8List> listOfImages;
+  List<bool>? isOfferExpanded;
+  final double? localLongitude,localLatitude;
+  List<Uint8List>? listOfImages;
 
   _ThirdPageState({this.localLongitude,this.localLatitude}){
     today = DateTime.now().toLocal();
@@ -113,10 +113,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     print(_selectedWeekday);
   }
   
-  Future<Image> _getFirstImage() async{
-    Uint8List imageFile;
+  Future<Image?> _getFirstImage() async{
+    Uint8List? imageFile;
     int maxSize = 6*1024*1024;
-    String fileName = widget.local.id;
+    String? fileName = widget.local!.id;
     String pathName = 'photos/europe/bucharest/$fileName';
     var storageRef = FirebaseStorage.instance.ref().child(pathName);
     try{
@@ -126,8 +126,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
           }
         );
       return Image.memory(
-        imageFile,
-        frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+        imageFile!,
+        frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) {
             return child;
           }
@@ -146,10 +146,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     return null; // if nothing else happens
   }
 
-  Future<Image> _getSecondImage() async{
-    Uint8List imageFile;
+  Future<Image?> _getSecondImage() async{
+    Uint8List? imageFile;
       int maxSize = 6*1024*1024;
-      String fileName = widget.local.id;
+      String? fileName = widget.local!.id;
       String pathName = 'photos/europe/bucharest/$fileName';
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
       try{
@@ -159,8 +159,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
             }
           );
         return Image.memory(
-          imageFile,
-          frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+          imageFile!,
+          frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
             if (wasSynchronouslyLoaded) {
               return child;
             }
@@ -179,10 +179,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
       return null; // if nothing else happens
   }
 
-  Future<Image> _getThirdImage() async{
-    Uint8List imageFile;
+  Future<Image?> _getThirdImage() async{
+    Uint8List? imageFile;
       int maxSize = 6*1024*1024;
-      String fileName = widget.local.id;
+      String? fileName = widget.local!.id;
       String pathName = 'photos/europe/bucharest/$fileName';
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
       try{
@@ -192,8 +192,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
             }
           );
         return Image.memory(
-          imageFile,
-          frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+          imageFile!,
+          frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
             if (wasSynchronouslyLoaded) {
               return child;
             }
@@ -235,7 +235,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
     }
   }
 
-  Future<void> dialPhoneNumber(int phoneNumber) async{
+  Future<void> dialPhoneNumber(int? phoneNumber) async{
     String url = "tel:+$phoneNumber";   
     if (await canLaunch(url)) {
        await launch(url);
@@ -246,16 +246,16 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   
   /// Deprecated
   double getDiscountForUser(double maxDiscount){
-    List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscount)['per_level'];
-    return userDiscounts[authService.currentUser.getLevel()].toDouble();
+    List<num> userDiscounts = g.discounts.firstWhere((element) => element['maxim'] == maxDiscount)['per_level'] as List<num>;
+    return userDiscounts[authService.currentUser!.getLevel()].toDouble();
   }
 
 
   Color getDealColor(Deal deal){
-    if(deal.title.toLowerCase().contains("alb"))
+    if(deal.title!.toLowerCase().contains("alb"))
       return Color(0xFFCFBA70);
       //return Theme.of(context).highlightColor;
-    else if(deal.title.toLowerCase().contains("roșu") || deal.title.toLowerCase().contains("rosu"))
+    else if(deal.title!.toLowerCase().contains("roșu") || deal.title!.toLowerCase().contains("rosu"))
       return Color(0xFF600F2B);
       //return Theme.of(context).primaryColor;
     else return Color(0xFFb78a97);
@@ -265,10 +265,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   // Configures how the title is progressively shown as the user's scrolling the page downwards
   @override
   void initState(){
-    if(widget.local.deals != null)
-      if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
-        isOfferExpanded = widget.local
-          .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+    if(widget.local!.deals != null)
+      if(widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()] != null)
+        isOfferExpanded = widget.local!
+          .deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()]
           .map<bool>((key) => false).toList();
     print(isOfferExpanded);
     _firstImage = _getFirstImage();
@@ -305,9 +305,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
 
   Future _openReservationDialog(BuildContext context) async{
     SnackBarBehavior _snackBarBehavior = SnackBarBehavior.floating;
-    if(!authService.currentUser.isAnonymous){
-      if(widget.local.hasReservations == true){
-        await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
+    if(!authService.currentUser!.isAnonymous!){
+      if(widget.local!.hasReservations == true){
+        await FirebaseFirestore.instance.collection('users').doc(authService.currentUser!.uid)
         .collection('reservations_history')
         .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal())).get().then((value){
           print(value.docs.length);
@@ -319,8 +319,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
           });
           if(!ok){
               if(g.isSnackBarActive == true)
-                Scaffold.of(context).removeCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   behavior: _snackBarBehavior,
                   content: MaterialButton(
@@ -337,9 +337,9 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                 )
               );
             }
-          else if(widget.local.hasReservations == true)
-            if(widget.local.preferPhone == true) {
-              dialPhoneNumber(widget.local.phoneNumber);
+          else if(widget.local!.hasReservations == true)
+            if(widget.local!.preferPhone == true) {
+              dialPhoneNumber(widget.local!.phoneNumber);
             }
             else {
               showGeneralDialog(
@@ -364,10 +364,10 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                     child: ReservationPanel(context:newContext)
                   );
                 }).then((reservation) => reservation != null 
-                ? Scaffold.of(context).showSnackBar(
+                ? ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     behavior: _snackBarBehavior,
-                    content: Text("Se asteapta confirmare pentru rezervarea facuta la ${reservation['place_name']} pentru ora ${reservation['hour']}")
+                    content: Text("Se asteapta confirmare pentru rezervarea facuta la ${(reservation as Map)['place_name']} pentru ora ${reservation['hour']}")
                   )
                 )
                 : null
@@ -375,14 +375,14 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
             }
         });
       }
-      else _scaffoldKey.currentState.showSnackBar(
+      else ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           behavior: _snackBarBehavior,
           content: Text("Localul nu accepta rezervari")
         ));
       }
-      else if(authService.currentUser.isAnonymous == true)
-        Scaffold.of(context).showSnackBar(
+      else if(authService.currentUser!.isAnonymous == true)
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: _snackBarBehavior,
             content: Text("Trebuie sa te loghezi pentru a face rezervari."),
@@ -440,17 +440,17 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                   title: Opacity(
                       opacity: titleOpacity,
                       child: Center(
-                        child: Text(widget.local.name),
+                        child: Text(widget.local!.name!),
                       ),
                   ),
                   expandedHeight: 220,
                   flexibleSpace: FlexibleSpaceBar(
                     background: Hero(
-                      tag: widget.local.name,
-                      child: FutureBuilder(
-                        future: widget.local.image,
-                        builder: (context,imgSnapshot){
-                          if(widget.local.finalImage == null)
+                      tag: widget.local!.name!,
+                      child: FutureBuilder<Image>(
+                        future: widget.local!.image,
+                        builder: (context,image){
+                          if(widget.local!.finalImage == null)
                             return Container(
                               width: 400,
                               height: 200,
@@ -459,7 +459,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           else 
                             return Container(
                               color: Colors.white,
-                              child: imgSnapshot.data
+                              child: image.data
                             );
                         }
                       ),
@@ -497,7 +497,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               bottom:10
                             ),
                             child: Text(
-                              widget.local.name==null? 'wrong':widget.local.name,
+                              widget.local!.name==null? 'wrong':widget.local!.name!,
                               maxLines: 2,
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
@@ -515,7 +515,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
-                                itemCount: widget.local.cost,
+                                itemCount: widget.local!.cost,
                                 itemBuilder: (context, costIndex){
                                   return FaIcon(FontAwesomeIcons.dollarSign, color: Theme.of(context).accentColor,);
                                 },
@@ -530,7 +530,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           gradient: LinearGradient(
                             colors: [
                               Colors.white,
-                              Colors.orange[600],
+                              Colors.orange[600]!,
                               //Theme.of(context).accentColor,
                               //Theme.of(context).primaryColor,
                               Colors.white
@@ -539,7 +539,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         ),
                       ),
                       SizedBox(height: 15,),
-                      !widget.local.isPartner
+                      !widget.local!.isPartner!
                       ? Text(
                         "Localul nu este partener",
                         style: TextStyle(
@@ -552,31 +552,31 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           DropdownButton( /// 'Select the Day' widget
                             value: weekdays.keys.toList()[_selectedWeekday-1],
                             items: weekdays.keys
-                            .map((String weekday) {
+                            .map((String? weekday) {
                               return DropdownMenuItem(
                                 value: weekday,
                                 child: Text(
                                   weekday != DateFormat("EEEE").format(today)
-                                  ? weekdays[weekday] 
-                                  : "Astazi - "+  weekdays[weekday] 
+                                  ? weekdays[weekday]! 
+                                  : "Astazi - "+  weekdays[weekday]! 
                                 ),
                               );
                             }).toList(),
-                            onChanged: (value){
+                            onChanged: (dynamic value){
                               setState((){
                                 _selectedWeekday = weekdays.keys.toList().indexOf(value)+1;
-                                if(widget.local.deals != null)
-                                  if(widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null)
-                                    isOfferExpanded = widget.local
-                                      .deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()]
+                                if(widget.local!.deals != null)
+                                  if(widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()] != null)
+                                    isOfferExpanded = widget.local!
+                                      .deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()]
                                       .map<bool>((key) => false).toList();
                               });
                             }
                           ),
                           /// The new widget for both deals & discounts
-                          widget.local.discounts != null && widget.local.discounts[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                          widget.local!.discounts != null && widget.local!.discounts![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()] != null
                           ||
-                          widget.local.deals != null && widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null
+                          widget.local!.deals != null && widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()] != null
                           ? Column(
                             children: [
                               Container(
@@ -597,16 +597,16 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
-                                  itemCount: widget.local.deals != null ?  
-                                            (widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()] != null? 
-                                              widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()].length : 0): 
+                                  itemCount: widget.local!.deals != null ?  
+                                            (widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()] != null? 
+                                              widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()].length : 0): 
                                             0,
                                   separatorBuilder: (BuildContext context, int index) => SizedBox(width: 20,),
                                   itemBuilder: (context,index) { 
                                     Deal deal = Deal(
-                                      title: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'], 
-                                      content: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['content'], 
-                                      interval: widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['interval']
+                                      title: widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['title'], 
+                                      content: widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['content'], 
+                                      interval: widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['interval']
                                     );
                                     return OpenContainer(  
                                       closedColor: Colors.transparent,
@@ -683,7 +683,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                   color: getDealColor(deal),
                                                   //color: Theme.of(context).accentColor,
                                                   child: Text(
-                                                    widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['title'],
+                                                    widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['title'],
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
@@ -694,7 +694,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               Container(
                                                 padding: EdgeInsets.all(10),
                                                 child: Text(
-                                                  widget.local.deals[weekdays.keys.toList()[_selectedWeekday-1].toLowerCase()][index]['interval'],
+                                                  widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['interval'],
                                                   style: TextStyle(
                                                     fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
                                                   )
@@ -984,7 +984,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       : Padding( // The place has NEITHER 'Discounts' or 'Deals'
                         padding: const EdgeInsets.all(15.0),
                         child: Text(
-                          "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]].toLowerCase()} oferte sau reduceri.", 
+                          "Localul nu are ${weekdays[weekdays.keys.toList()[_selectedWeekday-1]]!.toLowerCase()} oferte sau reduceri.", 
                         ),
                       )
                       ]
@@ -1004,7 +1004,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                         alignment: Alignment(-0.8, 0),
                         padding: EdgeInsets.only(top:15,bottom: 15,left:10,right:5),
                         child: Text(
-                          widget.local.description==null? 'wrong':widget.local.description,
+                          widget.local!.description==null? 'wrong':widget.local!.description!,
                           style: TextStyle(
                             fontSize: 15,
                             fontStyle: FontStyle.italic
@@ -1027,7 +1027,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               ),
                               body: GoogleMap(
                                 initialCameraPosition: CameraPosition(
-                                  target: LatLng(localLatitude,localLongitude),
+                                  target: LatLng(localLatitude!,localLongitude!),
                                   zoom: 15
                                 ),
                                 myLocationEnabled: true,
@@ -1035,7 +1035,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 markers: {
                                   Marker(
                                     markerId: MarkerId('0'),
-                                    position: LatLng(localLatitude,localLongitude)
+                                    position: LatLng(localLatitude!,localLongitude!)
                                   ),
                                 },
                               ),
@@ -1044,14 +1044,14 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                           scrollGesturesEnabled: false,
                           zoomGesturesEnabled: false,
                           initialCameraPosition: CameraPosition(
-                            target: LatLng(localLatitude,localLongitude),
+                            target: LatLng(localLatitude!,localLongitude!),
                             zoom: 15
                           ),
                           myLocationEnabled: true,
                           markers: {
                             Marker(
                               markerId: MarkerId('0'),
-                              position: LatLng(localLatitude,localLongitude)
+                              position: LatLng(localLatitude!,localLongitude!)
                             )
                           },
                             //TODO: Add a 'Return to location' button
@@ -1087,12 +1087,12 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   name: "check_uber",
                                 );
                                 LatLng pickup = LatLng(
-                                  queryingService.userLocation.latitude, 
-                                  queryingService.userLocation.longitude
+                                  queryingService.userLocation!.latitude!, 
+                                  queryingService.userLocation!.longitude!
                                 );
                                 LatLng dropoff = LatLng(
-                                  widget.local.location.latitude, 
-                                  widget.local.location.longitude
+                                  widget.local!.location!.latitude, 
+                                  widget.local!.location!.longitude
                                 );
                                 String deeplink = "https://m.uber.com/ul/?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&action=setPickup&pickup[latitude]=" 
                                 + pickup.latitude.toString()+
@@ -1107,7 +1107,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 "&dropoff[longitude]="
                                 + dropoff.longitude.toString() +
                                 "&dropoff[nickname]="
-                                + widget.local.name.replaceAll(' ', '%20') +
+                                + widget.local!.name!.replaceAll(' ', '%20') +
                                 "&dropoff[formatted_address]="
                                 + "" +
                                 "&product_id="
@@ -1138,7 +1138,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       ),
                       Container( // First Image
                         padding: EdgeInsets.only(top:30),
-                        child: FutureBuilder(
+                        child: FutureBuilder<Image?>(
                           future: _firstImage,
                           builder: (context, image){
                             if(!image.hasData){
@@ -1147,7 +1147,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   height: 300,
                                 );
                             }
-                            else return image.data;
+                            else return image.data!;
                           }
                         ),
                       ),
@@ -1155,7 +1155,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       // The 'Second Image'      
                       Container(
                         padding: EdgeInsets.only(top:30),
-                        child: FutureBuilder(
+                        child: FutureBuilder<Image?>(
                           future: _secondImage,
                           builder: (context, image){
                             if(!image.hasData){
@@ -1164,7 +1164,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   height: 300,
                                 );
                             }
-                            else return image.data;
+                            else return image.data!;
                           }
                         ),
                       ), 
@@ -1185,21 +1185,21 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                             ),
                           )
                         ),
-                        widget.local.schedule != null
+                        widget.local!.schedule != null
                         ? Container( // The 'Schedule'
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: weekdays.keys.map((String key) => Column(
+                            children: weekdays.keys.map((String? key) => Column(
                                 children: <Widget>[
                                   Container(
                                     margin: EdgeInsets.symmetric(vertical: 8),
-                                    child: Text(weekdays[key].substring(0,2))
+                                    child: Text(weekdays[key]!.substring(0,2))
                                   ),
                                   Text(
-                                    widget.local.schedule[key.toLowerCase()].substring(0,5),
+                                    widget.local!.schedule![key!.toLowerCase()].substring(0,5),
                                   ),
                                   Text(
-                                    widget.local.schedule[key.toLowerCase()].substring(6,11),
+                                    widget.local!.schedule![key.toLowerCase()].substring(6,11),
                                   )
                                 ],
                               ),
@@ -1226,13 +1226,13 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   ),
                                 ),
                                 onPressed: (){
-                                  _launchInBrowser(context, widget.local.menu);
+                                  _launchInBrowser(context, widget.local!.menu!);
                                 }
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width*0.3,
                                 child: Text(
-                                  widget.local.hasOpenspace == true
+                                  widget.local!.hasOpenspace == true
                                   ? "Terasa: Da"
                                   : "Terasa: Nu"
                                 ),
@@ -1259,7 +1259,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       ),
                       Container( // Third Image
                         padding: EdgeInsets.only(top:30),
-                        child: FutureBuilder(
+                        child: FutureBuilder<Image?>(
                           future: _thirdImage,
                           builder: (context, image){
                             if(!image.hasData){
@@ -1268,7 +1268,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   height: 300,
                                 );
                             }
-                            else return image.data;
+                            else return image.data!;
                           }
                         ),
                       ),

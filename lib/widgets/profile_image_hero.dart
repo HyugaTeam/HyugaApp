@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class HeroProfileImage extends StatelessWidget {
 
-  Image profileImage;
+  Image? profileImage;
   HeroProfileImage({this.profileImage});
 
   @override
@@ -19,7 +19,7 @@ class HeroProfileImage extends StatelessWidget {
         child: Container(
           child: Hero(
             tag: 'profile-image',
-            child: profileImage
+            child: profileImage!
           ),
         ),
       )

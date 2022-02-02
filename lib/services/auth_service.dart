@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart'; // For exceptions library
@@ -11,6 +10,7 @@ import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:rxdart/rxdart.dart'; 
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 
 //A class which handles the sign-in process
@@ -20,11 +20,11 @@ class AuthService{
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   //final FacebookLogin _facebookLogin = FacebookLogin();
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   PublishSubject<bool> loading = PublishSubject<bool>(); // used for the async
-  bool isLoading;
-  OurUser currentUser; /// used for the 'manager' property
+  bool? isLoading;
+  OurUser? currentUser; /// used for the 'manager' property
   
   AuthService(){
     user.listen(
@@ -34,17 +34,20 @@ class AuthService{
           loading.add(true);
           isLoading = true;
           try{
-            DocumentReference ref = _db.collection('users').doc(value.uid);
-            ref.get().then((DocumentSnapshot docSnap) {
-              if(docSnap != null && docSnap.data() != null){
-                if(docSnap.data().containsKey('manager') == true)
-                  currentUser.isManager = docSnap.data()['manager'];
+            DocumentReference ref = _db.collection('users').doc(value!.uid);
+            ref.get().then((DocumentSnapshot user) {
+              dynamic userData = user.data() as Map?;
+              if(user != null && userData != null){
+                if(userData.containsKey('manager') == true)
+                  currentUser!.isManager = userData['manager'];
                 else 
-                  currentUser.isManager = null;
-                if(docSnap.data().containsKey('score') == true)
-                  currentUser.score = docSnap.data()['score'];
+                  currentUser!.isManager = null;
+                if(userData.containsKey('score') == true)
+                  currentUser!.score = userData['score'];
                 else
-                  currentUser.score = null;
+                  // Changed due to null-safety migration
+                  // currentUser!.score = null;
+                  currentUser!.score = 0;
               }
               loading.add(false);
               isLoading = false;
@@ -59,10 +62,10 @@ class AuthService{
     );
   }
   
-  Stream<QuerySnapshot> get seatingStatus {
+  Stream<QuerySnapshot>? get seatingStatus {
     if(currentUser != null)
-      if(currentUser.isAnonymous != true)
-        return _db.collection('users').doc(currentUser.uid)
+      if(currentUser!.isAnonymous != true)
+        return _db.collection('users').doc(currentUser!.uid)
         .collection('scan_history')
         .where('is_active', isEqualTo: true)
         .orderBy('date_start',descending: true)
@@ -72,7 +75,7 @@ class AuthService{
   
 
   // create user object based on FirebaseUser
-  OurUser _ourUserFromFirebaseUser(User user){
+  OurUser? _ourUserFromFirebaseUser(User? user){
     /// Added in order to set the User ID property for the Google Analytics Service
     if(user!= null)
       AnalyticsService().setUserProperties(user.uid);
@@ -85,7 +88,7 @@ class AuthService{
       displayName: user.displayName != null 
         ? user.displayName 
         : (user.email != null
-          ? user.email.substring(0,user.email.indexOf('@'))
+          ? user.email!.substring(0,user.email!.indexOf('@'))
           : "Guest"),
       isAnonymous : user.isAnonymous
     ) 
@@ -97,7 +100,7 @@ class AuthService{
   }
 
   //auth change user stream
-  Stream<OurUser> get user{
+  Stream<OurUser?> get user{
     return (_auth.authStateChanges()
       .map(_ourUserFromFirebaseUser));
   }
@@ -105,7 +108,7 @@ class AuthService{
   /// Whenever a new user signs up, this method saves his unique token for Cloud Messaging
   /// The token matches his 'uid' in Firestore
   Future<void> _saveDeviceToken(String uid) async{
-    String fcmToken;
+    String? fcmToken;
     await _fcm.getToken().then((value) => fcmToken = value);
     if(fcmToken != null){
       var tokenRef = _db.collection('users').doc(uid)
@@ -121,20 +124,20 @@ class AuthService{
     }
   }
 
-  void updateUserData(User user, [String credentialProvider]) async{
+  void updateUserData(User user, [String? credentialProvider]) async{
 
     DocumentReference ref = _db.collection('users').doc(user.uid);
     DocumentSnapshot document = await ref.get();
     await _saveDeviceToken(user.uid);
     if(document.data() == null){
-      AnalyticsService().analytics.logSignUp(signUpMethod: credentialProvider);
+      AnalyticsService().analytics.logSignUp(signUpMethod: credentialProvider!);
       // Commented temporarly in order to skip the tutorial
       //g.isNewUser = true;
       ref.set({
         'uid' : user.uid,
         'email' : user.email,
         'photoURL' : user.photoURL,
-        'display_name' : (user.displayName != null || user.isAnonymous == true) ? user.displayName : user.email.substring(0,user.email.indexOf('@')),
+        'display_name' : (user.displayName != null || user.isAnonymous == true) ? user.displayName : user.email!.substring(0,user.email!.indexOf('@')),
         'score' : 0,
         'date_registered': FieldValue.serverTimestamp(),
         },
@@ -161,13 +164,15 @@ class AuthService{
   // sign in method for Facebook
   Future signInWithFacebook() async{
     try{
-      final AccessToken result = await FacebookAuth.instance.login(
+      final LoginResult result = await FacebookAuth.instance.login(
         permissions: ['email']
       );
-      User user;
-      print(result);
+      User? user;
+      //print(result.accessToken.);
+      //var facebookAuthProvider = FacebookAuthProvider();
+      //facebookAuthProvider.
       final AuthCredential credential = FacebookAuthProvider.credential(
-        result.token
+        result.accessToken!.token
       );
       dynamic authResult = await _auth.signInWithCredential(credential);
       user = authResult.user;
@@ -213,13 +218,13 @@ class AuthService{
   Future signInWithGoogle() async{
     try{
       await _googleSignIn.signOut();
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken, 
         accessToken: googleAuth.accessToken
       );
-      final User user = (await _auth.signInWithCredential(credential)).user;
+      final User? user = (await _auth.signInWithCredential(credential)).user;
       if(user != null)
         updateUserData(user,'google');
       
@@ -232,32 +237,66 @@ class AuthService{
   }
 
   // sign in with Apple
-
+  // Changed the method to fit the new plug-in (sign_in_with_apple) and replaced (apple_sign_in)
   Future signInWithApple() async{
     //1. perform the sign-in request
-    final AuthorizationResult result = await AppleSignIn.performRequests(
-      [AppleIdRequest(requestedScopes: [Scope.email,Scope.fullName])]
-    );
-    switch(result.status){
-      case AuthorizationStatus.authorized:
-        final appleIdCredential = result.credential;
-        final oAuthProvider = OAuthProvider('apple.com');
-        final credential = oAuthProvider.credential(
-          idToken: String.fromCharCodes(appleIdCredential.identityToken),
-          accessToken: String.fromCharCodes(appleIdCredential.authorizationCode)
-        );
-        final user = (await _auth.signInWithCredential(credential)).user;
-        if(user != null)
-          updateUserData(user, 'apple');
-        AnalyticsService().analytics.logLogin(loginMethod: 'apple');
+    // final AuthorizationResult result = await AppleSignIn.performRequests(
+    //   [AppleIdRequest(requestedScopes: [Scope.email,Scope.fullName])]
+    // );
+    final signInWithAppleStatus = await SignInWithApple.isAvailable();
+    switch(signInWithAppleStatus){
+      case true:
+        /// TODO: Treat all cases
+        try{
+          final appleIdCredential = await SignInWithApple.getAppleIDCredential(
+              scopes: [
+                AppleIDAuthorizationScopes.email,
+                AppleIDAuthorizationScopes.fullName,
+              ],
+            );
+          final oAuthProvider = OAuthProvider('apple.com');
+          final credential = oAuthProvider.credential(
+            idToken: appleIdCredential.identityToken,
+            accessToken: appleIdCredential.authorizationCode
+          );
+          final user = (await _auth.signInWithCredential(credential)).user;
+          if(user != null)
+            updateUserData(user, 'apple');
+          AnalyticsService().analytics.logLogin(loginMethod: 'apple');
+          // final credential = AuthCredential(providerId: 'apple.com', signInMethod: signInMethod)
+          // final user = (await _auth.signinwith(credential)).user;
+          // if(user != null)
+          //   updateUserData(user, 'apple');
+          // AnalyticsService().analytics.logLogin(loginMethod: 'apple');
+        }
+        catch(exception){
+          print(exception);
+        }
       break;
-      case AuthorizationStatus.error:
-        print(result.status);
-      break;
-      case AuthorizationStatus.cancelled:
-        print(result.status);
-      break;
+      case false:
+        print("apple sign in is not avaialable");
     }
+    // switch(result.status){
+    //   case AuthorizationStatus.authorized:
+    //     final appleIdCredential = result.credential;
+    //     final oAuthProvider = OAuthProvider('apple.com');
+    //     final credential = oAuthProvider.credential(
+    //       idToken: String.fromCharCodes(appleIdCredential.identityToken),
+    //       accessToken: String.fromCharCodes(appleIdCredential.authorizationCode)
+    //     );
+    //     final user = (await _auth.signInWithCredential(credential)).user;
+    //     if(user != null)
+    //       updateUserData(user, 'apple');
+    //     AnalyticsService().analytics.logLogin(loginMethod: 'apple');
+    //   break;
+    //   case AuthorizationStatus.error:
+    //     print(result.status);
+    //   break;
+    //   case AuthorizationStatus.cancelled:
+    //     print(result.status);
+    //   break;
+    // }
+
   }
 
   // sign in by email & password
@@ -265,7 +304,7 @@ class AuthService{
   Future signInWithEmailAndPassword(String email, String password) async{
     try{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      User user = result.user;
+      User? user = result.user;
       if(user != null)
         updateUserData(user);
       AnalyticsService().analytics.logLogin(loginMethod: 'email_and_password');
@@ -282,7 +321,7 @@ class AuthService{
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       if(result.user != null)
-        updateUserData(result.user,'email_and_password');
+        updateUserData(result.user!,'email_and_password');
       return result;
     }
     //on AuthException 

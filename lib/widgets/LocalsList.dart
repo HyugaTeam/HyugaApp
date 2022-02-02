@@ -3,7 +3,6 @@ import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
-import 'package:latlong/latlong.dart';
 
 import 'Place_List_profile.dart';
 
@@ -11,7 +10,7 @@ import 'Place_List_profile.dart';
 class Locals extends StatefulWidget {
 
   // Used by the DiscountLocals_Page in order to obtain only the Places with Discounts 
-  final bool onlyWithDiscounts;
+  final bool? onlyWithDiscounts;
   Locals({this.onlyWithDiscounts});
   @override
   _LocalsState createState() => _LocalsState();
@@ -55,15 +54,16 @@ class _LocalsState extends State<Locals> {
   ];
 
   int getDiscountForUser(int maxDiscount){
-    _discounts.firstWhere((element) => element['maxim']);
+    _discounts.firstWhere((element) => element['maxim'] as bool);
+    return 0;
   }
 
-  double getMaxDiscountForToday(Local local){
+  double? getMaxDiscountForToday(Local local){
 
     if(local.discounts != null)
-      if(local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null){
+      if(local.discounts![DateFormat('EEEE').format(today).toLowerCase()] != null){
       double maxDiscountToday = 0 ;
-      local.discounts[DateFormat('EEEE').format(today).toLowerCase()].forEach((element){
+      local.discounts![DateFormat('EEEE').format(today).toLowerCase()].forEach((element){
         if(double.parse(element.substring(12,14)) > maxDiscountToday)
           maxDiscountToday = double.parse(element.substring(12,14));
       });
@@ -79,12 +79,12 @@ class _LocalsState extends State<Locals> {
  
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<Local>?>(
       future: widget.onlyWithDiscounts != true? queryingService.fetch(false) : queryingService.fetchOnlyDiscounts(),
       builder:(context,locals){
         if(!locals.hasData)
           return Center(child: SpinningLogo (),);
-        else if(locals.data.length == 0)
+        else if(locals.data!.length == 0)
           return Center(
             child: Text("Ne pare rau, dar nu exista rezultate.\nIncearca sa cauti altceva.")
           );
@@ -100,11 +100,11 @@ class _LocalsState extends State<Locals> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(), 
-              itemCount: locals.data.length,
+              itemCount: locals.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                Local local = locals.data[index];
-                double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
-                double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
+                Local local = locals.data![index];
+                double lengthInKm = queryingService.getLocalLocation(local.location!);
+                double lengthInMeter = queryingService.getLocalLocation(local.location!);
                 PlaceListProfile place = PlaceListProfile(
                   scaffoldContext: context,
                   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,

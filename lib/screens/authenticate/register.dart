@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
@@ -11,8 +13,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
 
   var _formKey = GlobalKey<FormState>();
-  String email;
-  String password;
+  String? email;
+  String? password;
 
   void showErrorSnackBar(BuildContext context, String message){
     if(g.isSnackBarActive == false){
@@ -43,7 +45,7 @@ class _RegisterState extends State<Register> {
           toolbarOpacity: 0.5,
           elevation: 0,
         ),
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Builder(
           builder: (context)=>Center(
@@ -65,7 +67,7 @@ class _RegisterState extends State<Register> {
                       children: <Widget>[
                         SizedBox(height: 20),
                         TextFormField(
-                          validator: (input) => input.isEmpty ? "You must enter an email" : null,
+                          validator: (input) => input!.isEmpty ? "You must enter an email" : null,
                           decoration: InputDecoration(
                             focusColor: Theme.of(context).accentColor,
                             labelText: 'Email',
@@ -77,7 +79,7 @@ class _RegisterState extends State<Register> {
                         ),
                         SizedBox(height: 20),
                         TextFormField(
-                          validator: (input) => input.length < 6 ? "Your password must have at least 6 characters" : null,
+                          validator: (input) => input!.length < 6 ? "Your password must have at least 6 characters" : null,
                           decoration: InputDecoration(
                             labelText: 'Parola',
                             fillColor: Colors.orange[600]
@@ -95,13 +97,13 @@ class _RegisterState extends State<Register> {
                           color: Theme.of(context).highlightColor,
                           child: Text("Sign up"),
                           onPressed: () async{
-                            if(_formKey.currentState.validate()){
+                            if(_formKey.currentState!.validate()){
                               print(email);
                               print(password);
-                              dynamic registerResult = await authService.registerWithEmailAndPassword(email, password);
+                              dynamic registerResult = await authService.registerWithEmailAndPassword(email!, password!);
                               //print(registerResult.toString());
-                              if(registerResult.runtimeType == FirebaseAuthException){
-                                FirebaseAuthException authException = registerResult;
+                              if(registerResult.runtimeType == FirebaseException){
+                                FirebaseException authException = registerResult;
                                 if(authException.code == 'weak-password')
                                   showErrorSnackBar(context, "Parola este prea slaba");
                                 if(authException.code == 'invalid-email') 
@@ -109,7 +111,7 @@ class _RegisterState extends State<Register> {
                                 if(authException.code == 'email-already-in-use') 
                                   showErrorSnackBar(context, "Emailul este deja folosit.");
                               }
-                              else if(registerResult is UserCredential){ // not actually an error, but that's the name of the method
+                              else if(registerResult is User){ // not actually an error, but that's the name of the method
                                 showErrorSnackBar(context, 'Registered succesfully!');
                                 Navigator.pop(context);
                               } 

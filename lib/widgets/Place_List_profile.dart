@@ -13,16 +13,16 @@ import 'dart:math';
 
 //asta trebuie pusa intr-o clasa separata
 class _InkWrapper extends StatelessWidget {
-  final Color splashColor;
-  final Color highlightColor;
+  final Color? splashColor;
+  final Color? highlightColor;
   final Widget child;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   _InkWrapper({
     this.splashColor,
     this.highlightColor,
-    @required this.child,
-    @required this.onTap,
+    required this.child,
+    required this.onTap,
   });
 
   @override
@@ -50,19 +50,19 @@ class _InkWrapper extends StatelessWidget {
 ///The rendered element in the 'Places' List on the Second Page
 class PlaceListProfile extends StatefulWidget {
 
-  final GeoPoint location;
-  final Future<Image> image;
-  final String name;
-  final Future<String> address;
-  final String distance;
-  final int price;
-  final VoidCallback onTap;
-  double discount = 0;
-  Image finalImage;
-  final Local place;
-  final Map<String,dynamic> deals;
+  final GeoPoint? location;
+  final Future<Image>? image;
+  final String? name;
+  final Future<String>? address;
+  final String? distance;
+  final int? price;
+  final VoidCallback? onTap;
+  double? discount = 0;
+  Image? finalImage;
+  final Local? place;
+  final Map<String,dynamic>? deals;
 
-  final BuildContext scaffoldContext;
+  final BuildContext? scaffoldContext;
 
   PlaceListProfile(
       {this.address,
@@ -77,7 +77,7 @@ class PlaceListProfile extends StatefulWidget {
       this.place,
       this.deals
       }){
-        image.then((image) => finalImage = image);
+        image!.then((image) => finalImage = image);
       }
 
   @override
@@ -116,7 +116,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                 padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width*0.025, 
                   top: 10, 
-                  bottom: widget.name.length < 20? 5 : 0
+                  bottom: widget.name!.length < 20? 5 : 0
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -132,7 +132,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                                 bottom: MediaQuery.of(context).size.height*0.01, 
                                 left: 7.0),
                             child: Text( // The Place's name
-                              widget.name,
+                              widget.name!,
                               maxLines: 2,
                               style: TextStyle(
                                   fontFamily: 'Comfortaa',
@@ -232,11 +232,11 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                         width: min(325,MediaQuery.of(context).size.width*0.85),
                         height: 220,
                         child: Hero( /// The image Hero Widget
-                          tag: widget.name,
-                          child: FutureBuilder(
+                          tag: widget.name!,
+                          child: FutureBuilder<Image>(
                             future: widget.image,
-                            builder: (context, img) {
-                              if(img.hasData == null)
+                            builder: (context, image) {
+                              if(!image.hasData)
                                 return Container(
                                   width: 400,
                                   height: 200,
@@ -244,7 +244,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                                 );
                               else
                                 return Container(
-                                  child: img.data
+                                  child: image.data
                                 );
                             }
                           ),
@@ -268,12 +268,12 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                       child: Transform.scale(
                         scale: 1.25,
                         child: FloatingActionButton(
-                          heroTag: widget.name+'_dealsButton',
+                          heroTag: widget.name!+'_dealsButton',
                           backgroundColor: Theme.of(context).primaryColor,
                           onPressed: () {
                             if (g.isSnackBarActive == false) {
                               g.isSnackBarActive = true;
-                              Scaffold.of(widget.scaffoldContext)
+                              Scaffold.of(widget.scaffoldContext!)
                                   .showSnackBar(SnackBar(
                                     duration: Duration(seconds: 5),
                                     backgroundColor: Theme.of(context).highlightColor,
@@ -304,12 +304,12 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                 child: Transform.scale(
                   scale: 1.25,
                   child: FloatingActionButton(
-                    heroTag: widget.name+'_discountButton',
+                    heroTag: widget.name!+'_discountButton',
                     backgroundColor: Theme.of(context).primaryColor,
                     onPressed: () {
                       if (g.isSnackBarActive == false) {
                         g.isSnackBarActive = true;
-                        Scaffold.of(widget.scaffoldContext)
+                        Scaffold.of(widget.scaffoldContext!)
                             .showSnackBar(SnackBar(
                               duration: Duration(seconds: 5),
                               backgroundColor: Theme.of(context).primaryColor,
@@ -322,7 +322,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                       }
                     },
                     child: Text(
-                      '-' + widget.discount.toInt().toString() + '%',
+                      '-' + widget.discount!.toInt().toString() + '%',
                       style: TextStyle(
                         color: Colors.white,
                         shadows: [Shadow(offset: Offset(1.0, 1.0))],

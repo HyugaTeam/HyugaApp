@@ -13,11 +13,11 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
   final int _numPages = 5;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
-  Image _secondSlideGIF;
-  Image _thirdSlideGIF;
-  Image _fourthSlideGIF;
-  Image _fifthSlideGIF;
-  Image _firstSlideGIF; 
+  Image? _secondSlideGIF;
+  Image? _thirdSlideGIF;
+  Image? _fourthSlideGIF;
+  Image? _fifthSlideGIF;
+  Image? _firstSlideGIF; 
 
 
   List<Widget> _buildPageIndicator() {
@@ -41,8 +41,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
     );
   }
 
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -587,7 +587,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
           return child;
         return CircularProgressIndicator(
           value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
               : null,
         );
       },
@@ -599,7 +599,7 @@ _secondSlideGIF = Image.network(
           return child;
         return CircularProgressIndicator(
           value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
               : null,
         );
       },
@@ -611,7 +611,7 @@ _secondSlideGIF = Image.network(
           return child;
         return CircularProgressIndicator(
           value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
               : null,
         );
       },
@@ -623,7 +623,7 @@ _secondSlideGIF = Image.network(
           return child;
         return CircularProgressIndicator(
           value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
               : null,
         );
       },
@@ -635,7 +635,7 @@ _secondSlideGIF = Image.network(
           return child;
         return CircularProgressIndicator(
           value: loadingProgress.expectedTotalBytes != null
-              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
               : null,
         );
       },

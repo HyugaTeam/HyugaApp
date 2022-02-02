@@ -43,7 +43,7 @@ class AdminPanel extends StatelessWidget {
     //fetchBigQueryData();
 
     DateTime today = DateTime.now().toLocal();
-    QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser.uid)
+    QuerySnapshot scannedCodes = await FirebaseFirestore.instance.collection('users').doc(authService.currentUser!.uid)
     .collection('managed_locals').doc(placeID).collection('scanned_codes').where("is_active", isEqualTo: false).get();
     double allTimeIncome = 0;
     int allTimeGuests = 0;
@@ -58,18 +58,19 @@ class AdminPanel extends StatelessWidget {
     DateTime emissionDate = DateTime(today.year, maturityMonth,maturityDay);
     DateTime maturityDate = DateTime(today.year, (maturityMonth + 1) % 12, (maturityDay-1)%31);
     scannedCodes.docs.forEach((element) {
-      if(!element.data()["is_active"]){
-        allTimeIncome += element.data()['total'] == null? 0 : element.data()['total'];
-        allTimeGuests += element.data()['number_of_guests'];
-        if(today.difference(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
-          thirtyDaysIncome += element.data()['total'] == null? 0 : element.data()['total'];
-          thirtyDaysGuests += element.data()['number_of_guests'];
+      dynamic elementData = element.data() as Map;
+      if(!elementData["is_active"]){
+        allTimeIncome += elementData['total'] == null? 0 : elementData['total'];
+        allTimeGuests += elementData['number_of_guests'] as int;
+        if(today.difference(DateTime.fromMillisecondsSinceEpoch(elementData['date_start'].millisecondsSinceEpoch)).abs().inDays < 30){
+          thirtyDaysIncome += elementData['total'] == null? 0 : elementData['total'];
+          thirtyDaysGuests += elementData['number_of_guests'] as int;
         }
-        if(DateTime.fromMillisecondsSinceEpoch(element.data()['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 
+        if(DateTime.fromMillisecondsSinceEpoch(elementData['date_start'].millisecondsSinceEpoch).compareTo(emissionDate) > 0 
           && 
-          (element.data()['discount'] != 0 || element.data()['deals'] != [])
+          (elementData['discount'] != 0 || elementData['deals'] != [])
         ){
-          currentBillTotal += (element.data()['total'] == null? 0 : element.data()['total']);
+          currentBillTotal += (elementData['total'] == null? 0 : elementData['total']);
         }
       }
     });
@@ -94,19 +95,20 @@ class AdminPanel extends StatelessWidget {
     ManagedLocal _managedLocal = ManagedLocal();
 
     // Queries data about the place from the manager's directory
-    DocumentSnapshot placeData = (await FirebaseFirestore.instance
-    .collection('users').doc(authService.currentUser.uid)
+    DocumentSnapshot place = (await FirebaseFirestore.instance
+    .collection('users').doc(authService.currentUser!.uid)
     .collection('managed_locals')
     .get())
     .docs.first;
-    String placeDocumentID = placeData.id;
+    dynamic placeData = place.data() as Map;
+    String placeDocumentID = place.id;
     Map<String,dynamic> analytics = {};
         print("START1");
 
     analytics.addAll(await _getPlaceAnalytics(
       placeDocumentID, 
-      placeData.data()['maturity'],
-      placeData.data()['retained_percentage']
+      placeData['maturity'],
+      placeData['retained_percentage']
     ));
         print("START2");
 
@@ -114,24 +116,25 @@ class AdminPanel extends StatelessWidget {
     .collection('locals_bucharest')
     .doc(placeDocumentID)
     .get();
+    dynamic placeDocumentData = placeDocument.data() as Map;
     print("START3");
     print("");
     try{
       _managedLocal = ManagedLocal( 
         id: placeDocumentID,
-        name: placeDocument.data()['name'],
-        description: placeDocument.data()['description'],
-        cost: placeDocument.data()['cost'],
-        capacity: placeDocument.data()['capacity'],
-        ambiance: placeDocument.data()['ambiance'],
-        profile: placeDocument.data()['profile'],
-        discounts: placeDocument.data()['discounts'],
-        deals: placeDocument.data()['deals'],
+        name: placeDocumentData['name'],
+        description: placeDocumentData['description'],
+        cost: placeDocumentData['cost'],
+        capacity: placeDocumentData['capacity'],
+        ambiance: placeDocumentData['ambiance'],
+        profile: placeDocumentData['profile'],
+        discounts: placeDocumentData['discounts'],
+        deals: placeDocumentData['deals'],
         analytics: analytics,
-        reservations: placeDocument.data()['reservations'],
-        retainedPercentage: double.tryParse(placeData.data()['retained_percentage'].toString()),
-        schedule: placeDocument.data()['schedule'],
-        maturity: placeData.data()['maturity']
+        reservations: placeDocumentData['reservations'],
+        retainedPercentage: double.tryParse(placeData['retained_percentage'].toString()),
+        schedule: placeDocumentData['schedule'],
+        maturity: placeData['maturity']
       );
     }
     catch(err){print(err);}
@@ -142,7 +145,7 @@ class AdminPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<ManagedLocal>(
       future: _getPlaceData(),
       builder: (context, _managedLocal) {
         if(!_managedLocal.hasData)
@@ -171,7 +174,9 @@ class AdminPanel extends StatelessWidget {
                 ),],
                 backgroundColor: Theme.of(context).accentColor,
                 centerTitle: true,
-                title: Text(_managedLocal.data.name),
+                title: Text(
+                  _managedLocal.data!.name!
+                ),
                 bottom: TabBar(
                   labelPadding: EdgeInsets.all(5),
                   tabs: [Text("Mese active"),Text("Rezervari"),Text("Analiza & Facturi"), Text("Editor")]
@@ -179,19 +184,19 @@ class AdminPanel extends StatelessWidget {
               ),
               body: TabBarView(
                 children: [
-                  Provider(
+                  Provider<AsyncSnapshot<ManagedLocal>>(
                     create: (context) => _managedLocal,
                     child: ActiveGuestsPage()
                   ),
-                  Provider(
+                  Provider<AsyncSnapshot<ManagedLocal>>(
                     create: (context) => _managedLocal,
                     child: ReservationsPage()
                   ),
-                  Provider(
+                  Provider<AsyncSnapshot<ManagedLocal>>(
                     create: (context) => _managedLocal,
                     child: AnalysisPage()
                   ),
-                  Provider(
+                  Provider<AsyncSnapshot<ManagedLocal>>(
                     create: (context) => _managedLocal,
                     child: EditorPage()
                   ),

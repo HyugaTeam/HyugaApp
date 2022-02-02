@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 
 class DealItemPage extends StatefulWidget {
 
-  final Local place;
-  final Deal deal;
-  final int dealDayOfTheWeek; // The day on which the deal is active
+  final Local? place;
+  final Deal? deal;
+  final int? dealDayOfTheWeek; // The day on which the deal is active
 
   DealItemPage({this.place, this.deal, this.dealDayOfTheWeek});
 
@@ -22,9 +22,9 @@ class _DealItemPageState extends State<DealItemPage> {
   final Map<String,String> weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
   final FirebaseFirestore _db = FirebaseFirestore.instance; 
   final DateTime today = DateTime.now().toLocal();
-  Color buttonColor; // The floating action's button color
-  String buttonText; // The floating action button's text (differs whether the date is today or not)
-  VoidCallback callback; // The floating action button's callback (sets the button to DISABLE if needed)
+  Color? buttonColor; // The floating action's button color
+  late String buttonText; // The floating action button's text (differs whether the date is today or not)
+  VoidCallback? callback; // The floating action button's callback (sets the button to DISABLE if needed)
 
   @override
   void initState(){
@@ -82,10 +82,10 @@ class _DealItemPageState extends State<DealItemPage> {
   }
 
   Color getDealColor(){
-    if(widget.deal.title.toLowerCase().contains("alb"))
+    if(widget.deal!.title!.toLowerCase().contains("alb"))
       return Color(0xFFCFBA70);
       //return Theme.of(context).highlightColor;
-    else if(widget.deal.title.toLowerCase().contains("roșu") || widget.deal.title.toLowerCase().contains("rosu"))
+    else if(widget.deal!.title!.toLowerCase().contains("roșu") || widget.deal!.title!.toLowerCase().contains("rosu"))
       return Color(0xFF600F2B);
       //return Theme.of(context).primaryColor;
     else return Color(0xFFb78a97);
@@ -108,8 +108,8 @@ class _DealItemPageState extends State<DealItemPage> {
   }
 
   int getDiscount(){
-    Map<String, dynamic> discounts = widget.place.discounts;
-    List todayDiscounts;
+    Map<String, dynamic>? discounts = widget.place!.discounts;
+    List? todayDiscounts;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
     /// Checks if the place has discounts in the current weekday
     if(discounts != null)
@@ -117,7 +117,7 @@ class _DealItemPageState extends State<DealItemPage> {
         return 0;
       else {
         todayDiscounts = discounts[currentWeekday];
-        for(int i = 0 ; i< todayDiscounts.length; i++){
+        for(int i = 0 ; i< todayDiscounts!.length; i++){
           String startHour = todayDiscounts[i].toString().substring(0,5);
           String endHour = todayDiscounts[i].toString().substring(6,11);
           String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
@@ -131,8 +131,8 @@ class _DealItemPageState extends State<DealItemPage> {
   }
 
   List<Map<String,dynamic>> getDeals(){
-    Map<String, dynamic> deals = widget.place.deals;
-    List todayDeals;
+    Map<String, dynamic>? deals = widget.place!.deals;
+    List? todayDeals;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
     /// Checks if the place has deals in the current weekday
     if(deals != null)
@@ -141,7 +141,7 @@ class _DealItemPageState extends State<DealItemPage> {
       else {
         todayDeals = deals[currentWeekday];
         List<Map<String,dynamic>> result = <Map<String,dynamic>>[];
-        for(int i = 0 ; i< todayDeals.length; i++){
+        for(int i = 0 ; i< todayDeals!.length; i++){
           String startHour = todayDeals[i]['interval'].toString().substring(0,5); 
           String endHour = todayDeals[i]['interval'].toString().substring(6,11);
           String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
@@ -232,7 +232,7 @@ class _DealItemPageState extends State<DealItemPage> {
         extendBodyBehindAppBar: true,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: ButtonTheme(
-          highlightColor: Colors.grey[50].withOpacity(1),
+          highlightColor: Colors.grey[50]!.withOpacity(1),
           child: FloatingActionButton.extended(
             
             elevation: 1,
@@ -309,7 +309,7 @@ class _DealItemPageState extends State<DealItemPage> {
                   children: [
                     /// Title
                     Text(
-                      widget.deal.title,
+                      widget.deal!.title!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 24,
@@ -319,7 +319,7 @@ class _DealItemPageState extends State<DealItemPage> {
                     SizedBox(height: 40,),
                     /// Description
                     Text(
-                      widget.deal.content,
+                      widget.deal!.content!,
                       //textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17
@@ -328,7 +328,7 @@ class _DealItemPageState extends State<DealItemPage> {
                     SizedBox(height: 80,),
                     /// Interval
                     Text(
-                      widget.deal.interval,
+                      widget.deal!.interval!,
                       //textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18

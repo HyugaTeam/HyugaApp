@@ -6,12 +6,12 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 class MainMenuButton extends StatefulWidget {
 
-  final String name;
-  String buttonText;
-  final List<String> options;
-  final Function(int) changeText;
+  final String? name;
+  String? buttonText;
+  final List<String>? options;
+  final Function(int)? changeText;
 
-  MainMenuButton({Key key, this.name,this.options,this.buttonText,this.changeText}) :super(key: key);
+  MainMenuButton({Key? key, this.name,this.options,this.buttonText,this.changeText}) :super(key: key);
   MainMenuButtonState createState() => MainMenuButtonState(
     name: this.name,
     options: this.options,
@@ -23,9 +23,9 @@ class MainMenuButtonState extends State<MainMenuButton>{
 
   /// Used for getting the button's coordinates
   var _key = GlobalKey<MainMenuButtonState>();
-  String name;  
-  List<String> options;
-  String buttonText;
+  String? name;  
+  List<String>? options;
+  String? buttonText;
   Color buttonColor = Colors.white;
   Color textColor = Colors.black;
 
@@ -42,12 +42,12 @@ class MainMenuButtonState extends State<MainMenuButton>{
   void changeText(int index){
     setState((){
       if(name == 'What?'){
-        buttonText = g.whatListTranslation[g.selectedWhere][index];
+        buttonText = g.whatListTranslation[g.selectedWhere!][index];
         buttonColor = Colors.blueGrey;
         textColor = Colors.white;
       }
       else{
-        buttonText = options[index];
+        buttonText = options![index];
         buttonColor = Colors.blueGrey;
         textColor = Colors.white;
       }
@@ -60,14 +60,14 @@ class MainMenuButtonState extends State<MainMenuButton>{
 
   /// Method which returns the button's coordinates in the page
   _getPosition(){
-    RenderBox renderBoxButton;
-    renderBoxButton = _key.currentContext.findRenderObject();
-    final coordinatesButton = renderBoxButton.localToGlobal(Offset.zero);
+    RenderBox? renderBoxButton;
+    renderBoxButton = _key.currentContext!.findRenderObject() as RenderBox?;
+    final coordinatesButton = renderBoxButton!.localToGlobal(Offset.zero);
     return coordinatesButton;
  }
 
   ///Method which opens a dialog whenever the button is pressed
-  Future<int> createDialog(BuildContext context) {
+  Future<int?> createDialog(BuildContext context) {
       return showDialog(
         context: context, 
         builder: (context){
@@ -79,7 +79,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                 right: _getPosition().dx,
               ),
               child: OptionsDropButton(
-                  options: name == 'What?' ? g.whatListTranslation[g.selectedWhere] : options,
+                  options: name == 'What?' ? g.whatListTranslation[g.selectedWhere!] : options,
                   question: name,
                   sizeOfButton: _getPosition(),
                   button: this.widget,
@@ -90,7 +90,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
         );
   }
 
-  Stream<int> whereButtonChanged;
+  Stream<int>? whereButtonChanged;
   MainMenuButtonState({ this.name,this.options,this.buttonText}){
     /// We add the subscription to the 'Where' Button stream in case 'this' is the 'What' Button so we can change its appearance
     if(name == 'What?'){
@@ -103,7 +103,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
     return StreamBuilder<Object>(
       stream: HomeButtonsController.whereButton,
       builder: (context, snapshot) {
-        if(name == 'What?' && (snapshot.hasData && g.whatListTranslation[snapshot.data].contains(buttonText) == false )){
+        if(name == 'What?' && (snapshot.hasData && g.whatListTranslation[snapshot.data as int].contains(buttonText) == false )){
           buttonText = 'Specific';
           buttonColor = Colors.white;
           textColor = Colors.black;
@@ -148,7 +148,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                         });
                       },
                       label: Text(
-                        buttonText,
+                        buttonText!,
                         style: TextStyle(
                             fontSize: 28*(1/MediaQuery.of(context).textScaleFactor) ,
                             color: textColor,

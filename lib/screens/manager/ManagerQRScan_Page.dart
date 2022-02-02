@@ -20,19 +20,19 @@ class ManagerQRScan extends StatefulWidget {
 class _ManagerQRScanState extends State<ManagerQRScan> {
 
   bool cameraAccessDenied = false;
-  ManagedLocal managedLocal;
+  ManagedLocal? managedLocal;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  DocumentSnapshot scannedUser;
-  String uid = "";
-  int tableNumber;
-  int numberOfGuests;
+  DocumentSnapshot? scannedUser;
+  String? uid = "";
+  int? tableNumber;
+  int? numberOfGuests;
   TextEditingController _tableNumberTextController = new TextEditingController();
   TextEditingController _noOfGuestsTextController = new TextEditingController();
   GlobalKey<FormState> _tableNoFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> _noOfGuestsFormKey = GlobalKey<FormState>();
   GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController _qrViewController;
-  PublishSubject<String> scanStream;
+  late QRViewController _qrViewController;
+  PublishSubject<String?>? scanStream;
 
   _ManagerQRScanState(){
     _tableNumberTextController.addListener(() {
@@ -45,7 +45,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
   @override
   void initState(){
-    scanStream = PublishSubject<String>();
+    scanStream = PublishSubject<String?>();
     initializeDateFormatting('ro',null);
     print("initialized format");
     super.initState();
@@ -56,9 +56,9 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     DocumentReference ref = _db.collection('users').doc(uid); // a reference to the scanned user's profile
       scannedUser = await ref.get();
       if(scannedUser != null){
-        print(scannedUser.data());
+        print(scannedUser!.data());
         ref.set(({
-          'score' : scannedUser.data()['score'] + 1
+          'score' : (scannedUser!.data() as Map)['score'] + 1
         }),
         SetOptions(
           merge: true
@@ -100,12 +100,12 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   void _onQRViewCreated(QRViewController controller){
     this._qrViewController = controller;
     _qrViewController.scannedDataStream.listen((scanResult) {
-      scanStream.add(scanResult);
+      scanStream!.add(scanResult.code);
       print(scanResult);
     });  
   }
 
-  int getLevel(int score){
+  int? getLevel(int score){
     if(score != null){
       if(score < 1) // level 0
         return 0;
@@ -139,8 +139,8 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
   // Gets the current discount percentage
   int getDiscount(){
-    Map<String, dynamic> discounts = managedLocal.discounts;
-    List todayDiscounts;
+    Map<String, dynamic>? discounts = managedLocal!.discounts;
+    List? todayDiscounts;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
     /// Checks if the place has discounts in the current weekday
     if(discounts != null)
@@ -148,7 +148,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
         return 0;
       else {
         todayDiscounts = discounts[currentWeekday];
-        for(int i = 0 ; i< todayDiscounts.length; i++){
+        for(int i = 0 ; i< todayDiscounts!.length; i++){
           String startHour = todayDiscounts[i].toString().substring(0,5);
           String endHour = todayDiscounts[i].toString().substring(6,11);
           String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
@@ -162,8 +162,8 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
   }
 
   List<Map<String,dynamic>> getDeals(){
-    Map<String, dynamic> deals = managedLocal.deals;
-    List todayDeals;
+    Map<String, dynamic>? deals = managedLocal!.deals;
+    List? todayDeals;
     String currentWeekday = DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase();
     /// Checks if the place has deals in the current weekday
     if(deals != null)
@@ -172,7 +172,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       else {
         todayDeals = deals[currentWeekday];
         List<Map<String,dynamic>> result = <Map<String,dynamic>>[];
-        for(int i = 0 ; i< todayDeals.length; i++){
+        for(int i = 0 ; i< todayDeals!.length; i++){
           String startHour = todayDeals[i]['interval'].toString().substring(0,5); 
           String endHour = todayDeals[i]['interval'].toString().substring(6,11);
           String currentTime = DateTime.now().toLocal().hour.toString() + ':' + DateTime.now().toLocal().minute.toString();
@@ -198,23 +198,24 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 /// ...WITH THE 'OK' FLAG SET TO 'NO'
 
 
-  Future<bool> addNewScan(String userId,context)async {
+  Future<bool> addNewScan(String? userId,context)async {
     
     bool ok = false; // This decides whether the scan process has been approved by the user or not
-    DocumentSnapshot userDoc = await _db.collection('users').doc(userId).get();
-    DocumentReference userRef = _db.collection('users').doc(userDoc.id).collection('scan_history').doc();
-    DocumentReference placeRef = _db.collection('users').doc(authService.currentUser.uid)
-    .collection('managed_locals').doc(managedLocal.id).collection('scanned_codes').doc();
+    DocumentSnapshot user = await _db.collection('users').doc(userId).get();
+    DocumentReference userRef = _db.collection('users').doc(user.id).collection('scan_history').doc();
+    DocumentReference placeRef = _db.collection('users').doc(authService.currentUser!.uid)
+    .collection('managed_locals').doc(managedLocal!.id).collection('scanned_codes').doc();
+    dynamic userData = user.data() as Map;
     await userRef.set(
       {
-          'place_id' : managedLocal.id,
-          'place_name' : managedLocal.name,
+          'place_id' : managedLocal!.id,
+          'place_name' : managedLocal!.name,
           'date_start': FieldValue.serverTimestamp(),
           'discount': getDiscount(),
           'deals': getDeals(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
-          'score' : userDoc.data()['score'],
+          'score' : userData['score'],
           'approved_by_user' : null,
           'reservation' : false,
           'reservation_ref' : null,
@@ -226,15 +227,15 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     );
     await placeRef.set(
       {
-          'guest_id' : userDoc.id,
-          'guest_name' : userDoc.data()['displayName'] != null ? userDoc.data()['displayName'] : userDoc.data()['display_name'],
+          'guest_id' : user.id,
+          'guest_name' : userData['displayName'] != null ? userData['displayName'] : userData['display_name'],
           'date_start': FieldValue.serverTimestamp(), 
           'discount': getDiscount(),
           'deals': getDeals(),
           'is_active': true,
           'number_of_guests': numberOfGuests,
-          'retained_percentage': managedLocal.retainedPercentage,
-          'score' : userDoc.data()['score'],
+          'retained_percentage': managedLocal!.retainedPercentage,
+          'score' : userData['score'],
           'table_number' : tableNumber,
           'approved_by_user' : null,
           'reservation' : false,
@@ -250,8 +251,8 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
       AnalyticsService().analytics.logEvent(
         name: 'new_scan',
         parameters: {
-          'place_name': managedLocal.name,
-          'place_id': managedLocal.id,
+          'place_name': managedLocal!.name,
+          'place_id': managedLocal!.id,
           'date_start': FieldValue.serverTimestamp.toString(),
           'number_of_guests': numberOfGuests,
           'reservation': false,
@@ -269,7 +270,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
 
     managedLocal =  Provider.of<AsyncSnapshot<dynamic>>(context).data;
 
-    return StreamBuilder(
+    return StreamBuilder<String?>(
       stream: scanStream,
       builder:(context,scanResult) {
         print(scanResult.data);
@@ -330,10 +331,10 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                               key: _tableNoFormKey,
                               child: TextFormField(
                                 onChanged: (input) => tableNumber = int.tryParse(input),
-                                onFieldSubmitted: (input) => _tableNoFormKey.currentState.validate(),
+                                onFieldSubmitted: (input) => _tableNoFormKey.currentState!.validate(),
                                 cursorColor: Colors.blueGrey,
                                 keyboardType: TextInputType.number,
-                                validator: (String input) => int.tryParse(input) == null 
+                                validator: (String? input) => int.tryParse(input!) == null 
                                   ? "Numarul introdus nu este corect!"
                                   : null,
                               ),
@@ -351,10 +352,10 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                               key: _noOfGuestsFormKey,
                               child: TextFormField(
                                 onChanged: (input) => numberOfGuests = int.tryParse(input),
-                                onFieldSubmitted: (input) => _noOfGuestsFormKey.currentState.validate(),
+                                onFieldSubmitted: (input) => _noOfGuestsFormKey.currentState!.validate(),
                                 cursorColor: Colors.blueGrey,
                                 keyboardType: TextInputType.number,
-                                validator: (String input) => int.tryParse(input) == null 
+                                validator: (String? input) => int.tryParse(input!) == null 
                                   ? "Numarul introdus nu este corect!"
                                   : null,
                               ),
@@ -369,7 +370,7 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                                   color: Colors.blueGrey,
                                   child: Text("Continua"),
                                   onPressed: () async{
-                                    if(_tableNoFormKey.currentState.validate()){
+                                    if(_tableNoFormKey.currentState!.validate()){
                                       addNewScan(scanResult.data,context).then((value)=> Navigator.pop(context,value));
                                     }
                                   }

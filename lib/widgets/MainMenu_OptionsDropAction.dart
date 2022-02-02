@@ -6,9 +6,9 @@ import 'package:hyuga_app/widgets/MainMenu_Button.dart';
 
 class OptionsDropButton extends StatefulWidget {
 
-  final String question;
-  final List<String> options;
-  final Offset sizeOfButton;
+  final String? question;
+  final List<String>? options;
+  final Offset? sizeOfButton;
   final button;
   OptionsDropButton({this.options, this.sizeOfButton, this.question,this.button});
   _OptionsDropButtonState createState() => _OptionsDropButtonState(
@@ -21,10 +21,10 @@ class OptionsDropButton extends StatefulWidget {
 
 class _OptionsDropButtonState extends State<OptionsDropButton> {
   
-  List<String> options;
-  Offset sizeOfButton;
-  String question;
-  MainMenuButton button;
+  List<String>? options;
+  Offset? sizeOfButton;
+  String? question;
+  MainMenuButton? button;
 
   _OptionsDropButtonState({this.options, this.sizeOfButton, this.question, this.button});
   @override
@@ -37,7 +37,7 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
         ListView.builder(  /// A widget for listing the options
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(), /// Doesn't allow the List to be scrollable
-          itemCount: options.length,
+          itemCount: options!.length,
           itemBuilder: (BuildContext context, int index){
             return RaisedButton(  
               padding: EdgeInsets.symmetric(vertical: 12,horizontal: 5),
@@ -63,7 +63,7 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
                 Navigator.of(context).pop(index);
               },
               child: Text(
-                    options[index],
+                    options![index],
                     style: TextStyle(
                         fontFamily: 'Comfortaa',
                         fontSize: 21*(1/MediaQuery.of(context).textScaleFactor),

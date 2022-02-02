@@ -13,12 +13,12 @@ class ScannedLocalsPage extends StatefulWidget {
 
 class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
 
-  int itemCount;
+  int? itemCount;
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<List> getScanHistory() async {
     QuerySnapshot scanHistory = await _db.collection('users')
-    .doc(authService.currentUser.uid).collection('scan_history')
+    .doc(authService.currentUser!.uid).collection('scan_history')
     .orderBy("date_start", descending: true)
     //.where('approved_by_user', isEqualTo: true) 
     .get();
@@ -28,12 +28,12 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<dynamic>>(
         future: getScanHistory(),
         builder:(context, scanHistory){ 
           if(!scanHistory.hasData)
             return Scaffold(appBar: AppBar(backgroundColor: Theme.of(context).accentColor,),body: Center(child: LoadingAnimation()),);
-          else if(scanHistory.data == 0)
+          else if(scanHistory.data! == 0)
             return Scaffold(appBar: AppBar(),body: Center(child: Text("Nu ai nicio scanare. \n Incepe sa scanezi pentru a revendica reduceri!"),));
           else
             return  Scaffold(
@@ -45,16 +45,16 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
               body: Container(
                 padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.03, vertical: MediaQuery.of(context).size.width*0.05),
                 child: ListView.separated(
-                  itemCount: scanHistory.data.length,
+                  itemCount: scanHistory.data!.length,
                   separatorBuilder: (context,index) => SizedBox(
                     height: 10,
                   ),
                   itemBuilder: (context, index){
                     return GestureDetector(
                       onTap: (){
-                        Future<Image> placeImage;
+                        Future<Image>? placeImage;
                         try{
-                          placeImage = queryingService.getImage(scanHistory.data[index]['place_id']);
+                          placeImage = queryingService.getImage(scanHistory.data![index]['place_id']);
                         }
                         catch(e){}
                         // Shows a pop-up containing the details about the bill
@@ -74,7 +74,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                   GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
                                     onTap: () async {
                                       await _db
-                                      .collection('locals_bucharest').doc(scanHistory.data[index]['place_id'])
+                                      .collection('locals_bucharest').doc(scanHistory.data![index]['place_id'])
                                       .get().then((value) => 
                                       Navigator.pushNamed(
                                         context,
@@ -93,13 +93,13 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           constraints: BoxConstraints(
                                             maxHeight: 300
                                           ),
-                                          child: FutureBuilder(
+                                          child: FutureBuilder<Image>(
                                             future: placeImage,
-                                            builder: (context,img){
-                                              if(!img.hasData)
+                                            builder: (context,image){
+                                              if(!image.hasData)
                                                 return SpinningLogo();
                                               else
-                                                return img.data;
+                                                return image.data!;
                                             }
                                           ),
                                         ),
@@ -118,7 +118,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           bottom: 25,
                                           width: 300,
                                           child: Text(
-                                            scanHistory.data[index]['place_name'], 
+                                            scanHistory.data![index]['place_name'], 
                                             style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                                           )
                                         )
@@ -133,7 +133,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                         children:[
                                           TextSpan(text: "Valoare finala bon: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                          TextSpan(text: scanHistory.data[index]['total'].toString()+"RON")
+                                          TextSpan(text: scanHistory.data![index]['total'].toString()+"RON")
                                         ]
                                       ), 
                                     ),
@@ -145,12 +145,12 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                       text: TextSpan(
                                         style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                         children:[
-                                          scanHistory.data[index]['discount'] != 0 
+                                          scanHistory.data![index]['discount'] != 0 
                                           ? TextSpan(text: "Reducere: ", style: TextStyle(fontWeight: FontWeight.bold))
                                           : TextSpan(text: "Fara reducere", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                            text: scanHistory.data[index]['discount'] != 0
-                                            ? scanHistory.data[index]['discount'].toString() + "%"
+                                            text: scanHistory.data![index]['discount'] != 0
+                                            ? scanHistory.data![index]['discount'].toString() + "%"
                                             : ""
                                           )
                                         ]
@@ -166,8 +166,8 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         children:[
                                           TextSpan(text: "Numar persoane: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                           TextSpan(
-                                            text: scanHistory.data[index]['number_of_guests'] != null 
-                                            ? scanHistory.data[index]['number_of_guests'].toString()
+                                            text: scanHistory.data![index]['number_of_guests'] != null 
+                                            ? scanHistory.data![index]['number_of_guests'].toString()
                                             : "1"
                                           )
                                         ]
@@ -185,7 +185,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                           TextSpan(
                                             text: 
                                             DateFormat("y-MM-dd HH:mm").format(
-                                              DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch)
+                                              DateTime.fromMillisecondsSinceEpoch(scanHistory.data![index]['date_start'].millisecondsSinceEpoch)
                                             )
                                           )
                                         ]
@@ -217,12 +217,12 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                               Container( // The background image of the List Tile
                                   height: 225,
                                   width: 400,
-                                  child: FutureBuilder(
-                                    future: queryingService.getImage(scanHistory.data[index]['place_id']),
+                                  child: FutureBuilder<Image>(
+                                    future: queryingService.getImage(scanHistory.data![index]['place_id']),
                                     builder: (context, image) {
                                       if(!image.hasData)
                                         return Container(); 
-                                      else return image.data;
+                                      else return image.data!;
                                     }
                                   ),
                                 ),
@@ -259,7 +259,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                                   maxWidth: MediaQuery.of(context).size.width*0.6,
                                                 ),
                                                 child: Text(
-                                                  scanHistory.data[index]['place_name'],
+                                                  scanHistory.data![index]['place_name'],
                                                   style: TextStyle(
                                                     wordSpacing: 0.1,
                                                     fontWeight: FontWeight.bold,
@@ -283,12 +283,12 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                             Divider(
                                               indent: 10,
                                             ),
-                                            scanHistory.data[index]['total'] != null
+                                            scanHistory.data![index]['total'] != null
                                             ? Flexible(
                                               child: Text(
-                                                scanHistory.data[index]['total'] == scanHistory.data[index]['total'].toDouble()
-                                                  ? scanHistory.data[index]['total'].toDouble().toString()+" RON"
-                                                  : scanHistory.data[index]['total'] +" RON",
+                                                scanHistory.data![index]['total'] == scanHistory.data![index]['total'].toDouble()
+                                                  ? scanHistory.data![index]['total'].toDouble().toString()+" RON"
+                                                  : scanHistory.data![index]['total'] +" RON",
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   color: Colors.white,
@@ -305,7 +305,7 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                         padding: const EdgeInsets.only(top: 5, bottom: 8),
                                         child: Text(
                                           /// A formula which converts the Timestamp to Date format
-                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data[index]['date_start'].millisecondsSinceEpoch).toLocal().toString()
+                                          'Data: ' + DateTime.fromMillisecondsSinceEpoch(scanHistory.data![index]['date_start'].millisecondsSinceEpoch).toLocal().toString()
                                           .substring(0,16),
                                           style: TextStyle(
                                             fontSize: 12,
@@ -316,8 +316,8 @@ class _ScannedLocalsPageState extends State<ScannedLocalsPage> {
                                       Container(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
-                                          scanHistory.data[index]['discount'] != 0 && scanHistory.data[index]['discount'] != null
-                                          ? "Reducere: "+ scanHistory.data[index]['discount'].toString() + "%"
+                                          scanHistory.data![index]['discount'] != 0 && scanHistory.data![index]['discount'] != null
+                                          ? "Reducere: "+ scanHistory.data![index]['discount'].toString() + "%"
                                           : "Fara reducere",
                                           style: TextStyle(
                                             fontSize: 17,

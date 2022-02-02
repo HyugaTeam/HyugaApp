@@ -1,10 +1,10 @@
 import 'package:hyuga_app/models/locals/local.dart';
 
-int selectedWhere;
-int selectedWhat;
-int selectedHowMany;
-int selectedAmbiance;
-int selectedArea;
+int? selectedWhere;
+int? selectedWhat;
+int? selectedHowMany;
+int? selectedAmbiance;
+int? selectedArea;
 
 void resetSearchParameters(){
   selectedWhere = selectedWhat = selectedHowMany = selectedAmbiance = selectedArea = null;
@@ -15,11 +15,11 @@ bool isSnackBarActive = false;
 bool isStarting = true;
 bool isIOS = false; // Added for the AppleID Sign In method (only available on IOS)
 bool isNewUser = false;
-bool locationPermissionGranted;
+bool? locationPermissionGranted;
 
 List<Local> placesList = [];
 
-Map<String,int> selectedOptions = {
+Map<String,int?> selectedOptions = {
   'Categorie':selectedWhere, // 'Where?'
   'Specific':selectedWhat,  // 'What?'
   'Cate persoane':selectedHowMany, //'How many?'

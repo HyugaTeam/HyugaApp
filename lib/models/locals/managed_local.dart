@@ -1,18 +1,18 @@
 class ManagedLocal{
-  bool reservations;
-  String id;
-  String name;
-  String description;
-  int cost;
-  int capacity;
-  double retainedPercentage;
-  String ambiance;
-  Map<String,dynamic> profile;
-  Map<String,dynamic> discounts;
-  Map<String,dynamic> deals;
-  Map<String,dynamic> analytics;
-  Map<String,dynamic> schedule;
-  int maturity;
+  bool? reservations;
+  String? id;
+  String? name;
+  String? description;
+  int? cost;
+  int? capacity;
+  double? retainedPercentage;
+  String? ambiance;
+  Map<String,dynamic>? profile;
+  Map<String,dynamic>? discounts;
+  Map<String,dynamic>? deals;
+  Map<String,dynamic>? analytics;
+  Map<String,dynamic>? schedule;
+  int? maturity;
 
   ManagedLocal(
     {

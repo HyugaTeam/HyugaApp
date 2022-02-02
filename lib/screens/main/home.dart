@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/main/home/DiscountLocals_Page.dart';
@@ -25,7 +26,7 @@ class Home extends StatefulWidget {
 
 class HomeButtonsController{
   
-  static int lastValue;
+  static int? lastValue;
   static PublishSubject _whereButton = PublishSubject<int>();
   
   HomeButtonsController(){
@@ -35,7 +36,7 @@ class HomeButtonsController{
   }
   /// The stream which emits a new value whenever the 'Where' field is reselected.
   /// It emits and 'int' corresponding to the selected index.
-  static Stream<int> get whereButton => _whereButton.stream;
+  static Stream<int> get whereButton => _whereButton.stream as Stream<int>;
 
   /// Call this method whenever you want to notify the listeners about a 'Where' index modification
   static void addWhereValue(int value){
@@ -45,15 +46,15 @@ class HomeButtonsController{
 
 class _HomeState extends State<Home> with TickerProviderStateMixin{
 
-  HomeButtonsController buttonsController;
+  HomeButtonsController? buttonsController;
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   ProfileDrawer _drawer = ProfileDrawer();
 
-  Size _topWidgetSize;
-  Size _bottomWidgetSize;
+  late Size _topWidgetSize;
+  late Size _bottomWidgetSize;
 
-  Animation<double> _animation;
-  AnimationController _controller;
+  late Animation<double> _animation;
+  late AnimationController _controller;
 
   double _animatedButtonWidth = 70;
 
@@ -78,14 +79,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
 
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot<Object?>>(
       stream: authService.seatingStatus,
       builder: (context, ss) {
-      if(authService.currentUser.isAnonymous != true)
+      if(authService.currentUser!.isAnonymous != true)
         if(!ss.hasData) // Checks if the user is seated or not
           return Scaffold(body: Center(child: SpinningLogo(),));
-        else if(ss.data.docs.length == 1 )
-          return SeatingInterface(place: ss.data.docs[0]);
+        else if(ss.data!.docs.length == 1 )
+          return SeatingInterface(place: ss.data!.docs[0]);
         // return StreamBuilder<bool>(
         //   stream: QueryService.userLocationStream.stream,
         //   builder: (context, hasLocation) {
@@ -183,7 +184,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   highlightColor: Colors.white.withOpacity(0.2),
                   splashColor: Colors.white.withOpacity(0.8),
                   onPressed: () async {
-                    _drawerKey.currentState.openDrawer();
+                    _drawerKey.currentState!.openDrawer();
                   },
                 ),
                 actions: <Widget>[
@@ -239,8 +240,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                     end: Alignment.bottomRight,
                                     transform: GradientRotation(2),
                                     colors: [
-                                      Colors.blueGrey[600],
-                                      Colors.blueGrey[700]
+                                      Colors.blueGrey[600]!,
+                                      Colors.blueGrey[700]!
                                     ]
                                   )
                                 ),
@@ -321,15 +322,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                     end: Alignment.topLeft,
                                     transform: GradientRotation(2),
                                     colors: [
-                                      Colors.orange[500],
-                                      Colors.orange[800]
+                                      Colors.orange[500]!,
+                                      Colors.orange[800]!
                                     ]
                                   )
                                 ),
                                 width: double.infinity,
                                 height: _bottomWidgetSize.height,
                                 child: MaterialButton(
-                                  color: Colors.orange[600].withOpacity(0.6),
+                                  color: Colors.orange[600]!.withOpacity(0.6),
                                   splashColor: Colors.black26,
                                   highlightColor: Colors.black12,
                                   child: Column(

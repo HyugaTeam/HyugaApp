@@ -27,9 +27,11 @@ void main() async{
   queryingService = QueryService();
   MessagingService().requestNotificationPermissions();
   
-  runApp(StreamProvider<OurUser>.value( 
+  runApp(StreamProvider<OurUser?>.value( 
+      initialData: authService.currentUser,
       value: authService.user,
-      child: StreamProvider<bool>.value(
+      child: StreamProvider<bool?>.value(
+        initialData: null,
         value: queryingService.locationEnabledStream.stream,
         child: MaterialApp(
           /// Locales aren't used yet

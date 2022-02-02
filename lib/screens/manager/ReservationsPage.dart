@@ -18,25 +18,25 @@ class _ReservationsPageState extends State<ReservationsPage> {
   Map<String,String> weekdaysTranslate = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
 
   //List pendingReservationsCopy;
-  List pendingReservations;
-  List acceptedReservations=[];
+  List? pendingReservations;
+  List? acceptedReservations=[];
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  ManagedLocal _managedLocal;
+  ManagedLocal? _managedLocal;
 
-  Stream pendingReservationsStream() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> pendingReservationsStream() {
     FirebaseFirestore _db = FirebaseFirestore.instance;
-    return   _db.collection('users').doc(authService.currentUser.uid).collection('managed_locals')
-    .doc(_managedLocal.id).collection('reservations')
+    return   _db.collection('users').doc(authService.currentUser!.uid).collection('managed_locals')
+    .doc(_managedLocal!.id).collection('reservations')
     .where('accepted',isNull: true)
     .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal().add(Duration(minutes: -30))))
     .orderBy('date_start')
     .snapshots();
   }
 
-  Stream acceptedReservationsStream() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> acceptedReservationsStream() {
     FirebaseFirestore _db = FirebaseFirestore.instance;
-    return _db.collection('users').doc(authService.currentUser.uid).collection('managed_locals')
-    .doc(_managedLocal.id).collection('reservations')
+    return _db.collection('users').doc(authService.currentUser!.uid).collection('managed_locals')
+    .doc(_managedLocal!.id).collection('reservations')
     .where('accepted',isEqualTo: true)
     .where('claimed',isNull: true)
     .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
@@ -45,6 +45,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   /// Shows a bottom sheet when a list tile is pressed
   void _showBottomSheet(BuildContext context, DocumentSnapshot reservation, [bool accepted = false]){
+    dynamic reservationData = reservation.data() as Map?;
     showModalBottomSheet(context: context, builder: (context)=> Theme(
       data: ThemeData(
         fontFamily: 'Comfortaa',
@@ -85,21 +86,21 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 onPressed: (){
                   Navigator.pop(context);
                   DocumentReference managerRef = reservation.reference;
-                  DateTime date = DateTime.fromMillisecondsSinceEpoch(reservation.data()['date_start'].millisecondsSinceEpoch);
+                  DateTime date = DateTime.fromMillisecondsSinceEpoch(reservationData['date_start'].millisecondsSinceEpoch);
                   managerRef.set(
                     {
                       "accepted": true
                     },
                     SetOptions(merge: true)
                   );
-                  DocumentReference userRef = reservation.data()['user_reservation_ref'];
+                  DocumentReference userRef = reservationData['user_reservation_ref'];
                   userRef.set(
                     {
                       "accepted": true
                     },
                     SetOptions(merge: true)
                   );
-                  _scaffoldKey.currentState.showSnackBar(
+                  _scaffoldKey.currentState!.showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.orange[600],
                       content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - H:mm").format(date)}")
@@ -141,14 +142,14 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     },
                     SetOptions(merge: true)
                   );
-                  DocumentReference userRef = reservation.data()['user_reservation_ref'];
+                  DocumentReference userRef = reservationData['user_reservation_ref'];
                   userRef.set(
                     {
                       "accepted": false
                     },
                     SetOptions(merge: true)
                   );
-                  _scaffoldKey.currentState.showSnackBar(
+                  _scaffoldKey.currentState!.showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.orange[600],
                       content: Text("Rezervare refuzata.")
@@ -165,13 +166,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
             children: [
               Container(
                 padding: EdgeInsets.symmetric(vertical: 20),
-                child: Text("Nume: "+ reservation.data()['guest_name'], style: TextStyle(fontSize: 22),)
+                child: Text("Nume: "+ reservationData['guest_name'], style: TextStyle(fontSize: 22),)
               ),
               Container(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
                   "Pentru ora: "+ DateFormat("Hm").format(DateTime.fromMillisecondsSinceEpoch(
-                  reservation.data()['date_start'].millisecondsSinceEpoch
+                  reservationData['date_start'].millisecondsSinceEpoch
                   )).toString()
                   ,
                   style: TextStyle(fontSize: 18),
@@ -180,7 +181,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
               Container(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
-                  "Nr. persoane: " + "${reservation.data()['number_of_guests']}",
+                  "Nr. persoane: " + "${reservationData['number_of_guests']}",
                   style: TextStyle(fontSize: 18),
                 ),
               ),
@@ -189,7 +190,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Text(
                   "Facuta la data: ${DateFormat("dd-MM-yyyy  HH:mm").format(DateTime.fromMillisecondsSinceEpoch(
-                  reservation.data()['date_created'].millisecondsSinceEpoch
+                  reservationData['date_created'].millisecondsSinceEpoch
                   ))}",
                   style: TextStyle(fontSize: 18),
                 ),
@@ -202,7 +203,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   );
   }
 
-  String dealsToString(List<Map<String, dynamic>> deals){
+  String dealsToString(List<Map<String, dynamic>>? deals){
     String result = "";
     if(deals != null){
       for(int i = 0; i < deals.length; i++){
@@ -223,7 +224,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<dynamic>>(context).data;
+    _managedLocal = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -244,7 +245,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
             ),
           ),
           Container( // The pending reservations list
-            child: StreamBuilder(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: pendingReservationsStream(),
               builder: (context,ss) {
                 if(!ss.hasData)
@@ -252,9 +253,9 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     child: CircularProgressIndicator()
                   );
                 else{
-                  pendingReservations = ss.data.docs;
+                  pendingReservations = ss.data!.docs;
                   isLoading = false;
-                  if(pendingReservations.length == 0)
+                  if(pendingReservations!.length == 0)
                     return Container(
                       width: double.infinity,
                       height: 40,
@@ -263,7 +264,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   else return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: pendingReservations.length,
+                    itemCount: pendingReservations!.length,
                     itemBuilder: (context,index) => Dismissible(
                       key: UniqueKey(),
                       background: Container( /// The background behind the ListTile containing the 'Accept' text
@@ -283,22 +284,22 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         ),
                       ),
                       onDismissed: (direction) async {
-                        DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch);
-                        DocumentReference placeRef = pendingReservations[index].reference;
+                        DateTime date = DateTime.fromMillisecondsSinceEpoch(pendingReservations![index].data()['date_start'].millisecondsSinceEpoch);
+                        DocumentReference placeRef = pendingReservations![index].reference;
                         await placeRef.set(
                           {
                             "accepted": true
                           },
                           SetOptions(merge: true)
                         );
-                        DocumentReference userRef = pendingReservations[index].data()['user_reservation_ref'];
+                        DocumentReference userRef = pendingReservations![index].data()['user_reservation_ref'];
                         await userRef.set(
                           {
                             "accepted": true
                           },
                           SetOptions(merge: true)
                         );
-                        _scaffoldKey.currentState.showSnackBar(
+                        _scaffoldKey.currentState!.showSnackBar(
                           SnackBar(
                             backgroundColor: Colors.orange[600],
                             content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - HH:mm").format(date)}")
@@ -307,7 +308,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       },
                       child: ListTile(
                         trailing: Text(
-                          "${DateFormat("dd-MMM").format(DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch))}"
+                          "${DateFormat("dd-MMM").format(DateTime.fromMillisecondsSinceEpoch(pendingReservations![index].data()['date_start'].millisecondsSinceEpoch))}"
                         ),
                         title: RichText(
                           text: TextSpan(
@@ -319,11 +320,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: DateTime.now().weekday == DateTime.fromMillisecondsSinceEpoch(pendingReservations[index].data()['date_start'].millisecondsSinceEpoch).weekday
+                                text: DateTime.now().weekday == DateTime.fromMillisecondsSinceEpoch(pendingReservations![index].data()['date_start'].millisecondsSinceEpoch).weekday
                                 ? "Astazi "
                                 : weekdaysTranslate["${DateFormat("EEEE").format(DateTime.fromMillisecondsSinceEpoch(
-                                pendingReservations[index].data()['date_start'].millisecondsSinceEpoch
-                                ))}"] + " "
+                                pendingReservations![index].data()['date_start'].millisecondsSinceEpoch
+                                ))}"]! + " "
                               ),
                               WidgetSpan(
                                 alignment: PlaceholderAlignment.middle,
@@ -338,15 +339,15 @@ class _ReservationsPageState extends State<ReservationsPage> {
                               ),
                               TextSpan(
                                 text: " ${DateFormat("Hm").format(DateTime.fromMillisecondsSinceEpoch(
-                                pendingReservations[index].data()['date_start'].millisecondsSinceEpoch
+                                pendingReservations![index].data()['date_start'].millisecondsSinceEpoch
                                 ))}",
                               ),
                             ]
                           )
                         ),
-                        subtitle: Text("Persoane: "+"${pendingReservations[index].data()['number_of_guests']}"),
+                        subtitle: Text("Persoane: "+"${pendingReservations![index].data()['number_of_guests']}"),
                         onTap: (){
-                          _showBottomSheet(context,pendingReservations[index]);
+                          _showBottomSheet(context,pendingReservations![index]);
                       }
                     ),
                   )
@@ -362,7 +363,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
             child: Text("Acceptate"),
           ),
           Container(
-            child: StreamBuilder(
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: acceptedReservationsStream(),
               builder: (context, ss) {
                 if(!ss.hasData)
@@ -375,8 +376,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     ],
                   );
                 else{
-                  acceptedReservations = ss.data.docs;
-                  if(acceptedReservations.length == 0)
+                  acceptedReservations = ss.data!.docs;
+                  if(acceptedReservations!.length == 0)
                     return Container(
                       width: double.infinity,
                       height: 40,
@@ -385,7 +386,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   return ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: acceptedReservations.length,
+                    itemCount: acceptedReservations!.length,
                     itemBuilder: (context,index) => ListTile(
                       trailing: OutlineButton(
                         highlightedBorderColor: Colors.transparent,
@@ -393,16 +394,16 @@ class _ReservationsPageState extends State<ReservationsPage> {
                           borderRadius: BorderRadius.circular(30)
                         ),
                         borderSide: BorderSide(
-                          color: Colors.orange[600]
+                          color: Colors.orange[600]!
                         ),
                         child: Text(
                           "Activeaza",
                         ),
                         onPressed: (){
-                          DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(acceptedReservations[index].data()['date_start'].millisecondsSinceEpoch);
+                          DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(acceptedReservations![index].data()['date_start'].millisecondsSinceEpoch);
                           if(dateStart.difference(DateTime.now().toLocal()) < Duration(minutes: 30).abs()){
                             GlobalKey<FormState> _formKey = GlobalKey();
-                          int tableNumber;
+                          int? tableNumber;
                           bool isLoading = false;
                           showDialog(context: context, builder: (context) => Dialog(
                             child: Container(
@@ -423,10 +424,10 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       key: _formKey,
                                       child: TextFormField(
                                         onChanged: (input) => tableNumber = int.tryParse(input),
-                                        onFieldSubmitted: (input) => _formKey.currentState.validate(),
+                                        onFieldSubmitted: (input) => _formKey.currentState!.validate(),
                                         cursorColor: Colors.blueGrey,
                                         keyboardType: TextInputType.number,
-                                        validator: (String input) => int.tryParse(input) == null 
+                                        validator: (String? input) => int.tryParse(input!) == null 
                                           ? "Numarul introdus nu este corect!"
                                           : null,
                                       ),
@@ -440,10 +441,10 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                           color: Colors.blueGrey,
                                           child: Text("Continua"),
                                           onPressed: () async{
-                                            if(_formKey.currentState.validate()){
+                                            if(_formKey.currentState!.validate()){
                                               /// Activate the 'place' reservation  
-                                              DocumentReference placeRef = acceptedReservations[index].reference;
-                                              DocumentReference placeScanningRef = acceptedReservations[index].reference
+                                              DocumentReference placeRef = acceptedReservations![index].reference;
+                                              DocumentReference placeScanningRef = acceptedReservations![index].reference
                                               .parent.parent
                                               .collection('scanned_codes').doc();
                                               placeRef.set(
@@ -456,8 +457,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 SetOptions(merge: true)
                                               );
                                               /// Activate the 'user' reservation 
-                                              DocumentReference userRef = acceptedReservations[index].data()['user_reservation_ref'];
-                                              DocumentReference userScanningRef = acceptedReservations[index].data()['user_reservation_ref']
+                                              DocumentReference userRef = acceptedReservations![index].data()['user_reservation_ref'];
+                                              DocumentReference userScanningRef = acceptedReservations![index].data()['user_reservation_ref']
                                               .parent.parent
                                               .collection('scan_history').doc();
                                               userRef.set(
@@ -474,14 +475,14 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                               
                                               Map<String, dynamic> placeScanData = {
                                                 "approved_by_user": null,
-                                                "date_start": acceptedReservations[index].data()['date_start'],
+                                                "date_start": acceptedReservations![index].data()['date_start'],
                                                 "date_claimed": FieldValue.serverTimestamp(),
-                                                "discount": acceptedReservations[index].data()['discount'],
-                                                'deals': acceptedReservations[index].data()['deals'],
-                                                "guest_id": acceptedReservations[index].data()['guest_id'],
-                                                "guest_name": acceptedReservations[index].data()['guest_name'],
+                                                "discount": acceptedReservations![index].data()['discount'],
+                                                'deals': acceptedReservations![index].data()['deals'],
+                                                "guest_id": acceptedReservations![index].data()['guest_id'],
+                                                "guest_name": acceptedReservations![index].data()['guest_name'],
                                                 "is_active": true,
-                                                "number_of_guests": acceptedReservations[index].data()['number_of_guests'],
+                                                "number_of_guests": acceptedReservations![index].data()['number_of_guests'],
                                                 "user_scan_ref": userScanningRef,
                                                 "reservation": true,
                                                 "reservation_ref": placeRef,
@@ -495,13 +496,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 "accepted": true,
                                                 "approved_by_user": null,
                                                 "date_claimed": FieldValue.serverTimestamp(),
-                                                "date_start": acceptedReservations[index].data()['date_start'],
-                                                "discount": acceptedReservations[index].data()['discount'],
-                                                "deals": acceptedReservations[index].data()['deals'],
-                                                "place_id": _managedLocal.id,
-                                                "place_name": _managedLocal.name,
+                                                "date_start": acceptedReservations![index].data()['date_start'],
+                                                "discount": acceptedReservations![index].data()['discount'],
+                                                "deals": acceptedReservations![index].data()['deals'],
+                                                "place_id": _managedLocal!.id,
+                                                "place_name": _managedLocal!.name,
                                                 "is_active": true,
-                                                "number_of_guests": acceptedReservations[index].data()['number_of_guests'],
+                                                "number_of_guests": acceptedReservations![index].data()['number_of_guests'],
                                                 "place_scan_ref": placeScanningRef,
                                                 "reservation": true,
                                                 "reservation_ref": userRef
@@ -514,14 +515,14 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 AnalyticsService().analytics.logEvent(
                                                   name: 'new_scan',
                                                   parameters: {
-                                                    'place_name': _managedLocal.name,
-                                                    'place_id': _managedLocal.id,
+                                                    'place_name': _managedLocal!.name,
+                                                    'place_id': _managedLocal!.id,
                                                     "date_claimed": FieldValue.serverTimestamp().toString(),
-                                                    'date_start': acceptedReservations[index].data()['date_start'],
-                                                    'number_of_guests': acceptedReservations[index].data()['number_of_guests'],
+                                                    'date_start': acceptedReservations![index].data()['date_start'],
+                                                    'number_of_guests': acceptedReservations![index].data()['number_of_guests'],
                                                     'reservation': true,
-                                                    'discount': acceptedReservations[index].data()['discount'],
-                                                    'deals': dealsToString(acceptedReservations[index].data()['deals'])
+                                                    'discount': acceptedReservations![index].data()['discount'],
+                                                    'deals': dealsToString(acceptedReservations![index].data()['deals'])
                                                   }
                                                 );
                                               }
@@ -551,7 +552,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                             ),
                           ));
                           }
-                          else _scaffoldKey.currentState.showSnackBar(
+                          else _scaffoldKey.currentState!.showSnackBar(
                             SnackBar(
                               content: Text(
                                 "Rezervarile pot fi activate cu cel mult 30 de minute inainte sau dupa ora acestora."
@@ -572,19 +573,19 @@ class _ReservationsPageState extends State<ReservationsPage> {
                           children: [
                             TextSpan(
                               text: weekdaysTranslate["${DateFormat("EEEE").format(DateTime.fromMillisecondsSinceEpoch(
-                              acceptedReservations[index].data()['date_start'].millisecondsSinceEpoch
-                              ))}"] + " - "
+                              acceptedReservations![index].data()['date_start'].millisecondsSinceEpoch
+                              ))}"]! + " - "
                             ),
                             TextSpan(
                               text: "${DateFormat("Hm").format(DateTime.fromMillisecondsSinceEpoch(
-                              acceptedReservations[index].data()['date_start'].millisecondsSinceEpoch
+                              acceptedReservations![index].data()['date_start'].millisecondsSinceEpoch
                               ))}",
                             ),
                           ]
                         )
                       ),
-                      subtitle: Text("Persoane: "+"${acceptedReservations[index].data()['number_of_guests']}"),
-                      onTap:() => _showBottomSheet(context, acceptedReservations[index], true),
+                      subtitle: Text("Persoane: "+"${acceptedReservations![index].data()['number_of_guests']}"),
+                      onTap:() => _showBottomSheet(context, acceptedReservations![index], true),
                     )
                   );
                 }

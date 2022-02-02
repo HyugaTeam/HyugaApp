@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,15 +15,15 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> with TickerProviderStateMixin {
 
-  String email;
-  String password;
+  late String email;
+  late String password;
   bool formVisibility = false;
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
   GlobalKey _formFieldKey = GlobalKey();
 
-  AnimationController _controller;
-  Animation<double> _animation;
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -51,7 +53,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
       ).closed.then((reason) => g.isSnackBarActive = false);
     }
   }
-  void handleAuthError(BuildContext context, FirebaseAuthException signInResult){
+  void handleAuthError(BuildContext context, FirebaseException signInResult){
     print("code"+signInResult.code);
     if(signInResult.code == 'user-not-found')
       showErrorSnackBar(context, "Combinatia email+parola este gresita");
@@ -103,7 +105,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
       ),
       child: Scaffold(
         backgroundColor: Theme.of(context).accentColor,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: Builder(
           builder: (context) {
             _controller.forward();
@@ -334,9 +336,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                             TextFormField(
                                               key: _formFieldKey,
                                               onTap: (){
-                                                RenderBox field = _formFieldKey.currentContext.findRenderObject();
+                                                RenderBox field = _formFieldKey.currentContext!.findRenderObject() as RenderBox;
                                                 print(field.localToGlobal(Offset.zero));
-                                                _scrollController.animateTo(
+                                                _scrollController!.animateTo(
                                                   field.localToGlobal(Offset.zero).dy, 
                                                   duration: Duration(milliseconds: 100), 
                                                 curve: Curves.easeIn);
@@ -367,8 +369,8 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                               onPressed: () async{
                                                 dynamic signInResult = await authService.signInWithEmailAndPassword(email, password);
                                                 //print(signInResult.runtimeType);
-                                                if(signInResult.runtimeType == FirebaseAuthException) {
-                                                  FirebaseAuthException authException = signInResult;
+                                                if(signInResult.runtimeType == FirebaseException) {
+                                                  FirebaseException authException = signInResult;
                                                   handleAuthError(context, authException);
                                                 }
                                               },

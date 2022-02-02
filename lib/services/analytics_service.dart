@@ -3,7 +3,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/foundation.dart' as Foundation;
 
 class AnalyticsService{
-  final FirebaseAnalytics analytics = FirebaseAnalytics();
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   AnalyticsService(){
     Foundation.kDebugMode
@@ -14,6 +14,6 @@ class AnalyticsService{
   FirebaseAnalyticsObserver getAnalyticsObserver() => FirebaseAnalyticsObserver(analytics: analytics);
 
   Future setUserProperties(String uid) async{
-    await analytics.setUserId(uid);
+    await analytics.setUserId(id: uid);
   }
 }

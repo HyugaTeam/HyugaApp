@@ -1,13 +1,13 @@
+import 'package:maps_toolkit/maps_toolkit.dart';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocode/geocode.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:intl/intl.dart';
-import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,8 +19,8 @@ class QueryService{
   static final FirebaseStorage storage = FirebaseStorage.instance;
   static final Reference storageRef = storage.ref();
   static PublishSubject<bool> userLocationStream = PublishSubject<bool>();
-  PublishSubject<bool> locationEnabledStream = PublishSubject<bool>();
-  static LocationData _userLocation ;
+  PublishSubject<bool?> locationEnabledStream = PublishSubject<bool?>();
+  static LocationData? _userLocation ;
   
   static final QueryService _instance = new QueryService._privateConstructor();
 
@@ -33,45 +33,49 @@ class QueryService{
     checkAndRequestForLocationService();
     locationEnabledStream.listen((value) {print(value.toString()+ " locationenabledStream");});
     //getUserLocation().then((value) => _userLocation = value);
-    Location.instance.changeSettings(
-      interval: 10000
-    );
-  }
+    // Location().changeSettings(
+    //   interval: 10000
+    // );
+  } 
 
   /// A getter for the user's location
-  LocationData get userLocation{
+  LocationData? get userLocation{
     return _userLocation;
   }
 
   // Checks if the locations is enabled, then ask for enabling the location, then ACTUALLY gets the location
   void checkAndRequestForLocationService() async{
-    bool _serviceEnabled = await Location.instance.serviceEnabled();
+    bool _serviceEnabled = await Location().serviceEnabled();
     if(!_serviceEnabled){
       print("cere serviciu");
-      bool result = await Location.instance.requestService();
+      bool result = await Location().requestService();
       if(!result)
         return locationEnabledStream.add(false);
     }
     locationEnabledStream.add(true);
+    print("locatie");
     try {
-      PermissionStatus result = await Location.instance.requestPermission();
+      print('locatie1');
+      PermissionStatus result = await Location().requestPermission();
       if(result == PermissionStatus.denied || result == PermissionStatus.deniedForever)
         throw(PlatformException(code: result == PermissionStatus.denied ? "PERMISSION_DENIED" : "PERMISSION_DENIED_NEVER_ASK"));
-      // PermissionStatus res = await Location.instance.hasPermission();
+      // PermissionStatus res = await Location().hasPermission();
       // print(res.toString() + "res");
-      // if(res == PermissionStatus.denied || res == PermissionStatus.deniedForever){
+      // if(res == PermissionStatus.DENIED || res == PermissionStatus.DENIEDForever){
       //   print("sssssssssssssssssssss");
       //   userLocationStream.add(false);
       //   return askPermission();
       // }
-      await Location.instance.getLocation();
+      await Location().getLocation().then((value) => print(value.toString() + " value"));
       userLocationStream.add(true);
       Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
-        print(instantUserLocation);
+        //print(instantUserLocation);
         _userLocation = instantUserLocation;
-        userLocationStream.add(true);
+        //userLocationStream.add(true);
       });
     }
+    // Added due to Object not having the field 'code'
+    on PlatformException
     catch(error){
       if(error.code == "PERMISSION_DENIED_NEVER_ASK" || error.code == "PERMISSION_DENIED")
         userLocationStream.add(false);
@@ -80,7 +84,7 @@ class QueryService{
   }
 
   void askPermission() async{
-    PermissionStatus result = await Location.instance.requestPermission();
+    PermissionStatus result = await Location().requestPermission();
     if(result == PermissionStatus.granted)
       checkAndRequestForLocationService();
   }
@@ -113,7 +117,7 @@ class QueryService{
   // Old method, no longer in use
   Future <QuerySnapshot> getDataByHowManyAndAmbiance() {
     
-    String selectedAmbiance;
+    String? selectedAmbiance;
     int selectedHowMany;
     
     switch (g.selectedAmbiance) {
@@ -163,17 +167,17 @@ class QueryService{
   }
   
   // Obtains the images from Firebase Storage
-  Future<Image> getImage(String fileName) async {
-      Uint8List imageFile;
+  Future<Image> getImage(String? fileName) async {
+      Uint8List? imageFile;
       int maxSize = 10*1024*1024;
       String pathName = 'photos/europe/bucharest/$fileName';
       print(pathName);
       var storageRef = storage.ref().child(pathName);
       imageFile = await storageRef.child('$fileName'+'_profile.jpg').getData(maxSize);
       return Image.memory(
-        imageFile,
+        imageFile!,
         fit: BoxFit.fill,
-        frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+        frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) {
             return child;
           }
@@ -188,16 +192,16 @@ class QueryService{
   }
 
   /// Deprecated, too slow for queries
-  Future<List<Uint8List>> _getImages(String documentID) async{
+  Future<List<Uint8List?>?> _getImages(String documentID) async{
 
-      Uint8List imageFile;
+      Uint8List? imageFile;
       int maxSize = 6*1024*1024;
       String fileName = documentID;
       String pathName = 'photos/europe/bucharest/$fileName';
       
 
       var storageRef = FirebaseStorage.instance.ref().child(pathName);
-      List<Uint8List> listOfImages = [];
+      List<Uint8List?> listOfImages = [];
       int pictureIndex = 1;
       try{
         
@@ -225,7 +229,7 @@ class QueryService{
   }
   
   // Asks for permission and gets the User's location 
-  Future<LocationData> getUserLocation() async{
+  Future<LocationData?> getUserLocation() async{
 
     // Location location = new Location();
     // LocationData position;
@@ -250,8 +254,8 @@ class QueryService{
     // return position;
 
   }
- 
-  double getLocalLocation(LengthUnit unit, GeoPoint location){
+
+  double getLocalLocation(GeoPoint location){
     if(location == null)
       print("LOCATION IS NULL");
     LocationData localLocation ;
@@ -260,31 +264,27 @@ class QueryService{
       'longitude': location.longitude
       }
     );
-    Distance distance = Distance();
-    double fromAtoB = distance.as(
-      unit,
-      LatLng(localLocation.latitude, localLocation.longitude),
-      LatLng(_userLocation.latitude, _userLocation.longitude)
-      );
+    double fromAtoB = SphericalUtil.computeDistanceBetween(
+      LatLng(localLocation.latitude!, localLocation.longitude!),
+      LatLng(_userLocation!.latitude!, _userLocation!.longitude!)
+      ) as double;
     return fromAtoB;
   }
 
   /// Not in use for the moment
   Future<String> getLocationAddress(GeoPoint location) async {
-    final coordinates = Coordinates(location.latitude,location.longitude);
-    var addresses = await Geocoder.local.findAddressesFromCoordinates(
-        coordinates);
-    var firstAddress = addresses.first;
-    print("STRADA ESTE "+firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(',')));
-    var street = firstAddress.addressLine.substring(0,firstAddress.addressLine.indexOf(','));
+    final coordinates = Coordinates(latitude: location.latitude, longitude: location.longitude);
+    var addresses = await GeoCode(apiKey: "").reverseGeocoding(latitude: coordinates.latitude!, longitude: coordinates.longitude!);
+    print("STRADA ESTE "+addresses.streetAddress!.substring(0,addresses.streetAddress!.indexOf(',')));
+    var street = addresses.streetAddress!.substring(0,addresses.streetAddress!.indexOf(','));
     return street;
   }
 
   Local docSnapToLocal(DocumentSnapshot doc){
-    Future<String> address;
+    Future<String>? address;
 
     var profileImage = getImage(doc.id);
-    Map<String, dynamic> placeData = doc.data();
+    Map<String, dynamic> placeData = doc.data() as Map<String, dynamic>;
 
     return Local(
       cost: placeData['cost'],
@@ -311,12 +311,12 @@ class QueryService{
   }
 
   // Handles the whole process of querying
-  Future fetch(bool onlyDiscountLocals) async{
+  Future<List<Local>> fetch(bool onlyDiscountLocals) async{
     if(g.selectedArea == 0 && _userLocation == null){
       _userLocation = await getUserLocation();
       print("DONE-----------");
     }
-    String selectedAmbiance;
+    String? selectedAmbiance;
     int selectedHowMany;
     switch (g.selectedAmbiance) {
       case 0:
@@ -344,22 +344,22 @@ class QueryService{
         default: selectedHowMany = 9;
       }
     else selectedHowMany = 0;
-    QuerySnapshot locals;
+    late QuerySnapshot locals;
     if(g.selectedWhere != null)
       if(g.selectedWhat != null) {
         if(selectedAmbiance != null)  // query by 'ambiance' if selected
           locals = await _db.collection('locals_bucharest')
           .where('ambiance', isEqualTo: selectedAmbiance)
-          .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
+          .orderBy('profile.${g.whatList[g.selectedWhere!][g.selectedWhat!].toLowerCase()}', descending: true)
           .get();
         else // ignore 'ambiance' field if not selected
           locals = await _db.collection('locals_bucharest') 
-          .orderBy('profile.${g.whatList[g.selectedWhere][g.selectedWhat].toLowerCase()}', descending: true)
+          .orderBy('profile.${g.whatList[g.selectedWhere!][g.selectedWhat!].toLowerCase()}', descending: true)
           .get();
         
         print(locals.docs.length);
         locals.docs.forEach( (element) {
-          print("\nsaddas"+ element.data().toString());  
+          print("\nsaddas"+ element.toString());  
         });
       }
       else {
@@ -371,50 +371,49 @@ class QueryService{
     return (locals.docs
     .where((element){
       bool result = true;
+      dynamic place = element.data() as Map;
       if(_userLocation != null && g.selectedArea == 0) { // Filters the result by the 1km radius criteria
         LocationData localLocation ;
         localLocation = LocationData.fromMap({
-          'latitude': element.data()['location'].latitude,
-          'longitude': element.data()['location'].longitude
+          'latitude': place['location'].latitude,
+          'longitude': place['location'].longitude
           }
         );
-        Distance distance = Distance();
-        double fromAtoB = distance.as(
-          LengthUnit.Meter,
-          LatLng(localLocation.latitude, localLocation.longitude),
-          LatLng(_userLocation.latitude, _userLocation.longitude)
-        );
+        double fromAtoB = SphericalUtil.computeDistanceBetween(
+          LatLng(localLocation.latitude!, localLocation.longitude!),
+          LatLng(_userLocation!.latitude!, _userLocation!.longitude!)
+        ) as double;
         if(fromAtoB > 3000)
           result = false;
         print(fromAtoB);
       }
       // if(g.selectedWhat == null && g.selectedWhere != null)
-      //   if(element.data().containsKey("profile")){
+      //   if(place.containsKey("profile")){
       //   bool tempResult = false;
       //   for(int i = 0; i < g.whatList[g.selectedWhere].length; i++){
       //     print(g.whatList[g.selectedWhere][i].toLowerCase());
-      //     print(element.data()['profile'].containsKey('${g.whatList[g.selectedWhere][i].toLowerCase()}'));
-      //     if(element.data()['profile'].containsKey('${g.whatList[g.selectedWhere][i].toLowerCase()}'))
+      //     print(place['profile'].containsKey('${g.whatList[g.selectedWhere][i].toLowerCase()}'));
+      //     if(place['profile'].containsKey('${g.whatList[g.selectedWhere][i].toLowerCase()}'))
       //       tempResult = true;
       //   }
       //   result = tempResult;
       // }
       print(result.toString() + "   RESULT");
-      if(element.data()['capacity'] < selectedHowMany)
+      if(place['capacity'] < selectedHowMany)
         result = false;
-      if(element.data()['discounts'] != null)
+      if(place['discounts'] != null)
       print(
-        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
+        place['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()].toString()
       );
       if(onlyDiscountLocals == true 
-        && (element.data()['discounts'] == null || ( element.data()['discounts'] != null &&
-        element.data()['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null ))
-        && (element.data()['deals'] == null || ( element.data()['deals'] != null &&
-        element.data()['deals'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null ))){
+        && (place['discounts'] == null || ( place['discounts'] != null &&
+        place['discounts'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null ))
+        && (place['deals'] == null || ( place['deals'] != null &&
+        place['deals'][DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()] == null ))){
           print(result.toString() + "result");
           result = false;
         }
-        print(element.data());
+        print(place);
       return result;
     })
     .map(docSnapToLocal)).toList();
@@ -446,10 +445,10 @@ class QueryService{
         );
         /// Allows only the places that have the field 'partner' equal to true
         locals.removeWhere(
-          (doc) => doc.data().containsKey("partner") == false
-          || (doc.data().containsKey("partner") == true && doc.data()["partner"] == false));
-        List localsCopy = locals.toList();
-        localsCopy.sort((doc1, doc2) => doc2.data()['cost'].compareTo(doc1.data()['cost']));
+          (doc) => (doc.data() as Map).containsKey("partner") == false
+          || ((doc.data() as Map).containsKey("partner") == true && (doc.data() as Map)["partner"] == false));
+        List<DocumentSnapshot<Object?>> localsCopy = locals.toList();
+        localsCopy.sort((doc1, doc2) => (doc2.data()! as Map)['cost'].compareTo((doc1.data() as Map)['cost']));
         locals = localsCopy.toSet();
       }
     );

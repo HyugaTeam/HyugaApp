@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -12,17 +14,17 @@ class ReservationsHistoryPage extends StatelessWidget {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 
-  Future<Map<String,dynamic>> getUpcomingReservations() async{
+  Future<Map<String,dynamic>?> getUpcomingReservations() async{
      QuerySnapshot scanHistory = await _db.collection('users')
-    .doc(authService.currentUser.uid).collection('reservations_history')
+    .doc(authService.currentUser!.uid).collection('reservations_history')
     .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
     .where('claimed', isNull: true)     
     .get();
     itemCount = scanHistory.docs.length;
     bool allAreDenied = true;
-    DocumentSnapshot reservation;
+    DocumentSnapshot? reservation;
     scanHistory.docs.forEach((element) {
-      if(element.data()['accepted'] != false){
+      if((element.data() as Map)['accepted'] != false){
         reservation = element;
         allAreDenied = false;
       }
@@ -30,12 +32,12 @@ class ReservationsHistoryPage extends StatelessWidget {
     print(reservation);
     if(allAreDenied) return null;
 
-    return reservation.data();
+    return reservation!.data() as FutureOr<Map<String, dynamic>?>;
   }
 
   Future<List> getPastReservations() async {
     QuerySnapshot scanHistory = await _db.collection('users')
-    .doc(authService.currentUser.uid).collection('reservations_history')
+    .doc(authService.currentUser!.uid).collection('reservations_history')
     .where('date_start', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal())) 
     .get();
     itemCount = scanHistory.docs.length;
@@ -51,13 +53,14 @@ class ReservationsHistoryPage extends StatelessWidget {
       body: ListView(
         shrinkWrap: true,
         children: [
-          FutureBuilder(
+          FutureBuilder<Map<String, dynamic>?>(
             future: getUpcomingReservations(),
-            builder: (context,reservation){
+            builder: (context, AsyncSnapshot<Map<String, dynamic>?>reservation){
+              Map<String, dynamic>? reservationData = reservation.data!;
               if(!reservation.hasData)
                 return Container();
               else {
-                DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(reservation.data['date_start'].millisecondsSinceEpoch);
+                DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(reservation.data!['date_start'].millisecondsSinceEpoch);
                 return ListView(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -80,15 +83,15 @@ class ReservationsHistoryPage extends StatelessWidget {
                         children: [
                           Align( /// The place's image
                             alignment: Alignment.centerLeft,
-                            child: FutureBuilder(
-                              future: queryingService.getImage(reservation.data['place_id']),
-                              builder: (context,image){
+                            child: FutureBuilder<Image>(
+                              future: queryingService.getImage(reservation.data!['place_id']),
+                              builder: (context, image){
                                 if(!image.hasData)
                                   return Container(
                                     width: 300,
                                     height: 200,
                                   );
-                                else return image.data;
+                                else return image.data!;
                               },
                             ),
                           ),
@@ -111,7 +114,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  weekdaysTranslate[DateFormat("EEEE").format(dateStart)] 
+                                  weekdaysTranslate[DateFormat("EEEE").format(dateStart)]! 
                                   + ',\n' + 
                                   DateFormat("dd MMM").format(dateStart),
                                   style: TextStyle(
@@ -139,7 +142,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                 children: [
                                   Container(
                                     child: Text(
-                                      reservation.data['place_name'],
+                                      reservation.data!['place_name'],
                                       style: TextStyle(
                                         shadows: [
                                           Shadow(
@@ -149,7 +152,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             offset: Offset(-1,0)
                                           )
                                         ],
-                                        fontSize: reservation.data['place_name'].length < 27 ? 20 :19,
+                                        fontSize: reservation.data!['place_name'].length < 27 ? 20 :19,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold
                                       ),
@@ -170,13 +173,13 @@ class ReservationsHistoryPage extends StatelessWidget {
                                   ),
                                   Container(
                                     child: Text(
-                                      reservation.data['accepted'] == null
+                                      reservation.data!['accepted'] == null
                                       ? "in asteptare"
-                                      : (reservation.data['accepted'] == true ? "confirmata" : "") ,
+                                      : (reservation.data!['accepted'] == true ? "confirmata" : "") ,
                                       style: TextStyle(
-                                        color: reservation.data['accepted'] == null
+                                        color: reservation.data!['accepted'] == null
                                         ? Colors.yellow
-                                        : (reservation.data['accepted'] == true ? Colors.green : Colors.transparent ) ,
+                                        : (reservation.data!['accepted'] == true ? Colors.green : Colors.transparent ) ,
                                       ),
                                     ),
                                   )
@@ -200,12 +203,12 @@ class ReservationsHistoryPage extends StatelessWidget {
             color: Colors.grey[300],
             child: Text("Istoric rezervari"),
           ),
-          FutureBuilder(
+          FutureBuilder<List>(
               future: getPastReservations(),
               builder:(context, reservationsHistory){ 
                 if(!reservationsHistory.hasData)
                   return Center(child: LoadingAnimation());
-                else if(reservationsHistory.data.length == 0)
+                else if(reservationsHistory.data!.length == 0)
                   return Center(
                     child: Column(
                       children: [
@@ -219,16 +222,16 @@ class ReservationsHistoryPage extends StatelessWidget {
                     child: ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: reservationsHistory.data.length,
+                      itemCount: reservationsHistory.data!.length,
                       separatorBuilder: (context,index) => SizedBox(
                         height: 10,
                       ),
                       itemBuilder: (context, index){
                         return GestureDetector(
                           onTap: (){
-                            Future<Image> placeImage;
+                            Future<Image>? placeImage;
                             try{
-                              placeImage = queryingService.getImage(reservationsHistory.data[index]['place_id']);
+                              placeImage = queryingService.getImage(reservationsHistory.data![index]['place_id']);
                             }
                             catch(e){}
                             // Shows a pop-up containing the details about the bill
@@ -248,7 +251,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                       GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
                                         onTap: () async {
                                           await _db
-                                          .collection('locals_bucharest').doc(reservationsHistory.data[index]['place_id'])
+                                          .collection('locals_bucharest').doc(reservationsHistory.data![index]['place_id'])
                                           .get().then((value) => 
                                           Navigator.pushNamed(
                                             context,
@@ -267,13 +270,13 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               constraints: BoxConstraints(
                                                 maxHeight: 300
                                               ),
-                                              child: FutureBuilder(
+                                              child: FutureBuilder<Image>(
                                                 future: placeImage,
-                                                builder: (context,img){
-                                                  if(!img.hasData)
+                                                builder: (context,image){
+                                                  if(!image.hasData)
                                                     return CircularProgressIndicator();
                                                   else
-                                                    return img.data;
+                                                    return image.data!;
                                                 }
                                               ),
                                             ),
@@ -292,7 +295,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               bottom: 25,
                                               width: 300,
                                               child: Text(
-                                                reservationsHistory.data[index]['place_name'], 
+                                                reservationsHistory.data![index]['place_name'], 
                                                 style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                                               )
                                             )
@@ -300,7 +303,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(height: 20,),
-                                      reservationsHistory.data[index]['claimed'] == true
+                                      reservationsHistory.data![index]['claimed'] == true
                                       ? Container(
                                         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
                                         child: RichText(
@@ -308,7 +311,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                             children:[
                                               TextSpan(text: "Valoare finala bon: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                              TextSpan(text: reservationsHistory.data[index]['total'].toString()+"RON")
+                                              TextSpan(text: reservationsHistory.data![index]['total'].toString()+"RON")
                                             ]
                                           ), 
                                         ),
@@ -322,7 +325,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                             children:[
                                               TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                              TextSpan(text: reservationsHistory.data[index]['discount'].toString() + "%")
+                                              TextSpan(text: reservationsHistory.data![index]['discount'].toString() + "%")
                                               
                                             ]
                                           ), 
@@ -337,9 +340,9 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             children:[
                                               TextSpan(text: "Numar persoane: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                               TextSpan(
-                                                text: reservationsHistory.data[index]['number_of_guests'] != null 
-                                                ? reservationsHistory.data[index]['number_of_guests'].toString()
-                                                : 1
+                                                text: reservationsHistory.data![index]['number_of_guests'] != null 
+                                                ? reservationsHistory.data![index]['number_of_guests'].toString()
+                                                : 1 as String?
                                               )
                                             ]
                                           ), 
@@ -355,7 +358,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               TextSpan(text: "Data: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                               TextSpan(
                                                 text: 
-                                                DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date_start'].millisecondsSinceEpoch).toString()
+                                                DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data![index]['date_start'].millisecondsSinceEpoch).toString()
                                               )
                                             ]
                                           ), 
@@ -386,12 +389,12 @@ class ReservationsHistoryPage extends StatelessWidget {
                                   Container( // The background image of the List Tile
                                       height: 225,
                                       width: 400,
-                                      child: FutureBuilder(
-                                        future: queryingService.getImage(reservationsHistory.data[index]['place_id']),
+                                      child: FutureBuilder<Image>(
+                                        future: queryingService.getImage(reservationsHistory.data![index]['place_id']),
                                         builder: (context, image) {
                                           if(!image.hasData)
                                             return Container(); 
-                                          else return image.data;
+                                          else return image.data!;
                                         }
                                       ),
                                     ),
@@ -429,7 +432,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                     ),
                                                     child: Text(
                                                       //"Trattoria Buongiorno Covaci",
-                                                      reservationsHistory.data[index]['place_name'],
+                                                      reservationsHistory.data![index]['place_name'],
                                                       style: TextStyle(
                                                         wordSpacing: 0.1,
                                                         fontWeight: FontWeight.bold,
@@ -453,12 +456,12 @@ class ReservationsHistoryPage extends StatelessWidget {
                                                 Divider(
                                                   indent: 10,
                                                 ),
-                                                reservationsHistory.data[index]['total'] != null
+                                                reservationsHistory.data![index]['total'] != null
                                                 ? Flexible(
                                                   child: Text(
-                                                    reservationsHistory.data[index]['total'] == reservationsHistory.data[index]['total'].toDouble()
-                                                      ? reservationsHistory.data[index]['total'].toDouble().toString()+" RON"
-                                                      : reservationsHistory.data[index]['total'] +" RON",
+                                                    reservationsHistory.data![index]['total'] == reservationsHistory.data![index]['total'].toDouble()
+                                                      ? reservationsHistory.data![index]['total'].toDouble().toString()+" RON"
+                                                      : reservationsHistory.data![index]['total'] +" RON",
                                                     style: TextStyle(
                                                       fontSize: 20,
                                                       color: Colors.white,
@@ -475,7 +478,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                             padding: const EdgeInsets.only(top: 5, bottom: 8),
                                             child: Text(
                                               /// A formula which converts the Timestamp to Date format
-                                              'Data: ' + DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data[index]['date_start'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
+                                              'Data: ' + DateTime.fromMillisecondsSinceEpoch(reservationsHistory.data![index]['date_start'].millisecondsSinceEpoch, isUtc: true).toLocal().toString()
                                               .substring(0,16),
                                               style: TextStyle(
                                                 fontSize: 12,
@@ -486,9 +489,9 @@ class ReservationsHistoryPage extends StatelessWidget {
                                           Container(
                                             padding: const EdgeInsets.only(top: 5),
                                             child: Text(
-                                              reservationsHistory.data[index]['accepted'] == true
+                                              reservationsHistory.data![index]['accepted'] == true
                                               ? (
-                                                reservationsHistory.data[index]['claimed'] == true
+                                                reservationsHistory.data![index]['claimed'] == true
                                                 ? "Revendicata"
                                                 : "Nerevendicata"
                                               )
@@ -496,9 +499,9 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               ,
                                               style: TextStyle(
                                                 fontSize: 17,
-                                                color: reservationsHistory.data[index]['accepted'] == true
+                                                color: reservationsHistory.data![index]['accepted'] == true
                                               ? (
-                                                reservationsHistory.data[index]['claimed'] == true
+                                                reservationsHistory.data![index]['claimed'] == true
                                                 ? Colors.green
                                                 : Colors.red
                                               )

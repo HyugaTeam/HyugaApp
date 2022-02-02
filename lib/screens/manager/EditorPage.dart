@@ -21,18 +21,18 @@ class EditorPage extends StatefulWidget {
 class _EditorPageState extends State<EditorPage> {  
 
   bool areThereChanges = false; // adds an UI interaction whenever a field is changed
-  ManagedLocal temporaryChanges;
-  ManagedLocal unchangedData;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-  Map<String,dynamic> changesMap;
-  File _unsavedProfileImage;
+  ManagedLocal? temporaryChanges;
+  ManagedLocal? unchangedData;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  Map<String,dynamic>? changesMap;
+  XFile? _unsavedProfileImage;
   String _unsavedProfileImagePath = "";
 
   /// A method which builds the TextController for 'Name' & 'DeTscription' fields
-  TextEditingController buildTextController(String field){
-    TextEditingController textController;
+  TextEditingController? buildTextController(String field){
+    TextEditingController? textController;
     if(field == 'name'){
       textController = new TextEditingController(
-        text: temporaryChanges != null? (temporaryChanges.name != null? temporaryChanges.name : ''): ''
+        text: temporaryChanges != null? (temporaryChanges!.name != null? temporaryChanges!.name : ''): ''
       );
       // textController.addListener(() {
       //   setState(() {
@@ -43,7 +43,7 @@ class _EditorPageState extends State<EditorPage> {
     }
     if(field == 'description'){
       textController = new TextEditingController(
-        text: temporaryChanges != null? (temporaryChanges.description != null? temporaryChanges.description : ''): ''
+        text: temporaryChanges != null? (temporaryChanges!.description != null? temporaryChanges!.description : ''): ''
       );
       // textController.addListener(() {
       //   setState(() {
@@ -65,33 +65,33 @@ class _EditorPageState extends State<EditorPage> {
             child: ListView(
               children: <Widget>[
                 ListTile(title: Text("Schimbari:")),
-                temporaryChanges.name != unchangedData.name 
+                temporaryChanges!.name != unchangedData!.name 
                   ? Column(
                     children: <Widget>[
                       Text("Nume vechi:", style: TextStyle(color: Colors.red),maxLines: 10,),
-                      Text(unchangedData.name),
+                      Text(unchangedData!.name!),
                       Text("Nume nou:", style: TextStyle(color: Colors.green),maxLines: 10,),
-                      Text(temporaryChanges.name),
+                      Text(temporaryChanges!.name!),
                     ],
                   )
                   : Container(),
-                  temporaryChanges.description != unchangedData.description 
+                  temporaryChanges!.description != unchangedData!.description 
                   ? Column(
                     children: <Widget>[
                       Text("Descriere veche:", style: TextStyle(color: Colors.red),maxLines: 10,),
-                      Text(unchangedData.description),
+                      Text(unchangedData!.description!),
                       Text("Descriere noua:", style: TextStyle(color: Colors.green),maxLines: 10,),
-                      Text(temporaryChanges.description),
+                      Text(temporaryChanges!.description!),
                     ],
                   )
                   : Container(),
-                  temporaryChanges.capacity != unchangedData.capacity 
+                  temporaryChanges!.capacity != unchangedData!.capacity 
                   ? Column(
                     children: <Widget>[
                       Text("Capacitate veche:", style: TextStyle(color: Colors.red),maxLines: 10,),
-                      Text(unchangedData.capacity.toString()),
+                      Text(unchangedData!.capacity.toString()),
                       Text("Capacitate noua:", style: TextStyle(color: Colors.green),maxLines: 10,),
-                      Text(temporaryChanges.capacity.toString()),
+                      Text(temporaryChanges!.capacity.toString()),
                     ],
                   )
                   : Container(),
@@ -124,7 +124,7 @@ class _EditorPageState extends State<EditorPage> {
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
                             content: FutureBuilder(
-                              future: saveChanges(temporaryChanges),
+                              future: saveChanges(temporaryChanges!),
                               builder: (context,complete){
                                 if(!complete.hasData)
                                   return Row(
@@ -175,17 +175,17 @@ class _EditorPageState extends State<EditorPage> {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference photoRef = storage.ref().child('photos/europe/bucharest/${place.id}/${place.id}'+'_profile.jpg');
     if(_unsavedProfileImage != null)
-      photoRef.putFile(_unsavedProfileImage);
+      photoRef.putFile(File(_unsavedProfileImage!.path));
     
   }
 
   @override
   Widget build(BuildContext context) {
     
-    unchangedData = Provider.of<AsyncSnapshot<dynamic>>(context).data; // Used to compare with the changed properties
-    temporaryChanges = Provider.of<AsyncSnapshot<dynamic>>(context).data; // The actual changed properties
-    List<List<dynamic>> temporaryListOfProfiles = List<List<dynamic>>(); // NOT IN USE
-    temporaryChanges.profile.forEach((key, value) { temporaryListOfProfiles.add([key,value]); }); // NOT IN USE
+    unchangedData = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data; // Used to compare with the changed properties
+    temporaryChanges = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data; // The actual changed properties
+    List<List<dynamic>> temporaryListOfProfiles = <List<dynamic>>[]; // NOT IN USE
+    temporaryChanges!.profile!.forEach((key, value) { temporaryListOfProfiles.add([key,value]); }); // NOT IN USE
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -193,7 +193,7 @@ class _EditorPageState extends State<EditorPage> {
         width: 200,
         height: 40,
         child: FloatingActionButton(
-          backgroundColor: areThereChanges == false ? Colors.blueGrey: Colors.orange[600],
+          backgroundColor: areThereChanges == false ? Theme.of(context).accentColor: Colors.orange[600],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30)
           ),
@@ -201,7 +201,7 @@ class _EditorPageState extends State<EditorPage> {
             if(areThereChanges != true){
               if(g.isSnackBarActive == false){
                 g.isSnackBarActive = true;
-                Scaffold.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Nu sunt schimbari!"),
                   )
@@ -244,13 +244,13 @@ class _EditorPageState extends State<EditorPage> {
                     maxLength: 200,
                     onChanged: (name){
                         areThereChanges = true;
-                        temporaryChanges.name = name;
+                        temporaryChanges!.name = name;
                     },
                     controller: buildTextController('name'),
                     onSubmitted: (String changedName) => setState((){
                       print(areThereChanges);
                       areThereChanges = true;
-                      temporaryChanges.name = changedName;
+                      temporaryChanges!.name = changedName;
                     }),
                   ),
                 )
@@ -272,13 +272,13 @@ class _EditorPageState extends State<EditorPage> {
                     maxLength: 400,
                     onChanged: (description){
                         areThereChanges = true;
-                        temporaryChanges.description = description;
+                        temporaryChanges!.description = description;
                     },
                     controller: buildTextController('description'),
                     onSubmitted: (String changedDescription) => setState((){
                       print(areThereChanges);
                       areThereChanges = true;
-                      temporaryChanges.description = changedDescription;
+                      temporaryChanges!.description = changedDescription;
                     }),
                   ),
                 )
@@ -298,11 +298,11 @@ class _EditorPageState extends State<EditorPage> {
                 subtitle: Container(
                   padding: EdgeInsets.only(right : 30),
                   child: RaisedButton.icon(
-                    color: Colors.blueGrey,
+                    color: Theme.of(context).accentColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     icon: Icon(Icons.person, color: Theme.of(context).backgroundColor, size: 30,),
                     label: Text(
-                      temporaryChanges.capacity == null? "" : temporaryChanges.capacity.toString(),
+                      temporaryChanges!.capacity == null? "" : temporaryChanges!.capacity.toString(),
                       style: TextStyle(
                         fontSize: 18,
                         color: Theme.of(context).backgroundColor
@@ -335,7 +335,7 @@ class _EditorPageState extends State<EditorPage> {
                                           borderRadius: BorderRadius.circular(5),
                                           child: MaterialButton(
                                             elevation: 20,
-                                            color: Colors.blueGrey,
+                                            color: Theme.of(context).accentColor,
                                             height: 40,
                                             onPressed: (){
                                               Navigator.of(context).pop(index);
@@ -358,8 +358,8 @@ class _EditorPageState extends State<EditorPage> {
                         );
                       }).then((value) => setState((){
                         if(value != null)
-                          temporaryChanges.capacity = int.tryParse(value.toString().substring(0,1))+1;
-                        print(temporaryChanges.capacity);
+                          temporaryChanges!.capacity = int.tryParse(value.toString().substring(0,1))!+1;
+                        print(temporaryChanges!.capacity);
                       })),
                   ),
                 )
@@ -381,7 +381,7 @@ class _EditorPageState extends State<EditorPage> {
                           width: 200,
                           height: 200,
                           child: FutureBuilder<Image>(
-                            future: queryingService.getImage(temporaryChanges.id),
+                            future: queryingService.getImage(temporaryChanges!.id),
                             builder: (context,image){
                               if(!image.hasData)
                                 return Container(
@@ -428,15 +428,15 @@ class _EditorPageState extends State<EditorPage> {
                               ),
                               child: FaIcon(
                                 FontAwesomeIcons.plus,
-                                color: Colors.blueGrey
+                                color: Theme.of(context).accentColor
                               ),
                               onPressed: () async{
-                                File _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+                                XFile? _image = await ImagePicker().pickImage(source: ImageSource.gallery);
                                 if(_image != null){
                                   setState(() {
                                     areThereChanges = true;
                                     _unsavedProfileImage = _image;
-                                    _unsavedProfileImagePath = _image.uri.path;
+                                    _unsavedProfileImagePath = _image.path;
                                   });
                                 }
                               }

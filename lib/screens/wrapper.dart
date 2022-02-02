@@ -13,11 +13,11 @@ import 'main/home_map.dart';
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<OurUser>(context);
-    final hasLocationServiceEnabled = Provider.of<bool>(context);
-    print(user.toString() + hasLocationServiceEnabled.toString());
+    final user = Provider.of<OurUser?>(context);
+    final hasLocationServiceEnabled = Provider.of<bool?>(context);
+    print("user: " + user.toString() + ' locatie pornita: '+ hasLocationServiceEnabled.toString());
         if(hasLocationServiceEnabled != null)
-          if(hasLocationServiceEnabled == false)
+        if(hasLocationServiceEnabled == false) /// Changed from '==false' to '!=false' due to a strange bug in location service
           return Scaffold( /// Location not enabled
             body: Container(
               padding: EdgeInsets.only(left: 30),
@@ -35,7 +35,7 @@ class Wrapper extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Hyuga nu poate functiona fara locatie :(\n"
+                          text: "Wine Street nu poate functiona fara locatie :(\n"
 
                         ),
                         TextSpan(
@@ -71,7 +71,7 @@ class Wrapper extends StatelessWidget {
         return StreamBuilder<bool>(
           stream: QueryService.userLocationStream.stream,
           builder: (context, hasLocation) {
-            bool prevData;
+            bool? prevData;
             QueryService.userLocationStream.stream.last.then((prevData) => prevData = prevData);
             print(hasLocation.hasData.toString() + " hasData");
             if(!hasLocation.hasData && queryingService.userLocation == null)
@@ -87,7 +87,7 @@ class Wrapper extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/images/hyuga-logo.png',
+                          'assets/images/wine-street-logo.png',
                           width:50
                         ),
                         SizedBox(height: 30,),
@@ -96,7 +96,7 @@ class Wrapper extends StatelessWidget {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Hyuga nu are acces la locatie :(\n"
+                                text: "Wine Street nu are acces la locatie :(\n"
 
                               ),
                               TextSpan(
@@ -113,7 +113,7 @@ class Wrapper extends StatelessWidget {
                                   onPressed: (){
                                     QueryService().askPermission();
                                   },
-                                )
+                                  )
                               )                          
                             ],
                             style: TextStyle(
@@ -136,7 +136,7 @@ class Wrapper extends StatelessWidget {
                     builder: (context, snapshot) {
                       if(!snapshot.hasData && authService.isLoading == null)
                         return Scaffold(body: Center(child: SpinningLogo(),),);
-                      else if(authService.currentUser.isManager == true)
+                      else if(authService.currentUser!.isManager == true)
                         return AdminPanel();
                       // else if(g.isNewUser)
                       //   return SlideShowIntro();

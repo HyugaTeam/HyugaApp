@@ -1,13 +1,13 @@
 /// 02.09.2020 changed the 'User' class name to 'OurUser' (bcs of Firestore update)
 class OurUser{
   
-  final String uid;
-  final String email;
-  final String photoURL;
-  final String displayName;
-  final bool isAnonymous;
-  int score;
-  bool isManager;
+  final String? uid;
+  final String? email;
+  final String? photoURL;
+  final String? displayName;
+  final bool? isAnonymous;
+  int/*!*/ score = 0;
+  bool? isManager;
 
   OurUser({this.uid,this.email,this.photoURL, this.displayName, this.isAnonymous});
   

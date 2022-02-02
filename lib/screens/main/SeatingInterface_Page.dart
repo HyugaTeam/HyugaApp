@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 
 class SeatingInterface extends StatefulWidget {
 
-  final DocumentSnapshot place;
+  final DocumentSnapshot? place;
   SeatingInterface({this.place}){
     //getPlaceData()
   }
@@ -24,19 +24,22 @@ class SeatingInterface extends StatefulWidget {
 class _SeatingInterfaceState extends State<SeatingInterface> with TickerProviderStateMixin{
 
   Image placeImage = Image.memory(Uint8List(0));
-  ScrollController _scrollController;
-  TabController _tabController;
+  ScrollController? _scrollController;
+  TabController? _tabController;
 
-  GlobalKey<ScaffoldState> _scaffoldKey;
+  GlobalKey<ScaffoldState>? _scaffoldKey;
 
-  AnimationController _controller;
-  Animation<double> _animation;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  /// Workaround variable for the 'widget.place.data()' Object to Map
+  dynamic reservationData;
 
   Stream<String> get time{
     return Stream.periodic(
       Duration(milliseconds: 1000),
       (i){
-        Timestamp dateStart = widget.place.data()['date_claimed'] == null ? widget.place.data()['date_start'] : widget.place.data()['date_claimed'];
+        Timestamp dateStart = reservationData['date_claimed'] == null ? reservationData['date_start'] : reservationData['date_claimed'];
         Duration duration = DateTime.now().toLocal().difference(DateTime.fromMillisecondsSinceEpoch(dateStart.millisecondsSinceEpoch));
         String hours = duration.inHours< 10 ? '0'+duration.inHours.toString() : duration.inHours.toString();
         String minutes = duration.inMinutes%60 < 10 ? '0'+(duration.inMinutes%60).toString(): (duration.inMinutes%60).toString();
@@ -51,13 +54,13 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
 
   Future<Local> getPlaceData() async{
     DocumentSnapshot placeData = await FirebaseFirestore.instance
-    .collection('locals_bucharest').doc(widget.place.data()['place_id']).get();
+    .collection('locals_bucharest').doc(reservationData['place_id']).get();
     print(placeData.data());
     Local place = queryingService.docSnapToLocal(placeData);
     return place;
   }
   
-  String formatDeals(List deals){
+  String formatDeals(List? deals){
     String result = "";
     if(deals != null)
       deals.forEach((element) {
@@ -71,6 +74,10 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
   @override
   void initState() {
     super.initState();
+    
+    /// Here is the workaround
+    reservationData = widget.place!.data() as Map?;
+
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _tabController = TabController(length: 2, vsync: this);
     _scrollController = ScrollController(initialScrollOffset: 0);
@@ -97,7 +104,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
             icon: Icon(Icons.report,color: Colors.blueGrey,),
             tooltip: "Raporteaza o problema",
             onPressed: (){
-              if(widget.place.data()['issue_ref'] == null)
+              if(reservationData['issue_ref'] == null)
               showDialog(
                 context: context,
                 builder: (context){
@@ -143,24 +150,24 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                       textAlign: TextAlign.center,
                                     ),
                                     onPressed: (){
-                                      AnalyticsService().analytics.logEvent(name: "need_help", parameters: {"place_id": widget.place.data()['place_id']});
+                                      AnalyticsService().analytics.logEvent(name: "need_help", parameters: {"place_id": reservationData['place_id']});
                                       DocumentReference issueRef = FirebaseFirestore.instance.collection('issues').doc();
                                       issueRef.set(
                                         {
-                                          'guest_id': authService.currentUser.uid,
-                                          'guest_name': authService.currentUser.displayName,
-                                          'place_id': widget.place.data()['place_id'],
-                                          'place_name': widget.place.data()['place_name'],
-                                          'issue_ref': widget.place.reference
+                                          'guest_id': authService.currentUser!.uid,
+                                          'guest_name': authService.currentUser!.displayName,
+                                          'place_id': reservationData['place_id'],
+                                          'place_name': reservationData['place_name'],
+                                          'issue_ref': widget.place!.reference
                                         }
                                       );
-                                      widget.place.reference.set(
+                                      widget.place!.reference.set(
                                         {
                                           'issue_ref': issueRef
                                         },  
                                         SetOptions(merge: true)
                                       );
-                                      _tabController.animateTo(
+                                      _tabController!.animateTo(
                                         1
                                       );
                                     },
@@ -194,8 +201,8 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                     ),
                   );
                 }
-              ).then((value) => _tabController.index = 0);
-              else _scaffoldKey.currentState.showSnackBar(
+              ).then((value) => _tabController!.index = 0);
+              else _scaffoldKey!.currentState!.showSnackBar(
                 SnackBar(
                   content: Text("O problema a fost deja raportata.")
                 )
@@ -223,11 +230,11 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                       markers: {
                         Marker(
                           markerId: MarkerId("1"),
-                          position: LatLng(place.data.location.latitude,place.data.location.longitude),
+                          position: LatLng(place.data!.location!.latitude,place.data!.location!.longitude),
                         )
                       },
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(place.data.location.latitude,place.data.location.longitude),
+                        target: LatLng(place.data!.location!.latitude,place.data!.location!.longitude),
                         zoom: 16
                       ),
                     ),
@@ -253,7 +260,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                           children: [
                             Container(
                               child: Text(
-                                "Te afli la ${widget.place.data()['place_name']}",
+                                "Te afli la ${reservationData['place_name']}",
                                 style: TextStyle(
                                   fontSize: 18
                                 ),
@@ -290,8 +297,8 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                   ),
                                   child: AspectRatio( 
                                     aspectRatio: 16/9,
-                                    child: FutureBuilder(
-                                      future: place.data.image,
+                                    child: FutureBuilder<Image>(
+                                      future: place.data!.image,
                                       builder: (context, image){
                                         if(!image.hasData)
                                           return Container();
@@ -340,7 +347,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                           ),
                                         ),
                                         TextSpan(
-                                          text: '   ' + widget.place.data()['discount'].toString()+'%',
+                                          text: '   ' + reservationData['discount'].toString()+'%',
                                           style: TextStyle()
                                         )
                                       ]
@@ -368,7 +375,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                               context: context, 
                                               builder: (context) => AlertDialog(
                                                 content: Text(
-                                                  '\n' + formatDeals(widget.place.data()['deals']),
+                                                  '\n' + formatDeals(reservationData['deals']),
                                                   style: TextStyle(
                                                     fontSize: 16
                                                   )
@@ -409,7 +416,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                         TextSpan(
                                           text: '   ' 
                                           + DateFormat('hh:mm').format(DateTime.fromMillisecondsSinceEpoch(
-                                            widget.place.data()['date_start'].millisecondsSinceEpoch
+                                            reservationData['date_start'].millisecondsSinceEpoch
                                             ))
                                             .toString(),
                                           style: TextStyle()
@@ -418,12 +425,12 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                     )
                                   ),
                                 ),
-                                StreamBuilder(
+                                StreamBuilder<String>(
                                   stream: time,
                                   builder: (context, currentTime) =>
                                   Text(
                                     currentTime.hasData 
-                                    ? currentTime.data
+                                    ? currentTime.data!
                                     : "00:00:00",
                                     style: TextStyle(
                                       color: Colors.orange[600],

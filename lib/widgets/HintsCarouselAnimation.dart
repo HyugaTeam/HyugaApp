@@ -7,8 +7,8 @@ class HintsCarousel extends StatefulWidget {
 
 class _HintsCarouselState extends State<HintsCarousel> with TickerProviderStateMixin{
 
-  Animation<Offset> _animation;
-  AnimationController _controller;
+  late Animation<Offset> _animation;
+  late AnimationController _controller;
   List<String> _text = ["Breath in","Breath out"];
   
   int index = 0;

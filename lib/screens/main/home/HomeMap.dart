@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
@@ -17,7 +19,7 @@ class WriteTextPainter  extends CustomPainter{
 
 
 class HomeMap extends StatefulWidget {
-  const HomeMap({ Key key }) : super(key: key);
+  const HomeMap({ Key? key }) : super(key: key);
 
   @override
   _HomeMapState createState() => _HomeMapState();
@@ -31,7 +33,7 @@ class _HomeMapState extends State<HomeMap> {
   Future getPlaces(){
     return queryingService.fetchOnlyDiscounts().then((fetchedPlaces) async{
 
-      List customPins = List<BitmapDescriptor>();
+      List customPins = <BitmapDescriptor>[];
       for(int i = 0 ; i < fetchedPlaces.length; i++) {
         BitmapDescriptor customPin = await createCustomMarkerBitmap(fetchedPlaces[i].name);
         // print("CUSTOM PIN " + customPin.toString());
@@ -43,7 +45,7 @@ class _HomeMapState extends State<HomeMap> {
     // print("length pins:" + customPins.length.toString());
 
       setState(() {
-        pins = customPins;
+        pins = customPins as List<BitmapDescriptor>;
         places = fetchedPlaces;      
       });
     });
@@ -54,7 +56,7 @@ class _HomeMapState extends State<HomeMap> {
       getPlaces();
     }
 
-  Future<BitmapDescriptor> createCustomMarkerBitmap(String name) async {
+  Future<BitmapDescriptor> createCustomMarkerBitmap(String? name) async {
 
     /// The 'size' field doesn't work for some reason
     var pin = 
@@ -90,7 +92,7 @@ class _HomeMapState extends State<HomeMap> {
     painter.layout();
     painter.paint(canvas, Offset((width * 0.5) - painter.width * 0.5, (height * 0.5) - painter.height * 0.5));
     final img = await pictureRecorder.endRecording().toImage(width, height);
-    final data = await img.toByteData(format: ImageByteFormat.png);
+    final data = await (img.toByteData(format: ImageByteFormat.png) as FutureOr<ByteData>);
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
 
     // PictureRecorder recorder = new PictureRecorder();
@@ -154,8 +156,8 @@ class _HomeMapState extends State<HomeMap> {
             )
               //snippet: item.name
             ),
-            markerId: MarkerId(item.name),
-            position: LatLng(item.location.latitude, item.location.longitude), 
+            markerId: MarkerId(item.name!),
+            position: LatLng(item.location!.latitude, item.location!.longitude), 
           )
         ).toSet(),
       ),

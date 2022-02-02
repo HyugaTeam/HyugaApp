@@ -65,9 +65,9 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
     setState(() {
       // This if-statement handles the particularity of "What"'s button dropdown criteria
       if (listOfButtons[index].name == 'What?') {
-        listOfButtons[index].buttonText = g.whatListTranslation[g.selectedWhere][index];
+        listOfButtons[index].buttonText = g.whatListTranslation[g.selectedWhere!][index];
       } else {
-        listOfButtons[index].buttonText = listOfButtons[index].options[index];
+        listOfButtons[index].buttonText = listOfButtons[index].options![index];
       }
       if (listOfButtons[index].name == 'Where?' && g.selectedWhat != null) {
         listOfButtons[1].buttonText = 'Categorie';

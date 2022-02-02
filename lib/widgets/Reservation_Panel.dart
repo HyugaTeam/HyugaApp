@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class ReservationPanel extends StatefulWidget {
 
-  final BuildContext context;
+  final BuildContext? context;
 
   ReservationPanel({this.context});
 
@@ -23,24 +23,24 @@ class _ReservationPanelState extends State<ReservationPanel> {
   int _selectedNoOfPeople = 1;
   int _selectedDay = 0;
   int _selectedHour = DateTime.now().toLocal().hour;
-  DateTime _selectedDate; // The final parsed Date which will go in the database
-  int _selectedDiscount;
-  List<Map<String,dynamic>> _selectedDeals;
+  DateTime? _selectedDate; // The final parsed Date which will go in the database
+  int? _selectedDiscount;
+  List<Map<String,dynamic>>? _selectedDeals;
   
   DateTime currentTime = DateTime.now().toLocal();
 
   bool _isProgressIndicatorVisible = false;
-  ScrollController _noOfPeopleScrollController;
-  ScrollController _dayScrollController;
-  ScrollController _hourScrollController;
+  ScrollController? _noOfPeopleScrollController;
+  ScrollController? _dayScrollController;
+  ScrollController? _hourScrollController;
 
-  Local place;
-  Map<String,dynamic> placeSchedule;
-  String startHour; // The starting hour of the schedule
-  String endHour; // The ending hour of the schedule
-  int hourDiff; // The difference(in hours) between the ending and starting hour respectively
-  int minDiff; // It's value is either 1 or 0, for :30 and :00 respectively 
-  DateTime hour; // The first hour of the current weekday in the place's schedule (used for indexing the avaiable hours)
+  late Local place;
+  Map<String,dynamic>? placeSchedule;
+  String? startHour; // The starting hour of the schedule
+  late String endHour; // The ending hour of the schedule
+  late int hourDiff; // The difference(in hours) between the ending and starting hour respectively
+  late int minDiff; // It's value is either 1 or 0, for :30 and :00 respectively 
+  late DateTime hour; // The first hour of the current weekday in the place's schedule (used for indexing the avaiable hours)
 
   String formatDealTooltip(List<Map<String,dynamic>> deals){
     String result = "";
@@ -69,7 +69,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   @override
   void initState() {
     super.initState();
-    _noOfPeopleScrollController = ScrollController(initialScrollOffset: MediaQuery.of(widget.context).size.width*0.16);
+    _noOfPeopleScrollController = ScrollController(initialScrollOffset: MediaQuery.of(widget.context!).size.width*0.16);
     _dayScrollController = ScrollController();
     _hourScrollController = ScrollController(initialScrollOffset: 0);
   }
@@ -80,22 +80,22 @@ class _ReservationPanelState extends State<ReservationPanel> {
     
     if(placeSchedule != null){
       print(placeSchedule);
-      startHour = placeSchedule[DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].substring(0,5);
-      endHour = placeSchedule[DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].toString().substring(6,11);
-      hourDiff = int.parse(endHour.substring(0,2)) + 24 - int.parse(startHour.substring(0,2));
+      startHour = placeSchedule![DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].substring(0,5);
+      endHour = placeSchedule![DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].toString().substring(6,11);
+      hourDiff = int.parse(endHour.substring(0,2)) + 24 - int.parse(startHour!.substring(0,2));
       minDiff = endHour.substring(3,5) == '30' ? 1 : 0 ; /// In case the place has a delayed schedule
-      hour = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, int.parse(startHour.substring(0,2)), int.parse(startHour.substring(3,5)));
+      hour = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, int.parse(startHour!.substring(0,2)), int.parse(startHour!.substring(3,5)));
     }
   }
 
-  int getDiscountForHour(int index){
+  int? getDiscountForHour(int index){
     String selectedHour =  
     hour.add(Duration(minutes: index*30)).hour.toString()
         + ":" +
           (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
-    List hourAndDiscount = place.discounts[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    List? hourAndDiscount = place.discounts![DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
     if(hourAndDiscount != null)
       for(int i = 0; i< hourAndDiscount.length; i++)
         if(selectedHour.compareTo(hourAndDiscount[i].substring(0,5))>= 0 &&
@@ -111,7 +111,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
           (hour.add(Duration(minutes: index*30)).minute.toString() == '0' 
           ? '00'
           : hour.add(Duration(minutes: index*30)).minute.toString());
-    List hourAndDeals = place.deals[DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
+    List? hourAndDeals = place.deals![DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase()];
     List<Map<String,dynamic>> deals = <Map<String,dynamic>>[];
     if(hourAndDeals != null)
       for(int i = 0; i< hourAndDeals.length; i++)
@@ -174,7 +174,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           setState(() {
                             _selectedNoOfPeople = index;
                           });
-                          _noOfPeopleScrollController.animateTo(
+                          _noOfPeopleScrollController!.animateTo(
                             (_selectedNoOfPeople-2)*68.toDouble() - 6,
                             duration: Duration(milliseconds: 500), 
                             curve: Curves.ease
@@ -212,7 +212,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                             _selectedDay = index;
                           });
 
-                          _dayScrollController.animateTo(
+                          _dayScrollController!.animateTo(
                             (_selectedDay-1)*93.toDouble(),
                             duration: Duration(milliseconds: 500), 
                             curve: Curves.ease
@@ -227,7 +227,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  weekdays[DateFormat('EEEE').format(currentTime.add(Duration(days: index))).substring(0,3)],
+                                  weekdays[DateFormat('EEEE').format(currentTime.add(Duration(days: index))).substring(0,3)]!,
                                 ),
                                 Text(
                                   currentTime.add(Duration(days: index)).day.toString() 
@@ -306,7 +306,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               _selectedDeals = deals;
                               print(_selectedDate);
                             });
-                            _hourScrollController.animateTo(
+                            _hourScrollController!.animateTo(
                               (_selectedHour-1.6)*93.toDouble(),
                               duration: Duration(milliseconds: 500), 
                               curve: Curves.ease
@@ -421,15 +421,15 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         _isProgressIndicatorVisible = true;
                       });
                       DocumentReference placeReservationRef = 
-                      place.reference.collection('reservations').doc();
+                      place.reference!.collection('reservations').doc();
                       DocumentReference userReservationRef = FirebaseFirestore.instance.collection('users')
-                      .doc(authService.currentUser.uid).collection('reservations_history').doc();
+                      .doc(authService.currentUser!.uid).collection('reservations_history').doc();
                       await placeReservationRef.set({
                         'accepted': null,
                         'date_created' : FieldValue.serverTimestamp(),
-                        'date_start': Timestamp.fromDate(_selectedDate),
-                        'guest_id' : authService.currentUser.uid,
-                        'guest_name' : authService.currentUser.displayName,
+                        'date_start': Timestamp.fromDate(_selectedDate!),
+                        'guest_id' : authService.currentUser!.uid,
+                        'guest_name' : authService.currentUser!.displayName,
                         'claimed' : null,
                         'number_of_guests' : _selectedNoOfPeople + 1,
                         'discount': _selectedDiscount,
@@ -441,7 +441,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         {
                           'accepted': null,
                           'date_created' : FieldValue.serverTimestamp(),
-                          'date_start': Timestamp.fromDate(_selectedDate),
+                          'date_start': Timestamp.fromDate(_selectedDate!),
                           'place_id' : place.id,
                           'place_name' : place.name,
                           'claimed' : null,
@@ -460,13 +460,13 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'place_name': place.name,
                           'place_id': place.id,
                           'date_created': DateTime.now().toLocal().toString(),
-                          'date_start': Timestamp.fromDate(_selectedDate).toString(),
+                          'date_start': Timestamp.fromDate(_selectedDate!).toString(),
                           'number_of_guests': _selectedNoOfPeople,
                           'discount': _selectedDiscount,
                           'deals': _selectedDeals != null && _selectedDeals != [] ? true : false
                         }
                       );
-                      Navigator.pop(context, {'place_name': place.name, 'hour': DateFormat('HH:mm').format(_selectedDate.toLocal())});
+                      Navigator.pop(context, {'place_name': place.name, 'hour': DateFormat('HH:mm').format(_selectedDate!.toLocal())});
                     },
                   ),
                   SizedBox(

@@ -13,8 +13,8 @@ class _SearchBarPageState extends State<SearchBarPage> {
 
   //int _searchCount = 0;
   //Stream<List> _searchResult;
-  String _keyword;
-  TextEditingController _textController;
+  String? _keyword;
+  TextEditingController? _textController;
   
   @override
   void initState() {
@@ -25,16 +25,16 @@ class _SearchBarPageState extends State<SearchBarPage> {
     //_searchResult = [];
   } 
 
-  Stream<List<DocumentSnapshot>> searchResults(){
+  Stream<List<DocumentSnapshot>>? searchResults(){
     if(_keyword != "")
       return FirebaseFirestore.instance.collection('locals_bucharest')
       .snapshots()
       .map<List<DocumentSnapshot>>((querySnapshot) {
-        List<DocumentSnapshot> _searchResults = List();
+        List<DocumentSnapshot> _searchResults = [];
         querySnapshot.docs.forEach((element) {
           DocumentSnapshot doc = element;
-          String placeName = doc.data()['name'].toString().toLowerCase();
-          if(placeName.contains(_keyword)){
+          String placeName = (doc.data() as Map)['name'].toString().toLowerCase();
+          if(placeName.contains(_keyword!)){
             //print(_searchResults);
             _searchResults.add(doc);
           }
@@ -86,7 +86,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height*0.9,
         child: Container(
-          child: StreamBuilder(
+          child: StreamBuilder<List<DocumentSnapshot<Object?>>>(
             stream: searchResults(),
             builder: (context, result) {
               if(_keyword == "")
@@ -98,14 +98,14 @@ class _SearchBarPageState extends State<SearchBarPage> {
                       SpinningLogo(),
                     ],
                   );
-              else if(result.data.length == 0) 
+              else if(result.data!.length == 0) 
                 return Center(child: Text("Ne pare rau, nu exista rezultate"),);
               else return ListView.separated(
                 shrinkWrap: true,
-                itemCount: result.data.length,
+                itemCount: result.data!.length,
                 separatorBuilder: (context,index) => SizedBox(height: 15,),
                 itemBuilder: (context, index) {
-                  Local place = queryingService.docSnapToLocal(result.data[index]);
+                  Local place = queryingService.docSnapToLocal(result.data![index]);
                   return SearchListTile(place: place, key: ValueKey(place.name));
                 }
                   
@@ -120,8 +120,8 @@ class _SearchBarPageState extends State<SearchBarPage> {
 
 class SearchListTile extends StatefulWidget {
 
-  final Local place;
-  final Key key;
+  final Local? place;
+  final Key? key;
   SearchListTile({this.place, this.key});
 
   @override
@@ -148,8 +148,8 @@ class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAlive
         height: 80,
         child: Row(
           children: [
-            FutureBuilder( // The Image
-              future: widget.place.image,
+            FutureBuilder<Image>( // The Image
+              future: widget.place!.image,
               builder: (context,image){
                 if(!image.hasData)
                   return SizedBox(
@@ -171,7 +171,7 @@ class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAlive
                 runAlignment: WrapAlignment.start,
                 children: [
                   Text(
-                    widget.place.name,
+                    widget.place!.name!,
                     maxLines: 3,
                     style: TextStyle(
                       color: Colors.black,

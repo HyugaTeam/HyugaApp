@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 class UberService {
   getRide() async{
     
-    final req = await http.post("https://login.uber.com/oauth/v2/token",
+    final req = await http.post(Uri(path: "https://login.uber.com/oauth/v2/token"),
     headers: {
       "client_secret": "QHpMDhURp4wOe3A9fP5pjiyNeRayQJykd6GlXdu-",
       "client_id": "LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84",
@@ -13,7 +13,7 @@ class UberService {
     });
     print(req.body);
 
-    final req1 = await http.get("https://api.uber.com/v1.2/estimates/price?latitude=37.7752315&longitude=-122.418075",
+    final req1 = await http.get(Uri(path: "https://api.uber.com/v1.2/estimates/price?latitude=37.7752315&longitude=-122.418075"),
       headers: {
         "Authorization": "JA.VUNmGAAAAAAAEgASAAAABwAIAAwAAAAAAAAAEgAAAAAAAAH4AAAAFAAAAAAADgAQAAQAAAAIAAwAAAAOAAAAzAAAABwAAAAEAAAAEAAAABn5WZG2SOjO3z3Y2WR_ggOnAAAATIQqKeRQxvICqcdj29X95jAOyfnISypDB6a-ZtNwOxr2Iy8TeJrmbVWhLqf5FyyYwy1v6KJODvs98XIWZ7bs4n3VHeA6XfVmXaKy-ypWiZiu1QmNdlbCt6KlB8XtsJ62mfMAOaBOtAYeVb-c2KnkSYyoWOnzZ_CP_euzRGnLU1JQk-T30kmzeg6reQ_M7W3THA4X74hJ8QTuxAf2JJRs3XgCYbweCD8ADAAAABXfmJ46l7KBaEHkZiQAAABiMGQ4NTgwMy0zOGEwLTQyYjMtODA2ZS03YTRjZjhlMTk2ZWU",
         "Content-Type": "application/json",

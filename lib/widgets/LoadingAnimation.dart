@@ -32,9 +32,9 @@ class SpinningLogo extends StatefulWidget {
 
 class _SpinningLogoState extends State<SpinningLogo> with TickerProviderStateMixin{
   
-  AnimationController _animationController;
-  Color _animationColor;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  Color? _animationColor;
+  late Animation<double> _animation;
   @override
   void initState() {
     super.initState();

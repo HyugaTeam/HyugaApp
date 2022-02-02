@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -21,7 +22,7 @@ class ScanReceiptService {
 /// The Page through which the user scans the table code when arriving in the restaurant
 class ScanReceipt extends StatefulWidget {
 
-  BuildContext context;
+  BuildContext? context;
 
   ScanReceipt({this.context});
 
@@ -31,15 +32,15 @@ class ScanReceipt extends StatefulWidget {
 
 class _ScanReceiptState extends State<ScanReceipt> {
 
-  PublishSubject<String> scanStream;
+  PublishSubject<String>? scanStream;
 
-  PickedFile _imageFile;
+  XFile? _imageFile;
 
   dynamic _pickImageError;
 
   bool isVideo = false;
 
-  String _retrieveDataError;
+  String? _retrieveDataError;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -49,7 +50,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
   String checkPlaceLegalId(String text){
     print(text.substring(0,200));
     RegExp regExp = RegExp(r"((PO)|(RO)|(R0)|(P0))\d{1,9}");
-    RegExpMatch cifMatch;
+    RegExpMatch? cifMatch;
     try{
       cifMatch = regExp.firstMatch(text);
       print(cifMatch);
@@ -57,7 +58,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
     catch(ex){
       print(ex.toString());
     }
-    print(text.substring(cifMatch.start+2, cifMatch.end));
+    print(text.substring(cifMatch!.start+2, cifMatch.end));
     return text.substring(cifMatch.start+2, cifMatch.end);
   }
 
@@ -81,12 +82,12 @@ class _ScanReceiptState extends State<ScanReceipt> {
     return currNum;
   }
 
-  void _launchCamera(ImageSource source, {BuildContext context}) async {
-    _imageFile = PickedFile("");
+  void _launchCamera(ImageSource source, {BuildContext? context}) async {
+    _imageFile = XFile("");
     try {
-      final pickedFile = await _picker.getImage(
+      final pickedFile = await (ImagePicker().pickImage(
         source: source,
-      );
+      ) as FutureOr<XFile>);
       var imgBytes = await pickedFile.readAsBytes();
       var img = await decodeImageFromList(imgBytes);
       print(img.height);
@@ -94,7 +95,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
       setState(() {
         pickedFile != null 
         ? _imageFile = pickedFile
-        : PickedFile("");
+        : XFile("");
       });
     } catch (e) {
       print(e);
@@ -108,7 +109,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
   }
 
   int _currentStep = 0;
-  List<Step> _steps;
+  late List<Step> _steps;
 
   void initSteps(String total){
     //setState(() {
@@ -142,11 +143,11 @@ class _ScanReceiptState extends State<ScanReceipt> {
           _launchCamera(ImageSource.camera, context: widget.context);
           return Scaffold();
         }
-        else if(_imageFile.path == "")
+        else if(_imageFile!.path == "")
           return Scaffold();
         else{
-          TextDetector textDetector = GoogleMlKit.instance.textDetector();
-          final text = textDetector.processImage(InputImage.fromFilePath(_imageFile.path));
+          TextDetector textDetector = GoogleMlKit.vision.textDetector();
+          final text = textDetector.processImage(InputImage.fromFilePath(_imageFile!.path));
           return Scaffold(
             // extendBodyBehindAppBar: true,
             appBar: AppBar(
@@ -170,26 +171,26 @@ class _ScanReceiptState extends State<ScanReceipt> {
                         offset: Offset(-2.0, 2.0),
                         blurRadius: 5.0),
                   ],),
-                  child: Image.file(File(_imageFile.path)),
+                  child: Image.file(File(_imageFile!.path)),
                 ),
                 SizedBox(height: 10,),
                 Expanded(
                   // height: 400,
-                  child: FutureBuilder(
+                  child: FutureBuilder<RecognisedText>(
                     future: text,
                     builder: (context, ss) {
                       if(!ss.hasData){
                         return SpinningLogo();
                       }
                       else{
-                        checkPlaceLegalId(ss.data.text);
-                        initSteps(findReceiptTotal(ss.data.text));
+                        checkPlaceLegalId(ss.data!.text);
+                        initSteps(findReceiptTotal(ss.data!.text));
                         return Stepper(
                           type: StepperType.horizontal,
                           physics: NeverScrollableScrollPhysics(),
                           currentStep: _currentStep,
                           //onStepTapped: (step) => onStepTapped(step),  
-                          controlsBuilder: (context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => Container(
+                          controlsBuilder: (context, {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) => Container(
                             child: ButtonBar(
                               alignment: MainAxisAlignment.center,
                               children: [

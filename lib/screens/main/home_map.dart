@@ -33,7 +33,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   Radius topRightPanelCornerRadius = Radius.elliptical(210, 50);
 
   PanelController _panelController = PanelController();
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
   GlobalKey _listKey = GlobalKey();
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
   ProfileDrawer _drawer = ProfileDrawer();
@@ -271,7 +271,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
       highlightColor: Colors.white.withOpacity(0.2),
       splashColor: Colors.white.withOpacity(0.8),
       onPressed: () async {
-        _drawerKey.currentState.openDrawer();
+        _drawerKey.currentState!.openDrawer();
       },
     ),
     actions: <Widget>[
@@ -311,19 +311,19 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<QuerySnapshot<Object?>>(
       stream: authService.seatingStatus,
       builder: (context, ss) {
-      if(authService.currentUser.isAnonymous != true)
+      if(authService.currentUser!.isAnonymous != true)
         if(!ss.hasData) // Checks if the user is seated or not
           return Scaffold(body: Center(child: SpinningLogo(),));
-        else if(ss.data.docs.length == 1 )
-          return SeatingInterface(place: ss.data.docs[0]);
+        else if(ss.data!.docs.length == 1 )
+          return SeatingInterface(place: ss.data!.docs[0]);
         return Scaffold(
           extendBodyBehindAppBar: true,
           key: _drawerKey,
           drawer: _drawer,
-          appBar: buildAppBar(),
+          appBar: buildAppBar() as PreferredSizeWidget?,
           //bottomNavigationBar: BottomAppBar(),
           body: Builder(
             builder: (context){
@@ -334,7 +334,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
                     if(backButtonDismisses){
                       _panelController.close();
                       if(_scrollController != null)
-                        _scrollController.animateTo(
+                        _scrollController!.animateTo(
                           0,
                           duration: Duration(milliseconds: 0),
                           curve: Curves.linear 

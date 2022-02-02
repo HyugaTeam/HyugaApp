@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class DiscountHeroPage extends StatelessWidget {
 
-  final String heroTag;
-  final String interval;
-  final int discount;
+  final String? heroTag;
+  final String? interval;
+  final int? discount;
 
   DiscountHeroPage({this.heroTag,this.interval,this.discount});
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: heroTag,
+      tag: heroTag!,
       child: Container(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height*0.6
@@ -48,7 +48,7 @@ class DiscountHeroPage extends StatelessWidget {
                     height: 15,
                   ),
                   Text(
-                    interval,
+                    interval!,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold

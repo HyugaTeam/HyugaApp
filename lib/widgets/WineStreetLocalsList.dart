@@ -5,7 +5,6 @@ import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
-import 'package:latlong/latlong.dart';
 
 import 'Place_List_profile.dart';
 
@@ -13,7 +12,7 @@ import 'Place_List_profile.dart';
 class WineStreetLocals extends StatefulWidget {
 
   // Used by the DiscountLocals_Page in order to obtain only the Places with Discounts 
-  final bool onlyWithDiscounts;
+  final bool? onlyWithDiscounts;
   WineStreetLocals({this.onlyWithDiscounts});
   @override
   _WineStreetLocalsState createState() => _WineStreetLocalsState();
@@ -57,15 +56,16 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
   ];
 
   int getDiscountForUser(int maxDiscount){
-    _discounts.firstWhere((element) => element['maxim']);
+    _discounts.firstWhere((element) => element['maxim'] as bool);
+    return 0;
   }
 
-  double getMaxDiscountForToday(Local local){
+  double? getMaxDiscountForToday(Local local){
 
     if(local.discounts != null)
-      if(local.discounts[DateFormat('EEEE').format(today).toLowerCase()] != null){
+      if(local.discounts![DateFormat('EEEE').format(today).toLowerCase()] != null){
       double maxDiscountToday = 0 ;
-      local.discounts[DateFormat('EEEE').format(today).toLowerCase()].forEach((element){
+      local.discounts![DateFormat('EEEE').format(today).toLowerCase()].forEach((element){
         if(double.parse(element.substring(12,14)) > maxDiscountToday)
           maxDiscountToday = double.parse(element.substring(12,14));
       });
@@ -74,7 +74,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
     return null;
   }
 
-  Future<List<Local>> places;
+  Future<List<Local>>? places;
 
   void getPlaces(){
     places = queryingService.fetchOnlyDiscounts();
@@ -93,12 +93,12 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
  
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<List<Local>>(
       future: places,
       builder:(context,locals){
         if(!locals.hasData)
           return Center(child: SpinningLogo (),);
-        else if(locals.data.length == 0)
+        else if(locals.data!.length == 0)
           return Center(
             child: Text("Ne pare rau, dar nu exista rezultate.")
           );
@@ -110,11 +110,11 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               //physics: const AlwaysScrollableScrollPhysics(), 
-              itemCount: locals.data.length,
+              itemCount: locals.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                Local local = locals.data[index];
-                double lengthInKm = queryingService.getLocalLocation(LengthUnit.Kilometer,local.location);
-                double lengthInMeter = queryingService.getLocalLocation(LengthUnit.Meter,local.location);
+                Local local = locals.data![index];
+                double lengthInMeter = queryingService.getLocalLocation(local.location!);
+                double lengthInKm = lengthInMeter/1000;
                 //PlaceListProfile place;
                 // PlaceListProfile place = PlaceListProfile(
                 //   scaffoldContext: context,
@@ -138,6 +138,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
                     local: local,
                   ),
                   closedBuilder: (context, f) {
+                    print(lengthInMeter.toString() + " km");
                     PlaceListProfile place = PlaceListProfile(
                       scaffoldContext: context,
                       name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,

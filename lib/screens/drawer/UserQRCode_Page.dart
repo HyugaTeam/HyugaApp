@@ -38,7 +38,7 @@ class UserQRCode extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
               child: QrImage(
                 padding: EdgeInsets.all(0),
-                data: authService.currentUser.uid,
+                data: authService.currentUser!.uid!,
                 size: 320,
                 gapless: false,
                 errorStateBuilder: (cxt, err) {

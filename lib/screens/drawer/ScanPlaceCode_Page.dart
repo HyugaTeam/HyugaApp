@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
@@ -20,7 +22,7 @@ class ScanPlaceCodeService {
 /// The Page through which the user scans the table code when arriving in the restaurant
 class ScanPlaceCode extends StatefulWidget {
 
-  final BuildContext context;
+  final BuildContext? context;
 
   ScanPlaceCode({this.context});
 
@@ -30,15 +32,15 @@ class ScanPlaceCode extends StatefulWidget {
 
 class _ScanPlaceCodeState extends State<ScanPlaceCode> {
 
-  PublishSubject<String> scanStream;
+  PublishSubject<String>? scanStream;
 
-  PickedFile _imageFile;
+  XFile? _imageFile;
 
   dynamic _pickImageError;
 
   bool isVideo = false;
 
-  String _retrieveDataError;
+  String? _retrieveDataError;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -63,16 +65,16 @@ class _ScanPlaceCodeState extends State<ScanPlaceCode> {
       print(currNum);
   }
 
-  void _launchCamera(ImageSource source, {BuildContext context}) async {
-    _imageFile = PickedFile("");
+  void _launchCamera(ImageSource source, {BuildContext? context}) async {
+    _imageFile = XFile("");
     try {
-      final pickedFile = await _picker.getImage(
+      final pickedFile = await ImagePicker().pickImage(
         source: source,
       );
       setState(() {
         pickedFile != null 
         ? _imageFile = pickedFile
-        : PickedFile("");
+        : XFile("");
       });
     } catch (e) {
       print(e);
@@ -93,11 +95,11 @@ class _ScanPlaceCodeState extends State<ScanPlaceCode> {
           _launchCamera(ImageSource.camera, context: widget.context);
           return Scaffold();
         }
-        else if(_imageFile.path == "")
+        else if(_imageFile!.path == "")
           return Scaffold();
         else{
-          TextDetector textDetector = GoogleMlKit.instance.textDetector();
-          final text = textDetector.processImage(InputImage.fromFilePath(_imageFile.path));
+          TextDetector textDetector = GoogleMlKit.vision.textDetector();
+          final text = textDetector.processImage(InputImage.fromFilePath(_imageFile!.path));
           return Scaffold(
             body: FutureBuilder(
               future: text,
@@ -105,10 +107,10 @@ class _ScanPlaceCodeState extends State<ScanPlaceCode> {
                 if(!text.hasData)
                   return SpinningLogo();
                 else{
-                  findReceiptTotal(text.data.text);
+                  findReceiptTotal(text.data!.text);
                   return Center(
                     child: Text(
-                      text.data.text
+                      text.data!.text
                     ),
                   );
                 }
