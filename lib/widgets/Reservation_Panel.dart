@@ -129,7 +129,8 @@ class _ReservationPanelState extends State<ReservationPanel> {
 
     return Theme(
       data: ThemeData(
-        highlightColor: Theme.of(context).accentColor,
+        //highlightColor: Theme.of(context).accentColor,
+        primaryColor: Theme.of(context).primaryColor,
         accentColor: Theme.of(context).accentColor,
         textTheme: TextTheme(bodyText1: TextStyle(fontWeight: FontWeight.bold)),
         fontFamily: 'Comfortaa'
@@ -357,7 +358,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                       width: MediaQuery.of(context).size.width*0.11,
                                       height: 20,
                                       decoration: BoxDecoration(
-                                        color: Colors.blueGrey,
+                                        color: Theme.of(context).accentColor,
                                         borderRadius: BorderRadius.circular(30)
                                       ),
                                       child: Icon(
@@ -380,7 +381,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                   width: MediaQuery.of(context).size.width*0.11,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: Colors.blueGrey,
+                                    color: Theme.of(context).accentColor,
                                     borderRadius: BorderRadius.circular(30)
                                   ),
                                   child: Text(
