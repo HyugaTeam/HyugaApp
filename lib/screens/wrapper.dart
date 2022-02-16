@@ -68,19 +68,22 @@ class Wrapper extends StatelessWidget {
               ),
             )
         );
-        return StreamBuilder<bool>(
-          stream: QueryService.userLocationStream.stream,
-          builder: (context, hasLocation) {
+        return StreamProvider<bool?>.value(
+          initialData: null,
+          value: QueryService.userLocationStream.stream,
+          builder: (context, child) {
+            var hasLocation = Provider.of<bool?>(context);
             bool? prevData;
             QueryService.userLocationStream.stream.last.then((prevData) => prevData = prevData);
-            print(hasLocation.hasData.toString() + " hasData");
-            if(!hasLocation.hasData && queryingService.userLocation == null)
+            print((hasLocation != null).toString() + " hasData");
+            print(hasLocation.toString()+ " hasLocation" + queryingService.userLocation.toString() + " userLocation");
+            if(hasLocation == null && queryingService.userLocation == null)
               return Scaffold(
                 body: Center(
                   child: SpinningLogo(),
                 )
               );
-            else if(hasLocation.data == false || prevData == false) // Permission for location denied
+            else if(hasLocation == false || prevData == false) // Permission for location denied
               return Scaffold(body: Container(
                     padding: EdgeInsets.only(left: 30),
                     child: Column(
@@ -131,10 +134,12 @@ class Wrapper extends StatelessWidget {
             else{
               print(user.toString() + 'din provider');
                 if(user != null)
-                  return StreamBuilder(
-                    stream: authService.loading,
-                    builder: (context, snapshot) {
-                      if(!snapshot.hasData && authService.isLoading == null)
+                  return StreamProvider<bool?>.value(
+                    initialData: null,
+                    value: authService.loading,
+                    builder: (context, child) {
+                      var isLoading = Provider.of<bool?>(context);
+                      if(isLoading == null && authService.isLoading == null)
                         return Scaffold(body: Center(child: SpinningLogo(),),);
                       else if(authService.currentUser!.isManager == true)
                         return AdminPanel();
