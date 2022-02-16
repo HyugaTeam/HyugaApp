@@ -66,18 +66,21 @@ class QueryService{
       //   userLocationStream.add(false);
       //   return askPermission();
       // }
-      try{
-        await Location().getLocation().then((value) => print(value.toString() + " value"));
-      }
-      catch(error){
-        print(error);
-      }
+      await Location().getLocation().then((value) 
+        { 
+            Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
+            //print(instantUserLocation);
+            _userLocation = instantUserLocation;
+            //userLocationStream.add(true);
+          });
+          print(value.toString() + " value");
+        });
       userLocationStream.add(true);
-      Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
-        //print(instantUserLocation);
-        _userLocation = instantUserLocation;
-        //userLocationStream.add(true);
-      });
+      // Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
+      //   //print(instantUserLocation);
+      //   _userLocation = instantUserLocation;
+      //   //userLocationStream.add(true);
+      // });
     }
     // Added due to Object not having the field 'code'
     on PlatformException
