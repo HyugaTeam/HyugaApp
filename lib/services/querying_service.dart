@@ -67,6 +67,7 @@ class QueryService{
       //   return askPermission();
       // }
       await Location().getLocation().then((value) => print(value.toString() + " value"));
+      await Location().getLocation().then((value) => print(value.toString() + " value"));
       userLocationStream.add(true);
       Location.instance.onLocationChanged.listen((LocationData instantUserLocation) { 
         //print(instantUserLocation);
