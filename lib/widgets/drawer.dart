@@ -124,26 +124,26 @@ class ProfileDrawer extends StatelessWidget {
                               : Container();
                           }
                         ),
-                        StreamBuilder<bool>(
-                          stream: authService.loading.stream,
-                          builder: (context, snapshot) {
-                            return authService.currentUser!.isManager == null 
-                              ? ListTile(
-                                tileColor: Theme.of(context).accentColor.withOpacity(0.5),
-                                leading: FaIcon(FontAwesomeIcons.gem, color: Theme.of(context).accentColor), 
-                                title: Text(
-                                  'Premium',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ), 
-                                onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return SubscribePaymentPage(); }));
-                                }
-                              )
-                              : Container();
-                          }
-                        ),
+                        // StreamBuilder<bool>(
+                        //   stream: authService.loading.stream,
+                        //   builder: (context, snapshot) {
+                        //     return authService.currentUser!.isManager == null 
+                        //       ? ListTile(
+                        //         tileColor: Theme.of(context).accentColor.withOpacity(0.5),
+                        //         leading: FaIcon(FontAwesomeIcons.gem, color: Theme.of(context).accentColor), 
+                        //         title: Text(
+                        //           'Premium',
+                        //           style: TextStyle(
+                        //             fontWeight: FontWeight.bold
+                        //           )
+                        //         ), 
+                        //         onTap: (){
+                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return SubscribePaymentPage(); }));
+                        //         }
+                        //       )
+                        //       : Container();
+                        //   }
+                        // ),
                         // StreamBuilder<bool>(
                         //   stream: authService.loading.stream,
                         //   builder: (context, snapshot) {
