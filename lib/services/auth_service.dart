@@ -38,6 +38,8 @@ class AuthService{
             ref.get().then((DocumentSnapshot user) {
               dynamic userData = user.data() as Map?;
               if(user != null && userData != null){
+                if(userData.containsKey('contact_phone_number'))
+                  currentUser!.phoneNumber = userData['contact_phone_number'];
                 if(userData.containsKey('manager') == true)
                   currentUser!.isManager = userData['manager'];
                 else 
@@ -62,7 +64,7 @@ class AuthService{
     );
   }
   
-  Stream<QuerySnapshot>? get seatingStatus {
+  Stream<QuerySnapshot>? get seatingData {
     if(currentUser != null)
       if(currentUser!.isAnonymous != true)
         return _db.collection('users').doc(currentUser!.uid)
@@ -85,6 +87,7 @@ class AuthService{
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
+      phoneNumber: user.phoneNumber,
       displayName: user.displayName != null 
         ? user.displayName 
         : (user.email != null
@@ -132,7 +135,7 @@ class AuthService{
     if(document.data() == null){
       AnalyticsService().analytics.logSignUp(signUpMethod: credentialProvider!);
       // Commented temporarly in order to skip the tutorial
-      //g.isNewUser = true;
+      // g.isNewUser = true;
       ref.set({
         'uid' : user.uid,
         'email' : user.email,
@@ -152,7 +155,7 @@ class AuthService{
     try{
       UserCredential result = await _auth.signInAnonymously();
       // Commented temporarly in order to skip the tutorial
-      //g.isNewUser = true;
+      // g.isNewUser = true;
       AnalyticsService().analytics.logLogin(loginMethod: 'anonymous');
       return result;
     } catch(error){

@@ -6,10 +6,11 @@ class OurUser{
   final String? photoURL;
   final String? displayName;
   final bool? isAnonymous;
+  String? phoneNumber;
   int/*!*/ score = 0;
   bool? isManager;
 
-  OurUser({this.uid,this.email,this.photoURL, this.displayName, this.isAnonymous});
+  OurUser({this.uid,this.email,this.photoURL, this.displayName, this.isAnonymous, this.phoneNumber});
   
 
   // Can only return a number in the range [0,5]

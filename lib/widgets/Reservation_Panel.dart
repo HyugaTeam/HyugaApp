@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
@@ -26,6 +27,10 @@ class _ReservationPanelState extends State<ReservationPanel> {
   DateTime? _selectedDate; // The final parsed Date which will go in the database
   int? _selectedDiscount;
   List<Map<String,dynamic>>? _selectedDeals;
+  bool _isFormEnabled = true;
+  String _selectedPhoneNumber = authService.currentUser!.phoneNumber != null // Either a previously saved phone number or ""
+  ? authService.currentUser!.phoneNumber as String
+  : "";
   
   DateTime currentTime = DateTime.now().toLocal();
 
@@ -33,6 +38,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   ScrollController? _noOfPeopleScrollController;
   ScrollController? _dayScrollController;
   ScrollController? _hourScrollController;
+  GlobalKey<FormState> _phoneNumberFormKey = GlobalKey<FormState>();
 
   late Local place;
   Map<String,dynamic>? placeSchedule;
@@ -69,6 +75,8 @@ class _ReservationPanelState extends State<ReservationPanel> {
   @override
   void initState() {
     super.initState();
+    if(_selectedPhoneNumber != "")
+      _isFormEnabled = false;
     _noOfPeopleScrollController = ScrollController(initialScrollOffset: MediaQuery.of(widget.context!).size.width*0.16);
     _dayScrollController = ScrollController();
     _hourScrollController = ScrollController(initialScrollOffset: 0);
@@ -82,7 +90,11 @@ class _ReservationPanelState extends State<ReservationPanel> {
       print(placeSchedule);
       startHour = placeSchedule![DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].substring(0,5);
       endHour = placeSchedule![DateFormat('EEEE').format(currentTime.add(Duration(days: _selectedDay))).toLowerCase()].toString().substring(6,11);
-      hourDiff = int.parse(endHour.substring(0,2)) + 24 - int.parse(startHour!.substring(0,2));
+      hourDiff = 
+        endHour != '00:00' 
+        ? int.parse(endHour.substring(0,2)) - int.parse(startHour!.substring(0,2))
+        : int.parse(endHour.substring(0,2)) + 12 - int.parse(startHour!.substring(0,2))
+      ;
       minDiff = endHour.substring(3,5) == '30' ? 1 : 0 ; /// In case the place has a delayed schedule
       hour = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, int.parse(startHour!.substring(0,2)), int.parse(startHour!.substring(3,5)));
     }
@@ -129,6 +141,10 @@ class _ReservationPanelState extends State<ReservationPanel> {
 
     return Theme(
       data: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: Theme.of(context).accentColor,
+          selectionHandleColor: Theme.of(context).accentColor
+        ),
         //highlightColor: Theme.of(context).accentColor,
         primaryColor: Theme.of(context).primaryColor,
         accentColor: Theme.of(context).accentColor,
@@ -139,7 +155,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
         child: Container(
             color: Colors.white,
               width: double.infinity,
-              height: MediaQuery.of(context).size.height*0.65,
+              height: MediaQuery.of(context).size.height*0.70,
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 10,),
@@ -147,7 +163,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     "Rezervă o masă",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20
+                      fontSize: 20*(1/MediaQuery.of(context).textScaleFactor)
                     ),
                   ),
                   SizedBox(height: 10,),
@@ -157,7 +173,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     "Câte persoane?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20
+                      fontSize: 20*(1/MediaQuery.of(context).textScaleFactor)
                     ),
                   ),
                   SizedBox(height: 13,),
@@ -194,7 +210,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     "În ce zi?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20
+                      fontSize: 20*(1/MediaQuery.of(context).textScaleFactor)
                     ),
                   ),
                   SizedBox(height: 13,),
@@ -247,7 +263,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     "La ce oră?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20
+                      fontSize: 20*(1/MediaQuery.of(context).textScaleFactor)
                     ),
                   ),
                   SizedBox(height: 13,),
@@ -255,7 +271,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   //! (place.discounts != null  || place.discounts.containsKey(DateFormat("EEEE").format(DateTime.now().toLocal().add(Duration(days: _selectedDay))).toLowerCase())) 
                   //? Container()
                   //:
-                   Container( /// Hours list
+                  Container( /// Hours list
                     height: 60,
                     width: double.infinity,
                     child: ListView.separated(
@@ -263,10 +279,11 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       padding: EdgeInsets.symmetric(horizontal: 10,),
                       scrollDirection: Axis.horizontal,
                       itemCount: placeSchedule != null
-                        ? hourDiff * 2 + minDiff 
+                        ? (endHour != "00:00" ? hourDiff * 2 + minDiff - 2 : hourDiff * 2 + 24 + minDiff - 2)
                         : 0,
                       separatorBuilder: (context,index)=>SizedBox(width: 10,),
                       itemBuilder: (context,index) {
+                        
                         GlobalKey _tooltipKey = GlobalKey();
                         int discount = 0;
                         //int discount = getDiscountForHour(index);
@@ -332,7 +349,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                       ? '00'
                                       : hour.add(Duration(minutes: index*30)).minute.toString()),
                                     style: TextStyle(
-                                      fontSize: 15
+                                      fontSize: 15*(1/MediaQuery.of(context).textScaleFactor)
                                     ),
                                   )
                                 ),
@@ -387,7 +404,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                   child: Text(
                                     "-$discount%",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14*(1/MediaQuery.of(context).textScaleFactor),
                                       color: Colors.white
                                     ),
                                   ),
@@ -401,9 +418,122 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       }
                     ),
                   ),
-                  Expanded(
-                    child: Container()
+                  SizedBox(height: 15,),
+                  Text(
+                    "Număr de telefon?",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20*(1/MediaQuery.of(context).textScaleFactor)
+                    ),
                   ),
+                  SizedBox(height: 15,),
+                  Container(
+                    height: 60,
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.65,
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Form(
+                            key: _phoneNumberFormKey,
+                            child: TextFormField(
+                              enabled: _isFormEnabled,
+                              style: TextStyle(
+                                color: _isFormEnabled
+                                  ? Colors.black
+                                  : Colors.grey[600],
+                              ),
+                              initialValue: _selectedPhoneNumber != "" ? _selectedPhoneNumber : null,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                filled: true,
+                                fillColor: _isFormEnabled
+                                  ? Colors.transparent
+                                  : Colors.grey[200],
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Colors.red,
+                                    width: 1
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Colors.red,
+                                    width: 1
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                    width: 1
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey,
+                                    width: 1
+                                  ),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    width: 1
+                                  ),
+                                ),
+                                // errorBorder: OutlineInputBorder(
+                                //   borderRadius: BorderRadius.circular(30),
+                                //   borderSide: BorderSide(
+                                //     color: Colors.grey.withOpacity(0.4),
+                                //     width: 1
+                                //   ),
+                                // ),
+                                counterText: "",
+                              ),
+                              onChanged: (input) => setState(() => _selectedPhoneNumber = input),
+                              keyboardType: TextInputType.number,
+                              cursorColor: Theme.of(context).accentColor,
+                              validator: (input) {
+                                if(input == null || !input.startsWith('0') || input.length != 10)
+                                  return 'Numărul de telefon este invalid';
+                                return null;
+                              },
+                              maxLength: 15,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              width: 1,
+                              color: Theme.of(context).accentColor
+                            ),
+                            //borderRadius: BorderRadius.circular(30)
+                          ),
+                          child: IconButton(
+                            tooltip: "Modifică numărul de telefon",
+                            onPressed: () => setState(() => _isFormEnabled = true), 
+                            iconSize: 16,
+                            color: Theme.of(context).accentColor,
+                            splashColor: Theme.of(context).accentColor,
+                            highlightColor: Theme.of(context).accentColor,
+                            icon: FaIcon(FontAwesomeIcons.pen)
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  // Expanded(
+                  //   child: Container()
+                  // ),
                   RaisedButton(
                     elevation: 1,
                     disabledColor: Colors.grey[300],
@@ -416,7 +546,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                       ),
                     ),
                     /// The callback invoked when the 'Rezerva' button is pressed
-                    onPressed: _selectedDate == null? null : () async{
+                    onPressed: _selectedDate == null || !_phoneNumberFormKey.currentState!.validate() ? null : () async{
                       print(_selectedDate);
                       setState(() {
                         _isProgressIndicatorVisible = true;
@@ -431,11 +561,12 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         'date_start': Timestamp.fromDate(_selectedDate!),
                         'guest_id' : authService.currentUser!.uid,
                         'guest_name' : authService.currentUser!.displayName,
+                        'contact_phone_number' : _selectedPhoneNumber,
                         'claimed' : null,
                         'number_of_guests' : _selectedNoOfPeople + 1,
                         'discount': _selectedDiscount,
                         'deals': _selectedDeals,
-                        'user_reservation_ref' : userReservationRef
+                        'user_reservation_ref' : userReservationRef,
                       });
                       
                       await userReservationRef.set(
@@ -445,6 +576,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'date_start': Timestamp.fromDate(_selectedDate!),
                           'place_id' : place.id,
                           'place_name' : place.name,
+                          'contact_phone_number' : _selectedPhoneNumber,
                           'claimed' : null,
                           'number_of_guests' : _selectedNoOfPeople + 1,
                           'discount': _selectedDiscount,
@@ -452,6 +584,18 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           'place_reservation_ref': placeReservationRef
                         }
                       );
+                      /// Change user's phone number
+                      if(authService.currentUser!.phoneNumber == null && _selectedPhoneNumber != "")
+                        FirebaseFirestore.instance.collection('users')
+                        .doc(authService.currentUser!.uid)
+                        .set(
+                          {
+                            'contact_phone_number' : _selectedPhoneNumber
+                          },
+                          SetOptions(
+                            merge: true
+                          )
+                        );
                       setState(() {
                         _isProgressIndicatorVisible = false;
                       });
@@ -475,7 +619,9 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   ),
                   Visibility(
                     visible: _isProgressIndicatorVisible,
-                    child: LinearProgressIndicator(minHeight: 8,
+                    child: LinearProgressIndicator(
+                      minHeight: 8,
+                      color: Theme.of(context).accentColor,
                     ),
                   )
                 ],

@@ -9,6 +9,7 @@ import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SeatingInterface extends StatefulWidget {
 
@@ -425,19 +426,22 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                     )
                                   ),
                                 ),
-                                StreamBuilder<String>(
-                                  stream: time,
-                                  builder: (context, currentTime) =>
-                                  Text(
-                                    currentTime.hasData 
-                                    ? currentTime.data!
-                                    : "00:00:00",
-                                    style: TextStyle(
-                                      color: Colors.orange[600],
-                                      fontSize: 35*(1/MediaQuery.of(context).textScaleFactor),
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  )
+                                StreamProvider<String?>.value(
+                                  initialData: null,
+                                  value: time,
+                                  builder: (context, child){
+                                    var time = Provider.of<String?>(context);
+                                    return Text(
+                                      time != null
+                                      ? time
+                                      : "00:00:00",
+                                      style: TextStyle(
+                                        color: Colors.orange[600],
+                                        fontSize: 35*(1/MediaQuery.of(context).textScaleFactor),
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    );
+                                  }
                                 )
                               ],
                             ),

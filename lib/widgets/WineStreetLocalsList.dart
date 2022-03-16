@@ -5,6 +5,7 @@ import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'Place_List_profile.dart';
 
@@ -81,10 +82,10 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
   }
 
   @override
-    void initState() {
-      super.initState();
-      getPlaces();
-    }
+  void initState() {
+    super.initState();
+    getPlaces();
+  }
 
   Future refresh(){
     return Future((context as Element).reassemble);
@@ -93,12 +94,15 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
  
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Local>>(
-      future: places,
-      builder:(context,locals){
-        if(!locals.hasData)
+    return FutureProvider<List<Local>?>.value(
+      initialData: null,
+      value: places,
+      builder: (context, child){
+        print("REBUILD LIST");
+        var places  = Provider.of<List<Local>?>(context);
+        if(places == null)
           return Center(child: SpinningLogo (),);
-        else if(locals.data!.length == 0)
+        else if(places.length == 0)
           return Center(
             child: Text("Ne pare rau, dar nu exista rezultate.")
           );
@@ -109,49 +113,49 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
               padding: EdgeInsets.only(top: 20, bottom: 20),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              //physics: const AlwaysScrollableScrollPhysics(), 
-              itemCount: locals.data!.length,
+              itemCount: places.length,
               itemBuilder: (BuildContext context, int index) {
-                Local local = locals.data![index];
+                Local local = places[index];
                 double lengthInMeter = queryingService.getLocalLocation(local.location!);
                 double lengthInKm = lengthInMeter/1000;
+                //print(lengthInMeter.toString() + " KM");
                 //PlaceListProfile place;
-                // PlaceListProfile place = PlaceListProfile(
-                //   scaffoldContext: context,
-                //   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
-                //   distance: lengthInMeter > 1000 
-                //   ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
-                //   + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
-                //   :'0.' + ((lengthInMeter/100%10).toInt()).toString()
-                //   ,onTap: (){
-                //   Navigator.pushNamed(
-                //     context,
-                //     '/third',
-                //     arguments: [local,widget.onlyWithDiscounts]
-                //   );
-                // },
-                // );
-                return OpenContainer(
-                  closedElevation: 0,
-                  transitionDuration: Duration(milliseconds: 500),
-                  openBuilder: (context, f) => ThirdPage(
-                    local: local,
-                  ),
-                  closedBuilder: (context, f) {
-                    print(lengthInMeter.toString() + " km");
-                    PlaceListProfile place = PlaceListProfile(
-                      scaffoldContext: context,
-                      name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
-                      distance: lengthInMeter > 1000 
-                      ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
-                      + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
-                      :'0.' + ((lengthInMeter/100%10).toInt()).toString()
-                      ,onTap: f
-                    );
-                    return place;
-                  },
+                PlaceListProfile place = PlaceListProfile(
+                  scaffoldContext: context,
+                  name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
+                  distance: lengthInMeter > 1000 
+                  ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
+                  + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
+                  :'0.' + ((lengthInMeter/100%10).toInt()).toString()
+                  ,onTap: (){
+                  Navigator.pushNamed(
+                    context,
+                    '/third',
+                    arguments: [local,widget.onlyWithDiscounts]
+                  );
+                },
                 );
-                //return place;
+                // return OpenContainer(
+                //   closedElevation: 0,
+                //   transitionDuration: Duration(milliseconds: 500),
+                //   openBuilder: (context, f) => ThirdPage(
+                //     local: local,
+                //   ),
+                //   closedBuilder: (context, f) {
+                //     print(lengthInMeter.toString() + " km");
+                //     PlaceListProfile place = PlaceListProfile(
+                //       scaffoldContext: context,
+                //       name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,
+                //       distance: lengthInMeter > 1000 
+                //       ?  (lengthInKm <100 ? lengthInKm.toInt().toString() 
+                //       + '.' + ((lengthInMeter/100%10).toInt()).toString(): '99+')
+                //       :'0.' + ((lengthInMeter/100%10).toInt()).toString()
+                //       ,onTap: f
+                //     );
+                //     return place;
+                //   },
+                // );
+                return place;
               }
             ),
           );

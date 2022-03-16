@@ -41,7 +41,9 @@ class ReservationsHistoryPage extends StatelessWidget {
     .where('date_start', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal())) 
     .get();
     itemCount = scanHistory.docs.length;
-    return scanHistory.docs.map((doc)=>doc.data()).toList();
+    var pastReservationsList = scanHistory.docs.map((doc)=>doc.data()).toList();
+    pastReservationsList.sort((dynamic place1, dynamic place2) => place2!['date_start'].compareTo(place1!['date_start']));
+    return pastReservationsList;
   }
 
   @override
@@ -49,18 +51,26 @@ class ReservationsHistoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).accentColor,
+        title: Text(
+          "Rezervări",
+          style: TextStyle(
+            fontSize: 20*(1/MediaQuery.of(context).textScaleFactor),
+            fontWeight: FontWeight.bold
+          ),
+        ),
       ),
       body: ListView(
         shrinkWrap: true,
         children: [
           FutureBuilder<Map<String, dynamic>?>(
             future: getUpcomingReservations(),
-            builder: (context, AsyncSnapshot<Map<String, dynamic>?>reservation){
-              Map<String, dynamic>? reservationData = reservation.data!;
-              if(!reservation.hasData)
+            builder: (context, AsyncSnapshot<Map<String, dynamic>?> reservation){
+              Map<String, dynamic>? reservationData = reservation.data;
+              print(reservationData);
+              if(!reservation.hasData )
                 return Container();
               else {
-                DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(reservation.data!['date_start'].millisecondsSinceEpoch);
+                DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(reservationData!['date_start'].millisecondsSinceEpoch);
                 return ListView(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -84,7 +94,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                           Align( /// The place's image
                             alignment: Alignment.centerLeft,
                             child: FutureBuilder<Image>(
-                              future: queryingService.getImage(reservation.data!['place_id']),
+                              future: queryingService.getImage(reservationData['place_id']),
                               builder: (context, image){
                                 if(!image.hasData)
                                   return Container(
@@ -201,7 +211,7 @@ class ReservationsHistoryPage extends StatelessWidget {
               vertical: MediaQuery.of(context).size.height*0.01
             ),
             color: Colors.grey[300],
-            child: Text("Istoric rezervari"),
+            child: Text("Istoric rezervări"),
           ),
           FutureBuilder<List>(
               future: getPastReservations(),
@@ -486,29 +496,30 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                          Container(
-                                            padding: const EdgeInsets.only(top: 5),
-                                            child: Text(
-                                              reservationsHistory.data![index]['accepted'] == true
-                                              ? (
-                                                reservationsHistory.data![index]['claimed'] == true
-                                                ? "Revendicata"
-                                                : "Nerevendicata"
-                                              )
-                                              : "Refuzata"
-                                              ,
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: reservationsHistory.data![index]['accepted'] == true
-                                              ? (
-                                                reservationsHistory.data![index]['claimed'] == true
-                                                ? Colors.green
-                                                : Colors.red
-                                              )
-                                              : Colors.yellow
-                                              )
-                                            )
-                                          ),
+                                          /// Reservation's status
+                                          // Container(
+                                          //   padding: const EdgeInsets.only(top: 5),
+                                          //   child: Text(
+                                          //     reservationsHistory.data![index]['accepted'] == true
+                                          //     ? (
+                                          //       reservationsHistory.data![index]['claimed'] == true
+                                          //       ? "Revendicata"
+                                          //       : "Nerevendicata"
+                                          //     )
+                                          //     : "Refuzata"
+                                          //     ,
+                                          //     style: TextStyle(
+                                          //       fontSize: 17,
+                                          //       color: reservationsHistory.data![index]['accepted'] == true
+                                          //     ? (
+                                          //       reservationsHistory.data![index]['claimed'] == true
+                                          //       ? Colors.green
+                                          //       : Colors.red
+                                          //     )
+                                          //     : Colors.yellow
+                                          //     )
+                                          //   )
+                                          // ),
                                         ],
                                       ),
                                     ),

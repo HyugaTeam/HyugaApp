@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
+import 'package:provider/provider.dart';
 
 class SearchBarPage extends StatefulWidget {
   @override
@@ -86,26 +87,28 @@ class _SearchBarPageState extends State<SearchBarPage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height*0.9,
         child: Container(
-          child: StreamBuilder<List<DocumentSnapshot<Object?>>>(
-            stream: searchResults(),
-            builder: (context, result) {
+          child: StreamProvider<List<DocumentSnapshot<Object?>>?>.value(
+            initialData: [],
+            value: searchResults(),
+            builder: (context, child) {
+              var result = Provider.of<List<DocumentSnapshot<Object?>>?>(context);
               if(_keyword == "")
                 return Container();
-              else if(!result.hasData)
+              else if(result == null)
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SpinningLogo(),
                     ],
                   );
-              else if(result.data!.length == 0) 
+              else if(result.length == 0) 
                 return Center(child: Text("Ne pare rau, nu exista rezultate"),);
               else return ListView.separated(
                 shrinkWrap: true,
-                itemCount: result.data!.length,
+                itemCount: result.length,
                 separatorBuilder: (context,index) => SizedBox(height: 15,),
                 itemBuilder: (context, index) {
-                  Local place = queryingService.docSnapToLocal(result.data![index]);
+                  Local place = queryingService.docSnapToLocal(result[index]);
                   return SearchListTile(place: place, key: ValueKey(place.name));
                 }
                   

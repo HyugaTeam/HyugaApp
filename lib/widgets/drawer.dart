@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/screens/drawer/ScanPlaceCode_Page.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
+import 'package:hyuga_app/screens/drawer/ask_for_help_page.dart';
 import 'package:hyuga_app/screens/drawer/subscribe_payment_page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
@@ -110,63 +111,57 @@ class ProfileDrawer extends StatelessWidget {
                           }
                         ),
                         /// Either shows the 'My Code' button or nothing depending on the user's 'manager' property
-                        StreamBuilder<bool>(
-                          stream: authService.loading.stream,
-                          builder: (context, snapshot) {
-                            return authService.currentUser!.isManager == null 
-                              ? ListTile(
-                                leading: FaIcon(FontAwesomeIcons.qrcode, color: Theme.of(context).accentColor), 
-                                title: Text('Codul meu'), 
-                                onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(context); }));
-                                }
-                              )
-                              : Container();
-                          }
-                        ),
                         // StreamBuilder<bool>(
                         //   stream: authService.loading.stream,
                         //   builder: (context, snapshot) {
                         //     return authService.currentUser!.isManager == null 
                         //       ? ListTile(
-                        //         tileColor: Theme.of(context).accentColor.withOpacity(0.5),
-                        //         leading: FaIcon(FontAwesomeIcons.gem, color: Theme.of(context).accentColor), 
-                        //         title: Text(
-                        //           'Premium',
-                        //           style: TextStyle(
-                        //             fontWeight: FontWeight.bold
-                        //           )
-                        //         ), 
+                        //         leading: FaIcon(FontAwesomeIcons.qrcode, color: Theme.of(context).accentColor), 
+                        //         title: Text('Codul meu'), 
                         //         onTap: (){
-                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return SubscribePaymentPage(); }));
+                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(context); }));
                         //         }
                         //       )
                         //       : Container();
                         //   }
                         // ),
-                        // StreamBuilder<bool>(
-                        //   stream: authService.loading.stream,
-                        //   builder: (context, snapshot) {
-                        //     return authService.currentUser!.isManager == null 
-                        //       ? ListTile(
-                        //         title: Container( // sign-out button
-                        //           padding: EdgeInsets.symmetric(horizontal: 80),
-                        //           child: RaisedButton(
-                        //             shape: RoundedRectangleBorder(
-                        //               borderRadius: BorderRadius.circular(20),
-                        //             ),
-                        //             color: Theme.of(context).accentColor,
-                        //             splashColor: Colors.deepOrangeAccent,
-                        //             child: Text("Premium"),
-                        //             onPressed: () async {
-                                      
-                        //             },
-                        //           ),
-                        //         ),
-                        //       )
-                        //       : Container();
-                        //   }
-                        // ),
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                            return authService.currentUser!.isManager == null 
+                              ? ListTile(
+                                //tileColor: Theme.of(context).accentColor.withOpacity(0.5),
+                                leading: FaIcon(FontAwesomeIcons.questionCircle, color: Theme.of(context).accentColor), 
+                                title: Text(
+                                  'Ajutor'
+                                ), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AskForHelpPage(); }));
+                                }
+                              )
+                              : Container();
+                          }
+                        ),
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                            return authService.currentUser!.isManager == null 
+                              ? ListTile(
+                                tileColor: Theme.of(context).accentColor.withOpacity(0.5),
+                                leading: FaIcon(FontAwesomeIcons.gem, color: Theme.of(context).accentColor), 
+                                title: Text(
+                                  'Premium',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                  )
+                                ), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return SubscribePaymentPage(); }));
+                                }
+                              )
+                              : Container();
+                          }
+                        ),
                         // The 'Activate table' button
                         // StreamBuilder<bool>(
                         //   stream: authService.loading.stream,

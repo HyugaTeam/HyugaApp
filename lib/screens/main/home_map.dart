@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hyuga_app/widgets/WineStreetLocalsList.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -214,14 +215,28 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
           SizedBox(height: 10,),
           GestureDetector( /// The slide-up button
             child: Center(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                height: 5,
-                width: 30,
-                decoration: BoxDecoration(
-                  color: Color(0xFF70545c),
-                  borderRadius: BorderRadius.circular(12)
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    height: 5,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF70545c),
+                      borderRadius: BorderRadius.circular(12)
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    height: 5,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(12)
+                    ),
+                  ),
+                ],
               ),
             ),
             onTap: (){ // Doesn't work for some reason
@@ -311,14 +326,17 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Object?>>(
-      stream: authService.seatingStatus,
-      builder: (context, ss) {
+    return StreamProvider<QuerySnapshot<Object?>?>.value(
+      initialData: null,
+      value: authService.seatingData,
+      //updateShouldNotify: (oldData, newData) => (oldData != null && newData != null) && (oldData.docs != newData.docs),
+      builder: (context, child) {
+      var seatingData = Provider.of<QuerySnapshot<Object?>?>(context);
       if(authService.currentUser!.isAnonymous != true)
-        if(!ss.hasData) // Checks if the user is seated or not
+        if(seatingData == null) // Checks if the user is seated or not
           return Scaffold(body: Center(child: SpinningLogo(),));
-        else if(ss.data!.docs.length == 1 )
-          return SeatingInterface(place: ss.data!.docs[0]);
+        else if(seatingData.docs.length == 1 )
+          return SeatingInterface(place: seatingData.docs[0]);
         return Scaffold(
           extendBodyBehindAppBar: true,
           key: _drawerKey,
@@ -390,3 +408,4 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
     );
   }
 }
+
