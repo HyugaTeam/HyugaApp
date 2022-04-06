@@ -1,3 +1,4 @@
+require('dotenv').config();
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
@@ -12,12 +13,13 @@ const db = admin.firestore();
 const fcm = admin.messaging();
 
 const sgMail = require("@sendgrid/mail");
-const SG_API_KEY = functions.config().sgApiKey;
-const SG_TEMPLATE = functions.config().sgTemplate;
-sgMail.setApiKey('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');
+const SG_API_KEY = process.env.SG_API_KEY;
+const SG_TEMPLATE_ADMIN_NEW_RESERVATION = process.env.SG_TEMPLATE_ADMIN_NEW_RESERVATION;
+const SG_TEMPLATE_USER_NEW_RESERVATION = process.env.SG_TEMPLATE_USER_NEW_RESERVATION;
+sgMail.setApiKey(SG_API_KEY);
 
-const accountSid = 'ACe598aba1e01bcbc2d2d62c6b702b947f'; 
-const authToken = '2bc2ce087e5983b37fb58e263ddbf256'; 
+const accountSid = process.env.TW_ACCOUNT_SID; 
+const authToken = process.env.TW_AUTH_TOKEN; 
 const twilio = require('twilio')(accountSid, authToken); 
 
 // admin.auth()
@@ -41,6 +43,8 @@ const twilio = require('twilio')(accountSid, authToken);
 //   return console.log('Error fetching user data:', error);
 // });
 
+/// Issued whenever a new RESERVATION is made by an user
+/// Sends a push-notification to the restaurant-owner, and a confirmation email to the user
 exports.sendReservationNotification = functions.firestore
     .document('users/{user}/managed_locals/{managed_local}/reservations/{reservation}')
     .onCreate(async (docSnapshot,context) => {
@@ -59,26 +63,48 @@ exports.sendReservationNotification = functions.firestore
         const utc_offset = time.getTimezoneOffset()
         const hourOffset = 3
         var hoursAndMinutes = ""
-        if(time.getHours()<10)
-          hoursAndMinutes += "0" + (time.getHours()+3).toString()
+        if(time.getHours()+hourOffset<10)
+          hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()
         else
           hoursAndMinutes += (time.getHours()+hourOffset).toString()
-        hoursAndMinutes += ":" + time.getMinutes().toString()
+        if(time.getMinutes().toString() === "0")
+          hoursAndMinutes += ":" + "00"
+        else
+          hoursAndMinutes += ":" + time.getMinutes().toString()
         const months = {
           0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
         }
-        
+
+        const userDoc = await db.collection('users').doc(data['guest_id']).get();
+        userEmail = [userDoc.data()['email']]
+        const placeDoc = await docSnapshot.ref.parent.parent.get();
+        const placeName = placeDoc.data()['name'];
+        const date = time.getDate() + ' ' + months[time.getMonth()]
+        const numberOfGuests = data['number_of_guests']
+
+        const msg = {
+            to: userEmail,
+            from: 'support@winestreet.ro',
+            templateId: SG_TEMPLATE_USER_NEW_RESERVATION,
+            dynamic_template_data: {
+              placeName: placeName,
+              date: date,
+              time: hoursAndMinutes,
+              numberOfPeople: numberOfGuests
+            }
+        };
+
         //const options = {hours: "long",minutes:"long"};
         //const hour = Intl.DateTimeFormat('ro',options)
         const payload = {
               notification: {
-                title: 'Rezervare noua!',
+                title: 'Rezervare nouă!',
                 //body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+(time.getHours()+hourOffset)+':'+time.getMinutes(),
-                body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+ hoursAndMinutes,
+                body: "O nouă rezervare a fost facută la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+ hoursAndMinutes,
                 clickAction: 'FLUTTER_NOTIFICATION_CLICK'
               }
             }
-        return fcm.sendToDevice(registrationTokens,payload);
+        return Promise.all([fcm.sendToDevice(registrationTokens,payload), sgMail.send(msg)]);
     })
 
 exports.sendReservationNotificationToUser = functions.firestore
@@ -99,11 +125,14 @@ exports.sendReservationNotificationToUser = functions.firestore
       const utc_offset = time.getTimezoneOffset()
       const hourOffset = 3
       var hoursAndMinutes = ""
-      if(time.getHours()<10)
+      if(time.getHours()+hourOffset<10)
         hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()
       else
         hoursAndMinutes += (time.getHours()+hourOffset).toString()
-      hoursAndMinutes += ":" + time.getMinutes().toString()
+      if(time.getMinutes().toString() === "0")
+        hoursAndMinutes += ":" + "00"
+      else
+        hoursAndMinutes += ":" + time.getMinutes().toString()
 
       const months = {
         0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
@@ -111,9 +140,9 @@ exports.sendReservationNotificationToUser = functions.firestore
       if(dataBefore['accepted'] === null && dataAfter['accepted'] === true){
         const payload = {
               notification: {
-                title: 'Rezervare acceptata',
+                title: 'Rezervare acceptată',
                 //body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost acceptata!',
-                body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+hoursAndMinutes + " a fost acceptata!",
+                body: 'Rezervarea dumneavoastră la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+hoursAndMinutes + " a fost acceptată!",
                 clickAction: 'FLUTTER_NOTIFICATION_CLICK'
               }
             }
@@ -122,9 +151,9 @@ exports.sendReservationNotificationToUser = functions.firestore
       else if(dataBefore['accepted'] === null && dataAfter['accepted'] === false){
         const payload = {
           notification: {
-            title: 'Rezervare refuzata',
+            title: 'Rezervare refuzată',
             //body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+time.getHours()+':'+time.getMinutes() +' a fost refuzata!',
-            body: 'Rezervarea dumneavoastra la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+hoursAndMinutes +' a fost refuzata!',
+            body: 'Rezervarea dumneavoastră la ' + placeName +' pentru data '+ time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+hoursAndMinutes +' a fost refuzată!',
             clickAction: 'FLUTTER_NOTIFICATION_CLICK'
           }
         }
@@ -142,7 +171,7 @@ exports.sendReservationNotificationToAdmin = functions.firestore
         const data = docSnapshot.data()
         const guestName = data['guest_name']
         const guestId = data['guest_id']
-        const placeDoc = await docSnapshot.before.ref.parent.parent.get();
+        const placeDoc = await docSnapshot.ref.parent.parent.get();
         const placeName = placeDoc.data()['name'];
         //const reservationTime = data['date_start']
 
@@ -160,13 +189,16 @@ exports.sendReservationNotificationToAdmin = functions.firestore
 
         const time = data['date_start'].toDate()
         const utc_offset = time.getTimezoneOffset() 
-        const hourOffset = 2
+        const hourOffset = 3
         var hoursAndMinutes = ""
-        if(time.getHours()<10)
-          hoursAndMinutes += "0" + (time.getHours()+3).toString()
+        if(time.getHours()+hourOffset<10)
+          hoursAndMinutes += "0" + (time.getHours()+hourOffset).toString()
         else
           hoursAndMinutes += (time.getHours()+hourOffset).toString()
-        hoursAndMinutes += ":" + time.getMinutes().toString()
+        if(time.getMinutes().toString() === "0")
+          hoursAndMinutes += ":" + "00"
+        else
+          hoursAndMinutes += ":" + time.getMinutes().toString()
         const months = {
           0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"
         }
@@ -175,9 +207,9 @@ exports.sendReservationNotificationToAdmin = functions.firestore
         //const hour = Intl.DateTimeFormat('ro',options)
         const payload = {
               notification: {
-                title: 'Rezervare noua!',
+                title: 'Rezervare nouă!',
                 //body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+(time.getHours()+hourOffset)+':'+time.getMinutes(),
-                body: "O noua rezervare a fost facuta la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+ hoursAndMinutes + ' de catre '+ guestId + ' la restaurantul '+ placeName,
+                body: "O nouă rezervare a fost facută la data " + time.getDate() +' '+ months[time.getMonth()]+ ' '+(time.getYear()+1900)+', ora '+ hoursAndMinutes + ' de către '+ guestId + ' la restaurantul '+ placeName,
                 clickAction: 'FLUTTER_NOTIFICATION_CLICK'
               }
             }
@@ -186,10 +218,11 @@ exports.sendReservationNotificationToAdmin = functions.firestore
         const msg = {
             to: adminEmailList,
             from: 'support@winestreet.ro',
-            templateId: 'd-76f324f649164e1ba9969bfe03f54016',
+            templateId: SG_TEMPLATE_ADMIN_NEW_RESERVATION,
             dynamic_template_data: {
               username: guestName,
-              userId: guestId
+              userId: guestId,
+              placeName: placeName
             }
         };
 
@@ -215,6 +248,3 @@ exports.sendReservationNotificationToAdmin = functions.firestore
         return Promise.all([fcm.sendToDevice(registrationTokens,payload), sgMail.send(msg)]);
 
     })
-
-    // d-76f324f649164e1ba9969bfe03f54016
-    // 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
