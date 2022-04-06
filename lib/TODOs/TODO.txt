@@ -65,3 +65,39 @@ Flutter versions:
 -plati+tips pentru mesele scanate in restaurante
 -daca vii in local prin rezervare, chelnerul iti activeaza masa(ca pana acum) din aplicatie dupa care poti comanda
 -daca vii fara rezervare in local, scanezi codul de la masa, dupa care poti comanda
+
+
+- Junction de la branch-ul WineStreet
+- WineStreet este pe flutter2, WineStreet este pe flutter 1.20.4
+- User devine FirebaseUser
+- workaround pentru Object doesn't use [] este sa treci din 'object' in '(object as Map)'
+
+
+App Check Debug Tokens:
+
+android_debug_token : 382B36F7-E72C-4867-9D3D-571B0C4A1742
+
+Evenimente:
+Site de unde sa poti cumpara abonament
+Pagina evenimentul are buton de "obtine bilet" si astepti confirmarea
+La confirmare, primesti bilet electronic care contine cod QR si sa primesti si pe mail
+Rezervare in seara spectacolului + generare cod QR
+Sectiune evenimente si sa existe optiune de sold out
+BAGAT FUNCTIONALITATEA DE PREMIUM
+cand isi cumpara premium trebuie afisare ofertele premium
+loc special pentru ofertele premium care sa te incurajeze si sa ti aminteasca sa cumperi premium
+
+Orase
+de sus schimbi orasul,
+
+Oferte
+de adaugat la cele din MGC faptul ca restaurantul percepe o consumatie minima in loc de descriere
+popup cu faptul ca la oferte ai prag minim de consum
+
+// d-76f324f649164e1ba9969bfe03f54016
+// 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
+
+sendgrid
+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
+twilio
+d7c75fd2586b49dda3959bb9a84f732b

@@ -1,0 +1,2 @@
+Informatii utile:
+- locatia sdk-urilor flutter instalate de fvm este 'C:/Users/Florian/fvm/versions/1.20.4
