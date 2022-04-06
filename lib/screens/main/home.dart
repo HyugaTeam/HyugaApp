@@ -80,7 +80,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
 
     return StreamBuilder<QuerySnapshot<Object?>>(
-      stream: authService.seatingStatus,
+      stream: authService.seatingData,
       builder: (context, ss) {
       if(authService.currentUser!.isAnonymous != true)
         if(!ss.hasData) // Checks if the user is seated or not

@@ -52,27 +52,27 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   void initState(){
     super.initState();
     // var _db = FirebaseFirestore.instance;
-    // var place1 = _db.collection("locals_bucharest").doc("trattoria_monza");
+    // var place1 = _db.collection("locals_bucharest").doc("trattoria_monza_dtaberei");
     // place1.set(
     //   {
-    //     "name": "Trattoria Monza",
+    //     "name": "Trattoria Monza Drumul Taberei",
     //     "description": "",
     //     "ambiance": "sf",
     //     "capacity": 8,
     //     "cost": 1,
-    //     "location": GeoPoint(44.42820390326188, 26.153841057899836),
+    //     "location": GeoPoint(44.4236408236718, 26.02593875940558),
     //     "menu": "",
     //     "partner": true,
     //     "profile": {},
     //     "reservations": true,
     //     "schedule":{
-    //       "monday": "10:00-23:00",
-    //       "tuesday": "10:00-23:00",
-    //       "wednesday": "10:00-23:00",
-    //       "thursday": "10:00-23:00",
-    //       "friday": "10:00-23:00",
-    //       "saturday": "10:00-23:00",
-    //       "sunday": "10:00-23:00"
+    //       "monday": "10:00-00:00",
+    //       "tuesday": "12:00-00:00",
+    //       "wednesday": "10:00-00:00",
+    //       "thursday": "10:00-00:00",
+    //       "friday": "10:00-00:00",
+    //       "saturday": "10:00-00:00",
+    //       "sunday": "10:00-00:00"
     //     },
     //     "deals": {
     //         "monday": [

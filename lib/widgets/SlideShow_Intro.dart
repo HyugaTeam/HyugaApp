@@ -35,7 +35,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.orange[600] : Colors.white24,
+        color: isActive ? Theme.of(context).accentColor : Colors.white24,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -77,14 +77,19 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.3, 0.4, 0.6, 0.85],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    //stops: [0.3, 0.4, 0.6, 0.85],
                     colors: [
-                      Color(0xFF607D8B),
-                      Color(0xFF616F8C),
-                      Color(0xFF69618C),
-                      Color(0xFF78618C),
+                      Color(0xFF995d6f),
+                      //Theme.of(context).accentColor,
+                      Color(0xFFdba7b6),
+                      Color(0xFFf0e4e7),
+                      // Color(0xfcf0f4)
+                      // Color(0xFF607D8B),
+                      // Color(0xFF616F8C),
+                      // Color(0xFF69618C),
+                      // Color(0xFF78618C),
                     ],
                   ),
                 ),
@@ -98,7 +103,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                         child: FlatButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
-                          splashColor: Colors.orange[600],
+                          splashColor: Theme.of(context).accentColor,
                           onPressed: () {
                             g.isNewUser = false;
                             authService.loading.add(false);
@@ -134,15 +139,15 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                   Align(
                                     widthFactor: 10,
                                     child: Text(
-                                      'Gaseste localul perfect!',
+                                      'Caută un local în aplicație',
                                       style: TextStyle(
                                         fontFamily: 'Comfortaa',
                                         fontSize: 25,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800,
                                         shadows: [
-                                          Shadow(
-                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                          // Shadow(
+                                          //     offset: Offset(1.5, 1.5), blurRadius: 0)
                                         ],
                                       ),
                                       textAlign: TextAlign.center,
@@ -151,24 +156,24 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                   SizedBox(
                                     height: 30.0,
                                   ),
-                                  Text(
-                                    'Completeaza cele 5 intrebari scurte:\n+ tipul de local\n+ specificul dorit\n+ numarul de persoane\n+ atmosfera\n+ distanta fata de tine',
-                                    style: TextStyle(
-                                      fontFamily: 'Comfortaa',
-                                      fontSize: 17,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.7,
-                                      shadows: [
-                                        Shadow(offset: Offset(1, 1), blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  // Text(
+                                  //   'Completeaza cele 5 intrebari scurte:\n+ tipul de local\n+ specificul dorit\n+ numarul de persoane\n+ atmosfera\n+ distanta fata de tine',
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'Comfortaa',
+                                  //     fontSize: 17,
+                                  //     color: Colors.white,
+                                  //     fontWeight: FontWeight.w600,
+                                  //     height: 1.7,
+                                  //     shadows: [
+                                  //       Shadow(offset: Offset(1, 1), blurRadius: 2.0)
+                                  //     ],
+                                  //   ),
+                                  //   textAlign: TextAlign.center,
+                                  // ),
                                   SizedBox(height: 15,),
                                   SizedBox(
                                     width: 150,
-                                    height: 270,
+                                    height: 330,
                                     child: ClipRect(
                                       clipper: MyClipper(),
                                       child: _firstSlideGIF
@@ -187,50 +192,50 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                   Align(
                                     widthFactor: 10,
                                     child: Text(
-                                      'Descopera cele mai mari reduceri!',
+                                      'Fă o rezervare',
                                       style: TextStyle(
                                         fontFamily: 'Comfortaa',
                                         fontSize: 25,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w800,
                                         shadows: [
-                                          Shadow(
-                                              offset: Offset(1, 1), blurRadius: 2.0)
+                                          // Shadow(
+                                          //     offset: Offset(1, 1), blurRadius: 2.0)
                                         ],
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  SizedBox(height: 10.0),
-                                  Text(
-                                    "Toate reducerile si ofertele speciale sunt la un click distanta.",
-                                    style: TextStyle(
-                                      fontFamily: 'Comfortaa',
-                                      fontSize: 19,
-                                      color: Colors.orange[600],
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.5,
-                                      shadows: [
-                                        Shadow(offset: Offset(2, 2), blurRadius: 5.0)
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 20),
-                                  Text(
-                                    "Fiecare cerculet portocaliu indica reducerea de astazi din local.\nExploreaza lista pentru a gasi OFERTA care ti se potriveste.",
-                                    style: TextStyle(
-                                      fontFamily: 'Comfortaa',
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.5,
-                                      shadows: [
-                                        Shadow(offset: Offset(1, 1), blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  SizedBox(height: 40.0),
+                                  // Text(
+                                  //   "Toate reducerile si ofertele speciale sunt la un click distanta.",
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'Comfortaa',
+                                  //     fontSize: 19,
+                                  //     color: Colors.orange[600],
+                                  //     fontWeight: FontWeight.w600,
+                                  //     height: 1.5,
+                                  //     shadows: [
+                                  //       Shadow(offset: Offset(2, 2), blurRadius: 5.0)
+                                  //     ],
+                                  //   ),
+                                  //   textAlign: TextAlign.center,
+                                  // ),
+                                  // SizedBox(height: 20),
+                                  // Text(
+                                  //   "Fiecare cerculet portocaliu indica reducerea de astazi din local.\nExploreaza lista pentru a gasi OFERTA care ti se potriveste.",
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'Comfortaa',
+                                  //     fontSize: 16,
+                                  //     color: Colors.white,
+                                  //     fontWeight: FontWeight.w600,
+                                  //     height: 1.5,
+                                  //     shadows: [
+                                  //       Shadow(offset: Offset(1, 1), blurRadius: 2.0)
+                                  //     ],
+                                  //   ),
+                                  //   textAlign: TextAlign.center,
+                                  // ),
                                   SizedBox(height: 15,),
                                   SizedBox(
                                     width: 150,
@@ -343,157 +348,157 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                               ),
                             ),
                             //---------------------------------END OF SLIDE THREE--------------------------------------
-                            Padding( /// Fourth Slide
-                              padding: EdgeInsets.all(8.0),
-                              child: ListView(
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(height: 15.0),
-                                  Align(
-                                    widthFactor: 10,
-                                    child: RichText(
-                                      textAlign: TextAlign.center,
-                                      text: TextSpan(
-                                        children: [ 
-                                          TextSpan(
-                                            text: "Cum primesti ",
-                                            style: TextStyle(
-                                              fontFamily: 'Comfortaa',
-                                              fontSize: 25,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800,
-                                              shadows: [
-                                                Shadow(
-                                                    offset: Offset(1, 1), blurRadius: 2.0)
-                                              ],
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: "reducerea",
-                                            style: TextStyle(
-                                              fontFamily: 'Comfortaa',
-                                              fontSize: 25,
-                                              color: Colors.orange[600],
-                                              fontWeight: FontWeight.w800,
-                                              shadows: [
-                                                Shadow(
-                                                    offset: Offset(1, 1), blurRadius: 2.0)
-                                              ],
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: "?\nVarianta 2:",
-                                            style: TextStyle(
-                                              fontFamily: 'Comfortaa',
-                                              fontSize: 25,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800,
-                                              shadows: [
-                                                Shadow(
-                                                    offset: Offset(1, 1), blurRadius: 2.0)
-                                              ],
-                                            ),
-                                          ),
-                                        ]
-                                      )
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 150,
-                                    height: 270,
-                                    child: ClipRect(
-                                      clipper: MyClipper(),
-                                      child: _fourthSlideGIF
-                                    ),
-                                  ),
-                                  SizedBox(height: 15.0),
-                                  Text(
-                                    'Fa o rezervare intr-unul din localurile partenere',
-                                    style: TextStyle(
-                                      fontFamily: 'Comfortaa',
-                                      fontSize: 20,
-                                      color: Colors.orange[600],
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.4,
-                                      shadows: [
-                                        Shadow(offset: Offset(2, 2), blurRadius: 3.0)
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 17,),
-                                  Text(
-                                    'Planifici o iesire in oras? Fa o rezervare la unul dintre localuri si beneficiaza automat de reducerile si ofertele din acel interval orar.',
-                                    style: TextStyle(
-                                      fontFamily: 'Comfortaa',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      shadows: [
-                                        Shadow(offset: Offset(1, 1), blurRadius: 2.0)
-                                      ],
-                                      height: 1.5,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            //---------------------------------END OF SLIDE FOUR--------------------------------------
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: ListView(
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(height: 30.0),
-                                  Align(
-                                    widthFactor: 10,
-                                    child: Text(
-                                      'Cauta un local!',
-                                      style: TextStyle(
-                                        fontFamily: 'Comfortaa',
-                                        fontSize: 25,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                        shadows: [
-                                          Shadow(
-                                              offset: Offset(1, 1), blurRadius: 2.0)
-                                        ],
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.0,
-                                  ), // de ce nu face asta
-                                  SizedBox(
-                                    width: 150,
-                                    height: 270,
-                                    child: ClipRect(
-                                      clipper: MyClipper(),
-                                      child: _fifthSlideGIF
-                                    ),
-                                  ),
-                                  SizedBox(height: 15.0),
-                                  Text(
-                                    //'Salveaza localurile preferate pentru a le putea accesa oricand la sectiunea "FAVORITE". Vezi unde este locatia exact prin Google Maps si comanda un Uber! Vizualizeaza menu-ul complet prin aplicatie!\nSi multe altele!',
-                                    "Cauta localul tau preferat in aplicatia Hyuga si profita de reducerile acestuia. Fa o rezervare, vezi locatia exacta, studiaza meniul sau comanda un Uber!",
-                                    style: TextStyle(
-                                      fontFamily: 'Comfortaa',
-                                      fontSize: 17,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.8,
-                                      shadows: [
-                                        Shadow(offset: Offset(1, 1), blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                            // Padding( /// Fourth Slide
+                            //   padding: EdgeInsets.all(8.0),
+                            //   child: ListView(
+                            //     //crossAxisAlignment: CrossAxisAlignment.center,
+                            //     children: <Widget>[
+                            //       SizedBox(height: 15.0),
+                            //       Align(
+                            //         widthFactor: 10,
+                            //         child: RichText(
+                            //           textAlign: TextAlign.center,
+                            //           text: TextSpan(
+                            //             children: [ 
+                            //               TextSpan(
+                            //                 text: "Cum primesti ",
+                            //                 style: TextStyle(
+                            //                   fontFamily: 'Comfortaa',
+                            //                   fontSize: 25,
+                            //                   color: Colors.white,
+                            //                   fontWeight: FontWeight.w800,
+                            //                   shadows: [
+                            //                     Shadow(
+                            //                         offset: Offset(1, 1), blurRadius: 2.0)
+                            //                   ],
+                            //                 ),
+                            //               ),
+                            //               TextSpan(
+                            //                 text: "reducerea",
+                            //                 style: TextStyle(
+                            //                   fontFamily: 'Comfortaa',
+                            //                   fontSize: 25,
+                            //                   color: Colors.orange[600],
+                            //                   fontWeight: FontWeight.w800,
+                            //                   shadows: [
+                            //                     Shadow(
+                            //                         offset: Offset(1, 1), blurRadius: 2.0)
+                            //                   ],
+                            //                 ),
+                            //               ),
+                            //               TextSpan(
+                            //                 text: "?\nVarianta 2:",
+                            //                 style: TextStyle(
+                            //                   fontFamily: 'Comfortaa',
+                            //                   fontSize: 25,
+                            //                   color: Colors.white,
+                            //                   fontWeight: FontWeight.w800,
+                            //                   shadows: [
+                            //                     Shadow(
+                            //                         offset: Offset(1, 1), blurRadius: 2.0)
+                            //                   ],
+                            //                 ),
+                            //               ),
+                            //             ]
+                            //           )
+                            //         ),
+                            //       ),
+                            //       SizedBox(
+                            //         width: 150,
+                            //         height: 270,
+                            //         child: ClipRect(
+                            //           clipper: MyClipper(),
+                            //           child: _fourthSlideGIF
+                            //         ),
+                            //       ),
+                            //       SizedBox(height: 15.0),
+                            //       Text(
+                            //         'Fa o rezervare intr-unul din localurile partenere',
+                            //         style: TextStyle(
+                            //           fontFamily: 'Comfortaa',
+                            //           fontSize: 20,
+                            //           color: Colors.orange[600],
+                            //           fontWeight: FontWeight.w600,
+                            //           height: 1.4,
+                            //           shadows: [
+                            //             Shadow(offset: Offset(2, 2), blurRadius: 3.0)
+                            //           ],
+                            //         ),
+                            //         textAlign: TextAlign.center,
+                            //       ),
+                            //       SizedBox(height: 17,),
+                            //       Text(
+                            //         'Planifici o iesire in oras? Fa o rezervare la unul dintre localuri si beneficiaza automat de reducerile si ofertele din acel interval orar.',
+                            //         style: TextStyle(
+                            //           fontFamily: 'Comfortaa',
+                            //           fontSize: 18,
+                            //           color: Colors.white,
+                            //           fontWeight: FontWeight.w600,
+                            //           shadows: [
+                            //             Shadow(offset: Offset(1, 1), blurRadius: 2.0)
+                            //           ],
+                            //           height: 1.5,
+                            //         ),
+                            //         textAlign: TextAlign.center,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            // //---------------------------------END OF SLIDE FOUR--------------------------------------
+                            // Padding(
+                            //   padding: EdgeInsets.all(8.0),
+                            //   child: ListView(
+                            //     //crossAxisAlignment: CrossAxisAlignment.center,
+                            //     children: <Widget>[
+                            //       SizedBox(height: 30.0),
+                            //       Align(
+                            //         widthFactor: 10,
+                            //         child: Text(
+                            //           'Cauta un local!',
+                            //           style: TextStyle(
+                            //             fontFamily: 'Comfortaa',
+                            //             fontSize: 25,
+                            //             color: Colors.white,
+                            //             fontWeight: FontWeight.w800,
+                            //             shadows: [
+                            //               Shadow(
+                            //                   offset: Offset(1, 1), blurRadius: 2.0)
+                            //             ],
+                            //           ),
+                            //           textAlign: TextAlign.center,
+                            //         ),
+                            //       ),
+                            //       SizedBox(
+                            //         height: 20.0,
+                            //       ), // de ce nu face asta
+                            //       SizedBox(
+                            //         width: 150,
+                            //         height: 270,
+                            //         child: ClipRect(
+                            //           clipper: MyClipper(),
+                            //           child: _fifthSlideGIF
+                            //         ),
+                            //       ),
+                            //       SizedBox(height: 15.0),
+                            //       Text(
+                            //         //'Salveaza localurile preferate pentru a le putea accesa oricand la sectiunea "FAVORITE". Vezi unde este locatia exact prin Google Maps si comanda un Uber! Vizualizeaza menu-ul complet prin aplicatie!\nSi multe altele!',
+                            //         "Cauta localul tau preferat in aplicatia Hyuga si profita de reducerile acestuia. Fa o rezervare, vezi locatia exacta, studiaza meniul sau comanda un Uber!",
+                            //         style: TextStyle(
+                            //           fontFamily: 'Comfortaa',
+                            //           fontSize: 17,
+                            //           color: Colors.white,
+                            //           fontWeight: FontWeight.w600,
+                            //           height: 1.8,
+                            //           shadows: [
+                            //             Shadow(offset: Offset(1, 1), blurRadius: 2.0)
+                            //           ],
+                            //         ),
+                            //         textAlign: TextAlign.center,
+                            //       ),
 
-                                ],
-                              ),
-                            ),
+                            //     ],
+                            //   ),
+                            // ),
                             //---------------------------------END OF SLIDE FIVE--------------------------------------
                           ],
                         ),
@@ -510,7 +515,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                 child: FlatButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
-                                  splashColor: Colors.orange[600],
+                                  highlightColor: Theme.of(context).accentColor,
+                                  splashColor: Theme.of(context).accentColor,
                                   onPressed: () {
                                     _pageController.nextPage(
                                         duration: Duration(milliseconds: 500),
@@ -521,9 +527,9 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       Text(
-                                        'Urmatorul',
+                                        'Următorul',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Theme.of(context).primaryColor,
                                           fontSize: 17.5,
                                           fontFamily: 'Comfortaa',
                                           fontWeight: FontWeight.w600,
@@ -581,7 +587,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
 
   void _fetchGIFs(){
     _firstSlideGIF = Image.network(
-      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Fhelp%2Ffirst-gif.gif?alt=media&token=6f5c5aab-f43a-4df5-a633-dfda4dd374d4"
       ,loadingBuilder: (context, child, loadingProgress){
         if(loadingProgress == null)
           return child;
@@ -592,8 +598,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
         );
       },
     );
-_secondSlideGIF = Image.network(
-      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Ftutorial%2Fro%2Ffirst-slide.gif?alt=media&token=c96c3201-a34f-4783-851c-e232a2ad72ed"
+    _secondSlideGIF = Image.network(
+      "https://firebasestorage.googleapis.com/v0/b/hyuga-app.appspot.com/o/gifs%2Fhelp%2Fsecond-gif.gif?alt=media&token=48a434ef-05b3-47dd-b380-becf5c2a3227"
       ,loadingBuilder: (context, child, loadingProgress){
         if(loadingProgress == null)
           return child;
