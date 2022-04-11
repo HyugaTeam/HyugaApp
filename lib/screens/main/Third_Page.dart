@@ -594,7 +594,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               Container( /// The list of deals & discounts
                                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                                 width: double.infinity,
-                                height: 120,
+                                height: 145,
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
@@ -695,7 +695,12 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               Container(
                                                 padding: EdgeInsets.all(10),
                                                 child: Text(
-                                                  widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['interval'],
+                                                  "consumație minimă:\n" 
+                                                  +
+                                                  (widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index].containsKey('threshold')
+                                                  ? widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['threshold']
+                                                  : "*click*"),
+                                                  //widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['interval'],
                                                   style: TextStyle(
                                                     fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
                                                   )
@@ -703,8 +708,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                               )
                                             ],
                                           ),
-                                          height: 100,
-                                          width: 100,
+                                          height: 125,
+                                          width: 120,
                                         ),
                                         onTap: f,
                                       ),
