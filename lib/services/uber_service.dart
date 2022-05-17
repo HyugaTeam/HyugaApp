@@ -8,7 +8,7 @@ class UberService {
       "client_secret": "QHpMDhURp4wOe3A9fP5pjiyNeRayQJykd6GlXdu-",
       "client_id": "LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84",
       "grant_type": "authorization_code",
-      "redirect_uri": "https://www.hyuga.ro/",
+      "redirect_uri": "https://www.winestreet.ro/",
       "code": "JA.VUNmGAAAAAAAEgASAAAABwAIAAwAAAAAAAAAEgAAAAAAAAH4AAAAFAAAAAAADgAQAAQAAAAIAAwAAAAOAAAAzAAAABwAAAAEAAAAEAAAAMT5PXDDut-7w_xwFyCUGG2nAAAAYNvXzElo-C0OSsravy2aiF-TSnWllvBlQziVeudZxTmjCSRb7iws6TvEZXHXs_q0lCNIGPS7QasEhMWpfV4ZGaIClqf5RkXRRlDLjvmYoSd8K4CumFhOmiBkxtjYwBfgDYSkvi7V1Ka1vTuESByYlZrCk6vKvB8nkPWM4PDt-9L4RsOjvGP8Rd4piBtWTTGL2_7YzfoANobF53SGHpGi2RIcjA7-C0MADAAAAI_xXb_XwnItqlF44iQAAABiMGQ4NTgwMy0zOGEwLTQyYjMtODA2ZS03YTRjZjhlMTk2ZWU"
     });
     print(req.body);
