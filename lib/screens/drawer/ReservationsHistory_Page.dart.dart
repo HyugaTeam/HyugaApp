@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hyuga_app/models/deal.dart';
+import 'package:hyuga_app/screens/main/home/DealItem_Page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
@@ -10,8 +12,183 @@ import 'package:intl/intl.dart';
 class ReservationsHistoryPage extends StatelessWidget {
 
   final Map<String,String> weekdaysTranslate = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
+  final int currentWeekday = DateTime.now().toLocal().weekday;
   int itemCount = 0;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  Color getDealColor(Deal deal){
+    if(deal.title!.toLowerCase().contains("alb"))
+      return Color(0xFFCFBA70);
+      //return Theme.of(context).highlightColor;
+    else if(deal.title!.toLowerCase().contains("roșu") || deal.title!.toLowerCase().contains("rosu"))
+      return Color(0xFF600F2B);
+      //return Theme.of(context).primaryColor;
+    else return Color(0xFFb78a97);
+    //return Theme.of(context).accentColor;
+  }
+
+  Column getDeals(reservation){
+    //print(place['deals'][0]);
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          alignment: Alignment(-1,0),
+          child: Text(
+            "Oferte",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold
+            ),
+          )
+        ),
+        Container( /// The list of deals & discounts
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          width: double.infinity,
+          height: 145,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: reservation['deals'] != null ?  
+                      (reservation['deals'] != null? 
+                        reservation['deals'].length : 0): 
+                      0,
+            separatorBuilder: (BuildContext context, int index) => SizedBox(width: 20,),
+            itemBuilder: (context,index) { 
+              Deal deal = Deal(
+                title: reservation['deals'][index]['title'], 
+                content: reservation['deals'][index]['content'], 
+                interval: reservation['deals'][index]['interval']
+              );
+              return Container(
+                margin: EdgeInsets.all(7),
+                //padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0,
+                      blurRadius: 0,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ]
+                ),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                      child: Container(
+                        padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                        height: 50,
+                        width: double.infinity,
+                        color: getDealColor(deal),
+                        //color: Theme.of(context).accentColor,
+                        child: Text(
+                          reservation['deals'][index]['title'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "consumație minimă:\n" 
+                        +
+                        (reservation['deals'][index].containsKey('threshold')
+                        ? reservation['deals'][index]['threshold']
+                        : "*click*"),
+                        //widget.local!.deals![weekdays.keys.toList()[currentWeekday]!.toLowerCase()][index]['interval'],
+                        style: TextStyle(
+                          fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+                        )
+                      )
+                    )
+                  ],
+                ),
+                height: 125,
+                width: 120,
+              );
+              // return OpenContainer(  
+              //   closedColor: Colors.transparent,
+              //   closedElevation: 0,
+              //   openElevation: 0,
+              //   closedShape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.zero
+              //   ),
+              //   openBuilder: (context, f) => 
+              //     DealItemPage(
+              //     place:  queryingService.docSnapToLocal(reservation),
+              //     deal: deal,
+              //     dealDayOfTheWeek: currentWeekday,
+              //   ),
+              //   closedBuilder: (context, f) => GestureDetector(
+              //     child: Container(
+              //       margin: EdgeInsets.all(7),
+              //       //padding: EdgeInsets.all(8),
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(20),
+              //         color: Colors.white,
+              //         boxShadow: [
+              //           BoxShadow(
+              //             color: Colors.grey.withOpacity(0.5),
+              //             spreadRadius: 0,
+              //             blurRadius: 0,
+              //             offset: Offset(0, 0), // changes position of shadow
+              //           ),
+              //         ]
+              //       ),
+              //       child: Column(
+              //         children: [
+              //           ClipRRect(
+              //             borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+              //             child: Container(
+              //               padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+              //               height: 50,
+              //               width: double.infinity,
+              //               color: getDealColor(deal),
+              //               //color: Theme.of(context).accentColor,
+              //               child: Text(
+              //                 reservation['deals'][index]['title'],
+              //                 style: TextStyle(
+              //                   color: Colors.white,
+              //                   fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //           Container(
+              //             padding: EdgeInsets.all(10),
+              //             child: Text(
+              //               "consumație minimă:\n" 
+              //               +
+              //               (reservation['deals'][index].containsKey('threshold')
+              //               ? reservation['deals'][index]['threshold']
+              //               : "*click*"),
+              //               //widget.local!.deals![weekdays.keys.toList()[currentWeekday]!.toLowerCase()][index]['interval'],
+              //               style: TextStyle(
+              //                 fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
+              //               )
+              //             )
+              //           )
+              //         ],
+              //       ),
+              //       height: 125,
+              //       width: 120,
+              //     ),
+              //     onTap: f,
+              //   ),
+              // );
+            }
+          ),
+        ),
+      ],
+    );
+  }
 
 
   Future<Map<String,dynamic>?> getUpcomingReservations() async{
@@ -254,9 +431,9 @@ class ReservationsHistoryPage extends StatelessWidget {
                                     topRight: Radius.circular(30)
                                   )
                                 ),
-                                height: MediaQuery.of(context).size.height*0.75,
+                                //height: MediaQuery.of(context).size.height*0.75,
                                 child: Scaffold(
-                                  body: Column(
+                                  body: ListView(
                                     children: [
                                       GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
                                         onTap: () async {
@@ -304,9 +481,20 @@ class ReservationsHistoryPage extends StatelessWidget {
                                               left: 25,
                                               bottom: 25,
                                               width: 300,
-                                              child: Text(
-                                                reservationsHistory.data![index]['place_name'], 
-                                                style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Rezervare la:",
+                                                    style: TextStyle(
+                                                      color: Colors.orange[600]
+                                                    )
+                                                  ),
+                                                  Text(
+                                                    reservationsHistory.data![index]['place_name'], 
+                                                    style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ],
                                               )
                                             )
                                           ],
@@ -328,19 +516,20 @@ class ReservationsHistoryPage extends StatelessWidget {
                                       )
                                       : Container(),
                                       SizedBox(height: 20,),
-                                      Container(
-                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
-                                            children:[
-                                              TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                              TextSpan(text: reservationsHistory.data![index]['discount'].toString() + "%")
+                                      // Container(
+                                      //   padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
+                                      //   child: RichText(
+                                      //     text: TextSpan(
+                                      //       style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
+                                      //       children:[
+                                      //         TextSpan(text: "Discount: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                      //         TextSpan(text: reservationsHistory.data![index]['discount'].toString() + "%")
                                               
-                                            ]
-                                          ), 
-                                        ),
-                                      ),
+                                      //       ]
+                                      //     ), 
+                                      //   ),
+                                      // ),
+                                      getDeals(reservationsHistory.data![index]),
                                       SizedBox(height: 20,),
                                       Container(
                                         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
@@ -348,7 +537,7 @@ class ReservationsHistoryPage extends StatelessWidget {
                                           text: TextSpan(
                                             style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
                                             children:[
-                                              TextSpan(text: "Numar persoane: ", style: TextStyle(fontWeight: FontWeight.bold)),
+                                              TextSpan(text: "Număr persoane: ", style: TextStyle(fontWeight: FontWeight.bold)),
                                               TextSpan(
                                                 text: reservationsHistory.data![index]['number_of_guests'] != null 
                                                 ? reservationsHistory.data![index]['number_of_guests'].toString()
