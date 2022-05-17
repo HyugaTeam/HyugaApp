@@ -11,7 +11,7 @@ description: Hyuga App - Find your ideal hangout location.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+12
+version: 1.0.0+16
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -81,6 +81,9 @@ dependencies:
   # flutter_facebook_auth: ^1.0.2
   flutter_facebook_auth:
   in_app_purchase: 
+  adapty_flutter:
+  #firebase_app_check:
+  fake_cloud_firestore:
 
 
 
@@ -92,6 +95,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:           # new
+    sdk: flutter              # new
+  test: ^1.14.4               # new
 
 
 # For information on the generic Dart part of this file, see the
@@ -140,6 +146,9 @@ flutter:
     - family: Comfortaa
       fonts:
         - asset: fonts/Comfortaa-Regular.ttf
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
