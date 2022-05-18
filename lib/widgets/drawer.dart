@@ -4,9 +4,11 @@ import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/screens/drawer/ScanPlaceCode_Page.dart';
 import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/drawer/ask_for_help_page.dart';
+import 'package:hyuga_app/screens/drawer/events_page.dart';
 import 'package:hyuga_app/screens/drawer/subscribe_payment_page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
+import 'package:provider/provider.dart';
 
 class ProfileDrawer extends StatelessWidget {
   String? username = "" ;
@@ -97,6 +99,19 @@ class ProfileDrawer extends StatelessWidget {
                         //     : Container();
                         //   }
                         // ),
+                        StreamBuilder<bool>(
+                          stream: authService.loading.stream,
+                          builder: (context, snapshot) {
+                          return authService.currentUser!.isManager == null 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.calendar, color: Theme.of(context).accentColor, size: 20), 
+                                title: Text('Evenimente'), 
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return EventsPage(); }));
+                                }
+                            )
+                            : Container();
+                          }
+                        ),
                         StreamBuilder<bool>(
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
