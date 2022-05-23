@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/models/deal.dart';
 import 'package:hyuga_app/models/event.dart';
 import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/screens/drawer/events_page/event_page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +29,8 @@ class _EventsPageState extends State<EventsPage> {
       content: data['content'],
       dateCreated: data['date_created'].toDate(),
       dateStart: data['date_start'].toDate(),
-      placeRef: data['place_ref']
+      placeRef: data['place_ref'],
+      photoUrl: data['photo_url']
     );
   }
 
@@ -95,94 +98,7 @@ class _EventsPageState extends State<EventsPage> {
                             )
                           ),
                           //height: MediaQuery.of(context).size.height*0.75,
-                          child: Scaffold(
-                            body: ListView(
-                              children: [
-                                GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
-                                  onTap: () async {
-                                    await events[index].placeRef
-                                    .get().then((value) => 
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/third',
-                                      /// The first argument stands for the actual 'Local' information
-                                      /// The second argument stands for the 'Route' from which the third page came from(for Analytics purpose)
-                                      arguments: [queryingService.docSnapToLocal(value),false] 
-                                    ));
-                                  },
-                                  child: Stack(
-                                    children: [
-                                      Container( // The place's profile image
-                                        color: Colors.grey[100],
-                                        width: double.infinity,
-                                        height: 300,
-                                        constraints: BoxConstraints(
-                                          maxHeight: 300
-                                        ),
-                                        child: FutureBuilder<Image>(
-                                          future: placeImage,
-                                          builder: (context,image){
-                                            if(!image.hasData)
-                                              return CircularProgressIndicator();
-                                            else
-                                              return image.data!;
-                                          }
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 300,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [Colors.transparent,Colors.black87]
-                                          )
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 25,
-                                        bottom: 25,
-                                        width: 300,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Eveniment la:",
-                                              style: TextStyle(
-                                                color: Colors.orange[600]
-                                              )
-                                            ),
-                                            Text(
-                                              events[index].title, 
-                                              style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        )
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 20,),
-                                deals(place),
-                                SizedBox(height: 20,),
-                                Container(
-                                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.035),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(fontSize: 17, color: Colors.black, fontFamily: 'Comfortaa'),
-                                      children:[
-                                        TextSpan(text: "Data: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                                        TextSpan(
-                                          text: 
-                                          DateTime.fromMillisecondsSinceEpoch(events[index].dateStart.millisecondsSinceEpoch).toString()
-                                        )
-                                      ]
-                                    ), 
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          child: EventPage(event: event, place: place,)
                         )
                       );
                     },
@@ -207,17 +123,26 @@ class _EventsPageState extends State<EventsPage> {
                         child: Stack(
                           children: [
                             Container( // The background image of the List Tile
-                              height: 225,
-                              width: 400,
+                              //height: 225,
+                              width: 600,
+                              alignment: Alignment(0,0),
                               child: 
                               place != null
-                              ? FutureBuilder<Image>(
-                                future: queryingService.getImage(place.id),
-                                builder: (context, image) {
-                                  if(!image.hasData)
-                                    return Container(); 
-                                  else return image.data!;
-                                }
+                              ? Transform.scale(
+                                scale: 1.5,
+                                child: Image.network(
+                                  event.photoUrl,
+                                  loadingBuilder: (context, child, loadingProgress){
+                                    if(loadingProgress == null)
+                                      return child;
+                                    return CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                          : null,
+                                    );
+                                  },
+                                  fit: BoxFit.fill,
+                                ),
                               )
                               : Container(),
                             ),
@@ -238,7 +163,19 @@ class _EventsPageState extends State<EventsPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   verticalDirection: VerticalDirection.up,
-                                  children: [ 
+                                  children: [
+                                    /// The 'time' where the events takes place 
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          WidgetSpan(child: FaIcon(FontAwesomeIcons.clock, color: Colors.white, size: 16,)),
+                                          WidgetSpan(child: SizedBox(width: 7)),
+                                          TextSpan(text: dateToHoursAndMinutes(event.dateStart), style: TextStyle(color: Colors.white))
+                                        ]
+                                      )
+                                    ),
+                                    SizedBox(height: 10,),
+                                    /// The 'place' where the events takes place 
                                     Text.rich(
                                       TextSpan(
                                         children: [
@@ -249,6 +186,7 @@ class _EventsPageState extends State<EventsPage> {
                                       )
                                     ),
                                     SizedBox(height: 10,),
+                                    /// The 'title' of the event
                                     Container(
                                       width: MediaQuery.of(context).size.width*0.9,
                                       child: Row(
@@ -333,182 +271,5 @@ class _EventsPageState extends State<EventsPage> {
         },
       ),
     );
-  }
-  
-  Column deals(Local place){
-    /// Current weekday index
-    int currentWeekday = DateTime.now().toLocal().weekday;
-    /// Deals of the current weekday
-    var deals = place.deals![weekdaysTranslate.keys.toList()[currentWeekday].toLowerCase()];
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          alignment: Alignment(-1,0),
-          child: Text(
-            "Oferte",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-            ),
-          )
-        ),
-        Container( /// The list of deals & discounts
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          width: double.infinity,
-          height: 145,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: place.deals != null ?  
-                      (place.deals != null? 
-                        place.deals!.length : 0): 
-                      0,
-            separatorBuilder: (BuildContext context, int index) => SizedBox(width: 20,),
-            itemBuilder: (context,index) { 
-              Deal deal = Deal(
-                title: deals[index]['title'], 
-                content: deals['content'], 
-                interval: deals['interval']
-              );
-              return Container(
-                margin: EdgeInsets.all(7),
-                //padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 0,
-                      offset: Offset(0, 0), // changes position of shadow
-                    ),
-                  ]
-                ),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                      child: Container(
-                        padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-                        height: 50,
-                        width: double.infinity,
-                        color: dealColor(deal),
-                        //color: Theme.of(context).accentColor,
-                        child: Text(
-                          place.deals![index]['title'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        "consumație minimă:\n" 
-                        +
-                        (deals.containsKey('threshold')
-                        ? deals['threshold']
-                        : "*click*"),
-                        //widget.local!.deals![weekdays.keys.toList()[currentWeekday]!.toLowerCase()][index]['interval'],
-                        style: TextStyle(
-                          fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
-                        )
-                      )
-                    )
-                  ],
-                ),
-                height: 125,
-                width: 120,
-              );
-              // return OpenContainer(  
-              //   closedColor: Colors.transparent,
-              //   closedElevation: 0,
-              //   openElevation: 0,
-              //   closedShape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.zero
-              //   ),
-              //   openBuilder: (context, f) => 
-              //     DealItemPage(
-              //     place:  queryingService.docSnapToLocal(reservation),
-              //     deal: deal,
-              //     dealDayOfTheWeek: currentWeekday,
-              //   ),
-              //   closedBuilder: (context, f) => GestureDetector(
-              //     child: Container(
-              //       margin: EdgeInsets.all(7),
-              //       //padding: EdgeInsets.all(8),
-              //       decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.circular(20),
-              //         color: Colors.white,
-              //         boxShadow: [
-              //           BoxShadow(
-              //             color: Colors.grey.withOpacity(0.5),
-              //             spreadRadius: 0,
-              //             blurRadius: 0,
-              //             offset: Offset(0, 0), // changes position of shadow
-              //           ),
-              //         ]
-              //       ),
-              //       child: Column(
-              //         children: [
-              //           ClipRRect(
-              //             borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              //             child: Container(
-              //               padding: EdgeInsets.only(top: 10, right: 10, left: 10),
-              //               height: 50,
-              //               width: double.infinity,
-              //               color: getDealColor(deal),
-              //               //color: Theme.of(context).accentColor,
-              //               child: Text(
-              //                 reservation.deals[index]['title'],
-              //                 style: TextStyle(
-              //                   color: Colors.white,
-              //                   fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //           Container(
-              //             padding: EdgeInsets.all(10),
-              //             child: Text(
-              //               "consumație minimă:\n" 
-              //               +
-              //               (reservation.deals[index].containsKey('threshold')
-              //               ? reservation.deals[index]['threshold']
-              //               : "*click*"),
-              //               //widget.local!.deals![weekdays.keys.toList()[currentWeekday]!.toLowerCase()][index]['interval'],
-              //               style: TextStyle(
-              //                 fontSize: 14*(1/MediaQuery.of(context).textScaleFactor)
-              //               )
-              //             )
-              //           )
-              //         ],
-              //       ),
-              //       height: 125,
-              //       width: 120,
-              //     ),
-              //     onTap: f,
-              //   ),
-              // );
-            }
-          ),
-        ),
-      ],
-    );
-  }
-
-  Color dealColor(Deal deal){
-    if(deal.title!.toLowerCase().contains("alb"))
-      return Color(0xFFCFBA70);
-      //return Theme.of(context).highlightColor;
-    else if(deal.title!.toLowerCase().contains("roșu") || deal.title!.toLowerCase().contains("rosu"))
-      return Color(0xFF600F2B);
-      //return Theme.of(context).primaryColor;
-    else return Color(0xFFb78a97);
-    //return Theme.of(context).accentColor;
   }
 }

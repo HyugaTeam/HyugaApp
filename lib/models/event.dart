@@ -6,12 +6,14 @@ class Event{
   DateTime dateCreated;
   DateTime dateStart;
   DocumentReference placeRef;
+  String photoUrl;
 
   Event({
     required this.content,
     required this.title,
     required this.dateCreated,
     required this.dateStart,
-    required this.placeRef
+    required this.placeRef,
+    required this.photoUrl
   });
 }

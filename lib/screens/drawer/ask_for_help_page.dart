@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/screens/drawer/ask_for_help/another_problem_page.dart';
-import 'package:hyuga_app/screens/drawer/ask_for_help/help_with_deal_page.dart';
+import 'package:hyuga_app/screens/drawer/ask_for_help_page/another_problem_page.dart';
+import 'package:hyuga_app/screens/drawer/ask_for_help_page/help_with_deal_page.dart';
 
 class AskForHelpPage extends StatefulWidget {
   @override

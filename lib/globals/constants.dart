@@ -1,1 +1,5 @@
 const months = { 0 : "Ianuarie", 1: "Februarie", 2: "Martie", 3: "Aprilie", 4:"Mai", 5:"Iunie", 6:"Iulie", 7:"August", 8:"Septembrie", 9:"Octombrie", 10:"Noiembrie", 11:"Decembrie"};
+// String translateWeekday(String weekday){ var weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"}; return weekdays[weekday]!.toLowerCase();}
+const Map<String,String> weekdaysTranslate = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
+String translateWeekday(String weekday){ var weekdays = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"}; return weekdays[weekday]!.toLowerCase();}
+String dateToHoursAndMinutes(DateTime date) => date.hour.toString() + ":" + (date.minute == 0 ? "00" : date.minute.toString());
