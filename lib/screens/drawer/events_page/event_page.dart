@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 class EventPage extends StatelessWidget {
 
   final Event event;
-  final Local place;
+  final Place place;
 
   EventPage({required this.event, required this.place});
 
@@ -31,7 +31,8 @@ class EventPage extends StatelessWidget {
                 /// The first argument stands for the actual 'Local' information
                 /// The second argument stands for the 'Route' from which the third page came from(for Analytics purpose)
                 arguments: [queryingService.docSnapToLocal(value),false] 
-              ));
+              )
+              );
             },
             child: Stack(
               children: [
@@ -137,7 +138,7 @@ class EventPage extends StatelessWidget {
       ),
     );
   }
-  Column deals(Local place){
+  Column deals(Place place){
     /// Current weekday index
     int currentWeekday = DateTime.now().toLocal().weekday;
     /// Deals of the current weekday
@@ -317,7 +318,7 @@ class EventPage extends StatelessWidget {
   FloatingActionButton _buildFloatingActionButton(BuildContext context) => FloatingActionButton.extended(
     elevation: 10,
     shape: ContinuousRectangleBorder(),
-    backgroundColor: Theme.of(context).accentColor,
+    backgroundColor: Theme.of(context).primaryColor,
     onPressed: () => _openReservationDialog(context),
     label: Container(
       width: MediaQuery.of(context).size.width,

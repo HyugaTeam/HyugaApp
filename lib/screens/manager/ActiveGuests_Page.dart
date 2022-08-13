@@ -180,8 +180,8 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
                           ),
                         )).then((value) {
                             if (value != null && value != false) {
-                              Scaffold.of(context).removeCurrentSnackBar();
-                              Scaffold.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text("Masa a fost finalizata!"),
                                 )

@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 class DealItemPage extends StatefulWidget {
 
-  final Local? place;
+  final Place? place;
   final Deal? deal;
   final int? dealDayOfTheWeek; // The day on which the deal is active
 

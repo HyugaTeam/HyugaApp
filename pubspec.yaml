@@ -50,7 +50,7 @@ dependencies:
   google_sign_in: 
   #flutter_facebook_login: ^3.0.0
   # http: ^0.12.1
-  http: 
+  #http: 
   # qr_flutter: ^3.2.0
   qr_flutter: 
   # firebase_analytics: ^5.0.16

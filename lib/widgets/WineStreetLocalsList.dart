@@ -1,7 +1,5 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/locals/local.dart';
-import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +59,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
     return 0;
   }
 
-  double? getMaxDiscountForToday(Local local){
+  double? getMaxDiscountForToday(Place local){
 
     if(local.discounts != null)
       if(local.discounts![DateFormat('EEEE').format(today).toLowerCase()] != null){
@@ -75,7 +73,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
     return null;
   }
 
-  Future<List<Local>>? places;
+  Future<List<Place>>? places;
 
   void getPlaces(){
     places = queryingService.fetchOnlyDiscounts();
@@ -94,12 +92,12 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
  
   @override
   Widget build(BuildContext context) {
-    return FutureProvider<List<Local>?>.value(
+    return FutureProvider<List<Place>?>.value(
       initialData: null,
       value: places,
       builder: (context, child){
         print("REBUILD LIST");
-        var places  = Provider.of<List<Local>?>(context);
+        var places  = Provider.of<List<Place>?>(context);
         if(places == null)
           return Center(child: SpinningLogo (),);
         else if(places.length == 0)
@@ -115,7 +113,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: places.length,
               itemBuilder: (BuildContext context, int index) {
-                Local local = places[index];
+                Place local = places[index];
                 double lengthInMeter = queryingService.getLocalLocation(local.location!);
                 double lengthInKm = lengthInMeter/1000;
                 //print(lengthInMeter.toString() + " KM");

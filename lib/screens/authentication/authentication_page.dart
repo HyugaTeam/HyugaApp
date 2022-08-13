@@ -1,33 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hyuga_app/screens/authentication/authentication_provider.dart';
+import 'package:hyuga_app/screens/register/register_page.dart';
+import 'package:hyuga_app/screens/register/register_provider.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/screens/authenticate/register.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
-class SignIn extends StatefulWidget {
+class AuthenticationPage extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _AuthenticationPageState createState() => _AuthenticationPageState();
 }
 
-class _SignInState extends State<SignIn> with TickerProviderStateMixin {
-
-  late String email;
-  late String password;
-  bool formVisibility = false;
-
-  ScrollController? _scrollController;
-  GlobalKey _formFieldKey = GlobalKey();
+class _AuthenticationPageState extends State<AuthenticationPage> with TickerProviderStateMixin {
 
   late AnimationController _controller;
   late Animation<double> _animation;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
     super.initState();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
@@ -39,33 +29,6 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
     );
   }
 
-  void showErrorSnackBar(BuildContext context, String message){
-    if(g.isSnackBarActive == true){
-      Scaffold.of(context).removeCurrentSnackBar();
-    }
-    if(g.isSnackBarActive == false){
-      g.isSnackBarActive = true;
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(context).highlightColor,
-        )
-      ).closed.then((reason) => g.isSnackBarActive = false);
-    }
-  }
-  void handleAuthError(BuildContext context, FirebaseException signInResult){
-    print("code"+signInResult.code);
-    if(signInResult.code == 'user-not-found')
-      showErrorSnackBar(context, "Combinatia email+parola este gresita");
-    if(signInResult.code == 'wrong-password')
-      showErrorSnackBar(context, "Parola este gresita");
-    if(signInResult.code == 'ERROR_USER_DISABLED') 
-      showErrorSnackBar(context, "unknown");
-    if(signInResult.code == 'A aparut o eroare, incearca din nou') 
-      showErrorSnackBar(context, "The entered email is already in use! Try another sign-in method.");
-    if(signInResult.code == "invalid-email")
-      showErrorSnackBar(context, "Emailul este gresit");
-}
 
   @override
   void dispose() {
@@ -76,15 +39,16 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
 
-    g.resetSearchParameters(); /// Eventually called when the user logs out and the Home page no longer corresponds to the previous parameters
+    //g.resetSearchParameters(); /// Eventually called when the user logs out and the Home page no longer corresponds to the previous parameters
+    var provider = context.watch<AuthenticationPageProvider>();
 
     return Theme(
       data: ThemeData(
-        accentColor: Theme.of(context).accentColor,
+        primaryColor: Theme.of(context).primaryColor,
         textTheme: TextTheme(
           button: TextStyle(
             fontSize: 15,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             fontWeight: FontWeight.bold,
             fontFamily: 'Comfortaa'
           )
@@ -97,14 +61,14 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
             borderRadius: BorderRadius.circular(10)
           )
         ),
-        splashColor: Theme.of(context).accentColor,
+        splashColor: Theme.of(context).primaryColor,
         //highlightColor: Colors.black45,
-        primaryColor: Theme.of(context).primaryColor
+        //primaryColor: Theme.of(context).primaryColor
         
         //highlightColor: Colors.orange[600]
       ),
       child: Scaffold(
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).primaryColor,
         resizeToAvoidBottomInset: false,
         body: Builder(
           builder: (context) {
@@ -114,13 +78,13 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
               child: Center(
                 child: ListView(
                   //physics: NeverScrollableScrollPhysics(),
-                  controller: _scrollController,
+                  controller: provider.scrollController,
                   //padding: EdgeInsets.symmetric(horizontal: 20),
                   children: <Widget>[
                     /// Upper region
                     Container(
                       height: MediaQuery.of(context).size.height*0.35,
-                      color: Theme.of(context).accentColor, 
+                      color: Theme.of(context).primaryColor, 
                       child: Column(
                         children: [
                           SizedBox(height: MediaQuery.of(context).size.height*0.1),
@@ -159,7 +123,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                         ),
                         color: Colors.white,
                       ),
-                      height: formVisibility
+                      height: provider.formVisibility
                       ? MediaQuery.of(context).size.height*0.65 + 100
                       : MediaQuery.of(context).size.height*0.65,
                       // height: MediaQuery.of(context).size.height*0.65,
@@ -168,9 +132,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                           Container(  // sign-in anonymously button
                             padding: EdgeInsets.symmetric(vertical:20,horizontal:95),
                             child: MaterialButton(
-                              splashColor: Theme.of(context).accentColor,
+                              splashColor: Theme.of(context).primaryColor,
                               //splashColor: Colors.orange[100],
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               minWidth: 150,
                               height: 35,
                               shape: RoundedRectangleBorder(
@@ -205,8 +169,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                             minWidth: 360,
                             height: 50,
                             child: Container(
-                              width: 300,
-                              child: Row(
+                              //width: 300,
+                              child: Flex(
+                                direction: Axis.horizontal,
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Image.asset('assets/images/google-logo-icon.png',width: 24,),
@@ -214,11 +179,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                            onPressed: (){
-                              dynamic signInResult = authService.signInWithGoogle(); 
-                              if(signInResult.runtimeType == PlatformException) 
-                                handleAuthError(context, signInResult);
-                            },
+                            onPressed: () => provider.signInWithGoogle(context),
                           ),
                           SizedBox(height: 20),
                           MaterialButton(   /// Continue with Facebook button
@@ -232,8 +193,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                             minWidth: 360,
                             height: 50,
                             child: Container(
-                              width: 300,
-                              child: Row(
+                              //width: 300,
+                              child: Flex(
+                                direction: Axis.horizontal,
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   FaIcon(FontAwesomeIcons.facebook, color: Colors.blue,),
@@ -241,11 +203,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                            onPressed: (){
-                              dynamic signInResult = authService.signInWithFacebook();
-                              if(signInResult.runtimeType == PlatformException) 
-                                handleAuthError(context, signInResult);  
-                            },
+                            onPressed: () => provider.signInWithFacebook(context),
                           ),
                           g.isIOS 
                           ? SizedBox(height: 20,)
@@ -262,7 +220,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                             minWidth: 360,
                             height: 50,
                             child: Container(
-                              width: 300,
+                              //width: 300,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
@@ -272,9 +230,7 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                            onPressed: (){
-                              authService.signInWithApple();
-                            },
+                            onPressed: () => provider.signInWithApple()
                           )
                           : Container(),
                           SizedBox(
@@ -301,8 +257,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                   minWidth: 360,
                                   height: 50,
                                   child: Container(
-                                    width: 300,
-                                    child: Row(
+                                    //width: 300,
+                                    child: Flex(
+                                      direction: Axis.horizontal,
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         FaIcon(FontAwesomeIcons.solidEnvelope, color:  Colors.blueGrey,),
@@ -310,16 +267,12 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                       ],
                                     ),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      formVisibility = !formVisibility;
-                                    });
-                                  },
+                                  onPressed: () => provider.updateFormVisibility()
                                   ),
                                   Visibility( // The dialog shown under the 'Continue with email' button
                                     maintainState: true,
                                     maintainAnimation: true,
-                                    visible: formVisibility,
+                                    visible: provider.formVisibility,
                                     replacement: Container(
                                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                                     ),
@@ -334,22 +287,13 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                           children: <Widget>[
                                             SizedBox(height: 20),
                                             TextFormField(
-                                              key: _formFieldKey,
-                                              onTap: (){
-                                                RenderBox field = _formFieldKey.currentContext!.findRenderObject() as RenderBox;
-                                                print(field.localToGlobal(Offset.zero));
-                                                _scrollController!.animateTo(
-                                                  field.localToGlobal(Offset.zero).dy, 
-                                                  duration: Duration(milliseconds: 100), 
-                                                curve: Curves.easeIn);
-                                              },
+                                              key: provider.formFieldKey,
+                                              onTap: () => provider.animateScrollController(),
                                               decoration: InputDecoration(
                                                 labelText: 'Email',
                                                 hoverColor: Colors.blue
                                               ),
-                                              onChanged: (value){
-                                                setState(()=> email = value.trim());
-                                              }
+                                              onChanged: (value) => provider.updateEmail(value)
                                             ),
                                             SizedBox(height: 20),
                                             TextFormField(
@@ -358,22 +302,12 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                 fillColor: Colors.orange[600]
                                               ),
                                               obscureText: true,
-                                              onChanged: (value){
-                                                setState(()=>password = value);
-                                              },
+                                              onChanged: (value) => provider.updatePassword(value),
                                             ),
                                             SizedBox(height: 20),
                                             RaisedButton(  /// "Sign-In" button
-                                              
                                               child: Text("Log in"),
-                                              onPressed: () async{
-                                                dynamic signInResult = await authService.signInWithEmailAndPassword(email, password);
-                                                //print(signInResult.runtimeType);
-                                                if(signInResult.runtimeType == FirebaseException) {
-                                                  FirebaseException authException = signInResult;
-                                                  handleAuthError(context, authException);
-                                                }
-                                              },
+                                              onPressed: () => provider.signInWithEmailAndPassword(context)
                                             ),
                                             Container(
                                               width: double.maxFinite,
@@ -386,13 +320,17 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                                                       child: Text(
                                                         "Înregistrare",
                                                         style: TextStyle(
-                                                          color: Theme.of(context).accentColor,
+                                                          color: Theme.of(context).primaryColor,
                                                           fontWeight: FontWeight.bold
                                                         ),
                                                       ),
                                                       highlightColor: Colors.transparent,
                                                       onTap: (){
-                                                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context)=>Register()));
+                                                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
+                                                        ChangeNotifierProvider(
+                                                          create: (_) => RegisterPageProvider(),
+                                                          child: RegisterPage()
+                                                        )));
                                                       },
                                                     ),
                                                   ),
@@ -409,20 +347,9 @@ class _SignInState extends State<SignIn> with TickerProviderStateMixin {
                               ],
                             ),
                           ),
-                          // formVisibility 
-                          // ? Container(
-                          //   height: MediaQuery.of(context).size.height*0.35,
-                            
-                          // )
-                          // : Container()
                         ],
                       ),
                     ),
-                    // Center(
-                    //   child: Text(
-                    //     "Let's log in!",
-                    //   ),
-                    // ),
                     ],
                 ),
               ),

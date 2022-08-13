@@ -172,7 +172,7 @@ class AdminPanel extends StatelessWidget {
                     ));
                   },
                 ),],
-                backgroundColor: Theme.of(context).accentColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 centerTitle: true,
                 title: Text(
                   _managedLocal.data!.name!

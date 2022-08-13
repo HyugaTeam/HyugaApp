@@ -112,7 +112,7 @@ class _SubscribePaymentPageState extends State<SubscribePaymentPage> {
                       (Set<MaterialState> states) {
                         // if (states.contains(MaterialState.pressed))
                         //   return Theme.of(context).accentColor;
-                        return Theme.of(context).accentColor; // Use the component's default.
+                        return Theme.of(context).primaryColor; // Use the component's default.
                       },
                     ),
                   ),
@@ -134,7 +134,7 @@ class _SubscribePaymentPageState extends State<SubscribePaymentPage> {
                     ),
                     backgroundColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {
-                        return Theme.of(context).accentColor; // Use the component's default.
+                        return Theme.of(context).primaryColor; // Use the component's default.
                       },
                     ),
                   ),

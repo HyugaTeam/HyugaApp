@@ -190,7 +190,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
                           physics: NeverScrollableScrollPhysics(),
                           currentStep: _currentStep,
                           //onStepTapped: (step) => onStepTapped(step),  
-                          controlsBuilder: (context, {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) => Container(
+                          controlsBuilder: (context, controlsDetails) => Container(
                             child: ButtonBar(
                               alignment: MainAxisAlignment.center,
                               children: [
@@ -209,7 +209,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
                                       ),
                                     ),
                                   ),
-                                  onPressed: onStepContinue,
+                                  onPressed: (){},
                                 ),
                                 SizedBox(width: 20,),
                                 RaisedButton(

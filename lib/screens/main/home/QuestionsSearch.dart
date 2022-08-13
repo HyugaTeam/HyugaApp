@@ -141,19 +141,14 @@ class _QuestionsSearchState extends State<QuestionsSearch> {
                           Navigator.pushNamed(context, '/second');
                         } 
                         else {
-                          if(g.isSnackBarActive == false){
-                          print("incomplet");
-                            g.isSnackBarActive = true;
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'Selecteaza Categoria si Specificul.',
-                                textAlign: TextAlign.center,
-                              ),
-                              backgroundColor: Colors.orange[600],
-                            )).closed.then((SnackBarClosedReason reason){
-                              g.isSnackBarActive = false;
-                            });
-                          }
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              'Selecteaza Categoria si Specificul.',
+                              textAlign: TextAlign.center,
+                            ),
+                            backgroundColor: Colors.orange[600],
+                          ));
                         }
                       }
                     )

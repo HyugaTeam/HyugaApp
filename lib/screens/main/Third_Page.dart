@@ -27,7 +27,7 @@ class ThirdPageGenerator{
   //Function which generates the ThirdPage
   static Route<dynamic> generateRoute(RouteSettings settings){
     List<dynamic> args = settings.arguments as List<dynamic>;
-    Local local = args[0];  // This is the first argument(The 'Local')
+    Place local = args[0];  // This is the first argument(The 'Local')
     bool onlyDiscounts = args[1]; // This is the second argument(whether it shows only discounts or not)
     return MaterialPageRoute(
       builder: (_) => ThirdPage(
@@ -42,7 +42,7 @@ class ThirdPageGenerator{
 
 class ThirdPage extends StatefulWidget {
 
-  final Local? local;
+  final Place? local;
   final bool? onlyDiscounts;
   
   ThirdPage({this.local,this.onlyDiscounts}){
@@ -223,8 +223,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
         headers: <String, String>{'my_header_key': 'my_header_value'},
       );
     } else if(!universalLinks){
-      Scaffold.of(context).removeCurrentSnackBar();
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text(
@@ -318,8 +318,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
               ok = false;
           });
           if(!ok){
-              if(g.isSnackBarActive == true)
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   behavior: _snackBarBehavior,
@@ -396,7 +395,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                 });
               }
             ),
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
         );
   }
@@ -405,7 +404,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
   FloatingActionButton _buildFloatingActionButton(BuildContext context) => FloatingActionButton.extended(
     elevation: 10,
     shape: ContinuousRectangleBorder(),
-    backgroundColor: Theme.of(context).accentColor,
+    backgroundColor: Theme.of(context).primaryColor,
     onPressed: () => _openReservationDialog(context),
     label: Container(
       width: MediaQuery.of(context).size.width,
@@ -466,7 +465,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                       ),
                     ),
                   ),
-                  backgroundColor: Theme.of(context).accentColor,
+                  backgroundColor: Theme.of(context).primaryColor,
                   pinned: true,
                   floating: true,
                   forceElevated: innerBoxIsScrolled,
@@ -518,7 +517,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 shrinkWrap: true,
                                 itemCount: widget.local!.cost,
                                 itemBuilder: (context, costIndex){
-                                  return FaIcon(FontAwesomeIcons.dollarSign, color: Theme.of(context).accentColor,);
+                                  return FaIcon(FontAwesomeIcons.dollarSign, color: Theme.of(context).primaryColor,);
                                 },
                               ),
                           )                      
@@ -682,7 +681,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                                   height: 50,
                                                   width: double.infinity,
                                                   color: getDealColor(deal),
-                                                  //color: Theme.of(context).accentColor,
+                                                  //color: Theme.of(context).primaryColor,
                                                   child: Text(
                                                     widget.local!.deals![weekdays.keys.toList()[_selectedWeekday-1]!.toLowerCase()][index]['title'],
                                                     style: TextStyle(
@@ -1223,7 +1222,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)
                                 ),
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).primaryColor,
                                 child: Text(
                                   "Meniu",
                                   style: TextStyle(

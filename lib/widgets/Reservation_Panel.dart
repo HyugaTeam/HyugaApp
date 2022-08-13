@@ -40,7 +40,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
   ScrollController? _hourScrollController;
   GlobalKey<FormState> _phoneNumberFormKey = GlobalKey<FormState>();
 
-  late Local place;
+  late Place place;
   Map<String,dynamic>? placeSchedule;
   String? startHour; // The starting hour of the schedule
   late String endHour; // The ending hour of the schedule
@@ -84,7 +84,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
 
   /// Initiate the time schedule for this widget
   initiateHours(BuildContext context){
-    placeSchedule = Provider.of<Local>(context).schedule;
+    placeSchedule = Provider.of<Place>(context).schedule;
     
     if(placeSchedule != null){
       print(placeSchedule);
@@ -136,18 +136,17 @@ class _ReservationPanelState extends State<ReservationPanel> {
   @override
   Widget build(BuildContext context) {
     
-    place = Provider.of<Local>(context);
+    place = Provider.of<Place>(context);
     initiateHours(context);
 
     return Theme(
       data: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
-          selectionColor: Theme.of(context).accentColor,
-          selectionHandleColor: Theme.of(context).accentColor
+          selectionColor: Theme.of(context).primaryColor,
+          selectionHandleColor: Theme.of(context).primaryColor
         ),
-        //highlightColor: Theme.of(context).accentColor,
+        //highlightColor: Theme.of(context).primaryColor,
         primaryColor: Theme.of(context).primaryColor,
-        accentColor: Theme.of(context).accentColor,
         textTheme: TextTheme(bodyText1: TextStyle(fontWeight: FontWeight.bold)),
         fontFamily: 'Comfortaa'
       ),
@@ -198,7 +197,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           );
                         },
                         child: Chip(
-                          backgroundColor: index == _selectedNoOfPeople ? Theme.of(context).accentColor: Colors.grey[200],
+                          backgroundColor: index == _selectedNoOfPeople ? Theme.of(context).primaryColor: Colors.grey[200],
                           labelPadding: EdgeInsets.symmetric(horizontal: 20),
                           label: Text((index+1).toString())
                         ),
@@ -238,7 +237,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         child: Opacity(
                           opacity: index == _selectedDay ? 1 : 1,
                           child: Chip(
-                            backgroundColor: index == _selectedDay ? Theme.of(context).accentColor: Colors.grey[200],
+                            backgroundColor: index == _selectedDay ? Theme.of(context).primaryColor: Colors.grey[200],
                             labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
                             label: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -291,20 +290,16 @@ class _ReservationPanelState extends State<ReservationPanel> {
                         return  GestureDetector(
                         onTap: (){
                           if(hour.add(Duration(minutes: index*30)).compareTo(DateTime.now()) < 0 && _selectedDay == 0){
-                            if(g.isSnackBarActive == false){
-                              g.isSnackBarActive = true;
-                              Scaffold.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
                                   'Această oră este indisponibilă pentru rezervare',
                                   textAlign: TextAlign.center,
                                   ),
-                                  backgroundColor: Theme.of(context).accentColor
-                              )).closed.then((SnackBarClosedReason reason){
-                                g.isSnackBarActive = false;
-                              });
-                            }
+                                  backgroundColor: Theme.of(context).primaryColor
+                              )
+                            );
                           }
-                          
                           else {
                             _selectedHour = index;
                             String selectedHour =  
@@ -340,7 +335,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               Align(
                                 alignment: Alignment.center,
                                 child: Chip(
-                                  backgroundColor:  index == _selectedHour ? Theme.of(context).accentColor: Colors.grey[200],
+                                  backgroundColor:  index == _selectedHour ? Theme.of(context).primaryColor: Colors.grey[200],
                                   labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
                                   label: Text(
                                     hour.add(Duration(minutes: index*30)).hour.toString()
@@ -375,7 +370,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                       width: MediaQuery.of(context).size.width*0.11,
                                       height: 20,
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context).accentColor,
+                                        color: Theme.of(context).primaryColor,
                                         borderRadius: BorderRadius.circular(30)
                                       ),
                                       child: Icon(
@@ -398,7 +393,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                   width: MediaQuery.of(context).size.width*0.11,
                                   height: 20,
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).accentColor,
+                                    color: Theme.of(context).primaryColor,
                                     borderRadius: BorderRadius.circular(30)
                                   ),
                                   child: Text(
@@ -469,7 +464,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
                                   borderSide: BorderSide(
-                                    color: Theme.of(context).accentColor,
+                                    color: Theme.of(context).primaryColor,
                                     width: 1
                                   ),
                                 ),
@@ -498,7 +493,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                               ),
                               onChanged: (input) => setState(() => _selectedPhoneNumber = input),
                               keyboardType: TextInputType.number,
-                              cursorColor: Theme.of(context).accentColor,
+                              cursorColor: Theme.of(context).primaryColor,
                               validator: (input) {
                                 if(input == null || !input.startsWith('0') || input.length != 10)
                                   return 'Numărul de telefon este invalid';
@@ -514,7 +509,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                             shape: BoxShape.circle,
                             border: Border.all(
                               width: 1,
-                              color: Theme.of(context).accentColor
+                              color: Theme.of(context).primaryColor
                             ),
                             //borderRadius: BorderRadius.circular(30)
                           ),
@@ -522,9 +517,9 @@ class _ReservationPanelState extends State<ReservationPanel> {
                             tooltip: "Modifică numărul de telefon",
                             onPressed: () => setState(() => _isFormEnabled = true), 
                             iconSize: 16,
-                            color: Theme.of(context).accentColor,
-                            splashColor: Theme.of(context).accentColor,
-                            highlightColor: Theme.of(context).accentColor,
+                            color: Theme.of(context).primaryColor,
+                            splashColor: Theme.of(context).primaryColor,
+                            highlightColor: Theme.of(context).primaryColor,
                             icon: FaIcon(FontAwesomeIcons.pen)
                           ),
                         )
@@ -537,7 +532,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   RaisedButton(
                     elevation: 1,
                     disabledColor: Colors.grey[300],
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       "Rezervă",
@@ -621,7 +616,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                     visible: _isProgressIndicatorVisible,
                     child: LinearProgressIndicator(
                       minHeight: 8,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                   )
                 ],

@@ -37,6 +37,9 @@ class QueryService{
     //   interval: 10000
     // );
   } 
+  set userLocation(LocationData? userLocation){
+    _userLocation = userLocation;
+  }
 
   /// A getter for the user's location
   LocationData? get userLocation{
@@ -101,10 +104,10 @@ class QueryService{
   
 
   // Method that converts a map of Firebase Locals to OUR Locals
-  List<Local> toLocal(var localsMap){
-      List<Local> placesList = [];
+  List<Place> toLocal(var localsMap){
+      List<Place> placesList = [];
       for(int i = 0; i < localsMap.length; i++){
-        Local newLocal = Local(
+        Place newLocal = Place(
           id: localsMap[i]['id'],
           name: localsMap[i]['name'],
           description: localsMap[i]['description'],
@@ -288,13 +291,13 @@ class QueryService{
     return street;
   }
 
-  Local docSnapToLocal(DocumentSnapshot doc){
+  Place docSnapToLocal(DocumentSnapshot doc){
     Future<String>? address;
 
     var profileImage = getImage(doc.id);
     Map<String, dynamic> placeData = doc.data() as Map<String, dynamic>;
 
-    return Local(
+    return Place(
       cost: placeData['cost'],
       score: placeData['score'],
       id: doc.id,
@@ -319,7 +322,7 @@ class QueryService{
   }
 
   // Handles the whole process of querying
-  Future<List<Local>> fetch(bool onlyDiscountLocals) async{
+  Future<List<Place>> fetch(bool onlyDiscountLocals) async{
     if(g.selectedArea == 0 && _userLocation == null){
       _userLocation = await getUserLocation();
       print("DONE-----------");
@@ -427,7 +430,7 @@ class QueryService{
     .map(docSnapToLocal)).toList();
   }
 
-  Future<List<Local>> fetchOnlyDiscounts() async{
+  Future<List<Place>> fetchOnlyDiscounts() async{
     Future<QuerySnapshot> localsWithDiscounts = _db.collection('locals_bucharest')
     .orderBy('discounts.${DateFormat('EEEE').format(DateTime.now().toLocal()).toLowerCase()}')
     .get();

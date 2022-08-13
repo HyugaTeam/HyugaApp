@@ -2,14 +2,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/models/deal.dart';
 import 'package:hyuga_app/models/event.dart';
 import 'package:hyuga_app/models/locals/local.dart';
 import 'package:hyuga_app/screens/drawer/events_page/event_page.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:hyuga_app/globals/constants.dart';
 
 class EventsPage extends StatefulWidget {
@@ -49,7 +47,7 @@ class _EventsPageState extends State<EventsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "Evenimente",
           style: TextStyle(
@@ -72,12 +70,12 @@ class _EventsPageState extends State<EventsPage> {
             itemCount: events.length,
             itemBuilder: (context, index){
               var event = events[index];
-              return FutureProvider<Local?>.value(
+              return FutureProvider<Place?>.value(
                 initialData: null,
                 value: events[index].placeRef.get().then((doc) => queryingService.docSnapToLocal(doc)),
                 builder:(context, child) {
                   /// The 'place' for the current list index
-                  var place = Provider.of<Local?>(context);
+                  var place = Provider.of<Place?>(context);
                   if(place == null)
                     return CircularProgressIndicator();
                   else return GestureDetector(

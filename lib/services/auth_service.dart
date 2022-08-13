@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/services.dart'; // For exceptions library
-//import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -228,6 +226,7 @@ class AuthService{
         accessToken: googleAuth.accessToken
       );
       final User? user = (await _auth.signInWithCredential(credential)).user;
+      print(user!.uid);
       if(user != null)
         updateUserData(user,'google');
       

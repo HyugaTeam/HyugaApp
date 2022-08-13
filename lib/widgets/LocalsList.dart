@@ -58,7 +58,7 @@ class _LocalsState extends State<Locals> {
     return 0;
   }
 
-  double? getMaxDiscountForToday(Local local){
+  double? getMaxDiscountForToday(Place local){
 
     if(local.discounts != null)
       if(local.discounts![DateFormat('EEEE').format(today).toLowerCase()] != null){
@@ -79,7 +79,7 @@ class _LocalsState extends State<Locals> {
  
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Local>?>(
+    return FutureBuilder<List<Place>?>(
       future: widget.onlyWithDiscounts != true? queryingService.fetch(false) : queryingService.fetchOnlyDiscounts(),
       builder:(context,locals){
         if(!locals.hasData)
@@ -102,7 +102,7 @@ class _LocalsState extends State<Locals> {
               physics: const AlwaysScrollableScrollPhysics(), 
               itemCount: locals.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                Local local = locals.data![index];
+                Place local = locals.data![index];
                 double lengthInKm = queryingService.getLocalLocation(local.location!);
                 double lengthInMeter = queryingService.getLocalLocation(local.location!);
                 PlaceListProfile place = PlaceListProfile(

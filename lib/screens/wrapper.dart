@@ -1,16 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/user.dart';
-import 'package:hyuga_app/screens/authenticate/authenticate.dart';
 import 'package:hyuga_app/screens/manager/AdminPanel_Page.dart';
 import 'package:hyuga_app/screens/web_version/web_landing_page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
-import 'package:hyuga_app/widgets/SlideShow_Intro.dart';
-import 'package:provider/provider.dart';
+import 'authentication/authentication_page.dart';
+import 'authentication/authentication_provider.dart';
 import 'main/home_map.dart';
-import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
 
 /// Wrapper for the Authentification Screen and the MainMenu Screen
@@ -157,7 +155,10 @@ class Wrapper extends StatelessWidget {
                     }
                   ); 
                 else
-                  return Authenticate();
+                  return ChangeNotifierProvider(
+                    create: (_) => AuthenticationPageProvider(),
+                    child: AuthenticationPage()
+                  );
               }
             }
           );

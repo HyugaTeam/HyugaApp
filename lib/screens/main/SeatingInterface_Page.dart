@@ -53,11 +53,11 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
     );
   }
 
-  Future<Local> getPlaceData() async{
+  Future<Place> getPlaceData() async{
     DocumentSnapshot placeData = await FirebaseFirestore.instance
     .collection('locals_bucharest').doc(reservationData['place_id']).get();
     print(placeData.data());
-    Local place = queryingService.docSnapToLocal(placeData);
+    Place place = queryingService.docSnapToLocal(placeData);
     return place;
   }
   
@@ -218,7 +218,7 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
           _controller.forward();
           return ScaleTransition(
             scale: _animation,
-            child: FutureBuilder<Local>(
+            child: FutureBuilder<Place>(
               future: getPlaceData(),
               builder: (context, place) {
                 if(!place.hasData)

@@ -17,7 +17,7 @@ bool isIOS = false; // Added for the AppleID Sign In method (only available on I
 bool isNewUser = false;
 bool? locationPermissionGranted;
 
-List<Local> placesList = [];
+List<Place> placesList = [];
 
 Map<String,int?> selectedOptions = {
   'Categorie':selectedWhere, // 'Where?'

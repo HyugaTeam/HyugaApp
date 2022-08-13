@@ -32,7 +32,7 @@ class ProfileDrawer extends StatelessWidget {
                 children: <Widget>[
                   DrawerHeader(
                     padding: EdgeInsets.only(left: 15, bottom: 15),
-                    decoration: BoxDecoration(color: Theme.of(context).accentColor),
+                    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                     child: Container( 
                       width: MediaQuery.of(context).size.width,
                       child: Row(
@@ -90,7 +90,7 @@ class ProfileDrawer extends StatelessWidget {
                         //   stream: authService.loading.stream,
                         //   builder: (context, snapshot) {
                         //   return authService.currentUser.isManager == null 
-                        //     ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Theme.of(context).accentColor, size: 20,), 
+                        //     ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Theme.of(context).primaryColor, size: 20,), 
                         //         title: Text('Istoric scanari'), 
                         //         onTap: (){
                         //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ScannedLocalsPage(); }));
@@ -103,7 +103,7 @@ class ProfileDrawer extends StatelessWidget {
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
                           return authService.currentUser!.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.calendar, color: Theme.of(context).accentColor, size: 20), 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.calendar, color: Theme.of(context).primaryColor, size: 20), 
                                 title: Text('Evenimente'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return EventsPage(); }));
@@ -116,7 +116,7 @@ class ProfileDrawer extends StatelessWidget {
                           stream: authService.loading.stream,
                           builder: (context, snapshot) {
                           return authService.currentUser!.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Theme.of(context).accentColor, size: 20), 
+                            ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Theme.of(context).primaryColor, size: 20), 
                                 title: Text('Istoric rezervări'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
@@ -131,7 +131,7 @@ class ProfileDrawer extends StatelessWidget {
                         //   builder: (context, snapshot) {
                         //     return authService.currentUser!.isManager == null 
                         //       ? ListTile(
-                        //         leading: FaIcon(FontAwesomeIcons.qrcode, color: Theme.of(context).accentColor), 
+                        //         leading: FaIcon(FontAwesomeIcons.qrcode, color: Theme.of(context).primaryColor), 
                         //         title: Text('Codul meu'), 
                         //         onTap: (){
                         //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return UserQRCode(context); }));
@@ -145,8 +145,8 @@ class ProfileDrawer extends StatelessWidget {
                           builder: (context, snapshot) {
                             return authService.currentUser!.isManager == null 
                               ? ListTile(
-                                //tileColor: Theme.of(context).accentColor.withOpacity(0.5),
-                                leading: FaIcon(FontAwesomeIcons.questionCircle, color: Theme.of(context).accentColor), 
+                                //tileColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                                leading: FaIcon(FontAwesomeIcons.questionCircle, color: Theme.of(context).primaryColor), 
                                 title: Text(
                                   'Ajutor'
                                 ), 
@@ -202,7 +202,7 @@ class ProfileDrawer extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).primaryColor,
                               splashColor: Colors.deepOrangeAccent,
                               child: Text("Log out"),
                               onPressed: () async {
@@ -233,7 +233,7 @@ class ProfileDrawer extends StatelessWidget {
                 children: <Widget>[
                   DrawerHeader(
                     padding: EdgeInsets.only(left: 15, bottom: 15),
-                    decoration: BoxDecoration(color: Theme.of(context).accentColor),
+                    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -268,7 +268,7 @@ class ProfileDrawer extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).primaryColor,
                       splashColor: Colors.deepOrangeAccent,
                       child: Text(
                         "Log in",

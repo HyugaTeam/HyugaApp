@@ -128,20 +128,15 @@ class MainMenuButtonState extends State<MainMenuButton>{
                       elevation: 5,
                       onPressed: () {
                         if(name=='What?' && g.selectedWhere==null){
-                          if(g.isSnackBarActive == false){
-                            g.isSnackBarActive = true;
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'Selecteaza intai categoria.',
-                                textAlign: TextAlign.center,
-                                ),
-                                backgroundColor: Colors.orange[600],
-                              )
-                            ).closed.then((SnackBarClosedReason reason){
-                              g.isSnackBarActive = false;
-                          }
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              'Selecteaza intai categoria.',
+                              textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Colors.orange[600],
+                            )
                           );
-                         }
                         }
                         else createDialog(context).then((index){
                           index!= null? changeText(index):null;

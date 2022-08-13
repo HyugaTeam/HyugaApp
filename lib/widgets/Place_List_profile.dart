@@ -59,7 +59,7 @@ class PlaceListProfile extends StatefulWidget {
   final VoidCallback? onTap;
   double? discount = 0;
   Image? finalImage;
-  final Local? place;
+  final Place? place;
   final Map<String,dynamic>? deals;
 
   final BuildContext? scaffoldContext;
@@ -108,7 +108,7 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
               width: 355.0,
               decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.black38),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
                 //color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -271,20 +271,17 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           heroTag: widget.name!+'_dealsButton',
                           backgroundColor: Theme.of(context).primaryColor,
                           onPressed: () {
-                            if (g.isSnackBarActive == false) {
-                              g.isSnackBarActive = true;
-                              Scaffold.of(widget.scaffoldContext!)
-                                  .showSnackBar(SnackBar(
-                                    duration: Duration(seconds: 5),
-                                    backgroundColor: Theme.of(context).highlightColor,
-                                    //backgroundColor: Colors.orange[600],
-                                    content: Text(
-                                      "Localul are astazi oferte, intra pentru mai multe detalii"
-                                    ),
-                                  ))
-                                  .closed
-                                  .then((value) => g.isSnackBarActive = false);
-                            }
+                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                            Scaffold.of(widget.scaffoldContext!)
+                              .showSnackBar(SnackBar(
+                                duration: Duration(seconds: 5),
+                                backgroundColor: Theme.of(context).highlightColor,
+                                //backgroundColor: Colors.orange[600],
+                                content: Text(
+                                  "Localul are astazi oferte, intra pentru mai multe detalii"
+                                ),
+                              )
+                            );
                           },
                           child: FaIcon(
                             FontAwesomeIcons.award,
@@ -307,19 +304,16 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                     heroTag: widget.name!+'_discountButton',
                     backgroundColor: Theme.of(context).primaryColor,
                     onPressed: () {
-                      if (g.isSnackBarActive == false) {
-                        g.isSnackBarActive = true;
-                        Scaffold.of(widget.scaffoldContext!)
-                            .showSnackBar(SnackBar(
-                              duration: Duration(seconds: 5),
-                              backgroundColor: Theme.of(context).primaryColor,
-                              content: Text(
-                                "Reducerea maxima de astazi, intra pe restaurant pentru mai multe detalii"
-                              ),
-                            ))
-                            .closed
-                            .then((value) => g.isSnackBarActive = false);
-                      }
+                      ScaffoldMessenger.of(widget.scaffoldContext!).removeCurrentSnackBar();
+                      ScaffoldMessenger.of(widget.scaffoldContext!)
+                        .showSnackBar(SnackBar(
+                          duration: Duration(seconds: 5),
+                          backgroundColor: Theme.of(context).primaryColor,
+                          content: Text(
+                            "Reducerea maxima de astazi, intra pe restaurant pentru mai multe detalii"
+                          ),
+                        )
+                      );
                     },
                     child: Text(
                       '-' + widget.discount!.toInt().toString() + '%',

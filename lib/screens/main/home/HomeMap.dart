@@ -27,7 +27,7 @@ class HomeMap extends StatefulWidget {
 
 class _HomeMapState extends State<HomeMap> {
   
-  List<Local> places = [];
+  List<Place> places = [];
   List<BitmapDescriptor> pins = [];
 
   Future getPlaces(){

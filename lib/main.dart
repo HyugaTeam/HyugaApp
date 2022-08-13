@@ -1,11 +1,17 @@
 import 'dart:io';
-// import 'package:firebase_app_check/firebase_app_check.dart';
+//import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:hyuga_app/models/user.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/screens/main/home_map.dart';
+import 'package:hyuga_app/screens/web_version/navigation_menu/become_partner_page.dart';
+import 'package:hyuga_app/screens/web_version/navigation_menu/contact_page.dart';
+import 'package:hyuga_app/screens/web_version/navigation_menu/log_in_page.dart';
+import 'package:hyuga_app/screens/web_version/navigation_menu/partners_page.dart';
+import 'package:hyuga_app/screens/web_version/navigation_menu/profile_page.dart';
 import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -19,6 +25,8 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 // import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
+import 'config/theme.dart';
+
 
 
 
@@ -26,7 +34,13 @@ void main() async{
   
   await config();
 
-  runApp(StreamProvider<OurUser?>.value( 
+  runApp(Main());
+}
+
+class Main extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<OurUser?>.value( 
       initialData: authService.currentUser,
       value: authService.user,
       child: StreamProvider<bool?>.value(
@@ -53,56 +67,68 @@ void main() async{
             'loading/wrapper/': (context) => Wrapper(),
 
             '/second': (context) => SecondPage(),
+            /// '/devino-partener'
+            BecomePartnerWebPage.route : (context) => BecomePartnerWebPage(),
+            /// '/parteneri'
+            PartnersWebPage.route : (context) => PartnersWebPage(),
+            /// '/contact'
+            ContactWebPage.route : (context) => ContactWebPage(),
+            /// '/log-in'
+            LogInWebPage.route : (context) => LogInWebPage(),
+            /// '/profil'
+            ProfileWebPage.route : (context) => ProfileWebPage()
+ 
           }, 
           // Route generator (designed for the Third Page only)
-          onGenerateRoute: ThirdPageGenerator.generateRoute,
+          //onGenerateRoute: ThirdPageGenerator.generateRoute,
 
           navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
 
-          theme: ThemeData(
-            inputDecorationTheme: InputDecorationTheme(
-              labelStyle: TextStyle(
-                color: Colors.white
-              ),
-              suffixStyle: TextStyle(
-                color: Colors.white
-              )
-            ),
-            snackBarTheme: SnackBarThemeData(
-              backgroundColor: Colors.orange[600]
-            ),
-            appBarTheme: AppBarTheme(
-              color: Color(0xFFb78a97)
-              //color: Colors.blueGrey,
-            ),
-            textTheme: TextTheme(
-              subtitle2: TextStyle(
-                color: Colors.black
-              ) 
-            ),
-            // highlightColor: Colors.orange[600],
-            // backgroundColor: Colors.white,
-            // accentColor: Colors.blueGrey,
-            // primaryColorDark: Colors.orange[600]
+          theme: theme(context)
+          // theme: ThemeData(
+          //   inputDecorationTheme: InputDecorationTheme(
+          //     labelStyle: TextStyle(
+          //       color: Colors.white
+          //     ),
+          //     suffixStyle: TextStyle(
+          //       color: Colors.white
+          //     )
+          //   ),
+          //   snackBarTheme: SnackBarThemeData(
+          //     backgroundColor: Colors.orange[600]
+          //   ),
+          //   appBarTheme: AppBarTheme(
+          //     color: Color(0xFFb78a97)
+          //     //color: Colors.blueGrey,
+          //   ),
+          //   textTheme: TextTheme(
+          //     subtitle2: TextStyle(
+          //       color: Colors.black
+          //     ) 
+          //   ),
+          //   // highlightColor: Colors.orange[600],
+          //   // backgroundColor: Colors.white,
+          //   // accentColor: Colors.blueGrey,
+          //   // primaryColorDark: Colors.orange[600]
 
-            primaryColor: Color(0xFF600F2B),
-            //highlightColor: Color(0xFF600F2B),
-            highlightColor: Color(0xFFCFBA70),
-            backgroundColor: Colors.white,
-            accentColor: Color(0xFFb78a97),
-            primaryColorDark: Color(0xFF600F2B),
+          //   primaryColor: Color(0xFF600F2B),
+          //   //highlightColor: Color(0xFF600F2B),
+          //   highlightColor: Color(0xFFCFBA70),
+          //   backgroundColor: Colors.white,
+          //   accentColor: Color(0xFFb78a97),
+          //   primaryColorDark: Color(0xFF600F2B),
 
-            // primaryColor: Color(0xFF600F2B),
-            // highlightColor: Color(0xFFb78a97),
-            // backgroundColor: Colors.white,
-            // accentColor: Color(0xFFCFBA70),
-            // primaryColorDark: Color(0xFF340808),
-            fontFamily: 'Comfortaa'
-          ),
+          //   // primaryColor: Color(0xFF600F2B),
+          //   // highlightColor: Color(0xFFb78a97),
+          //   // backgroundColor: Colors.white,
+          //   // accentColor: Color(0xFFCFBA70),
+          //   // primaryColorDark: Color(0xFF340808),
+          //   fontFamily: 'Comfortaa'
+          // ),
         ),
       ),
-    )
-  );
+    );
+  }
 }
 
 /// Function that handles all the initialization for the app
@@ -112,7 +138,17 @@ Future<void> config() async{
     apiKey: 'AIzaSyBeApv-LQI5lDvkZUFD-5yiMLu55KOe6Bo',
     projectId: 'hyuga-app',
     messagingSenderId: '1009284415459',
+    storageBucket: 'hyuga-app.appspot.com'
   );
+  if (kIsWeb) {
+    // initialiaze the facebook javascript SDK
+    FacebookAuth.instance.webInitialize(
+      appId: "2317348558566656",
+      cookie: true,
+      xfbml: true,
+      version: "v13.0",
+    );
+  }
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   if(kIsWeb)

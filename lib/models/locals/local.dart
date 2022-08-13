@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Local{
+class Place{
   final int? score; // Dynamic (depends on the score of the category)
   final String? id; // Imported from the database
   final String? name; // Imported from the database
@@ -27,7 +27,7 @@ class Local{
   final String? tipMessage;
   Image? finalImage;
 
-  Local({
+  Place({
     this.cost,
     this.score, 
     this.id,

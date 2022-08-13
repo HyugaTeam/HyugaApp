@@ -52,142 +52,121 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   void initState(){
     super.initState();
     // var _db = FirebaseFirestore.instance;
-    // var place1 = _db.collection("locals_bucharest").doc("trattoria_monza_dtaberei");
+    // var place1 = _db.collection("locals_bucharest").doc("bistro_1568");
     // place1.set(
     //   {
-    //     "name": "Trattoria Monza Drumul Taberei",
+    //     "name": "CLUJ - Bistro 1568",
     //     "description": "",
     //     "ambiance": "sf",
-    //     "capacity": 8,
-    //     "cost": 1,
-    //     "location": GeoPoint(44.4236408236718, 26.02593875940558),
-    //     "menu": "",
+    //     "capacity": 4,
+    //     "cost": 2,
+    //     "location": GeoPoint(46.7715644687848, 23.591659682336378),
+    //     "menu": "https://maimutaplangatoare.ro/mancare/",
     //     "partner": true,
     //     "profile": {},
     //     "reservations": true,
     //     "schedule":{
-    //       "monday": "10:00-00:00",
-    //       "tuesday": "12:00-00:00",
-    //       "wednesday": "10:00-00:00",
-    //       "thursday": "10:00-00:00",
-    //       "friday": "10:00-00:00",
-    //       "saturday": "10:00-00:00",
-    //       "sunday": "10:00-00:00"
+    //       "monday": "11:00-23:00",
+    //       "tuesday": "11:00-23:00",
+    //       "wednesday": "11:00-23:00",
+    //       "thursday": "11:00-00:00",
+    //       "friday": "11:00-00:00",
+    //       "saturday": "11:00-00:00",
+    //       "sunday": "11:00-23:00"
     //     },
     //     "deals": {
     //         "monday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-23:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-23:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],
     //         "tuesday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-23:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-23:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],"wednesday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-23:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-23:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],"thursday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],"friday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],"saturday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],"sunday": [
     //           {
-    //             'title': "Vin Alb (sticlă)",
-    //             'content': 'Primești o sticlă de vin la consumație de minim 150 RON',
-    //             'interval': "10:00-23:00"
-    //           },
-    //           {
     //             'title': "Vin Rosé (sticlă)",
-    //             'content': "Primești o sticlă de vin rosé la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
+    //             'content': 'Primești o sticlă de vin rosé Duzsi Tamas Kekfrankos la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
     //           },
     //           {
-    //             'title': "Vin Roșu (sticlă)",
-    //             'content': "Primești o sticlă de vin roșu la consumație de minim 150 RON",
-    //             'interval': "10:00-23:00"
-    //           }
+    //             'title': "Vin Alb (sticlă)",
+    //             'content': 'Primești o sticlă de vin alb Frittmann Irsai Oliver la o consumație de minim 150 RON',
+    //             'interval': "11:00-00:00",
+    //             'threshold': "150 RON"
+    //           },
     //         ],
     //       }
     //   },
@@ -268,7 +247,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
         bottomRight: Radius.elliptical(210, 50)
       )            
     ),
-    backgroundColor: Theme.of(context).accentColor,
+    backgroundColor: Theme.of(context).primaryColor,
     elevation: 2,
     toolbarHeight: 70,
     centerTitle: true,
@@ -363,7 +342,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
                   },
                   child: SlidingUpPanel(
                     controller: _panelController,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).primaryColor,
                     parallaxEnabled: true,
                     // onPanelOpened: (){
                     //   setState(() {

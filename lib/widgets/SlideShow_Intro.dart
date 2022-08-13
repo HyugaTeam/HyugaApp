@@ -35,7 +35,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
-        color: isActive ? Theme.of(context).accentColor : Colors.white24,
+        color: isActive ? Theme.of(context).primaryColor : Colors.white24,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -82,7 +82,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                     //stops: [0.3, 0.4, 0.6, 0.85],
                     colors: [
                       Color(0xFF995d6f),
-                      //Theme.of(context).accentColor,
+                      //Theme.of(context).primaryColor,
                       Color(0xFFdba7b6),
                       Color(0xFFf0e4e7),
                       // Color(0xfcf0f4)
@@ -103,7 +103,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                         child: FlatButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
-                          splashColor: Theme.of(context).accentColor,
+                          splashColor: Theme.of(context).primaryColor,
                           onPressed: () {
                             g.isNewUser = false;
                             authService.loading.add(false);
@@ -515,8 +515,8 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                                 child: FlatButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
-                                  highlightColor: Theme.of(context).accentColor,
-                                  splashColor: Theme.of(context).accentColor,
+                                  highlightColor: Theme.of(context).primaryColor,
+                                  splashColor: Theme.of(context).primaryColor,
                                   onPressed: () {
                                     _pageController.nextPage(
                                         duration: Duration(milliseconds: 500),

@@ -52,7 +52,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 70,
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).primaryColor,
         title: Container(
           height: 50,
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -108,7 +108,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
                 itemCount: result.length,
                 separatorBuilder: (context,index) => SizedBox(height: 15,),
                 itemBuilder: (context, index) {
-                  Local place = queryingService.docSnapToLocal(result[index]);
+                  Place place = queryingService.docSnapToLocal(result[index]);
                   return SearchListTile(place: place, key: ValueKey(place.name));
                 }
                   
@@ -123,7 +123,7 @@ class _SearchBarPageState extends State<SearchBarPage> {
 
 class SearchListTile extends StatefulWidget {
 
-  final Local? place;
+  final Place? place;
   final Key? key;
   SearchListTile({this.place, this.key});
 

@@ -120,8 +120,8 @@ class _EditorPageState extends State<EditorPage> {
                     ).then((value){
                       if(value){
                         Navigator.of(context).pop();
-                        g.isSnackBarActive = true;
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: FutureBuilder(
                               future: saveChanges(temporaryChanges!),
@@ -145,7 +145,7 @@ class _EditorPageState extends State<EditorPage> {
                               }
                             )
                           )
-                        ).closed.then((reason) => g.isSnackBarActive = false);
+                        );
                       }
                     });
                   }
@@ -193,20 +193,19 @@ class _EditorPageState extends State<EditorPage> {
         width: 200,
         height: 40,
         child: FloatingActionButton(
-          backgroundColor: areThereChanges == false ? Theme.of(context).accentColor: Colors.orange[600],
+          backgroundColor: areThereChanges == false ? Theme.of(context).primaryColor: Colors.orange[600],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30)
           ),
           onPressed: (){
             if(areThereChanges != true){
-              if(g.isSnackBarActive == false){
-                g.isSnackBarActive = true;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Nu sunt schimbari!"),
-                  )
-                ).closed.then((reason) => g.isSnackBarActive = false);
-              }
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Nu sunt schimbari!"),
+                )
+              );
+            
             }
             else{
               showChanges();
@@ -298,7 +297,7 @@ class _EditorPageState extends State<EditorPage> {
                 subtitle: Container(
                   padding: EdgeInsets.only(right : 30),
                   child: RaisedButton.icon(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                     icon: Icon(Icons.person, color: Theme.of(context).backgroundColor, size: 30,),
                     label: Text(
@@ -335,7 +334,7 @@ class _EditorPageState extends State<EditorPage> {
                                           borderRadius: BorderRadius.circular(5),
                                           child: MaterialButton(
                                             elevation: 20,
-                                            color: Theme.of(context).accentColor,
+                                            color: Theme.of(context).primaryColor,
                                             height: 40,
                                             onPressed: (){
                                               Navigator.of(context).pop(index);
@@ -428,7 +427,7 @@ class _EditorPageState extends State<EditorPage> {
                               ),
                               child: FaIcon(
                                 FontAwesomeIcons.plus,
-                                color: Theme.of(context).accentColor
+                                color: Theme.of(context).primaryColor
                               ),
                               onPressed: () async{
                                 XFile? _image = await ImagePicker().pickImage(source: ImageSource.gallery);
