@@ -108,3 +108,8 @@ Wine Street 2022 Big Update
 
 - reorganize code (providers)
 - reorganize UI
+
+Wine Street Events UI
+
+- scapam de AppBar ul colorat
+- pe pagina cu restaurante ne ramane doar harta cu colturile rotunjite (appbar alb si navbar tot alb)

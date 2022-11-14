@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:provider/provider.dart';
 
 class ScannedCodesHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    ManagedLocal _managedLocal = Provider.of<ManagedLocal>(context);
+    ManagedPlace _managedLocal = Provider.of<ManagedPlace>(context);
 
     return Scaffold(
       appBar: AppBar(

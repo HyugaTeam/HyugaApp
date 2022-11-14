@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hyuga_app/models/user.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:rxdart/rxdart.dart'; 

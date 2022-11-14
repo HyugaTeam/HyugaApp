@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocode/geocode.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';

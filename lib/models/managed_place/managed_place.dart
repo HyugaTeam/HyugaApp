@@ -1,4 +1,4 @@
-class ManagedLocal{
+class ManagedPlace{
   bool? reservations;
   String? id;
   String? name;
@@ -14,7 +14,7 @@ class ManagedLocal{
   Map<String,dynamic>? schedule;
   int? maturity;
 
-  ManagedLocal(
+  ManagedPlace(
     {
       this.reservations,
       this.id,

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hyuga_app/config/constants.dart';
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/screens/place/place_provider.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
@@ -19,18 +19,17 @@ import 'package:provider/provider.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:hyuga_app/screens/main/home/DealItem_Page.dart';
-import 'package:hyuga_app/models/deal.dart';
 
 
 class PlacePage extends StatefulWidget {
 
-  // final Place? place;
-  // final bool? onlyDiscounts;
+  final Place? place;
+  final bool? onlyDiscounts;
   
-  // PlacePage({this.place,this.onlyDiscounts}){
+  PlacePage({this.place,this.onlyDiscounts}){
     
     
-  // }
+  }
 
   @override
   _PlacePageState createState() => _PlacePageState(
@@ -69,105 +68,6 @@ class _PlacePageState extends State<PlacePage> with TickerProviderStateMixin{
     today = DateTime.now().toLocal();
     _selectedWeekday = today.weekday;
     print(_selectedWeekday);
-  }
-  
-  Future<Image?> _getFirstImage() async{
-    Uint8List? imageFile;
-    int maxSize = 6*1024*1024;
-    String? fileName = widget.place!.id;
-    String pathName = 'photos/europe/bucharest/$fileName';
-    var storageRef = FirebaseStorage.instance.ref().child(pathName);
-    try{
-      await storageRef.child('$fileName'+'_1.jpg')
-        .getData(maxSize).then((data){
-          imageFile = data;
-          }
-        );
-      return Image.memory(
-        imageFile!,
-        frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-          if (wasSynchronouslyLoaded) {
-            return child;
-          }
-          return AnimatedOpacity(
-            child: child,
-            opacity: frame == null ? 0 : 1,
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeOut,
-          );
-        }
-      );
-    }
-    catch(error){
-      print(error);
-    }
-    return null; // if nothing else happens
-  }
-
-  Future<Image?> _getSecondImage() async{
-    Uint8List? imageFile;
-      int maxSize = 6*1024*1024;
-      String? fileName = widget.place!.id;
-      String pathName = 'photos/europe/bucharest/$fileName';
-      var storageRef = FirebaseStorage.instance.ref().child(pathName);
-      try{
-        await storageRef.child('$fileName'+'_2.jpg')
-          .getData(maxSize).then((data){
-            imageFile = data;
-            }
-          );
-        return Image.memory(
-          imageFile!,
-          frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-            if (wasSynchronouslyLoaded) {
-              return child;
-            }
-            return AnimatedOpacity(
-              child: child,
-              opacity: frame == null ? 0 : 1,
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-            );
-          }
-        );
-      }
-      catch(error){
-        print(error);
-      }
-      return null; // if nothing else happens
-  }
-
-  Future<Image?> _getThirdImage() async{
-    Uint8List? imageFile;
-      int maxSize = 6*1024*1024;
-      String? fileName = widget.place!.id;
-      String pathName = 'photos/europe/bucharest/$fileName';
-      var storageRef = FirebaseStorage.instance.ref().child(pathName);
-      try{
-        await storageRef.child('$fileName'+'_m.jpg')
-          .getData(maxSize).then((data){
-            imageFile = data;
-            }
-          );
-        return Image.memory(
-          imageFile!,
-          frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-            if (wasSynchronouslyLoaded) {
-              return child;
-            }
-            return AnimatedOpacity(
-              child: child,
-              opacity: frame == null ? 0 : 1,
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-            );
-          }
-        );
-      }
-      catch(error){
-        print(error);
-      }
-      return null; // if nothing else happens
   }
 
   // Launches both Uber app and Place's Menu

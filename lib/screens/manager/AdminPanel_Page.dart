@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/manager/ActiveGuests_Page.dart';
 import 'package:hyuga_app/screens/manager/AnalysisPage.dart';
 import 'package:hyuga_app/screens/manager/EditorPage.dart';
@@ -91,8 +91,8 @@ class AdminPanel extends StatelessWidget {
     return result;
   }
 
-  Future<ManagedLocal> _getPlaceData() async{
-    ManagedLocal _managedLocal = ManagedLocal();
+  Future<ManagedPlace> _getPlaceData() async{
+    ManagedPlace _managedLocal = ManagedPlace();
 
     // Queries data about the place from the manager's directory
     DocumentSnapshot place = (await FirebaseFirestore.instance
@@ -120,7 +120,7 @@ class AdminPanel extends StatelessWidget {
     print("START3");
     print("");
     try{
-      _managedLocal = ManagedLocal( 
+      _managedLocal = ManagedPlace( 
         id: placeDocumentID,
         name: placeDocumentData['name'],
         description: placeDocumentData['description'],
@@ -145,7 +145,7 @@ class AdminPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ManagedLocal>(
+    return FutureBuilder<ManagedPlace>(
       future: _getPlaceData(),
       builder: (context, _managedLocal) {
         if(!_managedLocal.hasData)
@@ -184,19 +184,19 @@ class AdminPanel extends StatelessWidget {
               ),
               body: TabBarView(
                 children: [
-                  Provider<AsyncSnapshot<ManagedLocal>>(
+                  Provider<AsyncSnapshot<ManagedPlace>>(
                     create: (context) => _managedLocal,
                     child: ActiveGuestsPage()
                   ),
-                  Provider<AsyncSnapshot<ManagedLocal>>(
+                  Provider<AsyncSnapshot<ManagedPlace>>(
                     create: (context) => _managedLocal,
                     child: ReservationsPage()
                   ),
-                  Provider<AsyncSnapshot<ManagedLocal>>(
+                  Provider<AsyncSnapshot<ManagedPlace>>(
                     create: (context) => _managedLocal,
                     child: AnalysisPage()
                   ),
-                  Provider<AsyncSnapshot<ManagedLocal>>(
+                  Provider<AsyncSnapshot<ManagedPlace>>(
                     create: (context) => _managedLocal,
                     child: EditorPage()
                   ),

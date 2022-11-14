@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,7 @@ class ActiveGuestsPage extends StatefulWidget {
 
 class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
 
-  ManagedLocal? _managedLocal;
+  ManagedPlace? _managedLocal;
 
   List<QueryDocumentSnapshot>? activeGuestsList = [];
 
@@ -27,7 +27,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data;
+    _managedLocal = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data;
     
     return Scaffold(
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(

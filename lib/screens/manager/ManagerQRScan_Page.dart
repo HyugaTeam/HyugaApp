@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -20,7 +20,7 @@ class ManagerQRScan extends StatefulWidget {
 class _ManagerQRScanState extends State<ManagerQRScan> {
 
   bool cameraAccessDenied = false;
-  ManagedLocal? managedLocal;
+  ManagedPlace? managedLocal;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   DocumentSnapshot? scannedUser;
   String? uid = "";

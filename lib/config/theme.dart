@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 Color _tertiaryColor = Color(0xFFCFBA70);
-Color _highlightColor = Colors.white;
+// Color _highlightColor = Colors.white;
+Color _highlightColor = Colors.grey[200]!;
 Color _primaryColor = Color(0xFFb78a97);
-Color _secondaryColor = Color(0xFF600F2B);
+Color _secondaryColor = Color(0xFF0C0910);
+// Color _secondaryColor = Color(0xFF600F2B);
 /// The color of the text, used in TextTheme
 Color _textColor = Colors.black;
 Color _splashColor = Colors.grey[300]!;
+Color _canvasColor = Colors.grey[200]!;
 
 double? textScaleFactor = 1;
 
@@ -17,7 +20,7 @@ ThemeData theme(BuildContext context){
     splashColor: _splashColor,
     primaryColor: _primaryColor,
     highlightColor: _highlightColor,
-    canvasColor: Colors.grey[200],
+    canvasColor: _canvasColor,
     fontFamily: 'Raleway',
     iconTheme: _iconTheme,
     inputDecorationTheme: _inputDecorationTheme,
@@ -35,7 +38,7 @@ ThemeData theme(BuildContext context){
 
 ColorScheme _colorScheme = ColorScheme(
   primary: _primaryColor,
-  secondary: _secondaryColor,
+  secondary: _primaryColor,
   tertiary: _tertiaryColor, 
   background: _highlightColor, 
   brightness: Brightness.light, 
@@ -225,8 +228,10 @@ BottomNavigationBarThemeData _bottomNavigationBarTheme = BottomNavigationBarThem
   // backgroundColor: Colors.grey[200],
   backgroundColor: _highlightColor,
   selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-  unselectedLabelStyle: TextStyle(color: Colors.black),
-  unselectedItemColor: Colors.black.withOpacity(0.65),
+  // unselectedLabelStyle: TextStyle(color: Colors.black),
+  // unselectedItemColor: Colors.black.withOpacity(0.65),
+  unselectedLabelStyle: TextStyle(color: _secondaryColor),
+  unselectedItemColor: _secondaryColor,
 );
 
 AppBarTheme _appBarTheme = AppBarTheme(

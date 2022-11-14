@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/screens/wrapper.dart';
+
+import 'wrapper/wrapper.dart';
 
 class LoadingScreen extends StatelessWidget {
 

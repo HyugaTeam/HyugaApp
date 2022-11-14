@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/profile_image_hero.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,8 +21,8 @@ class EditorPage extends StatefulWidget {
 class _EditorPageState extends State<EditorPage> {  
 
   bool areThereChanges = false; // adds an UI interaction whenever a field is changed
-  ManagedLocal? temporaryChanges;
-  ManagedLocal? unchangedData;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  ManagedPlace? temporaryChanges;
+  ManagedPlace? unchangedData;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
   Map<String,dynamic>? changesMap;
   XFile? _unsavedProfileImage;
   String _unsavedProfileImagePath = "";
@@ -158,7 +158,7 @@ class _EditorPageState extends State<EditorPage> {
     );
   }
 
-  Future<void> saveChanges(ManagedLocal place) async{
+  Future<void> saveChanges(ManagedPlace place) async{
     FirebaseFirestore _db = FirebaseFirestore.instance;
     DocumentReference placeRef = _db.collection('locals_bucharest').doc(place.id);
     
@@ -182,8 +182,8 @@ class _EditorPageState extends State<EditorPage> {
   @override
   Widget build(BuildContext context) {
     
-    unchangedData = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data; // Used to compare with the changed properties
-    temporaryChanges = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data; // The actual changed properties
+    unchangedData = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data; // Used to compare with the changed properties
+    temporaryChanges = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data; // The actual changed properties
     List<List<dynamic>> temporaryListOfProfiles = <List<dynamic>>[]; // NOT IN USE
     temporaryChanges!.profile!.forEach((key, value) { temporaryListOfProfiles.add([key,value]); }); // NOT IN USE
 

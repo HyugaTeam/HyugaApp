@@ -1,4 +1,4 @@
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 
 int? selectedWhere;
 int? selectedWhat;

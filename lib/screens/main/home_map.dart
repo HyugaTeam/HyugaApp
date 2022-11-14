@@ -36,8 +36,8 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
   PanelController _panelController = PanelController();
   ScrollController? _scrollController;
   GlobalKey _listKey = GlobalKey();
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
-  ProfileDrawer _drawer = ProfileDrawer();
+  // GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
+  // ProfileDrawer _drawer = ProfileDrawer();
   
   void _initScrollController(ScrollController controller){
     // if(_scrollController != null)
@@ -265,7 +265,7 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
       highlightColor: Colors.white.withOpacity(0.2),
       splashColor: Colors.white.withOpacity(0.8),
       onPressed: () async {
-        _drawerKey.currentState!.openDrawer();
+        // _drawerKey.currentState!.openDrawer();
       },
     ),
     actions: <Widget>[
@@ -318,8 +318,8 @@ class _HomeMapPageState extends State<HomeMapPage> with TickerProviderStateMixin
           return SeatingInterface(place: seatingData.docs[0]);
         return Scaffold(
           extendBodyBehindAppBar: true,
-          key: _drawerKey,
-          drawer: _drawer,
+          // key: _drawerKey,
+          // drawer: _drawer,
           appBar: buildAppBar() as PreferredSizeWidget?,
           //bottomNavigationBar: BottomAppBar(),
           body: Builder(

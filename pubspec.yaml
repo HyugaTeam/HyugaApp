@@ -24,7 +24,7 @@ dependencies:
   # firebase_storage: ^5.0.0
   firebase_storage: 
   # image_picker: 0.6.7+12
-  image_picker: ^0.8.0
+  image_picker: 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   # font_awesome_flutter: ^8.8.1
@@ -34,14 +34,14 @@ dependencies:
   # firebase_auth: ^0.18.0+1
   firebase_auth:
   # cloud_firestore: ^0.14.0+2
-  cloud_firestore: ^3.1.7
+  cloud_firestore: 
   # location: ^3.0.2
   location: 
   # google_maps_flutter: ^0.5.24+1
   google_maps_flutter:
   # latlong: ^0.6.1
   # latlong:
-  maps_toolkit: ^2.0.0
+  maps_toolkit:
   # provider: ^4.0.5
   provider: 
   # rxdart: ^0.24.0
@@ -60,7 +60,7 @@ dependencies:
   sign_in_with_apple:
   # geocoder: ^0.2.1
   # geocoder:
-  geocode: ^1.0.1
+  geocode: 
   # url_launcher: ^5.5.1
   url_launcher: 
   # firebase_messaging: ^7.0.0
@@ -121,6 +121,7 @@ flutter:
     - assets/images/pins/ios/wine-street-logo-pin.png
     - assets/images/pins/android/wine-street-logo-pin.png
     - assets/images/wine_icon1.png
+    - assets/icons/restaurant.png
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

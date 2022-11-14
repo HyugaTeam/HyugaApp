@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/models/locals/local.dart';
-import 'package:hyuga_app/globals/Global_Variables.dart' as g;
+import 'package:hyuga_app/models/models.dart';
 import 'dart:math';
 
 /*

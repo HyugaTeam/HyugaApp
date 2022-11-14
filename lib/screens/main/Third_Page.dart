@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
@@ -17,9 +17,6 @@ import 'package:provider/provider.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:hyuga_app/screens/main/home/DealItem_Page.dart';
-import 'package:hyuga_app/models/deal.dart';
-
-
 
 // The generator of the third page
 class ThirdPageGenerator{

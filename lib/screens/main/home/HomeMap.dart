@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 
@@ -46,7 +46,7 @@ class _HomeMapState extends State<HomeMap> {
 
       setState(() {
         pins = customPins as List<BitmapDescriptor>;
-        places = fetchedPlaces;      
+        places = fetchedPlaces as List<Place>;      
       });
     });
   }

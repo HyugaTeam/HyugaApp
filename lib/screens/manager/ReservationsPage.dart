@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hyuga_app/models/locals/managed_local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +21,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   List? pendingReservations;
   List? acceptedReservations=[];
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  ManagedLocal? _managedLocal;
+  ManagedPlace? _managedLocal;
 
   Stream<QuerySnapshot<Map<String, dynamic>>> pendingReservationsStream() {
     FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -224,7 +224,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<ManagedLocal>>(context).data;
+    _managedLocal = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data;
 
     return Scaffold(
       key: _scaffoldKey,

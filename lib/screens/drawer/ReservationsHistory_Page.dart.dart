@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/deal.dart';
-import 'package:hyuga_app/screens/main/home/DealItem_Page.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';

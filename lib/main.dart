@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:hyuga_app/models/user.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/main/Third_Page.dart';
 import 'package:hyuga_app/screens/main/home_map.dart';
 import 'package:hyuga_app/screens/web_version/navigation_menu/become_partner_page.dart';
@@ -12,7 +12,6 @@ import 'package:hyuga_app/screens/web_version/navigation_menu/contact_page.dart'
 import 'package:hyuga_app/screens/web_version/navigation_menu/log_in_page.dart';
 import 'package:hyuga_app/screens/web_version/navigation_menu/partners_page.dart';
 import 'package:hyuga_app/screens/web_version/navigation_menu/profile_page.dart';
-import 'package:hyuga_app/screens/wrapper.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/main/Second_Page.dart';
@@ -26,6 +25,7 @@ import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 import 'config/theme.dart';
+import 'screens/wrapper/wrapper.dart';
 
 
 
@@ -67,6 +67,7 @@ class Main extends StatelessWidget {
             'loading/wrapper/': (context) => Wrapper(),
 
             '/second': (context) => SecondPage(),
+            
             /// '/devino-partener'
             BecomePartnerWebPage.route : (context) => BecomePartnerWebPage(),
             /// '/parteneri'
@@ -80,7 +81,7 @@ class Main extends StatelessWidget {
  
           }, 
           // Route generator (designed for the Third Page only)
-          //onGenerateRoute: ThirdPageGenerator.generateRoute,
+          onGenerateRoute: ThirdPageGenerator.generateRoute,
 
           navigatorObservers: [AnalyticsService().getAnalyticsObserver()],
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 
 class EventReservationPanel extends StatefulWidget {
   final BuildContext context;

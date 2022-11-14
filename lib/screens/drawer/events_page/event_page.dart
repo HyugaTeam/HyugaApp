@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/globals/constants.dart';
-import 'package:hyuga_app/models/deal.dart';
-import 'package:hyuga_app/models/event.dart';
-import 'package:hyuga_app/models/locals/local.dart';
+import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/drawer/events_page/event_reservation_panel.dart';
 import 'package:hyuga_app/services/querying_service.dart';
-import 'package:hyuga_app/widgets/Reservation_Panel.dart';
-import 'package:provider/provider.dart';
 
 class EventPage extends StatelessWidget {
 
