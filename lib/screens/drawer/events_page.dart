@@ -20,16 +20,7 @@ class _EventsPageState extends State<EventsPage> {
   final Map<String,String> weekdaysTranslate = {"Monday" : "Luni", "Tuesday" : "Marti","Wednesday" : "Miercuri","Thursday" : "Joi","Friday" : "Vineri","Saturday" : "Sambata", "Sunday" : "Duminica"};
   int itemCount = 0;
 
-  Event _docToEvent(Map<String, dynamic> data){
-    return Event(
-      title: data['title'],
-      content: data['content'],
-      dateCreated: data['date_created'].toDate(),
-      dateStart: data['date_start'].toDate(),
-      placeRef: data['place_ref'],
-      photoUrl: data['photo_url']
-    );
-  }
+  
 
   /// Fetches the upcoming events from the database
   Future<List<Event>> _getUpcomingEvents() async{
@@ -39,7 +30,7 @@ class _EventsPageState extends State<EventsPage> {
     // setState(() {
     //   itemCount = query.docs.length;
     // });
-    return query.docs.map((doc) => _docToEvent(doc.data() as Map<String, dynamic>)).toList();
+    return query.docs.map((doc) => docToEvent(doc.data() as Map<String, dynamic>)).toList();
   }
 
   @override

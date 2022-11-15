@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-Color _tertiaryColor = Color(0xFFCFBA70);
+// Color _tertiaryColor = Color(0xFFCFBA70);
 // Color _highlightColor = Colors.white;
 Color _highlightColor = Colors.grey[200]!;
 Color _primaryColor = Color(0xFFb78a97);
 Color _secondaryColor = Color(0xFF0C0910);
-// Color _secondaryColor = Color(0xFF600F2B);
+Color _tertiaryColor = Color(0xFF600F2B);
 /// The color of the text, used in TextTheme
 Color _textColor = Colors.black;
 Color _splashColor = Colors.grey[300]!;
@@ -236,10 +236,11 @@ BottomNavigationBarThemeData _bottomNavigationBarTheme = BottomNavigationBarThem
 
 AppBarTheme _appBarTheme = AppBarTheme(
   elevation: 0,
-  backgroundColor: _primaryColor,
+  backgroundColor: _canvasColor,
   titleTextStyle: TextStyle(
-    color: _highlightColor,
-    fontSize: 20*(1/textScaleFactor!),  
+    color: _tertiaryColor,
+    fontWeight: FontWeight.bold,
+    fontSize: 25*(1/textScaleFactor!),  
     fontFamily: 'Raleway'
   )
 );
