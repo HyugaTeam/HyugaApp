@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 export 'package:provider/provider.dart';
@@ -37,29 +37,35 @@ class AuthenticationPageProvider with ChangeNotifier{
   } 
 
   void signInWithEmailAndPassword(BuildContext context) async {
-    dynamic signInResult = await authService.signInWithEmailAndPassword(email!, password!);
+    dynamic signInResult = await Authentication.signInWithEmailAndPassword(email!, password!);
     //print(signInResult.runtimeType);
     if(signInResult.runtimeType == FirebaseException) {
       FirebaseException authException = signInResult;
       handleAuthError(context, authException);
     }
+
+    notifyListeners();
   }
 
   void signInWithApple(){
-    authService.signInWithApple();
+    Authentication.signInWithApple();
 
     notifyListeners();
   }
   void signInWithGoogle(BuildContext context){
-    dynamic signInResult = authService.signInWithGoogle(); 
+    dynamic signInResult = Authentication.signInWithGoogle(); 
     if(signInResult.runtimeType == FirebaseException) 
       handleAuthError(context, signInResult);
+
+    notifyListeners();
   }
 
   void signInWithFacebook(BuildContext context){
-    dynamic signInResult = authService.signInWithFacebook(); 
+    dynamic signInResult = Authentication.signInWithFacebook(); 
     if(signInResult.runtimeType == FirebaseException) 
       handleAuthError(context, signInResult);
+
+    notifyListeners();
   }
 
   void updateFormVisibility(){

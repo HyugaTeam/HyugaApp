@@ -7,6 +7,7 @@ import 'package:hyuga_app/screens/manager/EditorPage.dart';
 import 'package:hyuga_app/screens/manager/ReservationsPage.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:hyuga_app/screens/manager/ManagerQRScan_Page.dart';
+import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:hyuga_app/widgets/drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -147,9 +148,11 @@ class AdminPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<ManagedPlace>(
       future: _getPlaceData(),
+      initialData: null,
       builder: (context, _managedLocal) {
+        print("hasData " + _managedLocal.hasData.toString());
         if(!_managedLocal.hasData)
-          return Scaffold(body: Center(child: CircularProgressIndicator(),));
+          return Scaffold(body: Center(child: SpinningLogo(),));
         else 
           return DefaultTabController(
             length: 4,

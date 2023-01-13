@@ -114,7 +114,7 @@ class _WineStreetLocalsState extends State<WineStreetLocals> {
               itemCount: places.length,
               itemBuilder: (BuildContext context, int index) {
                 Place local = places[index];
-                double lengthInMeter = queryingService.getLocalLocation(local.location!);
+                double lengthInMeter = queryingService.getLocalLocation(local.location);
                 double lengthInKm = lengthInMeter/1000;
                 //print(lengthInMeter.toString() + " KM");
                 //PlaceListProfile place;

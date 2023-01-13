@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/drawer/events_page/event_page.dart';
-import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/LoadingAnimation.dart';
 import 'package:provider/provider.dart';
 import 'package:hyuga_app/globals/constants.dart';
@@ -24,13 +23,13 @@ class _EventsPageState extends State<EventsPage> {
 
   /// Fetches the upcoming events from the database
   Future<List<Event>> _getUpcomingEvents() async{
-    QuerySnapshot query = await FirebaseFirestore.instance.collection('events')
+    var query = await FirebaseFirestore.instance.collection('events')
     .where('date_start',isGreaterThan: Timestamp.fromDate(DateTime.now().add(Duration(minutes: -30)).toLocal()))
     .get();
     // setState(() {
     //   itemCount = query.docs.length;
     // });
-    return query.docs.map((doc) => docToEvent(doc.data() as Map<String, dynamic>)).toList();
+    return query.docs.map((doc) => docToEvent(doc)).toList();
   }
 
   @override
@@ -62,7 +61,8 @@ class _EventsPageState extends State<EventsPage> {
               var event = events[index];
               return FutureProvider<Place?>.value(
                 initialData: null,
-                value: events[index].placeRef.get().then((doc) => queryingService.docSnapToLocal(doc)),
+                value: null,
+                // value: events[index].placeRef.get().then((doc) => queryingService.docSnapToLocal(doc)),
                 builder:(context, child) {
                   /// The 'place' for the current list index
                   var place = Provider.of<Place?>(context);
@@ -169,7 +169,7 @@ class _EventsPageState extends State<EventsPage> {
                                         children: [
                                           WidgetSpan(child: Icon(Icons.location_pin, color: Colors.white, size: 18,)),
                                           WidgetSpan(child: SizedBox(width: 7)),
-                                          TextSpan(text: place.name!, style: TextStyle(color: Colors.white))
+                                          TextSpan(text: place.name, style: TextStyle(color: Colors.white))
                                         ]
                                       )
                                     ),

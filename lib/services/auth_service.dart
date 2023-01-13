@@ -9,6 +9,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:hyuga_app/globals/Global_Variables.dart' as g;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+export 'package:cloud_firestore/cloud_firestore.dart';
 
 
 //A class which handles the sign-in process
@@ -22,7 +23,7 @@ class AuthService{
 
   PublishSubject<bool> loading = PublishSubject<bool>(); // used for the async
   bool? isLoading;
-  OurUser? currentUser; /// used for the 'manager' property
+  UserProfile? currentUser; /// used for the 'manager' property
   
   AuthService(){
     user.listen(
@@ -75,19 +76,19 @@ class AuthService{
   
 
   // create user object based on FirebaseUser
-  OurUser? _ourUserFromFirebaseUser(User? user){
+  UserProfile? _ourUserFromFirebaseUser(User? user){
     /// Added in order to set the User ID property for the Google Analytics Service
     if(user!= null)
       AnalyticsService().setUserProperties(user.uid);
 
     return user != null 
-    ? OurUser(
+    ? UserProfile(
       uid: user.uid,
       email: user.email,
       photoURL: user.photoURL,
       phoneNumber: user.phoneNumber,
       displayName: user.displayName != null 
-        ? user.displayName 
+        ? user.displayName !
         : (user.email != null
           ? user.email!.substring(0,user.email!.indexOf('@'))
           : "Guest"),
@@ -101,7 +102,7 @@ class AuthService{
   }
 
   //auth change user stream
-  Stream<OurUser?> get user{
+  Stream<UserProfile?> get user{
     return (_auth.authStateChanges()
       .map(_ourUserFromFirebaseUser));
   }

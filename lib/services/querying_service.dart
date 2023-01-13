@@ -111,7 +111,12 @@ class QueryService{
           id: localsMap[i]['id'],
           name: localsMap[i]['name'],
           description: localsMap[i]['description'],
-          location: localsMap[i]['location']
+          location: localsMap[i]['location'],
+          favourite: false,
+          profileImageURL: localsMap[i]['profile_image_url'],
+          importantInformation: "",
+          ambience: "",
+          area: ""
         );
         placesList.add(newLocal);
       }
@@ -307,7 +312,7 @@ class QueryService{
       description: placeData['description'],
       capacity: placeData['capacity'],
       discounts: placeData['discounts'],
-      address: address,
+      address: "",
       reference: placeData.containsKey('manager_reference') ? placeData['manager_reference']: null,
       schedule: placeData.containsKey('schedule') ? placeData['schedule']: null,
       deals: placeData.containsKey('deals') ? placeData['deals']: null,
@@ -318,6 +323,11 @@ class QueryService{
       preferPhone: placeData.containsKey('prefer_phone') ? placeData['prefer_phone'] : null,
       phoneNumber: placeData.containsKey('phone_number') ? placeData['phone_number'] : null,
       tipMessage: placeData.containsKey('tip_message') ? placeData['tip_message'] : null,
+      favourite: false,
+      profileImageURL: placeData.containsKey('profile_image_url') ? placeData['profile_image_url'] : "",
+      importantInformation: placeData['important_information'],
+      ambience: "",
+      area: ""
     );
   }
 

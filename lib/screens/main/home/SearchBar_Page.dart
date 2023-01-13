@@ -174,7 +174,7 @@ class _SearchListTileState extends State<SearchListTile> with AutomaticKeepAlive
                 runAlignment: WrapAlignment.start,
                 children: [
                   Text(
-                    widget.place!.name!,
+                    widget.place!.name,
                     maxLines: 3,
                     style: TextStyle(
                       color: Colors.black,

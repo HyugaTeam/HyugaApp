@@ -53,7 +53,7 @@ class ThirdPage extends StatefulWidget {
           "place_name": local!.name,
           //"place_path": "${g.whereListTranslation[g.selectedWhere]}_${g.whatListTranslation[g.selectedWhere][g.selectedWhat]}_${g.howManyListTranslation[g.selectedHowMany]}_${g.ambianceListTranslation[g.selectedAmbiance]}_${g.areaListTranslation[g.selectedArea]}"
         }
-      ).then((value) => print(local!.id!+local!.name!));
+      ).then((value) => print(local!.id!+local!.name));
     }
     else{
       AnalyticsService().analytics.logEvent(
@@ -69,8 +69,8 @@ class ThirdPage extends StatefulWidget {
 
   @override
   _ThirdPageState createState() => _ThirdPageState(
-    localLongitude: local!.location!.longitude,
-    localLatitude: local!.location!.latitude
+    localLongitude: local!.location.longitude,
+    localLatitude: local!.location.latitude
   );
 }
 
@@ -437,13 +437,13 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                   title: Opacity(
                       opacity: titleOpacity,
                       child: Center(
-                        child: Text(widget.local!.name!),
+                        child: Text(widget.local!.name),
                       ),
                   ),
                   expandedHeight: 220,
                   flexibleSpace: FlexibleSpaceBar(
                     background: Hero(
-                      tag: widget.local!.name!,
+                      tag: widget.local!.name,
                       child: FutureBuilder<Image>(
                         future: widget.local!.image,
                         builder: (context,image){
@@ -494,7 +494,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                               bottom:10
                             ),
                             child: Text(
-                              widget.local!.name==null? 'wrong':widget.local!.name!,
+                              widget.local!.name==null? 'wrong':widget.local!.name,
                               maxLines: 2,
                               style: TextStyle(
                                 fontFamily: 'Comfortaa',
@@ -1093,8 +1093,8 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   queryingService.userLocation!.longitude!
                                 );
                                 LatLng dropoff = LatLng(
-                                  widget.local!.location!.latitude, 
-                                  widget.local!.location!.longitude
+                                  widget.local!.location.latitude, 
+                                  widget.local!.location.longitude
                                 );
                                 String deeplink = "https://m.uber.com/ul/?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&action=setPickup&pickup[latitude]=" 
                                 + pickup.latitude.toString()+
@@ -1109,7 +1109,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                 "&dropoff[longitude]="
                                 + dropoff.longitude.toString() +
                                 "&dropoff[nickname]="
-                                + widget.local!.name!.replaceAll(' ', '%20') +
+                                + widget.local!.name.replaceAll(' ', '%20') +
                                 "&dropoff[formatted_address]="
                                 + "" +
                                 "&product_id="
@@ -1228,7 +1228,7 @@ class _ThirdPageState extends State<ThirdPage> with TickerProviderStateMixin{
                                   ),
                                 ),
                                 onPressed: (){
-                                  _launchInBrowser(context, widget.local!.menu!);
+                                  // _launchInBrowser(context, widget.local!.menu!);
                                 }
                               ),
                               Container(

@@ -231,11 +231,11 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                       markers: {
                         Marker(
                           markerId: MarkerId("1"),
-                          position: LatLng(place.data!.location!.latitude,place.data!.location!.longitude),
+                          position: LatLng(place.data!.location.latitude,place.data!.location.longitude),
                         )
                       },
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(place.data!.location!.latitude,place.data!.location!.longitude),
+                        target: LatLng(place.data!.location.latitude,place.data!.location.longitude),
                         zoom: 16
                       ),
                     ),

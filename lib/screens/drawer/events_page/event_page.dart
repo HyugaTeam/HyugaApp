@@ -19,16 +19,16 @@ class EventPage extends StatelessWidget {
         children: [
           GestureDetector( // When the image is tapped, it pushes the ThirdPage containing the place
             onTap: () async {
-              await event.placeRef
-              .get().then((value) => 
-              Navigator.pushNamed(
-                context,
-                '/third',
-                /// The first argument stands for the actual 'Local' information
-                /// The second argument stands for the 'Route' from which the third page came from(for Analytics purpose)
-                arguments: [queryingService.docSnapToLocal(value),false] 
-              )
-              );
+              // await event.placeRef
+              // .get().then((value) => 
+              // Navigator.pushNamed(
+              //   context,
+              //   '/third',
+              //   /// The first argument stands for the actual 'Local' information
+              //   /// The second argument stands for the 'Route' from which the third page came from(for Analytics purpose)
+              //   arguments: [queryingService.docSnapToLocal(value),false] 
+              // )
+              // );
             },
             child: Stack(
               children: [

@@ -52,7 +52,7 @@ class PlaceListProfile extends StatefulWidget {
   final GeoPoint? location;
   final Future<Image>? image;
   final String? name;
-  final Future<String>? address;
+  final String? address;
   final String? distance;
   final int? price;
   final VoidCallback? onTap;

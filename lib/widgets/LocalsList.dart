@@ -103,8 +103,8 @@ class _LocalsState extends State<Locals> {
               itemCount: locals.data!.length,
               itemBuilder: (BuildContext context, int index) {
                 Place local = locals.data![index];
-                double lengthInKm = queryingService.getLocalLocation(local.location!);
-                double lengthInMeter = queryingService.getLocalLocation(local.location!);
+                double lengthInKm = queryingService.getLocalLocation(local.location);
+                double lengthInMeter = queryingService.getLocalLocation(local.location);
                 PlaceListProfile place = PlaceListProfile(
                   scaffoldContext: context,
                   name: local.name, address: local.address, image: local.image, price: local.cost, discount: getMaxDiscountForToday(local), deals: local.deals,

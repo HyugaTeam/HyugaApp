@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Color _highlightColor = Colors.white;
 Color _highlightColor = Colors.grey[200]!;
 Color _primaryColor = Color(0xFFb78a97);
+Color _lighterPrimaryColor = Color(0xFFd9c6ca);
 Color _secondaryColor = Color(0xFF0C0910);
 Color _tertiaryColor = Color(0xFF600F2B);
 /// The color of the text, used in TextTheme
@@ -19,9 +20,10 @@ ThemeData theme(BuildContext context){
     colorScheme: _colorScheme,
     splashColor: _splashColor,
     primaryColor: _primaryColor,
-    highlightColor: _highlightColor,
+    // highlightColor: _highlightColor,
+    highlightColor: _lighterPrimaryColor,
     canvasColor: _canvasColor,
-    fontFamily: 'Raleway',
+    fontFamily: 'OpenSans',
     iconTheme: _iconTheme,
     inputDecorationTheme: _inputDecorationTheme,
     textTheme: _textTheme,
@@ -38,7 +40,7 @@ ThemeData theme(BuildContext context){
 
 ColorScheme _colorScheme = ColorScheme(
   primary: _primaryColor,
-  secondary: _primaryColor,
+  secondary: _secondaryColor,
   tertiary: _tertiaryColor, 
   background: _highlightColor, 
   brightness: Brightness.light, 
@@ -240,7 +242,7 @@ AppBarTheme _appBarTheme = AppBarTheme(
   titleTextStyle: TextStyle(
     color: _tertiaryColor,
     fontWeight: FontWeight.bold,
-    fontSize: 25*(1/textScaleFactor!),  
+    fontSize: 22*(1/textScaleFactor!),  
     fontFamily: 'Raleway'
   )
 );

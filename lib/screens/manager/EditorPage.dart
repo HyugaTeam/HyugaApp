@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/models/models.dart';
+import 'package:hyuga_app/screens/manager_wrapper_home/manager_wrapper_home_provider.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:hyuga_app/widgets/profile_image_hero.dart';
 import 'package:image_picker/image_picker.dart';
@@ -182,8 +183,8 @@ class _EditorPageState extends State<EditorPage> {
   @override
   Widget build(BuildContext context) {
     
-    unchangedData = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data; // Used to compare with the changed properties
-    temporaryChanges = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data; // The actual changed properties
+    unchangedData = context.watch<ManagerWrapperHomePageProvider>().managedPlace; // Used to compare with the changed properties
+    temporaryChanges = context.watch<ManagerWrapperHomePageProvider>().managedPlace; // The actual changed properties
     List<List<dynamic>> temporaryListOfProfiles = <List<dynamic>>[]; // NOT IN USE
     temporaryChanges!.profile!.forEach((key, value) { temporaryListOfProfiles.add([key,value]); }); // NOT IN USE
 

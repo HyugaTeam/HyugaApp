@@ -1,8 +1,10 @@
 
+import 'package:authentication/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/models/models.dart';
+import 'package:hyuga_app/screens/manager_wrapper_home/manager_wrapper_home_provider.dart';
 import 'package:hyuga_app/services/analytics_service.dart';
 import 'package:hyuga_app/services/auth_service.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +27,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> pendingReservationsStream() {
     FirebaseFirestore _db = FirebaseFirestore.instance;
-    return   _db.collection('users').doc(authService.currentUser!.uid).collection('managed_locals')
+    return   _db.collection('users').doc(Authentication.auth.currentUser!.uid).collection('managed_locals')
     .doc(_managedLocal!.id).collection('reservations')
     .where('accepted',isNull: true)
     .where('date_start', isGreaterThan: Timestamp.fromDate(DateTime.now().toLocal().add(Duration(minutes: -30))))
@@ -35,7 +37,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> acceptedReservationsStream() {
     FirebaseFirestore _db = FirebaseFirestore.instance;
-    return _db.collection('users').doc(authService.currentUser!.uid).collection('managed_locals')
+    return _db.collection('users').doc(Authentication.auth.currentUser!.uid).collection('managed_locals')
     .doc(_managedLocal!.id).collection('reservations')
     .where('accepted',isEqualTo: true)
     .where('claimed',isNull: true)
@@ -224,7 +226,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data;
+    _managedLocal = Provider.of<ManagerWrapperHomePageProvider>(context).managedPlace;
 
     return Scaffold(
       key: _scaffoldKey,

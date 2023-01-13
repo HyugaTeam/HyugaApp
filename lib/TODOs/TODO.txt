@@ -113,3 +113,9 @@ Wine Street Events UI
 
 - scapam de AppBar ul colorat
 - pe pagina cu restaurante ne ramane doar harta cu colturile rotunjite (appbar alb si navbar tot alb)
+
+
+- profile page
+- sa faci Rezervare
+- sa faci bilet
+- cand cumperi bilet sa poti personaliza fiecare bilet (cu nume si email)

@@ -146,8 +146,8 @@ class _ScanReceiptState extends State<ScanReceipt> {
         else if(_imageFile!.path == "")
           return Scaffold();
         else{
-          TextDetector textDetector = GoogleMlKit.vision.textDetector();
-          final text = textDetector.processImage(InputImage.fromFilePath(_imageFile!.path));
+          TextRecognizer textRecognizer = GoogleMlKit.vision.textRecognizer();
+          final text = textRecognizer.processImage(InputImage.fromFilePath(_imageFile!.path));
           return Scaffold(
             // extendBodyBehindAppBar: true,
             appBar: AppBar(
@@ -176,7 +176,7 @@ class _ScanReceiptState extends State<ScanReceipt> {
                 SizedBox(height: 10,),
                 Expanded(
                   // height: 400,
-                  child: FutureBuilder<RecognisedText>(
+                  child: FutureBuilder<RecognizedText>(
                     future: text,
                     builder: (context, ss) {
                       if(!ss.hasData){

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/models.dart';
 import 'package:hyuga_app/screens/manager/ScannedCodesHistoryPage.dart';
+import 'package:hyuga_app/screens/manager_wrapper_home/manager_wrapper_home_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,7 @@ class AnalysisPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data;
+    _managedLocal = Provider.of<ManagerWrapperHomePageProvider>(context).managedPlace;
 
     return Scaffold(
       body: Container(

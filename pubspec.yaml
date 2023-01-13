@@ -1,6 +1,8 @@
 name: hyuga_app
 description: Hyuga App - Find your ideal hangout location.
 
+publish_to: 'none'
+
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -14,13 +16,16 @@ description: Hyuga App - Find your ideal hangout location.
 version: 1.0.0+16
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  authentication: 
+    path: ./packages/authentication
+  firebase_core:
   # firebase_storage: ^5.0.0
   firebase_storage: 
   # image_picker: 0.6.7+12
@@ -32,9 +37,9 @@ dependencies:
   # cupertino_icons: ^0.1.2
   cupertino_icons: 
   # firebase_auth: ^0.18.0+1
-  firebase_auth:
+  firebase_auth: ^3.4.2
   # cloud_firestore: ^0.14.0+2
-  cloud_firestore: 
+  # cloud_firestore: 
   # location: ^3.0.2
   location: 
   # google_maps_flutter: ^0.5.24+1
@@ -83,7 +88,13 @@ dependencies:
   in_app_purchase: 
   #adapty_flutter:
   #firebase_app_check:
-  fake_cloud_firestore:
+  #fake_cloud_firestore:
+  expandable_text:
+  flutter_stripe:
+  shared_preferences:
+  http:
+  path_provider:
+  flutter_polyline_points:
 
 
 
@@ -91,6 +102,8 @@ dependencies:
 # Commented
 # dependency_overrides:
 #   firebase_core: 0.4.4
+dependency_overrides:
+  firebase_core_platform_interface: 4.5.1
 
 dev_dependencies:
   flutter_test:
@@ -122,7 +135,42 @@ flutter:
     - assets/images/pins/android/wine-street-logo-pin.png
     - assets/images/wine_icon1.png
     - assets/icons/restaurant.png
-  
+    - assets/icons/filter.png
+    - assets/icons/more.png
+    - assets/icons/left-arrow.png
+    - assets/icons/favourite.png
+    - assets/icons/favourite-solid.png
+    - assets/icons/no-data.png
+    - assets/icons/pin.png
+    - assets/icons/list.png
+    - assets/icons/map.png
+    - assets/icons/clear-filter.png
+    - assets/icons/log-in.png
+    - assets/templates/ticket.html
+    - assets/icons/ticket.png
+    - assets/icons/accepted.png
+    - assets/icons/refused.png
+    - assets/icons/claimed.png
+    - assets/icons/waiting.png
+    - assets/icons/calendar.png
+    - assets/icons/time.png
+    - assets/icons/no-results-found.png
+    - assets/icons/important.png
+    - assets/icons/user.png
+    - assets/icons/phone.png
+    - assets/icons/distance.png
+    - assets/icons/italian.png
+    - assets/icons/pizza.png
+    - assets/icons/beer.png
+    - assets/icons/european.png
+    - assets/icons/coffee.png
+    - assets/icons/wine.png
+    - assets/icons/social-friendly.png
+    - assets/icons/question.png
+    - assets/icons/edit.png
+    - assets/icons/detail.png
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -150,6 +198,9 @@ flutter:
     - family: Lato
       fonts:
         - asset: fonts/Lato-Regular.ttf
+    - family: Helvetica
+      fonts:
+        - asset: fonts/Helvetica.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

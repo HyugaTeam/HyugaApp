@@ -1,7 +1,8 @@
+import 'package:authentication/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/models/models.dart';
-import 'package:hyuga_app/services/auth_service.dart';
+import 'package:hyuga_app/screens/manager_wrapper_home/manager_wrapper_home_provider.dart';
 import 'package:hyuga_app/services/querying_service.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> activeGuestsStream(){
     FirebaseFirestore _db = FirebaseFirestore.instance;
-    return   _db.collection('users').doc(authService.currentUser!.uid).collection('managed_locals')
+    return   _db.collection('users').doc(Authentication.auth.currentUser!.uid).collection('managed_locals')
     .doc(_managedLocal!.id).collection('scanned_codes')
     .where('is_active',isEqualTo: true)
     .snapshots();
@@ -27,7 +28,7 @@ class _ActiveGuestsPageState extends State<ActiveGuestsPage> {
   @override
   Widget build(BuildContext context) {
 
-    _managedLocal = Provider.of<AsyncSnapshot<ManagedPlace>>(context).data;
+    _managedLocal = Provider.of<ManagerWrapperHomePageProvider>(context).managedPlace;
     
     return Scaffold(
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(

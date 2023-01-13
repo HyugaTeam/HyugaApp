@@ -8,6 +8,7 @@ class WrapperHomePage extends StatelessWidget {
     var provider = context.watch<WrapperHomePageProvider>();
     var selectedScreenIndex = provider.selectedScreenIndex;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: selectedScreenIndex,

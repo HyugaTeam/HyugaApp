@@ -8,7 +8,7 @@ String localAsset(String fileName){
 String localSvgAsset(String fileName){
   return "assets/icons/$fileName.svg";
 }
-Uint8List cloudAsset(String fileName){
+String cloudAsset(String fileName){
   return kAssets[fileName];
 }
 

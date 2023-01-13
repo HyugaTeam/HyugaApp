@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -98,12 +99,12 @@ class _ScanPlaceCodeState extends State<ScanPlaceCode> {
         else if(_imageFile!.path == "")
           return Scaffold();
         else{
-          TextDetector textDetector = GoogleMlKit.vision.textDetector();
+          TextRecognizer textDetector = GoogleMlKit.vision.textRecognizer();
           final text = textDetector.processImage(InputImage.fromFilePath(_imageFile!.path));
           return Scaffold(
             body: FutureBuilder(
               future: text,
-              builder: (context, AsyncSnapshot<RecognisedText> text) {
+              builder: (context, AsyncSnapshot<RecognizedText> text) {
                 if(!text.hasData)
                   return SpinningLogo();
                 else{

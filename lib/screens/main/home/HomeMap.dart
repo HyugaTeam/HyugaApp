@@ -156,8 +156,8 @@ class _HomeMapState extends State<HomeMap> {
             )
               //snippet: item.name
             ),
-            markerId: MarkerId(item.name!),
-            position: LatLng(item.location!.latitude, item.location!.longitude), 
+            markerId: MarkerId(item.name),
+            position: LatLng(item.location.latitude, item.location.longitude), 
           )
         ).toSet(),
       ),

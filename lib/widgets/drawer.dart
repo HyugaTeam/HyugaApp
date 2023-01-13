@@ -1,31 +1,27 @@
+import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/screens/drawer/ReservationsHistory_Page.dart.dart';
-import 'package:hyuga_app/screens/drawer/ScanPlaceCode_Page.dart';
-import 'package:hyuga_app/screens/drawer/ScannedLocals_Page.dart';
 import 'package:hyuga_app/screens/drawer/ask_for_help_page.dart';
 import 'package:hyuga_app/screens/drawer/events_page.dart';
-import 'package:hyuga_app/screens/drawer/subscribe_payment_page.dart';
 import 'package:hyuga_app/services/auth_service.dart';
-import 'package:hyuga_app/screens/drawer/UserQRCode_Page.dart';
-import 'package:provider/provider.dart';
 
 class ProfileDrawer extends StatelessWidget {
   String? username = "" ;
   ProfileDrawer(){
-    if(authService.currentUser!.displayName != null)
-      username = authService.currentUser!.displayName;
-    else if(authService.currentUser!.email != null)
-     username = authService.currentUser!.email!.substring(0,authService.currentUser!.email!.indexOf('@'));
+    if(Authentication.auth.currentUser!.displayName != null)
+      username = Authentication.auth.currentUser!.displayName;
+    else if(Authentication.auth.currentUser!.email != null)
+     username = Authentication.auth.currentUser!.email!.substring(0,Authentication.auth.currentUser!.email!.indexOf('@'));
   }
   
   @override
   Widget build(BuildContext context) {
     return Drawer(
         child: StreamBuilder( 
-          stream: authService.user,
+          stream: Authentication.user,
           builder: (context, snapshot) {
-            if(snapshot.hasData && !authService.currentUser!.isAnonymous!)
+            if(snapshot.hasData && !Authentication.auth.currentUser!.isAnonymous)
               return Column(  // The StreamBuilder returns this path if the user is LOGGED IN and NOT ANONYMOUS
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +43,7 @@ class ProfileDrawer extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(30),
                                   child: Image.network(
-                                    authService.currentUser!.photoURL != null? authService.currentUser!.photoURL! : '',
+                                    Authentication.auth.currentUser!.photoURL != null? Authentication.auth.currentUser!.photoURL! : '',
                                     width: 50,
                                     loadingBuilder: (context, child, loadingProgress){
                                       if(loadingProgress == null)
@@ -59,7 +55,7 @@ class ProfileDrawer extends StatelessWidget {
                                       );
                                     },
                                     errorBuilder: (context, error, stacktrace){
-                                      print(authService.currentUser!.photoURL);
+                                      print(Authentication.auth.currentUser!.photoURL);
                                       return Image.asset(
                                         'assets/images/empty-profile.png',
                                         width:50
@@ -87,9 +83,9 @@ class ProfileDrawer extends StatelessWidget {
                       children: <Widget>[
                         /// Either shows the 'Scan History' button or nothing depending on the user's 'manager' property
                         // StreamBuilder<bool>(
-                        //   stream: authService.loading.stream,
+                        //   stream: Authentication.auth.loading.stream,
                         //   builder: (context, snapshot) {
-                        //   return authService.currentUser.isManager == null 
+                        //   return Authentication.auth.currentUser.isManager == null 
                         //     ? ListTile(leading: FaIcon(FontAwesomeIcons.percent, color: Theme.of(context).primaryColor, size: 20,), 
                         //         title: Text('Istoric scanari'), 
                         //         onTap: (){
@@ -99,37 +95,52 @@ class ProfileDrawer extends StatelessWidget {
                         //     : Container();
                         //   }
                         // ),
-                        StreamBuilder<bool>(
-                          stream: authService.loading.stream,
-                          builder: (context, snapshot) {
-                          return authService.currentUser!.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.calendar, color: Theme.of(context).primaryColor, size: 20), 
+                        Builder(
+                          builder: (context){
+                            final isManager = Authentication.currentUserProfile != null && Authentication.currentUserProfile!.isManager!;
+                            if(isManager)
+                              return ListTile(leading: FaIcon(FontAwesomeIcons.calendar, color: Theme.of(context).primaryColor, size: 20), 
                                 title: Text('Evenimente'), 
                                 onTap: (){
                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){ return EventsPage(); }));
                                 }
-                            )
-                            : Container();
-                          }
+                            );
+                            return Container();
+                          },
                         ),
-                        StreamBuilder<bool>(
-                          stream: authService.loading.stream,
-                          builder: (context, snapshot) {
-                          return authService.currentUser!.isManager == null 
-                            ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Theme.of(context).primaryColor, size: 20), 
-                                title: Text('Istoric rezervări'), 
-                                onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
-                                }
-                            )
-                            : Container();
-                          }
-                        ),
+                        // StreamBuilder<bool>(
+                        //   stream: Authentication.auth.loading.stream,
+                        //   builder: (context, snapshot) {
+                        //   return Authentication.auth.currentUser!.isManager == null 
+                        //     ? ListTile(leading: FaIcon(FontAwesomeIcons.calendar, color: Theme.of(context).primaryColor, size: 20), 
+                        //         title: Text('Evenimente'), 
+                        //         onTap: (){
+                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return EventsPage(); }));
+                        //         }
+                        //     )
+                        //     : Container();
+                        //   }
+                        // ),
+                        // StreamBuilder<bool>(
+                        //   stream: Authentication.auth.loading.stream,
+                        //   builder: (context, snapshot) {
+                        //   return Authentication.auth.currentUser!.isManager == null 
+                        //     ? ListTile(leading: FaIcon(FontAwesomeIcons.bookOpen, color: Theme.of(context).primaryColor, size: 20), 
+                        //         title: Text('Istoric rezervări'), 
+                        //         onTap: (){
+                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return ReservationsHistoryPage(); }));
+                        //         }
+                        //     )
+                        //     : Container();
+                        //   }
+                        // ),
+
+
                         /// Either shows the 'My Code' button or nothing depending on the user's 'manager' property
                         // StreamBuilder<bool>(
-                        //   stream: authService.loading.stream,
+                        //   stream: Authentication.auth.loading.stream,
                         //   builder: (context, snapshot) {
-                        //     return authService.currentUser!.isManager == null 
+                        //     return Authentication.auth.currentUser!.isManager == null 
                         //       ? ListTile(
                         //         leading: FaIcon(FontAwesomeIcons.qrcode, color: Theme.of(context).primaryColor), 
                         //         title: Text('Codul meu'), 
@@ -140,27 +151,27 @@ class ProfileDrawer extends StatelessWidget {
                         //       : Container();
                         //   }
                         // ),
-                        StreamBuilder<bool>(
-                          stream: authService.loading.stream,
-                          builder: (context, snapshot) {
-                            return authService.currentUser!.isManager == null 
-                              ? ListTile(
-                                //tileColor: Theme.of(context).primaryColor.withOpacity(0.5),
-                                leading: FaIcon(FontAwesomeIcons.questionCircle, color: Theme.of(context).primaryColor), 
-                                title: Text(
-                                  'Ajutor'
-                                ), 
-                                onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AskForHelpPage(); }));
-                                }
-                              )
-                              : Container();
-                          }
-                        ),
                         // StreamBuilder<bool>(
-                        //   stream: authService.loading.stream,
+                        //   stream: Authentication.auth.loading.stream,
                         //   builder: (context, snapshot) {
-                        //     return authService.currentUser!.isManager == null 
+                        //     return Authentication.auth.currentUser!.isManager == null 
+                        //       ? ListTile(
+                        //         //tileColor: Theme.of(context).primaryColor.withOpacity(0.5),
+                        //         leading: FaIcon(FontAwesomeIcons.questionCircle, color: Theme.of(context).primaryColor), 
+                        //         title: Text(
+                        //           'Ajutor'
+                        //         ), 
+                        //         onTap: (){
+                        //           Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AskForHelpPage(); }));
+                        //         }
+                        //       )
+                        //       : Container();
+                        //   }
+                        // ),
+                        // StreamBuilder<bool>(
+                        //   stream: Authentication.auth.loading.stream,
+                        //   builder: (context, snapshot) {
+                        //     return Authentication.auth.currentUser!.isManager == null 
                         //       ? ListTile(
                         //         tileColor: Theme.of(context).accentColor.withOpacity(0.5),
                         //         leading: FaIcon(FontAwesomeIcons.gem, color: Theme.of(context).accentColor), 
@@ -179,9 +190,9 @@ class ProfileDrawer extends StatelessWidget {
                         // ),
                         // The 'Activate table' button
                         // StreamBuilder<bool>(
-                        //   stream: authService.loading.stream,
+                        //   stream: Authentication.auth.loading.stream,
                         //   builder: (context, snapshot) {
-                        //     return authService.currentUser.isManager == null 
+                        //     return Authentication.auth.currentUser.isManager == null 
                         //       ? ListTile(
                         //         leading: FaIcon(FontAwesomeIcons.camera, color: Colors.blueGrey), 
                         //         title: Text('Activeaza masa'), 
@@ -206,14 +217,12 @@ class ProfileDrawer extends StatelessWidget {
                               splashColor: Colors.deepOrangeAccent,
                               child: Text("Log out"),
                               onPressed: () async {
-                                await authService.signOut();
+                                await Authentication.auth.signOut();
                                 Navigator.popUntil(context, (route){
                                   if(route.isFirst)
                                     return true;
                                   return false;
                                 });
-                                if(authService.user == null)
-                                  print("Daskhfjghfjsdf");
                               },
                             ),
                           ),
@@ -278,9 +287,7 @@ class ProfileDrawer extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        await authService.signOut();
-                        if(authService.user == null)
-                          print("Daskhfjghfjsdf");
+                        await Authentication.auth.signOut();
                       },
                     ),
                   ),
