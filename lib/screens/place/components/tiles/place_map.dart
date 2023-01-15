@@ -15,7 +15,7 @@ class PlaceMapPage extends StatelessWidget {
     var placeLocation = provider.place.location;
     var userLocation = wrapperHomePageProvider.currentLocation;
     // print(provider.distanceBetween(userLocation!, placeLocation));
-    if(provider.distance == null && provider.time == null)
+    if(userLocation != null && provider.distance == null && provider.time == null)
       provider.getTimeAndDistance(userLocation, placeLocation);
     if(userLocation != null && provider.polyline == null)
       provider.getPolylines(context, LatLng(userLocation.latitude!, userLocation.longitude!),  LatLng(placeLocation.latitude, placeLocation.longitude));
@@ -135,6 +135,7 @@ class PlaceMapPage extends StatelessWidget {
                       height: 40,
                       width: 220,
                       child: FloatingActionButton.extended(
+                        elevation: 0,
                         label: Text.rich(
                           TextSpan(
                             children: [

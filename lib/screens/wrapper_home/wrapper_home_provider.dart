@@ -106,7 +106,7 @@ class WrapperHomePageProvider with ChangeNotifier{
     notifyListeners();
   }
   void updateSelectedScreenIndex(int index){
-    if(Authentication.auth.currentUser!.isAnonymous && index == 2)
+    if(Authentication.auth.currentUser!.isAnonymous && (index == 2 || index == 3))
       showCupertinoDialog(
         context: context,
         barrierDismissible: true, 
@@ -115,7 +115,9 @@ class WrapperHomePageProvider with ChangeNotifier{
           titleTextStyle: Theme.of(context).textTheme.labelMedium!.copyWith(fontSize: 18),
           title: Center(
             child: Container(
-              child: Text("Pentru a vizualiza profilul, trebuie să fiți logat.", textAlign: TextAlign.center,),
+              child: index == 2
+              ? Text("Pentru a vizualiza istoricul, trebuie să fiți logat.", textAlign: TextAlign.center,)
+              : Text("Pentru a vizualiza profilul, trebuie să fiți logat.", textAlign: TextAlign.center,),
             ),
           ),
           actionsAlignment: MainAxisAlignment.center,

@@ -95,6 +95,8 @@ dependencies:
   http:
   path_provider:
   flutter_polyline_points:
+  barcode_widget:
+  maps_launcher:
 
 
 

@@ -82,6 +82,26 @@ class HistoryPageProvider with ChangeNotifier{
     );
   }
 
+  Image getTicketImage(String photoUrl){
+    
+    return Image.network(
+      photoUrl,
+      alignment: FractionalOffset.topCenter,
+      fit: BoxFit.cover,
+      frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) {
+          return child;
+        }
+        return AnimatedOpacity(
+          child: child,
+          opacity: frame == null ? 0 : 1,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    );
+  }
+
   void changeViewType() async{
     _loading();
     if(viewType == ViewType.reservations)

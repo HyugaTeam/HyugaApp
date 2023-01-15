@@ -1,3 +1,4 @@
+import 'package:authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hyuga_app/config/format.dart';
@@ -7,6 +8,8 @@ import 'package:hyuga_app/screens/payment/payment_page.dart';
 import 'package:hyuga_app/screens/payment/payment_provider.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'dart:math' as Math;
+
+import 'package:maps_launcher/maps_launcher.dart';
 
 class EventPage extends StatelessWidget {
   @override
@@ -67,7 +70,38 @@ class EventPage extends StatelessWidget {
                 style: Theme.of(context).textButtonTheme.style!.copyWith(
                   padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 20, vertical: 13))
                 ),
-                onPressed: (){
+                onPressed: Authentication.auth.currentUser!.isAnonymous 
+                ? (){
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.6,
+                            child: Text("Pentru a cumpăra un bilet, trebuie să vă înregistrați.")
+                          ),
+                          TextButton(
+                            style: Theme.of(context).textButtonTheme.style!.copyWith(
+                              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent)
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Authentication.signOut();
+                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                            },
+                            child: Text("Log In", style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              decoration: TextDecoration.underline,
+                              fontSize: 15
+                            ),),
+                          )
+                        ],
+                      ),
+                    )
+                  );
+                }
+                : () {
                   Navigator.push(context, PageRouteBuilder(
                     pageBuilder: (context, animation, secAnimation) => ChangeNotifierProvider(
                       create: (_) => PaymentPageProvider(event, event.prices.keys.toList(), event.mainCategory, event.prices, event.originalPrices),
@@ -246,14 +280,19 @@ class EventPage extends StatelessWidget {
                 backgroundColor: Theme.of(context).highlightColor, radius: 15,
               ),
               SizedBox(width: 15,),
-              Text(
-                "${event.locationName}", 
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: Colors.black, 
-                  // color: Colors.grey,
-                  fontSize: 16, 
-                  decoration: TextDecoration.underline,
-                  // fontWeight: FontWeight.normal
+              GestureDetector(
+                onTap: (){
+                  MapsLauncher.launchCoordinates(provider.event.location.latitude, provider.event.location.longitude);
+                },
+                child: Text(
+                  "${event.locationName}", 
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    color: Colors.black, 
+                    // color: Colors.grey,
+                    fontSize: 16, 
+                    decoration: TextDecoration.underline,
+                    // fontWeight: FontWeight.normal
+                  ),
                 ),
               )
             ],

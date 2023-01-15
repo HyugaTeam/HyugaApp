@@ -194,65 +194,68 @@ class ReservationPage extends StatelessWidget {
                     Column(/// TIME, DATE 
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text.rich( /// The Date
-                          TextSpan(
-                            children: [
-                              WidgetSpan(child: Image.asset(localAsset('calendar'), width: 17)),
-                              WidgetSpan(child: SizedBox(width: 10)),
-                              TextSpan(
-                                text: formatDateToDay(reservation.dateStart),
-                                style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
-                              ),
-                            ]
-                          )
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              child: Image.asset(localAsset('calendar'), color: Theme.of(context).primaryColor, width: 16,),
+                              backgroundColor: Theme.of(context).highlightColor, radius: 15,
+                            ),
+                            SizedBox(width: 10),
+                            Text( 
+                              formatDateToDay(reservation.dateStart)!,
+                              style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
+                            ),
+                          ]
                         ),
                         SizedBox(height: 20),
-                        Text.rich( /// The Time 
-                          TextSpan(
-                            children: [
-                              WidgetSpan(child: Image.asset(localAsset('time'), width: 17)),
-                              WidgetSpan(child: SizedBox(width: 10)),
-                              TextSpan(
-                                text: formatDateToHourAndMinutes(reservation.dateStart),
-                                style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
-                              ),
-                            ]
-                          )
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              child: Image.asset(localAsset('time'), color: Theme.of(context).primaryColor, width: 16,),
+                              backgroundColor: Theme.of(context).highlightColor, radius: 15,
+                            ),
+                            SizedBox(width: 10),
+                            Text( 
+                              formatDateToHourAndMinutes(reservation.dateStart)!,
+                              style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
+                            ),
+                          ]
                         ),
                         SizedBox(height: 20),
-                        Text.rich( /// The Name
-                          TextSpan(
-                            children: [
-                              WidgetSpan(child: Icon(Icons.person, size: 20)),
-                              WidgetSpan(child: SizedBox(width: 10)),
-                              TextSpan(
-                                
-                                text: reservation.guestName == null 
-                                ? ( Authentication.auth.currentUser!.displayName!.length < 20 ?  Authentication.auth.currentUser!.displayName! : reservation.guestName!.substring(0,20))
-                                : ( Authentication.auth.currentUser!.displayName != null
-                                ? Authentication.auth.currentUser!.displayName!.length < 20 ?  Authentication.auth.currentUser!.displayName! : reservation.guestName!.substring(0,20)
-                                : "fără nume"),
-                                style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15, color: Theme.of(context).colorScheme.secondary)
-                              ),
-                            ]
-                          )
-                        ),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              child: Icon(Icons.person, color: Theme.of(context).primaryColor, size: 16,),
+                              backgroundColor: Theme.of(context).highlightColor, radius: 15,
+                            ),
+                            SizedBox(width: 10),
+                            Text( 
+                              reservation.guestName == null 
+                              ? ( Authentication.auth.currentUser!.displayName!.length < 20 ?  Authentication.auth.currentUser!.displayName! : reservation.guestName!.substring(0,20))
+                              : ( Authentication.auth.currentUser!.displayName != null
+                              ? Authentication.auth.currentUser!.displayName!.length < 20 ?  Authentication.auth.currentUser!.displayName! : reservation.guestName!.substring(0,20)
+                              : "fără nume"),
+                              style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15, color: Theme.of(context).colorScheme.secondary)
+                            ),
+                          ]
+                        )
                       ],
                     ),                    
                     Column(///Number of people
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text.rich( /// The Number of people
-                          TextSpan(
-                            children: [
-                              WidgetSpan(child: Image.asset(localAsset('user'), width: 16)),
-                              WidgetSpan(child: SizedBox(width: 10)),
-                              TextSpan(
-                                text: reservation.numberOfGuests.toString(),
-                                style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
-                              ),
-                            ]
-                          )
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              child: Image.asset(localAsset('user'), color: Theme.of(context).primaryColor, width: 16,),
+                              backgroundColor: Theme.of(context).highlightColor, radius: 15,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              reservation.numberOfGuests.toString(),
+                              style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
+                            ),
+                          ]
                         ),
                         SizedBox(height: 20,),
                         // Text.rich( /// The Discount 
@@ -270,18 +273,19 @@ class ReservationPage extends StatelessWidget {
                         //   )
                         // ),
                         SizedBox(height: 20,),
-                        Text.rich( /// The phone number 
-                          TextSpan(
-                            children: [
-                              WidgetSpan(child: Image.asset(localAsset('phone'), width: 16)),
-                              WidgetSpan(child: SizedBox(width: 10)),
-                              TextSpan(
-                                text: reservation.contactPhoneNumber,
-                                style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
-                              ),
-                            ]
-                          )
-                        ),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              child: Image.asset(localAsset('phone'), color: Theme.of(context).primaryColor, width: 16,),
+                              backgroundColor: Theme.of(context).highlightColor, radius: 15,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              reservation.contactPhoneNumber!,
+                              style: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15)
+                            ),
+                          ]
+                        )
                       ],
                     ),
                   ],
@@ -296,7 +300,10 @@ class ReservationPage extends StatelessWidget {
                     Text.rich( /// The Date
                       TextSpan(
                         children: [
-                          WidgetSpan(child: Image.asset(localAsset('important'), width: 16)),
+                          WidgetSpan(child: CircleAvatar(
+                                child: Image.asset(localAsset('important'), color: Theme.of(context).primaryColor, width: 16,),
+                                backgroundColor: Theme.of(context).highlightColor, radius: 15,
+                              ),),
                           WidgetSpan(child: SizedBox(width: 10)),
                           TextSpan(
                             text: "Informații importante",

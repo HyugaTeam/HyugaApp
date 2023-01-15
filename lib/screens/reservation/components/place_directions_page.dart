@@ -14,11 +14,11 @@ class PlaceDirectionsPage extends StatelessWidget {
     var placeLocation = provider.place != null ? provider.place!.location: null;
     var userLocation = wrapperHomePageProvider.currentLocation;
     //print(provider.distanceBetween(userLocation!, placeLocation));
-    if(provider.distance == null && provider.time == null && provider.place != null)
+    if(userLocation != null && provider.distance == null && provider.time == null && provider.place != null)
       provider.getTimeAndDistance(userLocation, placeLocation);
     if(userLocation != null && provider.polyline == null && provider.place != null)
       provider.getPolylines(context, LatLng(userLocation.latitude!, userLocation.longitude!),  LatLng(placeLocation!.latitude, placeLocation.longitude));
-    print(userLocation!.latitude);
+    // print(userLocation!.latitude);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -55,9 +55,14 @@ class PlaceDirectionsPage extends StatelessWidget {
               Container(
                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).highlightColor,
+                  color: Colors.white,
                   boxShadow: [
-                    BoxShadow(offset: Offset(0,1), color: Colors.black54)
+                    BoxShadow(
+                      color: Colors.black45, 
+                      offset: Offset(1.5,1),
+                      blurRadius: 2,
+                      spreadRadius: 0.2
+                    )
                   ]
                 ),
                 //height: 100,
@@ -144,6 +149,7 @@ class PlaceDirectionsPage extends StatelessWidget {
                       height: 40,
                       width: 220,
                       child: FloatingActionButton.extended(
+                        elevation: 0,
                         label: Text.rich(
                           TextSpan(
                             children: [

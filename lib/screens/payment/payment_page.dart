@@ -1,3 +1,4 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hyuga_app/config/config.dart';
@@ -30,7 +31,7 @@ class PaymentPage extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>
                 MultiProvider(
                   providers: [
-                    ChangeNotifierProvider(create: (context) => TicketPageProvider(ticket)),
+                    ChangeNotifierProvider(create: (context) => TicketPageProvider(ticket, BarcodeWidget(barcode:  Barcode.code128(), data: ticket.id, drawText: false,))),
                   ],
                   child: TicketPage(),
                 )

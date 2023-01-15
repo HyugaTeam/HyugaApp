@@ -1,6 +1,10 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hyuga_app/config/config.dart';
 import 'package:hyuga_app/screens/history/history_provider.dart';
+import 'package:hyuga_app/screens/ticket/ticket_page.dart';
+import 'package:hyuga_app/screens/ticket/ticket_provider.dart';
+import 'package:hyuga_app/screens/wrapper_home/wrapper_home_provider.dart';
 
 import 'empty_tickets_list.dart';
 
@@ -8,6 +12,7 @@ class HistoryTicketsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = context.watch<HistoryPageProvider>();
+    var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     return Builder(
       builder: (context) {
         var upcomingTickets = provider.upcomingTickets;
@@ -57,9 +62,9 @@ class HistoryTicketsList extends StatelessWidget {
                             )),
                             WidgetSpan(child: SizedBox(width: 10,)),
                             TextSpan( 
-                              text: "Nu ai rezervări trecute", 
+                              text: "Nu ai evenimente trecute", 
                               style: Theme.of(context).textTheme.headline6!.copyWith(
-                                fontSize: 18, 
+                                fontSize: 14, 
                                 fontWeight: FontWeight.normal,
                                 // color: Theme.of(context).textTheme.headline6!.color!.withOpacity(0.54)
                                 color: Theme.of(context).textTheme.headline6!.color
@@ -70,13 +75,101 @@ class HistoryTicketsList extends StatelessWidget {
                     );
                 else{
                   var ticket = upcomingTickets[index];
-                  return GestureDetector(
-                    onTap: (){
-                      
-                    },
-                    child: Container(
-                      
-                    ),
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: MaterialButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                        ChangeNotifierProvider.value(
+                          value: wrapperHomePageProvider,
+                          child: ChangeNotifierProvider(
+                            create: (context) => TicketPageProvider(ticket, BarcodeWidget(barcode:  Barcode.code128(),data: ticket.id, drawText: false, height: 80, )),
+                            child: TicketPage(),
+                          ),
+                        )
+                      )).whenComplete(() => provider.getData()),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              spreadRadius: 0.1,
+                              blurRadius: 10,
+                              offset: const Offset(0, 0)
+                            )
+                          ],
+                        ),
+                        //padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        height: 100,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: AspectRatio(
+                                aspectRatio: 1.5,
+                                child: Image.network(ticket.photoUrl),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(ticket.eventName, style: Theme.of(context).textTheme.labelMedium),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text.rich( /// The Date
+                                        TextSpan(
+                                          children: [
+                                            WidgetSpan(child: Image.asset(localAsset('calendar'), width: 18)),
+                                            WidgetSpan(child: SizedBox(width: 10)),
+                                            TextSpan(
+                                              text: formatDateToDay(ticket.dateStart)
+                                            ),
+                                          ]
+                                        )
+                                      ),
+                                      SizedBox(width: 20,),
+                                      Text.rich( /// The Time 
+                                        TextSpan(
+                                          children: [
+                                            WidgetSpan(child: Image.asset(localAsset('time'), width: 18)),
+                                            WidgetSpan(child: SizedBox(width: 10)),
+                                            TextSpan(
+                                              text: formatDateToHourAndMinutes(ticket.dateStart)
+                                            ),
+                                          ]
+                                        )
+                                      ),
+                                    ],
+                                  ),
+                                    Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text.rich( /// The 'Accepted' or 'Refused' symbol
+                                        TextSpan( 
+                                          children: [
+                                            WidgetSpan(child: Icon(Icons.place, size: 18,)),
+                                            WidgetSpan(child: SizedBox(width: 10)),
+                                            TextSpan(
+                                              text: ticket.eventLocationName,
+                                            ),
+                                          ]
+                                        )
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      )
+                    ) 
                   );
                 }
               },
@@ -122,9 +215,9 @@ class HistoryTicketsList extends StatelessWidget {
                           )),
                           WidgetSpan(child: SizedBox(width: 10,)),
                           TextSpan( 
-                            text: "Nu ai rezervări trecute", 
+                            text: "Nu ai evenimente trecute", 
                             style: Theme.of(context).textTheme.headline6!.copyWith(
-                              fontSize: 18, 
+                              fontSize: 14, 
                               fontWeight: FontWeight.normal,
                               // color: Theme.of(context).textTheme.headline6!.color!.withOpacity(0.54)
                               color: Theme.of(context).textTheme.headline6!.color
@@ -135,13 +228,101 @@ class HistoryTicketsList extends StatelessWidget {
                   );
                 else{
                   var ticket = pastTickets[index];
-                  return GestureDetector(
-                    onTap: (){
-                      
-                    },
-                    child: Container(
-                      
-                    ),
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: MaterialButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => 
+                        ChangeNotifierProvider.value(
+                          value: wrapperHomePageProvider,
+                          child: ChangeNotifierProvider(
+                            create: (context) => TicketPageProvider(ticket, BarcodeWidget(barcode:  Barcode.code128(),data: ticket.id, drawText: false, height: 80, )),
+                            child: TicketPage(),
+                          ),
+                        )
+                      )).whenComplete(() => provider.getData()),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).highlightColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              spreadRadius: 0.1,
+                              blurRadius: 10,
+                              offset: const Offset(0, 0)
+                            )
+                          ],
+                        ),
+                        //padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        height: 100,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: AspectRatio(
+                                aspectRatio: 1.5,
+                                child: Image.network(ticket.photoUrl),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(ticket.eventName, style: Theme.of(context).textTheme.labelMedium),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text.rich( /// The Date
+                                        TextSpan(
+                                          children: [
+                                            WidgetSpan(child: Image.asset(localAsset('calendar'), width: 18)),
+                                            WidgetSpan(child: SizedBox(width: 10)),
+                                            TextSpan(
+                                              text: formatDateToDay(ticket.dateStart)
+                                            ),
+                                          ]
+                                        )
+                                      ),
+                                      SizedBox(width: 20,),
+                                      Text.rich( /// The Time 
+                                        TextSpan(
+                                          children: [
+                                            WidgetSpan(child: Image.asset(localAsset('time'), width: 18)),
+                                            WidgetSpan(child: SizedBox(width: 10)),
+                                            TextSpan(
+                                              text: formatDateToHourAndMinutes(ticket.dateStart)
+                                            ),
+                                          ]
+                                        )
+                                      ),
+                                    ],
+                                  ),
+                                    Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text.rich( /// The 'Accepted' or 'Refused' symbol
+                                        TextSpan( 
+                                          children: [
+                                            WidgetSpan(child: Icon(Icons.place, size: 18,)),
+                                            WidgetSpan(child: SizedBox(width: 10)),
+                                            TextSpan(
+                                              text: ticket.eventLocationName,
+                                            ),
+                                          ]
+                                        )
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      )
+                    ) 
                   );
                 }
               },

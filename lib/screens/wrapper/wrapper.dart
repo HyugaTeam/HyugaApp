@@ -92,7 +92,7 @@ class Wrapper extends StatelessWidget {
           if(Authentication.isLoading)
             return LoadingPage();
           else{
-            if(Authentication.currentUserProfile != null && Authentication.currentUserProfile!.isManager!)
+            if(Authentication.currentUserProfile != null && !Authentication.currentUserProfile!.isAnonymous! && Authentication.currentUserProfile!.isManager!)
               return ChangeNotifierProvider(
                 create: (_) => ManagerWrapperHomePageProvider(),
                 child: ManagerWrapperHomePage()

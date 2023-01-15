@@ -17,6 +17,8 @@ class Ticket{
   DateTime dateCreated;
   DateTime dateStart;
   DateTime dateEnd;
+  String photoUrl;
+  String eventLocationName;
   
   Ticket({
     required this.id,
@@ -35,6 +37,8 @@ class Ticket{
     required this.dateStart,
     required this.eventTicketRef,
     required this.userTicketRef,
+    required this.photoUrl,
+    required this.eventLocationName
   });
 }
 
@@ -56,7 +60,9 @@ Ticket docToTicket(QueryDocumentSnapshot<Map<String, dynamic>> doc){
     dateEnd: DateTime.fromMillisecondsSinceEpoch(data['date_end'].millisecondsSinceEpoch),
     cardLast4: data['card_last_4'],
     eventTicketRef: data['event_ticket_ref'],
-    userTicketRef: data['user_ticket_ref']
+    userTicketRef: data['user_ticket_ref'],
+    photoUrl: data['photo_url'],
+    eventLocationName: data['event_location_name']
   );
 }
 /// Used in return upon booking a succesful ticket on payment page (since we don't have a document snapshot) 
@@ -77,6 +83,8 @@ Ticket docWithIdAndDataAsArgsToTicket(String id, Map<String, dynamic> data, Docu
     dateEnd: DateTime.fromMillisecondsSinceEpoch(data['date_end'].millisecondsSinceEpoch),
     cardLast4: data['card_last_4'],
     eventTicketRef: eventTicketRef,
-    userTicketRef: userTicketRef
+    userTicketRef: userTicketRef,
+    photoUrl: data['photo_url'],
+    eventLocationName: data['event_location_name']
   );
 }

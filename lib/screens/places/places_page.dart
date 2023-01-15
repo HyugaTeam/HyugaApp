@@ -236,15 +236,15 @@ class PlacesPage extends StatelessWidget {
             // ],
           ),
           provider.isLoading
-              ? Positioned(
-                child: Container(
-                  height: 5,
-                  width: MediaQuery.of(context).size.width,
-                  child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), backgroundColor: Colors.transparent,)
-                ), 
-                bottom: MediaQuery.of(context).padding.bottom,
-              )
-              : Container(),
+          ? Positioned(
+            child: Container(
+              height: 5,
+              width: MediaQuery.of(context).size.width,
+              child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), backgroundColor: Colors.transparent,)
+            ), 
+            bottom: MediaQuery.of(context).padding.bottom,
+          )
+          : Container(),
         ],
       ),
     );

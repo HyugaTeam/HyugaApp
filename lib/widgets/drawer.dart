@@ -271,6 +271,7 @@ class ProfileDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Spacer(),
                   Container( // sign-out button
                     padding: EdgeInsets.symmetric(horizontal: 0),
                     child: RaisedButton(

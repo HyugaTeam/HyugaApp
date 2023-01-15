@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:authentication/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
@@ -40,6 +43,17 @@ class Authentication{
         },
         SetOptions(merge: true)
       );
+    }
+  }
+
+  static Future<void> updateProfileImage(String path) async{
+    try{
+      var ref = FirebaseStorage.instance.ref().child("users/${auth.currentUser!.uid}/profile.jpg");
+      await ref.putFile(File(path));
+      await auth.currentUser!.updatePhotoURL(await ref.getDownloadURL());
+    } 
+    catch(error){
+
     }
   }
   
@@ -205,7 +219,7 @@ class Authentication{
   /// Fetches data about the current logged user from the database
   Future<UserProfile?> getUserData(User? currentUser) async {
     var currentUserProfile = userToUserProfile(currentUser);
-    if(currentUser != null){
+    if(currentUser != null && !currentUser.isAnonymous){
       await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get().then((doc){
         currentUserProfile!.isManager = doc.data()!['manager'] ?? false;
       });

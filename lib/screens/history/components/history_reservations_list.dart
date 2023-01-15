@@ -98,7 +98,17 @@ class
                         child: Stack(
                           children: [
                             Container(
-                              color: Theme.of(context).highlightColor,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).highlightColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade300,
+                                    spreadRadius: 0.1,
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 0)
+                                  )
+                                ],
+                              ),
                               //padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                               height: 100,
                               child: Row(
