@@ -171,7 +171,10 @@ flutter:
     - assets/icons/question.png
     - assets/icons/edit.png
     - assets/icons/detail.png
-
+    - assets/icons/dine-out.png
+    - assets/icons/discount.png
+    - assets/icons/event.png
+    - assets/icons/bookings.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

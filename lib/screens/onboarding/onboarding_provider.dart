@@ -14,23 +14,28 @@ class OnboardingPageProvider with ChangeNotifier {
   var pages = [
     {
       "image": "log-in",
-      "title": "Bun venit",
-      "content": "Găsește transportul cel mai ieftin și rapid către aeroport."
+      "title": "Bun venit în comunitatea Wine Street!",
+      "content": ""
     },
     {
-      "image": "log-in",
-      "title": "Alege traseul perfect",
-      "content": "Introdu ziua, plecarea și destinația transportului tău și alege ora potrivită din traseele disponibile."
+      "image": "discount",
+      "title": "Petreci mai ieftin",
+      "content": "Cu Wine Street salvezi bani de fiecare dată când ieși în oraș!"
     },
     {
-      "image": "log-in",
-      "title": "Introdu datele tale",
-      "content": "Completează numele, adresa de email, numărul de bagaje și alte date ale zborului."
+      "image": "dine-out",
+      "title": "Economisește bani la restaurant",
+      "content": "Fă o rezervare la restaurant și primești o sticlă de vin gratuit la consumația minimă."
     },
     {
-      "image": "log-in",
-      "title": "Bilet confirmat!",
-      "content": "Gata, ai primit biletul pe adresa de email, și ai transportul către aeroport asigurat.",
-    }
+      "image": "event",
+      "title": "Cumpără bilete mai ieftin la evenimente",
+      "content": "Cumpără bilete mai ieftin la orice concert și eveniment."
+    },
+    {
+      "image": "bookings",
+      "title": "Rezervări și bilete în aplicație",
+      "content": "Poți vizualiza și administra rezervările și biletele tale direct în aplicație "
+    },
   ];
 }
