@@ -46,14 +46,14 @@ class _PlacePageState extends State<PlacePage> {
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0, 
         shape: ContinuousRectangleBorder(),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         onPressed: !( wrapperHomePageProvider.currentUser != null && wrapperHomePageProvider.currentUser!.isAnonymous == true)
         ?() {
           showModalBottomSheet(
             context: context, 
             // elevation: 0,
             isScrollControlled: true,
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
             barrierColor: Colors.black.withOpacity(0.35),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
             builder: (context) => MultiProvider(
@@ -146,7 +146,7 @@ class _PlacePageState extends State<PlacePage> {
                         borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(150,30), bottomRight: Radius.elliptical(200,50)),
                         child: Container(
                           height: 220 + MediaQuery.of(context).padding.top,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.tertiary,
                         ),
                       ),
                       ClipRRect(
@@ -189,14 +189,14 @@ class _PlacePageState extends State<PlacePage> {
           leading: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: CircleAvatar(
-              backgroundColor: Theme.of(context).highlightColor,
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
               radius: 40,
               child: IconButton(
                 // alignment: Alignment.centerRight,
                 color: Theme.of(context).colorScheme.secondary,
                 //padding: EdgeInsets.symmetric(horizontal: 20),
                 onPressed: () => Navigator.pop(context),
-                icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).primaryColor,)
+                icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).canvasColor,)
               ),
             ),
           ),
@@ -232,7 +232,7 @@ class _PlacePageState extends State<PlacePage> {
                   //width: 20,
                   child: TextButton.icon(
                     style: Theme.of(context).textButtonTheme.style!.copyWith(
-                      //backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.tertiary),
                       padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 20))
                     ),
                     onPressed: () => Navigator.push(context, MaterialPageRoute(

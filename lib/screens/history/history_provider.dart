@@ -56,6 +56,8 @@ class HistoryPageProvider with ChangeNotifier{
     .get()
     .then((query) => upcomingTickets = query.docs.map<Ticket>((doc) => docToTicket(doc)).toList());
 
+    print(isLoading);
+
     _loading();
 
     notifyListeners();

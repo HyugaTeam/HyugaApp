@@ -15,6 +15,7 @@ class
     print(wrapperHomePageProvider.toString() + " wrapperHomeRes");
 
     return RefreshIndicator(
+      color: Theme.of(context).colorScheme.tertiary,
       onRefresh: provider.getData,
       child: Builder(
         builder: (context) {
@@ -41,7 +42,7 @@ class
                 itemCount: upcomingReservations == null || upcomingReservations.length == 0 ?  1 : upcomingReservations.length,
                 separatorBuilder: (context, index) => SizedBox(height: 15),
                 itemBuilder: (context, index){
-                  if(provider.isLoading){
+                  if(upcomingReservations == null && provider.isLoading){
                     return Container(
                       padding: EdgeInsets.only(top: 95),
                       height: 100,

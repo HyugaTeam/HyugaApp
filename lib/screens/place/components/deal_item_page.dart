@@ -38,6 +38,7 @@ class DealItemPopupPage extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width,
               child: FloatingActionButton.extended(
+                backgroundColor: Theme.of(context).colorScheme.tertiary,
                 shape: ContinuousRectangleBorder(),
                 elevation: 0,
                 onPressed: (){Navigator.pop(context);},

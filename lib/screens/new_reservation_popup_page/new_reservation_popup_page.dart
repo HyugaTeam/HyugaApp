@@ -88,9 +88,14 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                     separatorBuilder: (context,index)=>SizedBox(width: 10,),
                     itemBuilder: (context,index) => ChoiceChip(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                      side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                       backgroundColor:Colors.grey[200],
-                      selectedColor: Theme.of(context).primaryColor,
+                      selectedColor: Theme.of(context).colorScheme.tertiary,
+                      labelStyle: Theme.of(context).textTheme.overline!.copyWith(
+                        color: index == provider.selectedDay
+                        ? Theme.of(context).canvasColor
+                        : Colors.black
+                      ),
                       labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
                       selected: index == selectedDay,
                       label: Column(
@@ -152,17 +157,21 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                               child: ChoiceChip(
                                 labelPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 0),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                                side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                                side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                                 backgroundColor: Theme.of(context).canvasColor,
-                                selectedColor: Theme.of(context).primaryColor,
+                                selectedColor: Theme.of(context).colorScheme.tertiary,
                                 selected: index == selectedHour,
+                                labelStyle: Theme.of(context).textTheme.overline!.copyWith(
+                                  color: index == provider.selectedHour
+                                  ? Theme.of(context).canvasColor
+                                  : Colors.black
+                                ),
                                 label: Text(
                                   provider.firstHourAsDate!.add(Duration(minutes: index*30)).hour.toString()
                                   + ":" +
                                     (provider.firstHourAsDate!.add(Duration(minutes: index*30)).minute.toString() == '0' 
                                     ? '00' 
                                     : provider.firstHourAsDate!.add(Duration(minutes: index*30)).minute.toString()),
-                                  style: Theme.of(context).textTheme.overline
                                 ),
                                 onSelected: (selected){
                                     provider.selectHour(index);
@@ -253,12 +262,17 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                     separatorBuilder: (context,index) => SizedBox(width: 10,),
                     itemBuilder: (context,index) => ChoiceChip(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                      side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                       backgroundColor: Theme.of(context).canvasColor,
                       labelPadding: EdgeInsets.symmetric(horizontal: 20),
+                      labelStyle: Theme.of(context).textTheme.overline!.copyWith(
+                        color: index == provider.selectedPeopleNo
+                        ? Theme.of(context).canvasColor
+                        : Colors.black
+                      ),
                       label: Text((index+1).toString()),
                       selected: index == selectedPeopleNo,
-                      selectedColor: Theme.of(context).primaryColor,
+                      selectedColor: Theme.of(context).colorScheme.tertiary,
                       onSelected: (selected){
                         provider.selectPeopleNo(index);
                         _peopleNoScrollController!.animateTo(
@@ -277,12 +291,14 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                 ? Container(
                   height: 5,
                   width: MediaQuery.of(context).size.width,
-                  child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor), backgroundColor: Colors.transparent,)
+                  child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.tertiary), backgroundColor: Colors.transparent,)
                 )
                 : Container(), 
                 Container(
+                  color: Theme.of(context).colorScheme.tertiary,
                   width: MediaQuery.of(context).size.width,
                   child: FloatingActionButton.extended(
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                     shape: ContinuousRectangleBorder(),
                     elevation: 0,
                     onPressed: (){
@@ -350,7 +366,7 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 1
                                 ),
                               ),
@@ -379,31 +395,31 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                             ),
                             onChanged: (input) => provider.selectName(input),
                             keyboardType: TextInputType.name,
-                            cursorColor: Theme.of(context).primaryColor,
+                            cursorColor: Theme.of(context).colorScheme.tertiary,
                             maxLength: 15,
                           ),
                         ),
                       ),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 1,
-                            color: Theme.of(context).primaryColor
-                          ),
-                          //borderRadius: BorderRadius.circular(30)
-                        ),
-                        child: IconButton(
-                          //tooltip: "Modifică numărul de telefon",
-                          onPressed: () => setState(() => _isFormEnabled = true), 
-                          iconSize: 16,
-                          color: Theme.of(context).primaryColor,
-                          // splashColor:  Theme.of(context).colorScheme.secondary,
-                          // highlightColor:  Theme.of(context).colorScheme.secondary,
-                          icon: Image.asset(localAsset("edit"), width: 15,)
-                        ),
-                      )
+                      // Container(
+                      //   height: 40,
+                      //   decoration: BoxDecoration(
+                      //     shape: BoxShape.circle,
+                      //     border: Border.all(
+                      //       width: 1,
+                      //       color: Theme.of(context).colorScheme.tertiary
+                      //     ),
+                      //     //borderRadius: BorderRadius.circular(30)
+                      //   ),
+                      //   child: IconButton(
+                      //     //tooltip: "Modifică numărul de telefon",
+                      //     onPressed: () => setState(() => _isFormEnabled = true), 
+                      //     iconSize: 16,
+                      //     color: Theme.of(context).primaryColor,
+                      //     // splashColor:  Theme.of(context).colorScheme.secondary,
+                      //     // highlightColor:  Theme.of(context).colorScheme.secondary,
+                      //     icon: Image.asset(localAsset("edit"), width: 15,)
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -458,7 +474,7 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 1
                                 ),
                               ),
@@ -487,7 +503,7 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                             ),
                             onChanged: (input) => provider.selectPhoneNo(input),
                             keyboardType: TextInputType.number,
-                            cursorColor: Theme.of(context).primaryColor,
+                            cursorColor: Theme.of(context).colorScheme.tertiary,
                             validator: (input) {
                               if(input == null || !input.startsWith('0') || input.length != 10)
                                 return 'Numărul de telefon este invalid';
@@ -497,26 +513,26 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 1,
-                            color: Theme.of(context).primaryColor
-                          ),
-                          //borderRadius: BorderRadius.circular(30)
-                        ),
-                        child: IconButton(
-                          //tooltip: "Modifică numărul de telefon",
-                          onPressed: () => setState(() => _isFormEnabled = true), 
-                          iconSize: 16,
-                          color: Theme.of(context).primaryColor,
-                          // splashColor:  Theme.of(context).colorScheme.secondary,
-                          // highlightColor:  Theme.of(context).colorScheme.secondary,
-                          icon: Image.asset(localAsset("edit"), width: 15,)
-                        ),
-                      )
+                      // Container(
+                      //   height: 40,
+                      //   decoration: BoxDecoration(
+                      //     shape: BoxShape.circle,
+                      //     border: Border.all(
+                      //       width: 1,
+                      //       color: Theme.of(context).primaryColor
+                      //     ),
+                      //     //borderRadius: BorderRadius.circular(30)
+                      //   ),
+                      //   child: IconButton(
+                      //     //tooltip: "Modifică numărul de telefon",
+                      //     onPressed: () => setState(() => _isFormEnabled = true), 
+                      //     iconSize: 16,
+                      //     color: Theme.of(context).primaryColor,
+                      //     // splashColor:  Theme.of(context).colorScheme.secondary,
+                      //     // highlightColor:  Theme.of(context).colorScheme.secondary,
+                      //     icon: Image.asset(localAsset("edit"), width: 15,)
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -584,7 +600,7 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   width: 1
                                 ),
                               ),
@@ -612,31 +628,31 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                               counterText: "",
                             ),
                             onChanged: (input) => provider.selectDetails(input),
-                            cursorColor: Theme.of(context).primaryColor,
+                            cursorColor: Theme.of(context).colorScheme.tertiary,
                             maxLength: 15,
                           ),
                         ),
                       ),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 1,
-                            color: Theme.of(context).primaryColor
-                          ),
-                          //borderRadius: BorderRadius.circular(30)
-                        ),
-                        child: IconButton(
-                          //tooltip: "Modifică numărul de telefon",
-                          onPressed: () => setState(() => _isFormEnabled = true), 
-                          iconSize: 16,
-                          color: Theme.of(context).primaryColor,
-                          // splashColor:  Theme.of(context).colorScheme.secondary,
-                          // highlightColor:  Theme.of(context).colorScheme.secondary,
-                          icon: Image.asset(localAsset("edit"), width: 15,)
-                        ),
-                      )
+                      // Container(
+                      //   height: 40,
+                      //   decoration: BoxDecoration(
+                      //     shape: BoxShape.circle,
+                      //     border: Border.all(
+                      //       width: 1,
+                      //       color: Theme.of(context).primaryColor
+                      //     ),
+                      //     //borderRadius: BorderRadius.circular(30)
+                      //   ),
+                      //   child: IconButton(
+                      //     //tooltip: "Modifică numărul de telefon",
+                      //     onPressed: () => setState(() => _isFormEnabled = true), 
+                      //     iconSize: 16,
+                      //     color: Theme.of(context).primaryColor,
+                      //     // splashColor:  Theme.of(context).colorScheme.secondary,
+                      //     // highlightColor:  Theme.of(context).colorScheme.secondary,
+                      //     icon: Image.asset(localAsset("edit"), width: 15,)
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -646,6 +662,7 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: FloatingActionButton.extended(
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                     shape: ContinuousRectangleBorder(),
                     elevation: 0,
                     onPressed: (){
@@ -800,6 +817,7 @@ class _NewReservationPopupPageState extends State<NewReservationPopupPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: FloatingActionButton.extended(
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                     shape: ContinuousRectangleBorder(),
                     elevation: 0,
                     onPressed: () async{

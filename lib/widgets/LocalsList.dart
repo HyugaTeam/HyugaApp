@@ -89,6 +89,7 @@ class _LocalsState extends State<Locals> {
             child: Text("Ne pare rau, dar nu exista rezultate.\nIncearca sa cauti altceva.")
           );
           else return RefreshIndicator(
+            color: Theme.of(context).colorScheme.tertiary,
             displacement: 50,
             onRefresh: refresh,
             child: Container(

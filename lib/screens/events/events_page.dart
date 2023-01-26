@@ -5,6 +5,7 @@ import 'package:hyuga_app/config/paths.dart';
 import 'package:hyuga_app/screens/event/event_page.dart';
 import 'package:hyuga_app/screens/event/event_provider.dart';
 import 'package:hyuga_app/screens/events/events_provider.dart';
+import 'package:hyuga_app/screens/wrapper_home/wrapper_home_provider.dart';
 
 import 'components/empty_list.dart';
 import 'components/filters_popup.dart';
@@ -14,6 +15,7 @@ class EventsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = context.watch<EventsPageProvider>();
+    var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
@@ -74,6 +76,7 @@ class EventsPage extends StatelessWidget {
       ),
       body: SizedBox.expand(
         child: RefreshIndicator(
+          color: Theme.of(context).colorScheme.tertiary,
           onRefresh: provider.getData,
           child: Stack(
             children: [
@@ -92,11 +95,14 @@ class EventsPage extends StatelessWidget {
                       return GestureDetector(
                         onTap: () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-                            create: (_) => EventPageProvider(event),
+                          MaterialPageRoute(builder: (context) => MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (_) => EventPageProvider(event),),
+                              ChangeNotifierProvider.value(value: wrapperHomePageProvider)
+                            ],
                             child: EventPage(),
-                          ))
-                        ),
+                          ),
+                        )),
                         child: Container(
                           height: 320,
                           // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -149,14 +155,14 @@ class EventsPage extends StatelessWidget {
                                                 Container(
                                                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).highlightColor,
+                                                    color: Theme.of(context).colorScheme.tertiary,
                                                     borderRadius: BorderRadius.circular(20)
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
                                                     "RON${event.prices[event.mainCategory].toString()}",
                                                     style: Theme.of(context).textTheme.headline6!.copyWith(
-                                                      color: Theme.of(context).primaryColor,
+                                                      color: Theme.of(context).canvasColor,
                                                       fontSize: 18
                                                     ),
                                                   ),

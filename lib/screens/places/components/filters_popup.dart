@@ -48,8 +48,8 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
         elevation: 0, 
         shape: ContinuousRectangleBorder(),
         backgroundColor: _currFiltersSelected
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.primary.withOpacity(0.6),
+        ? Theme.of(context).colorScheme.tertiary
+        : Colors.grey,
         onPressed: _currFiltersSelected 
         ? () {
           provider.filter(
@@ -76,14 +76,14 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.4),
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
             radius: 40,
             child: IconButton(
               // alignment: Alignment.centerRight,
               color: Theme.of(context).colorScheme.secondary,
               //padding: EdgeInsets.symmetric(horizontal: 20),
               onPressed: () => Navigator.pop(context),
-              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).primaryColor,)
+              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).canvasColor,)
             ),
           ),
         ),
@@ -101,10 +101,10 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: CircleAvatar(
-              backgroundColor: _currFiltersSelected ? Theme.of(context).highlightColor : Theme.of(context).canvasColor,
+              backgroundColor: _currFiltersSelected ? Theme.of(context).colorScheme.tertiary : Theme.of(context).canvasColor,
               radius: 30,
               child: IconButton(
-                icon: Image.asset(localAsset("clear-filter"), width: 30, color: Theme.of(context).primaryColor,),
+                icon: Image.asset(localAsset("clear-filter"), width: 30, color: !_currFiltersSelected ? Theme.of(context).primaryColor : Theme.of(context).canvasColor,),
                 color: Theme.of(context).primaryColor,
                 // color: _currFiltersSelected ? Theme.of(context).textTheme.labelMedium!.color :  Theme.of(context).textTheme.labelMedium!.color!.withOpacity(0.4),
                 onPressed: _currFiltersSelected 
@@ -138,11 +138,11 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
                 return Container(
                   child: ChoiceChip(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                    side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                     pressElevation: 0,
-                    selectedColor: Theme.of(context).primaryColor,
+                    selectedColor: Theme.of(context).colorScheme.tertiary,
                     backgroundColor: Theme.of(context).canvasColor,
-                    labelStyle: Theme.of(context).textTheme.overline!,
+                    labelStyle: Theme.of(context).textTheme.overline!.copyWith(color: _currSelectedFilters['types']![index] ? Theme.of(context).canvasColor : Colors.black),
                     label: Text(_filters['types']![index],),
                     selected: _currSelectedFilters['types']![index],
                     onSelected: (selected){
@@ -171,11 +171,11 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
                 return Container(
                   child: ChoiceChip(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                    side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                     pressElevation: 0,
-                    selectedColor: Theme.of(context).primaryColor,
+                    selectedColor: Theme.of(context).colorScheme.tertiary,
                     backgroundColor: Theme.of(context).canvasColor,
-                    labelStyle: Theme.of(context).textTheme.overline!,
+                    labelStyle: Theme.of(context).textTheme.overline!.copyWith(color: _currSelectedFilters['ambiences']![index] ? Theme.of(context).canvasColor : Colors.black),
                     label: Text(kAmbiences[_filters['ambiences']![index]]!,),
                     selected: _currSelectedFilters['ambiences']![index],
                     onSelected: (selected){
@@ -202,11 +202,11 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
               itemBuilder: (context, index){
                 return ChoiceChip(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                  side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                   pressElevation: 0,
-                  selectedColor: Theme.of(context).primaryColor,
+                  selectedColor: Theme.of(context).colorScheme.tertiary,
                   backgroundColor: Theme.of(context).canvasColor,
-                  labelStyle: Theme.of(context).textTheme.overline!,
+                  labelStyle: Theme.of(context).textTheme.overline!.copyWith(color: _currSelectedFilters['costs']![index] ? Theme.of(context).canvasColor : Colors.black),
                   label: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(int.parse(_filters['costs']![index]), (index) => 
@@ -247,11 +247,11 @@ class _FiltersPopUpPageState extends State<FiltersPopUpPage> {
               itemBuilder: (context, index){
                 return ChoiceChip(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
+                  side: BorderSide(width: 1, color: Theme.of(context).colorScheme.tertiary),
                   pressElevation: 0,
-                  selectedColor: Theme.of(context).colorScheme.primary,
+                  selectedColor: Theme.of(context).colorScheme.tertiary,
                   backgroundColor: Theme.of(context).canvasColor,
-                  labelStyle: Theme.of(context).textTheme.overline!.copyWith(fontSize: 15),
+                  labelStyle: Theme.of(context).textTheme.overline!.copyWith(color: _currSelectedFilters['sorts']![index] ? Theme.of(context).canvasColor : Colors.black),
                   label: Text(_filters['sorts']![index],),
                   selected: _currSelectedFilters['sorts']![index],
                   onSelected: (selected){

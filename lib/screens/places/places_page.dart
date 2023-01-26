@@ -6,6 +6,9 @@ import 'package:hyuga_app/screens/places/components/places_list.dart';
 import 'package:hyuga_app/screens/places/components/places_map.dart';
 import 'package:hyuga_app/screens/places/places_provider.dart';
 
+
+/// Wrapping screen for the 'Places' page
+/// Either a 'Google Map', or a 'List of places'
 class PlacesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,15 @@ class PlacesPage extends StatelessWidget {
           // alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(30)
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 0.1,
+                blurRadius: 10,
+                offset: const Offset(0, 0)
+              )
+            ],
           ),
           duration: Duration(milliseconds: 300),
           width: 200,
@@ -32,7 +43,7 @@ class PlacesPage extends StatelessWidget {
                   duration: Duration(milliseconds: 200),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: provider.viewType == ViewType.list ? Theme.of(context).primaryColor : Colors.white,
+                    color: provider.viewType == ViewType.list ? Theme.of(context).colorScheme.tertiary : Colors.white,
                     borderRadius: BorderRadius.circular(30)
                   ),
                   width: 100,
@@ -41,14 +52,14 @@ class PlacesPage extends StatelessWidget {
                     TextSpan(
                       children: [
                         WidgetSpan(
-                          child: Image.asset(localAsset("list"), width: 15, color: Theme.of(context).canvasColor,)
+                          child: Image.asset(localAsset("list"), width: 15, color: provider.viewType == ViewType.map ? Colors.grey: Theme.of(context).canvasColor,)
                         ),
                         WidgetSpan(
                           child: SizedBox(width: 10)
                         ),
                         TextSpan(
                           text: "Listă",
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15),
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15, color: provider.viewType == ViewType.map ? Colors.grey: Theme.of(context).canvasColor)
                         )
                       ]
                     )
@@ -61,7 +72,7 @@ class PlacesPage extends StatelessWidget {
                   duration: Duration(milliseconds: 200),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: provider.viewType == ViewType.map ? Theme.of(context).primaryColor : Colors.white,
+                    color: provider.viewType == ViewType.map ? Theme.of(context).colorScheme.tertiary : Colors.white,
                     borderRadius: BorderRadius.circular(30)
                   ),
                   width: 100,
@@ -70,14 +81,14 @@ class PlacesPage extends StatelessWidget {
                     TextSpan(
                       children: [
                         WidgetSpan(
-                          child: Image.asset(localAsset("map"), width: 15, color: Theme.of(context).canvasColor,)
+                          child: Image.asset(localAsset("map"), width: 15, color: provider.viewType == ViewType.list ? Colors.grey: Theme.of(context).canvasColor)
                         ),
                         WidgetSpan(
                           child: SizedBox(width: 10)
                         ),
                         TextSpan(
                           text: "Hartă",
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15),
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15, color: provider.viewType == ViewType.list ? Colors.grey: Theme.of(context).canvasColor),
                         )
                       ]
                     )

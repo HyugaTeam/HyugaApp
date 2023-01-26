@@ -7,6 +7,7 @@ import 'package:hyuga_app/screens/event/event_provider.dart';
 import 'package:hyuga_app/screens/payment/payment_page.dart';
 import 'package:hyuga_app/screens/payment/payment_provider.dart';
 import 'package:expandable_text/expandable_text.dart';
+import 'package:hyuga_app/screens/wrapper_home/wrapper_home_provider.dart';
 import 'dart:math' as Math;
 
 import 'package:maps_launcher/maps_launcher.dart';
@@ -15,6 +16,7 @@ class EventPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = context.watch<EventPageProvider>();
+    var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var event = provider.event;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -68,7 +70,8 @@ class EventPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width*0.4,
               child: TextButton(
                 style: Theme.of(context).textButtonTheme.style!.copyWith(
-                  padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 20, vertical: 13))
+                  padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 20, vertical: 13)),
+                  backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.tertiary),
                 ),
                 onPressed: Authentication.auth.currentUser!.isAnonymous 
                 ? (){
@@ -103,8 +106,11 @@ class EventPage extends StatelessWidget {
                 }
                 : () {
                   Navigator.push(context, PageRouteBuilder(
-                    pageBuilder: (context, animation, secAnimation) => ChangeNotifierProvider(
-                      create: (_) => PaymentPageProvider(event, event.prices.keys.toList(), event.mainCategory, event.prices, event.originalPrices),
+                    pageBuilder: (context, animation, secAnimation) => MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider(create: (_) => PaymentPageProvider(event, event.prices.keys.toList(), event.mainCategory, event.prices, event.originalPrices),),
+                        ChangeNotifierProvider.value(value: wrapperHomePageProvider)
+                      ],
                       child: PaymentPage(),
                     ),
                     transitionDuration: Duration(milliseconds: 300),
@@ -166,8 +172,8 @@ class EventPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.4),
-              child: Image.asset(localAsset("more"), width: 22, color: Theme.of(context).primaryColor,),
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              child: Image.asset(localAsset("more"), width: 22, color: Colors.white,),
               radius: 30,
             ),
           )
@@ -176,14 +182,14 @@ class EventPage extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: CircleAvatar(
-            backgroundColor: Theme.of(context).highlightColor,
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
             radius: 40,
             child: IconButton(
               // alignment: Alignment.centerRight,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).canvasColor,
               //padding: EdgeInsets.symmetric(horizontal: 20),
               onPressed: () => Navigator.pop(context),
-              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).primaryColor,)
+              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).canvasColor,)
             ),
           ),
         ),

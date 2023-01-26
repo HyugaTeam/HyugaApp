@@ -186,6 +186,8 @@ class PaymentPageProvider with ChangeNotifier{
       var ticketData = {
         'event_name': event.name,
         'event_id': event.id,
+        'event_location_name' : event.locationName,
+        'event_location': event.location,
         'guest_name': selectedName,
         'guest_id': user.uid,
         'number_of_people' : selectedNumberOfPeople,
@@ -194,6 +196,7 @@ class PaymentPageProvider with ChangeNotifier{
         'price': prices[selectedCategory],
         'email': selectedEmail,
         'card_last_4': cardFormEditController.details.last4,
+        'photo_url': event.photoUrl,
         'date_created': FieldValue.serverTimestamp(),
         'date_start': Timestamp.fromDate(event.dateStart),
         'date_end': Timestamp.fromDate(event.dateEnd!),
@@ -221,6 +224,7 @@ class PaymentPageProvider with ChangeNotifier{
       print("after set ${selectedCategory}");
       
       ticketData.update("date_created", (_) => DateTime.now().toLocal());
+      print(ticketData);
       return docWithIdAndDataAsArgsToTicket(
         userTicketRef.id,
         ticketData,
@@ -229,7 +233,7 @@ class PaymentPageProvider with ChangeNotifier{
       );
     }
     catch(e){
-      print(e);
+      print(e.toString() + "eroare");
       return null;
     }
   }

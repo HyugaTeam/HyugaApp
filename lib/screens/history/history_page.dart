@@ -30,7 +30,15 @@ class HistoryPage extends StatelessWidget {
           // alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(30)
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                spreadRadius: 0.1,
+                blurRadius: 10,
+                offset: const Offset(0, 0)
+              )
+            ],
           ),
           duration: Duration(milliseconds: 300),
           width: 230,
@@ -43,7 +51,7 @@ class HistoryPage extends StatelessWidget {
                   duration: Duration(milliseconds: 200),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: provider.viewType == ViewType.reservations ? Theme.of(context).primaryColor : Colors.white,
+                    color: provider.viewType == ViewType.reservations ? Theme.of(context).colorScheme.tertiary : Colors.white,
                     borderRadius: BorderRadius.circular(30)
                   ),
                   width: 115,
@@ -52,14 +60,14 @@ class HistoryPage extends StatelessWidget {
                     TextSpan(
                       children: [
                         WidgetSpan(
-                          child: Image.asset(localAsset("restaurant"), width: 15*(1/MediaQuery.textScaleFactorOf(context)), color: Theme.of(context).canvasColor,)
+                          child: Image.asset(localAsset("restaurant"), width: 15*(1/MediaQuery.textScaleFactorOf(context)), color: provider.viewType == ViewType.tickets ? Colors.grey: Theme.of(context).canvasColor)
                         ),
                         WidgetSpan(
                           child: SizedBox(width: 10)
                         ),
                         TextSpan(
                           text: "Rezervări",
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15),
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15, color: provider.viewType == ViewType.tickets ? Colors.grey: Theme.of(context).canvasColor),
                         )
                       ]
                     )
@@ -72,8 +80,8 @@ class HistoryPage extends StatelessWidget {
                   duration: Duration(milliseconds: 200),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: provider.viewType == ViewType.tickets ? Theme.of(context).primaryColor : Colors.white,
-                    borderRadius: BorderRadius.circular(30)
+                    color: provider.viewType == ViewType.tickets ? Theme.of(context).colorScheme.tertiary : Colors.white,
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   width: 115,
                   height: 30,
@@ -81,14 +89,14 @@ class HistoryPage extends StatelessWidget {
                     TextSpan(
                       children: [
                         WidgetSpan(
-                          child: Image.asset(localAsset("ticket"), width: 15*(1/MediaQuery.textScaleFactorOf(context)), color: Theme.of(context).canvasColor,)
+                          child: Image.asset(localAsset("ticket"), width: 15*(1/MediaQuery.textScaleFactorOf(context)), color: provider.viewType == ViewType.reservations ? Colors.grey: Theme.of(context).canvasColor,)
                         ),
                         WidgetSpan(
                           child: SizedBox(width: 10)
                         ),
                         TextSpan(
                           text: "Bilete",
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15),
+                          style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 15, color: provider.viewType == ViewType.reservations ? Colors.grey: Theme.of(context).canvasColor),
                         )
                       ]
                     )
@@ -104,6 +112,7 @@ class HistoryPage extends StatelessWidget {
         ),
       ),
       body: RefreshIndicator(
+        color: Theme.of(context).colorScheme.tertiary,
         onRefresh: provider.getData,
         child: SizedBox.expand(
           child: Stack(

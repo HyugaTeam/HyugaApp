@@ -26,6 +26,7 @@ class WrapperHomePageProvider with ChangeNotifier{
   UserProfile? currentUser; 
   List<String>? favouritePlaces;
   LocationData? currentLocation;
+  HistoryPageProvider? historyPageProvider;
 
   List<BottomNavigationBarItem> screenLabels = <BottomNavigationBarItem>[
     BottomNavigationBarItem(
@@ -82,6 +83,7 @@ class WrapperHomePageProvider with ChangeNotifier{
     .get().
     then((query) => favouritePlaces = query.docs.map((doc) => doc.id).toList());
 
+    historyPageProvider = HistoryPageProvider();
     screens = <Widget>[
       // HomeMapPage(),
       ChangeNotifierProvider(
@@ -93,7 +95,7 @@ class WrapperHomePageProvider with ChangeNotifier{
         child: EventsPage()
       ),
       ChangeNotifierProvider(
-        create: (_) => HistoryPageProvider(),
+        create: (_) => historyPageProvider,
         child: HistoryPage()
       ),
       ChangeNotifierProvider(

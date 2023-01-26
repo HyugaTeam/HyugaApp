@@ -17,6 +17,7 @@ class PlacesPageProvider with ChangeNotifier{
   List<Place> popularPlaces = [];
   List<Place> bestOfferPlaces = [];
   List<Place> favouritePlaces = [];
+  List<Place> searchedPlaces = [];
   Set<Marker> markers = {};
   ViewType viewType = ViewType.list;
   bool isLoading = false;
@@ -299,6 +300,19 @@ class PlacesPageProvider with ChangeNotifier{
 
     notifyListeners();
     _loading();
+  }
+
+  void updateSearchedPlaces(){
+    _loading();
+
+    searchedPlaces = List.from(places);
+
+    if(searchKeyword != null && searchKeyword!.length != 0)
+      searchedPlaces.retainWhere((place) {
+        return place.name.toLowerCase().contains(searchKeyword!.toLowerCase());
+      });
+    _loading();
+    notifyListeners();
   }
 
   Future<void> sortPlaces(String value) async{

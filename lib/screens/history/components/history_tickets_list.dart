@@ -327,6 +327,7 @@ class HistoryTicketsList extends StatelessWidget {
                 }
               },
             ),
+            SizedBox(height: 100)
           ],
         );
       }

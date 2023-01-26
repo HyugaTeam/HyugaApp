@@ -4,6 +4,7 @@ import 'package:hyuga_app/config/config.dart';
 import 'package:hyuga_app/screens/event/event_page.dart';
 import 'package:hyuga_app/screens/event/event_provider.dart';
 import 'package:hyuga_app/screens/ticket/ticket_provider.dart';
+import 'package:hyuga_app/screens/wrapper_home/wrapper_home_provider.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
 class TicketPage extends StatelessWidget {
@@ -11,6 +12,7 @@ class TicketPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = context.watch<TicketPageProvider>();
+    var wrapperHomePageProvider = context.watch<WrapperHomePageProvider>();
     var ticket = provider.ticket;
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -24,24 +26,27 @@ class TicketPage extends StatelessWidget {
           ? null
           : () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-              create: (_) => EventPageProvider(provider.event!),
+            MaterialPageRoute(builder: (context) => MultiProvider(
+              providers: [ 
+                ChangeNotifierProvider(create: (_) => EventPageProvider(provider.event!),),
+                ChangeNotifierProvider.value(value: wrapperHomePageProvider)
+              ],
               child: EventPage(),
-            ))
-          ),
+            )
+          )),
           child: Text("${ticket.eventName}", style: Theme.of(context).appBarTheme.titleTextStyle!.copyWith(decoration: TextDecoration.underline),)
         ),
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: CircleAvatar(
-            backgroundColor: Theme.of(context).highlightColor,
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
             radius: 40,
             child: IconButton(
               // alignment: Alignment.centerRight,
               color: Theme.of(context).colorScheme.secondary,
               //padding: EdgeInsets.symmetric(horizontal: 20),
               onPressed: () => Navigator.pop(context),        
-              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).primaryColor,)
+              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).canvasColor,)
             ),
           ),
         ),
@@ -49,8 +54,8 @@ class TicketPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.4),
-              child: Image.asset(localAsset("more"), width: 22, color: Theme.of(context).primaryColor,),
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
+              child: Image.asset(localAsset("more"), width: 22, color: Theme.of(context).canvasColor,),
               radius: 30,
             ),
           )

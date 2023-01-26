@@ -44,7 +44,7 @@ class PlaceOffers extends StatelessWidget {
                         context: context, 
                         // elevation: 0,
                         isScrollControlled: true,
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
                         barrierColor: Colors.black.withOpacity(0.35),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30))),
                         builder: (context) => Container(

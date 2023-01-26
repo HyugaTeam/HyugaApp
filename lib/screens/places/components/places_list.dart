@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hyuga_app/screens/place/components/search_places_page.dart';
 import 'package:hyuga_app/screens/place/place_page.dart';
 import 'package:hyuga_app/screens/place/place_provider.dart';
 import 'package:hyuga_app/screens/places/places_provider.dart';
@@ -33,14 +32,22 @@ class PlacesList extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 // width: 100,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).highlightColor,
+                  // color: Theme.of(context).highlightColor,
+                  color: Theme.of(context).colorScheme.tertiary,
                   borderRadius: BorderRadius.circular(30)
                 ),
                 child: Row(
                   children: [
-                    Text("Vezi toate", style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Theme.of(context).primaryColor),),
+                    Text(
+                      "Vezi toate", 
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        // color: Theme.of(context).primaryColor),
+                        color: Theme.of(context).canvasColor,
+                        // fontWeight: FontWeight.normal
+                      )
+                    ),
                     SizedBox(width: 10,),
-                    Icon(Icons.arrow_forward_ios, size: 15, color: Theme.of(context).primaryColor,)
+                    Icon(Icons.arrow_forward_ios, size: 15, color: Theme.of(context).canvasColor,)
                   ],
                 ),
               ),
@@ -122,13 +129,15 @@ class PlacesList extends StatelessWidget {
             height: 50,
             width: MediaQuery.of(context).size.width*0.7 < 260 ? MediaQuery.of(context).size.width*0.7 : 260,
             child: TextFormField(
+              maxLength: 15,
               focusNode: provider.textFieldFocusNode,
               controller: provider.textEditingController,
               style: TextStyle(
-                color: Theme.of(context).primaryColor
+                color: Theme.of(context).canvasColor
               ),
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
+                counterText: "",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide(color: Colors.transparent),
@@ -137,7 +146,8 @@ class PlacesList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide(color: Colors.transparent),
                 ),    
-                fillColor: Theme.of(context).highlightColor,
+                fillColor: Theme.of(context).colorScheme.tertiary,
+                // fillColor: Theme.of(context).highlightColor,
                 suffixIcon: AnimatedContainer(
                   width: 100,
                   alignment: Alignment.centerRight,
@@ -149,15 +159,17 @@ class PlacesList extends StatelessWidget {
                       AnimatedContainer(
                         duration: Duration(milliseconds: 500),
                         child: provider.textFieldFocusNode.hasFocus ? IconButton(
-                          icon: Icon(Icons.cancel, color:  Theme.of(context).primaryColor,),
-                          onPressed: (){provider.textFieldFocusNode.unfocus();},
+                          icon: Icon(Icons.cancel, color:  Theme.of(context).canvasColor,),
+                          onPressed: (){provider.textFieldFocusNode.unfocus(); provider.textEditingController.clear(); provider.updateSearchKeyword("");},
                         )
                         : Container(),
                       ),
                       IconButton(
-                        icon: Icon(Icons.search, color:  Theme.of(context).primaryColor,),
+                        icon: Icon(Icons.search, color:  Theme.of(context).canvasColor,),
                         onPressed: (){
                           if(provider.searchKeyword != null && provider.searchKeyword != "") {
+                            provider.textFieldFocusNode.unfocus();
+                            provider.updateSearchedPlaces();
                             provider.updateNextPageIndex(1);
                             provider.pageController.animateToPage(2, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                           }
@@ -186,7 +198,7 @@ class PlacesList extends StatelessWidget {
                 // floatingLabelAlignment: FloatingLabelAlignment.center,
                 label: Container(
                   // alignment: Alignment.center,
-                  child: Text("Caută", style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Theme.of(context).primaryColor),),
+                  child: Text("Caută", style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Theme.of(context).canvasColor,),),
                 ),
                 // enabled: false
               ),
@@ -205,12 +217,18 @@ class PlacesList extends StatelessWidget {
               children: [
                 Text(
                   "Cele mai bune oferte",
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 23),
                 ),
                 CircleAvatar(
-                  backgroundColor: Theme.of(context).highlightColor,
+                  // backgroundColor: Theme.of(context).highlightColor,
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
                   child: IconButton(
-                    icon: Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor, size: 16),
+                    icon: Icon(
+                      Icons.arrow_forward_ios, 
+                      // color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).canvasColor,
+                      size: 16
+                    ),
                     onPressed: (){
                       provider.updateNextPageIndex(0);
                       provider.pushFilteredPlaces('best-offer');
@@ -221,7 +239,7 @@ class PlacesList extends StatelessWidget {
             ),
           ),
           Container(
-            height: 140,
+            height: 130,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: provider.isLoading ? 2 : provider.bestOfferPlaces.length,
@@ -306,7 +324,7 @@ class PlacesList extends StatelessWidget {
                           )
                         ),
                         Container( /// Place's description
-                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                           height: 100,
                           width: 150,
                           decoration: BoxDecoration(
@@ -315,10 +333,10 @@ class PlacesList extends StatelessWidget {
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                padding: const EdgeInsets.only(left: 5.0, right: 2),
                                 child: Text(
                                   place.name,
                                   style: Theme.of(context).textTheme.labelMedium!.copyWith(),
@@ -377,12 +395,18 @@ class PlacesList extends StatelessWidget {
               children: [
                 Text(
                   "Populare",
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 23),
                 ),
                 CircleAvatar(
-                  backgroundColor: Theme.of(context).highlightColor,
+                  // backgroundColor: Theme.of(context).highlightColor,
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
                   child: IconButton(
-                    icon: Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor, size: 16),
+                    icon: Icon(
+                      Icons.arrow_forward_ios, 
+                      // color: Theme.of(context).primaryColor, 
+                      color: Theme.of(context).canvasColor,
+                      size: 16
+                    ),
                     onPressed: (){
                       provider.updateNextPageIndex(0);
                       provider.pushFilteredPlaces('popular');
@@ -393,7 +417,7 @@ class PlacesList extends StatelessWidget {
             ),
           ),
           Container(
-            height: 150,
+            height: 130,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: provider.isLoading ? 2 : popularPlaces.length ,
@@ -478,7 +502,7 @@ class PlacesList extends StatelessWidget {
                           )
                         ),
                         Container( /// Place's description
-                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                           height: 100,
                           width: 150,
                           decoration: BoxDecoration(
@@ -487,10 +511,10 @@ class PlacesList extends StatelessWidget {
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                padding: const EdgeInsets.only(left: 5.0, right: 2),
                                 child: Text(
                                   place.name,
                                   style: Theme.of(context).textTheme.labelMedium!.copyWith(),
@@ -553,9 +577,15 @@ class PlacesList extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 CircleAvatar(
-                  backgroundColor: Theme.of(context).highlightColor,
+                  // backgroundColor: Theme.of(context).highlightColor,
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
                   child: IconButton(
-                    icon: Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor, size: 16),
+                    icon: Icon(
+                      Icons.arrow_forward_ios, 
+                      // color: Theme.of(context).primaryColor, 
+                      color: Theme.of(context).canvasColor,
+                      size: 16
+                    ),
                     onPressed: (){},
                   ),
                 )
@@ -586,7 +616,11 @@ class PlacesList extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Vezi\ntoate", textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).primaryColor)),
+                          Text(
+                            "Vezi\ntoate", 
+                            textAlign: TextAlign.center, 
+                            style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).primaryColor)
+                          ),
                           SizedBox(height: 20,),
                           Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor,)
                         ],

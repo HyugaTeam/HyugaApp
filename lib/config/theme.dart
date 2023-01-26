@@ -40,7 +40,7 @@ ThemeData theme(BuildContext context){
 
 ColorScheme _colorScheme = ColorScheme(
   primary: _primaryColor,
-  secondary: _secondaryColor,
+  secondary: _tertiaryColor,
   tertiary: _tertiaryColor, 
   background: _highlightColor, 
   brightness: Brightness.light, 
@@ -226,14 +226,14 @@ InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
 
 BottomNavigationBarThemeData _bottomNavigationBarTheme = BottomNavigationBarThemeData(
   elevation: 0,
-  selectedItemColor: _primaryColor,
+  selectedItemColor: _tertiaryColor,
   // backgroundColor: Colors.grey[200],
   backgroundColor: _highlightColor,
   selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
   // unselectedLabelStyle: TextStyle(color: Colors.black),
   // unselectedItemColor: Colors.black.withOpacity(0.65),
   unselectedLabelStyle: TextStyle(color: _secondaryColor),
-  unselectedItemColor: _secondaryColor,
+  unselectedItemColor: Colors.grey,
 );
 
 AppBarTheme _appBarTheme = AppBarTheme(

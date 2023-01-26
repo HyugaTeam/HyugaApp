@@ -9,6 +9,7 @@ class EmptyTicketsList extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = context.watch<HistoryPageProvider>();
     return RefreshIndicator(
+      color: Theme.of(context).colorScheme.tertiary,
       triggerMode: RefreshIndicatorTriggerMode.anywhere,
       onRefresh: provider.getData,
       child: SizedBox.expand(
