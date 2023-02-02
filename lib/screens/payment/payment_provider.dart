@@ -69,8 +69,8 @@ class PaymentPageProvider with ChangeNotifier{
         value: total!*100,
       );
 
-      if(paymentIntentResults['erorr'] != null){
-        return null;
+      if(paymentIntentResults['error'] != null){
+        result = null;
       }
 
       print(paymentIntentResults['error'].toString() + " ERROR");
@@ -94,19 +94,19 @@ class PaymentPageProvider with ChangeNotifier{
             Map<String, dynamic> results = await _callPayEndpointIntentId(paymentIntentId: paymentIntent.id);
             /// On 'results' contains an error
             if(results['error'] != null){
-              return null;
+              result = null;
             }
-
+            else result = true;
           }
-
+          else result = true;
         }
         catch(e) {
           print(e.toString() + " error");
-          return null;
+          result = null;
         }
 
       }
-      result = true;
+      //result = true;
     }
     /// The user didn't fill the card info correctly
     on StripeException
@@ -171,7 +171,7 @@ class PaymentPageProvider with ChangeNotifier{
 
   void handlePaymentError(BuildContext context, result) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("A aparut o eroare ${result}"),
+      content: Text("A aparut o eroare."),
     ));
   }
 
