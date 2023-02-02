@@ -27,7 +27,7 @@ class OnboardContent extends StatelessWidget {
         Spacer(),
         Text(title, style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).colorScheme.tertiary, fontStyle: FontStyle.normal, fontSize: 22)),
         SizedBox(height: 25),
-        Text(content, style: Theme.of(context).textTheme.headline3!.copyWith(color: Theme.of(context).primaryColor, fontSize: 26, fontWeight: FontWeight.normal)),
+        Text(content, style: Theme.of(context).textTheme.headline3!.copyWith(color: Theme.of(context).primaryColor, fontSize: 22, fontWeight: FontWeight.normal)),
         Spacer()
       ],
     );

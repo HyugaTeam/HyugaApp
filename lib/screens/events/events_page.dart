@@ -23,56 +23,56 @@ class EventsPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Text("Evenimente",),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: IconButton(
-              icon: Stack(
-                children: [
-                  Center(child: Image.asset(localAsset('filter'), width: 30,)),
-                  provider.activeFilters['sorts']!.fold(false, (prev, curr) => prev || curr)
-                  ? Positioned(
-                    right: 0,
-                    top: 12,
-                    child: Container(
-                      width: 10.0,
-                      height: 10.0,
-                      decoration: new BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  )
-                  : Container()
-                ]
-                ,
-              ),
-              onPressed: (){
-                showGeneralDialog(
-                  context: context,
-                  transitionDuration: Duration(milliseconds: 300),
-                  transitionBuilder: (context, animation, secondAnimation, child){
-                    var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
-                    return SlideTransition(
-                      child: child,
-                      position: Tween<Offset>(
-                        begin: Offset(0,-1),
-                        end: Offset(0,0)
-                      ).animate(_animation),
-                    );
-                  },
-                  pageBuilder: ((context, animation, secondaryAnimation) => MultiProvider(
-                    providers: [
-                      ChangeNotifierProvider.value(value: provider,),
-                      // ChangeNotifierProvider.value(value: wrapperHomePageProvider)
-                    ],
-                    child: FiltersPopUpPage()
-                  )
-                ));
-              },
-            )
-          )
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.symmetric(horizontal: 20.0),
+        //     child: IconButton(
+        //       icon: Stack(
+        //         children: [
+        //           Center(child: Image.asset(localAsset('filter'), width: 30,)),
+        //           provider.activeFilters['sorts']!.fold(false, (prev, curr) => prev || curr)
+        //           ? Positioned(
+        //             right: 0,
+        //             top: 12,
+        //             child: Container(
+        //               width: 10.0,
+        //               height: 10.0,
+        //               decoration: new BoxDecoration(
+        //                 color: Theme.of(context).colorScheme.secondary,
+        //                 shape: BoxShape.circle,
+        //               ),
+        //             ),
+        //           )
+        //           : Container()
+        //         ]
+        //         ,
+        //       ),
+        //       onPressed: (){
+        //         showGeneralDialog(
+        //           context: context,
+        //           transitionDuration: Duration(milliseconds: 300),
+        //           transitionBuilder: (context, animation, secondAnimation, child){
+        //             var _animation = CurvedAnimation(parent: animation, curve: Curves.easeIn);
+        //             return SlideTransition(
+        //               child: child,
+        //               position: Tween<Offset>(
+        //                 begin: Offset(0,-1),
+        //                 end: Offset(0,0)
+        //               ).animate(_animation),
+        //             );
+        //           },
+        //           pageBuilder: ((context, animation, secondaryAnimation) => MultiProvider(
+        //             providers: [
+        //               ChangeNotifierProvider.value(value: provider,),
+        //               // ChangeNotifierProvider.value(value: wrapperHomePageProvider)
+        //             ],
+        //             child: FiltersPopUpPage()
+        //           )
+        //         ));
+        //       },
+        //     )
+        //   )
+        // ],
       ),
       body: SizedBox.expand(
         child: RefreshIndicator(

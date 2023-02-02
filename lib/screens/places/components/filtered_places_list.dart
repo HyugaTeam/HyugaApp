@@ -31,14 +31,14 @@ class FilteredPlacesList extends StatelessWidget {
           leading: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.4),
+              backgroundColor: Theme.of(context).colorScheme.tertiary,
               radius: 40,
               child: IconButton(
                 // alignment: Alignment.centerRight,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.tertiary,
                 //padding: EdgeInsets.symmetric(horizontal: 20),
                 onPressed: () => provider.pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeOut),
-                icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).primaryColor,)
+                icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).canvasColor,)
               ),
             ),
           ),

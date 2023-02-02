@@ -73,6 +73,8 @@ class PaymentPageProvider with ChangeNotifier{
         return null;
       }
 
+      print(paymentIntentResults['error'].toString() + " ERROR");
+
       /// NO 3DS
       /// Payments completes succesfully
       if(paymentIntentResults['clientSecret'] != null && paymentIntentResults['requiresAction'] == null)

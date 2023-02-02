@@ -119,9 +119,9 @@ Wine Street Events UI
 - sa faci Rezervare  x
 - sa faci bilet   x
 - cand cumperi bilet sa poti personaliza fiecare bilet (cu nume si email)
-- schimbat paddingul dinamic de pe pagina localului
+- schimbat paddingul dinamic de pe pagina localului   
 - facut istoricul biletelor  x
 - nu cere locatia pe ios
-- refresh idnicator pe istoric
+- refresh idnicator pe istoric    x
 - apar doua rezervari la alea trecute  
 - schimbat textul pe pagina cu bilete  x

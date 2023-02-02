@@ -28,14 +28,14 @@ class PlaceMapPage extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: CircleAvatar(
-            backgroundColor: Theme.of(context).highlightColor,
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
             radius: 40,
             child: IconButton(
               // alignment: Alignment.centerRight,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.tertiary,
               //padding: EdgeInsets.symmetric(horizontal: 20),
               onPressed: () => Navigator.pop(context),
-              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).primaryColor,)
+              icon: Image.asset(localAsset("left-arrow"), width: 18, color: Theme.of(context).canvasColor,)
             ),
           ),
         ),
