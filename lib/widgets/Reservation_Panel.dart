@@ -329,7 +329,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                           opacity: hour.add(Duration(minutes: index*30)).compareTo(DateTime.now()) < 0 && _selectedDay == 0
                                   ? 0.4 : 1,
                           child: Stack(
-                            overflow: Overflow.visible,
+                            // overflow: Overflow.visible,
                             children: [
                               Align(
                                 alignment: Alignment.center,
@@ -528,7 +528,7 @@ class _ReservationPanelState extends State<ReservationPanel> {
                   // Expanded(
                   //   child: Container()
                   // ),
-                  RaisedButton(
+                  MaterialButton(
                     elevation: 1,
                     disabledColor: Colors.grey[300],
                     color: Theme.of(context).primaryColor,

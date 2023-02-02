@@ -119,7 +119,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
               child: ButtonTheme(
                   minWidth: 310,
                   height: 50,
-                  child: RaisedButton.icon(
+                  child: MaterialButton(
                       animationDuration: Duration(
                         milliseconds: 100
                       ),
@@ -142,7 +142,7 @@ class MainMenuButtonState extends State<MainMenuButton>{
                           index!= null? changeText(index):null;
                         });
                       },
-                      label: Text(
+                      child: Text(
                         buttonText!,
                         style: TextStyle(
                             fontSize: 28*(1/MediaQuery.of(context).textScaleFactor) ,
@@ -151,11 +151,11 @@ class MainMenuButtonState extends State<MainMenuButton>{
                             fontFamily: 'Comfortaa'
                             ),
                       ),
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        size: 52,
-                        color: Colors.orange[600],
-                      ), 
+                      // icon: Icon(
+                      //   Icons.arrow_drop_down,
+                      //   size: 52,
+                      //   color: Colors.orange[600],
+                      // ), 
                     )
               )
             ),

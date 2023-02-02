@@ -100,7 +100,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                     children: <Widget>[
                       Container(
                         alignment: Alignment.centerRight,
-                        child: FlatButton(
+                        child: MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
                           splashColor: Theme.of(context).primaryColor,
@@ -512,7 +512,7 @@ class _SlideShowIntroState extends State<SlideShowIntro> with TickerProviderStat
                               child: Align(
                                 widthFactor: null,
                                 alignment: FractionalOffset.bottomRight,
-                                child: FlatButton(
+                                child: MaterialButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
                                   highlightColor: Theme.of(context).primaryColor,

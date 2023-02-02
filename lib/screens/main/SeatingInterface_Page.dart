@@ -135,44 +135,44 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                     ),
                                   ),
                                   SizedBox(height: 20),
-                                  RaisedButton(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    color: Colors.white,
-                                    highlightColor: Colors.grey.withOpacity(0.4),
-                                    splashColor: Colors.orange[600],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    elevation: 1,
-                                    highlightElevation: 2,
-                                    child: Text(
-                                      "Nu pot folosi aplicatia, desi am parasit localul.",
-                                      style: TextStyle(fontSize: 14),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    onPressed: (){
-                                      AnalyticsService().analytics.logEvent(name: "need_help", parameters: {"place_id": reservationData['place_id']});
-                                      DocumentReference issueRef = FirebaseFirestore.instance.collection('issues').doc();
-                                      issueRef.set(
-                                        {
-                                          'guest_id': authService.currentUser!.uid,
-                                          'guest_name': authService.currentUser!.displayName,
-                                          'place_id': reservationData['place_id'],
-                                          'place_name': reservationData['place_name'],
-                                          'issue_ref': widget.place!.reference
-                                        }
-                                      );
-                                      widget.place!.reference.set(
-                                        {
-                                          'issue_ref': issueRef
-                                        },  
-                                        SetOptions(merge: true)
-                                      );
-                                      _tabController!.animateTo(
-                                        1
-                                      );
-                                    },
-                                  ),
+                                  // RaisedButton(
+                                  //   padding: EdgeInsets.symmetric(vertical: 10),
+                                  //   color: Colors.white,
+                                  //   highlightColor: Colors.grey.withOpacity(0.4),
+                                  //   splashColor: Colors.orange[600],
+                                  //   shape: RoundedRectangleBorder(
+                                  //     borderRadius: BorderRadius.circular(20)
+                                  //   ),
+                                  //   elevation: 1,
+                                  //   highlightElevation: 2,
+                                  //   child: Text(
+                                  //     "Nu pot folosi aplicatia, desi am parasit localul.",
+                                  //     style: TextStyle(fontSize: 14),
+                                  //     textAlign: TextAlign.center,
+                                  //   ),
+                                  //   onPressed: (){
+                                  //     AnalyticsService().analytics.logEvent(name: "need_help", parameters: {"place_id": reservationData['place_id']});
+                                  //     DocumentReference issueRef = FirebaseFirestore.instance.collection('issues').doc();
+                                  //     issueRef.set(
+                                  //       {
+                                  //         'guest_id': authService.currentUser!.uid,
+                                  //         'guest_name': authService.currentUser!.displayName,
+                                  //         'place_id': reservationData['place_id'],
+                                  //         'place_name': reservationData['place_name'],
+                                  //         'issue_ref': widget.place!.reference
+                                  //       }
+                                  //     );
+                                  //     widget.place!.reference.set(
+                                  //       {
+                                  //         'issue_ref': issueRef
+                                  //       },  
+                                  //       SetOptions(merge: true)
+                                  //     );
+                                  //     _tabController!.animateTo(
+                                  //       1
+                                  //     );
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             ),
@@ -203,11 +203,11 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                   );
                 }
               ).then((value) => _tabController!.index = 0);
-              else _scaffoldKey!.currentState!.showSnackBar(
-                SnackBar(
-                  content: Text("O problema a fost deja raportata.")
-                )
-              );
+              // else _scaffoldKey!.currentState!.showSnackBar(
+              //   SnackBar(
+              //     content: Text("O problema a fost deja raportata.")
+              //   )
+              // );
             },
           )
         ],
@@ -361,30 +361,30 @@ class _SeatingInterfaceState extends State<SeatingInterface> with TickerProvider
                                      Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        RaisedButton(
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                          color: Theme.of(context).highlightColor,
-                                          child: Text(
-                                            "Oferte disponibile",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold
-                                            )
-                                          ),
-                                          onPressed: (){
-                                            showDialog(
-                                              context: context, 
-                                              builder: (context) => AlertDialog(
-                                                content: Text(
-                                                  '\n' + formatDeals(reservationData['deals']),
-                                                  style: TextStyle(
-                                                    fontSize: 16
-                                                  )
-                                                ),
-                                              )
-                                            );
-                                          },
-                                        ),
+                                        // RaisedButton(
+                                        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                        //   color: Theme.of(context).highlightColor,
+                                        //   child: Text(
+                                        //     "Oferte disponibile",
+                                        //     style: TextStyle(
+                                        //       fontSize: 20,
+                                        //       fontWeight: FontWeight.bold
+                                        //     )
+                                        //   ),
+                                        //   onPressed: (){
+                                        //     showDialog(
+                                        //       context: context, 
+                                        //       builder: (context) => AlertDialog(
+                                        //         content: Text(
+                                        //           '\n' + formatDeals(reservationData['deals']),
+                                        //           style: TextStyle(
+                                        //             fontSize: 16
+                                        //           )
+                                        //         ),
+                                        //       )
+                                        //     );
+                                        //   },
+                                        // ),
                                       ]
                                     ),
                                 ),

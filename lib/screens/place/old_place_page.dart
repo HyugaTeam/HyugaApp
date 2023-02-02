@@ -816,70 +816,70 @@ class _PlacePageState extends State<PlacePage> with TickerProviderStateMixin{
                           Container( 
                             width: 100,
                             height: 30,
-                            child: RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                              ),
-                              child: Text(
-                                'Uber',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1
-                                ),
-                              ),
-                              color: Colors.black,
-                              onPressed: () async{
-                                AnalyticsService().analytics.logEvent(
-                                  name: "check_uber",
-                                );
-                                LatLng pickup = LatLng(
-                                  queryingService.userLocation!.latitude!, 
-                                  queryingService.userLocation!.longitude!
-                                );
-                                LatLng dropoff = LatLng(
-                                  place.location.latitude, 
-                                  place.location.longitude
-                                );
-                                String deeplink = "https://m.uber.com/ul/?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&action=setPickup&pickup[latitude]=" 
-                                + pickup.latitude.toString()+
-                                "&pickup[longitude]=" 
-                                + pickup.longitude.toString() +
-                                "&pickup[nickname]="
-                                + "" +
-                                "&pickup[formatted_address]="
-                                + "" +
-                                "&dropoff[latitude]="
-                                + dropoff.latitude.toString() + 
-                                "&dropoff[longitude]="
-                                + dropoff.longitude.toString() +
-                                "&dropoff[nickname]="
-                                + place.name.replaceAll(' ', '%20') +
-                                "&dropoff[formatted_address]="
-                                + "" +
-                                "&product_id="
-                                +"a1111c8c-c720-46c3-8534-2fcdd730040d"
-                                ;
-                                _launchInBrowser(
-                                  context,
-                                  deeplink,
-                                  //"https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
-                                  // "https://m.uber.com/ul/
-                                  // ?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&
-                                  // action=setPickup
-                                  // &pickup[latitude]=37.775818
-                                  // &pickup[longitude]=-122.418028
-                                  // &pickup[nickname]=UberHQ
-                                  // &pickup[formatted_address]=1455%20Market%20St%2C%20San%20Francisco%2C%20CA%2094103
-                                  // &dropoff[latitude]=37.802374
-                                  // &dropoff[longitude]=-122.405818
-                                  // &dropoff[nickname]=Coit%20Tower
-                                  // &dropoff[formatted_address]=1%20Telegraph%20Hill%20Blvd%2C%20San%20Francisco%2C%20CA%2094133
-                                  // &product_id=a1111c8c-c720-46c3-8534-2fcdd730040d",
-                                  true
-                                );
-                              },
-                            ),
+                            // child: RaisedButton(
+                            //   shape: RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.circular(20)
+                            //   ),
+                            //   child: Text(
+                            //     'Uber',
+                            //     style: TextStyle(
+                            //       color: Colors.white,
+                            //       fontWeight: FontWeight.bold,
+                            //       letterSpacing: 1
+                            //     ),
+                            //   ),
+                            //   color: Colors.black,
+                            //   onPressed: () async{
+                            //     AnalyticsService().analytics.logEvent(
+                            //       name: "check_uber",
+                            //     );
+                            //     LatLng pickup = LatLng(
+                            //       queryingService.userLocation!.latitude!, 
+                            //       queryingService.userLocation!.longitude!
+                            //     );
+                            //     LatLng dropoff = LatLng(
+                            //       place.location.latitude, 
+                            //       place.location.longitude
+                            //     );
+                            //     String deeplink = "https://m.uber.com/ul/?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&action=setPickup&pickup[latitude]=" 
+                            //     + pickup.latitude.toString()+
+                            //     "&pickup[longitude]=" 
+                            //     + pickup.longitude.toString() +
+                            //     "&pickup[nickname]="
+                            //     + "" +
+                            //     "&pickup[formatted_address]="
+                            //     + "" +
+                            //     "&dropoff[latitude]="
+                            //     + dropoff.latitude.toString() + 
+                            //     "&dropoff[longitude]="
+                            //     + dropoff.longitude.toString() +
+                            //     "&dropoff[nickname]="
+                            //     + place.name.replaceAll(' ', '%20') +
+                            //     "&dropoff[formatted_address]="
+                            //     + "" +
+                            //     "&product_id="
+                            //     +"a1111c8c-c720-46c3-8534-2fcdd730040d"
+                            //     ;
+                            //     _launchInBrowser(
+                            //       context,
+                            //       deeplink,
+                            //       //"https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&scope=request%20profile%20history&redirect_uri=https://www.hyuga.ro/"
+                            //       // "https://m.uber.com/ul/
+                            //       // ?client_id=LNvSpVc4ZskDaV1rDZe8hGZy02dPfN84&
+                            //       // action=setPickup
+                            //       // &pickup[latitude]=37.775818
+                            //       // &pickup[longitude]=-122.418028
+                            //       // &pickup[nickname]=UberHQ
+                            //       // &pickup[formatted_address]=1455%20Market%20St%2C%20San%20Francisco%2C%20CA%2094103
+                            //       // &dropoff[latitude]=37.802374
+                            //       // &dropoff[longitude]=-122.405818
+                            //       // &dropoff[nickname]=Coit%20Tower
+                            //       // &dropoff[formatted_address]=1%20Telegraph%20Hill%20Blvd%2C%20San%20Francisco%2C%20CA%2094133
+                            //       // &product_id=a1111c8c-c720-46c3-8534-2fcdd730040d",
+                            //       true
+                            //     );
+                            //   },
+                            // ),
                           ),
                         ],
                       ),
@@ -959,23 +959,23 @@ class _PlacePageState extends State<PlacePage> with TickerProviderStateMixin{
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-                              RaisedButton(
-                                highlightElevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30)
-                                ),
-                                color: Theme.of(context).primaryColor,
-                                child: Text(
-                                  "Meniu",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                                onPressed: (){
-                                  // _launchInBrowser(context, place.menu!);
-                                }
-                              ),
+                              // RaisedButton(
+                              //   highlightElevation: 3,
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: BorderRadius.circular(30)
+                              //   ),
+                              //   color: Theme.of(context).primaryColor,
+                              //   child: Text(
+                              //     "Meniu",
+                              //     style: TextStyle(
+                              //       color: Colors.white,
+                              //       fontWeight: FontWeight.bold
+                              //     ),
+                              //   ),
+                              //   onPressed: (){
+                              //     // _launchInBrowser(context, place.menu!);
+                              //   }
+                              // ),
                               Container(
                                 width: MediaQuery.of(context).size.width*0.3,
                                 child: Text(

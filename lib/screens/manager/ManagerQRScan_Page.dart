@@ -71,12 +71,12 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          RaisedButton(
-            onPressed: (){
-              Navigator.pop(context);
-            },
-            child: Text("Renunta"),
-          ),
+          // RaisedButton(
+          //   onPressed: (){
+          //     Navigator.pop(context);
+          //   },
+          //   child: Text("Renunta"),
+          // ),
         ],
       ),
       body: Column(
@@ -366,22 +366,22 @@ class _ManagerQRScanState extends State<ManagerQRScan> {
                             
                             ButtonBar(
                               children: [
-                                RaisedButton(
-                                  color: Colors.blueGrey,
-                                  child: Text("Continua"),
-                                  onPressed: () async{
-                                    if(_tableNoFormKey.currentState!.validate()){
-                                      addNewScan(scanResult.data,context).then((value)=> Navigator.pop(context,value));
-                                    }
-                                  }
-                                ),
-                                RaisedButton(
-                                  color: Colors.white,
-                                  child: Text("Renunta"),
-                                  onPressed: (){
-                                    Navigator.pop(context);
-                                  },
-                                )
+                                // RaisedButton(
+                                //   color: Colors.blueGrey,
+                                //   child: Text("Continua"),
+                                //   onPressed: () async{
+                                //     if(_tableNoFormKey.currentState!.validate()){
+                                //       addNewScan(scanResult.data,context).then((value)=> Navigator.pop(context,value));
+                                //     }
+                                //   }
+                                // ),
+                                // RaisedButton(
+                                //   color: Colors.white,
+                                //   child: Text("Renunta"),
+                                //   onPressed: (){
+                                //     Navigator.pop(context);
+                                //   },
+                                // )
                               ],
                             ),
                             Expanded(

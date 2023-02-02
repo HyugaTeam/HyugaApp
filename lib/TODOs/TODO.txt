@@ -115,7 +115,13 @@ Wine Street Events UI
 - pe pagina cu restaurante ne ramane doar harta cu colturile rotunjite (appbar alb si navbar tot alb)
 
 
-- profile page
-- sa faci Rezervare
-- sa faci bilet
+- profile page   x
+- sa faci Rezervare  x
+- sa faci bilet   x
 - cand cumperi bilet sa poti personaliza fiecare bilet (cu nume si email)
+- schimbat paddingul dinamic de pe pagina localului
+- facut istoricul biletelor  x
+- nu cere locatia pe ios
+- refresh idnicator pe istoric
+- apar doua rezervari la alea trecute  
+- schimbat textul pe pagina cu bilete  x

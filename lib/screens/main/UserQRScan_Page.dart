@@ -194,40 +194,40 @@ class _ScanReceiptState extends State<ScanReceipt> {
                             child: ButtonBar(
                               alignment: MainAxisAlignment.center,
                               children: [
-                                RaisedButton(
-                                  color: Colors.orange[600],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                                    child: Text(
-                                      "Da",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: (){},
-                                ),
+                                // RaisedButton(
+                                //   color: Colors.orange[600],
+                                //   shape: RoundedRectangleBorder(
+                                //     borderRadius: BorderRadius.circular(30)
+                                //   ),
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                                //     child: Text(
+                                //       "Da",
+                                //       style: TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18
+                                //       ),
+                                //     ),
+                                //   ),
+                                //   onPressed: (){},
+                                // ),
                                 SizedBox(width: 20,),
-                                RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                                    child: Text(
-                                      "Nu",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: onStepCancel,
-                                ),
+                                // RaisedButton(
+                                //   shape: RoundedRectangleBorder(
+                                //     borderRadius: BorderRadius.circular(30)
+                                //   ),
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                                //     child: Text(
+                                //       "Nu",
+                                //       style: TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18
+                                //       ),
+                                //     ),
+                                //   ),
+                                //   onPressed: onStepCancel,
+                                // ),
                               ],
                             ),
                           ),

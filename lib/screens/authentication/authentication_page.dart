@@ -305,7 +305,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> with TickerProv
                                               onChanged: (value) => provider.updatePassword(value),
                                             ),
                                             SizedBox(height: 20),
-                                            RaisedButton(  /// "Sign-In" button
+                                            TextButton(  /// "Sign-In" button
                                               child: Text("Log in"),
                                               onPressed: () => provider.signInWithEmailAndPassword(context)
                                             ),

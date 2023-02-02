@@ -271,16 +271,16 @@ class _PlaceListProfileState extends State<PlaceListProfile> with AutomaticKeepA
                           backgroundColor: Theme.of(context).primaryColor,
                           onPressed: () {
                             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                            Scaffold.of(widget.scaffoldContext!)
-                              .showSnackBar(SnackBar(
-                                duration: Duration(seconds: 5),
-                                backgroundColor: Theme.of(context).highlightColor,
-                                //backgroundColor: Colors.orange[600],
-                                content: Text(
-                                  "Localul are astazi oferte, intra pentru mai multe detalii"
-                                ),
-                              )
-                            );
+                            // Scaffold.of(widget.scaffoldContext!)
+                            //   .showSnackBar(SnackBar(
+                            //     duration: Duration(seconds: 5),
+                            //     backgroundColor: Theme.of(context).highlightColor,
+                            //     //backgroundColor: Colors.orange[600],
+                            //     content: Text(
+                            //       "Localul are astazi oferte, intra pentru mai multe detalii"
+                            //     ),
+                            //   )
+                            // );
                           },
                           child: FaIcon(
                             FontAwesomeIcons.award,

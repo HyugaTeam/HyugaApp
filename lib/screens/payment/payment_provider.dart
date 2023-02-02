@@ -70,7 +70,7 @@ class PaymentPageProvider with ChangeNotifier{
       );
 
       if(paymentIntentResults['erorr'] != null){
-        result = null;
+        return null;
       }
 
       /// NO 3DS

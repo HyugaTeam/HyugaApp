@@ -209,7 +209,7 @@ class ProfileDrawer extends StatelessWidget {
                         ListTile(
                           title: Container( // sign-out button
                             padding: EdgeInsets.symmetric(horizontal: 80),
-                            child: RaisedButton(
+                            child: MaterialButton(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -274,7 +274,7 @@ class ProfileDrawer extends StatelessWidget {
                   Spacer(),
                   Container( // sign-out button
                     padding: EdgeInsets.symmetric(horizontal: 0),
-                    child: RaisedButton(
+                    child: MaterialButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

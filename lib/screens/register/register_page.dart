@@ -63,35 +63,35 @@ class RegisterPage extends StatelessWidget {
                           onChanged: provider.updatePassword
                         ),
                         SizedBox(height: 20),
-                        RaisedButton(
-                          elevation: 0,
-                          highlightElevation: 2,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          color: Theme.of(context).highlightColor,
-                          child: Text("Sign up"),
-                          onPressed: () async{
-                            if(provider.formKey.currentState!.validate()){
-                              dynamic registerResult = await authService.registerWithEmailAndPassword(provider.email!, provider.password!);
-                              //print(registerResult.toString());
-                              if(registerResult.runtimeType == FirebaseException){
-                                FirebaseException authException = registerResult;
-                                if(authException.code == 'weak-password')
-                                  provider.showErrorSnackBar(context, "Parola este prea slaba");
-                                if(authException.code == 'invalid-email') 
-                                  provider.showErrorSnackBar(context, "Emailul este invalid");
-                                if(authException.code == 'email-already-in-use') 
-                                  provider.showErrorSnackBar(context, "Emailul este deja folosit.");
-                              }
-                              else if(registerResult is User){ // not actually an error, but that's the name of the method
-                                provider.showErrorSnackBar(context, 'Registered succesfully!');
-                                Navigator.pop(context);
-                              } 
-                              else{
-                                provider.showErrorSnackBar(context, 'There was an error');
-                              }
-                            }
-                          },
-                        ),
+                        // RaisedButton(
+                        //   elevation: 0,
+                        //   highlightElevation: 2,
+                        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        //   color: Theme.of(context).highlightColor,
+                        //   child: Text("Sign up"),
+                        //   onPressed: () async{
+                        //     if(provider.formKey.currentState!.validate()){
+                        //       dynamic registerResult = await authService.registerWithEmailAndPassword(provider.email!, provider.password!);
+                        //       //print(registerResult.toString());
+                        //       if(registerResult.runtimeType == FirebaseException){
+                        //         FirebaseException authException = registerResult;
+                        //         if(authException.code == 'weak-password')
+                        //           provider.showErrorSnackBar(context, "Parola este prea slaba");
+                        //         if(authException.code == 'invalid-email') 
+                        //           provider.showErrorSnackBar(context, "Emailul este invalid");
+                        //         if(authException.code == 'email-already-in-use') 
+                        //           provider.showErrorSnackBar(context, "Emailul este deja folosit.");
+                        //       }
+                        //       else if(registerResult is User){ // not actually an error, but that's the name of the method
+                        //         provider.showErrorSnackBar(context, 'Registered succesfully!');
+                        //         Navigator.pop(context);
+                        //       } 
+                        //       else{
+                        //         provider.showErrorSnackBar(context, 'There was an error');
+                        //       }
+                        //     }
+                        //   },
+                        // ),
                       ],
                     )
                   ),

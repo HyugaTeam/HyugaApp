@@ -73,7 +73,7 @@ dependencies:
   # expansion_card: ^0.1.0
   expansion_card:
   # qr_code_scanner: ^0.0.13
-  qr_code_scanner:
+  qr_code_scanner: ^1.0.0
   # animations: ^1.1.2
   animations: 
   # firebase_database: ^4.1.0
@@ -97,7 +97,7 @@ dependencies:
   flutter_polyline_points:
   barcode_widget:
   maps_launcher:
-  workmanager:
+  # workmanager:
 
 
 

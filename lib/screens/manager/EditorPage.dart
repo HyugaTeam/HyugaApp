@@ -96,61 +96,61 @@ class _EditorPageState extends State<EditorPage> {
                     ],
                   )
                   : Container(),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  child: Text("Salveaza"),
-                  onPressed: (){
-                    showDialog(context: context, builder: (context) =>
-                      AlertDialog(
-                        title: Center(child: Text("Esti sigur?"),),
-                        actions: <Widget>[
-                          RaisedButton(
-                            child: Text("Da"),
-                            onPressed: (){
-                              Navigator.of(context).pop(true);
-                            }
-                          ),
-                          RaisedButton(
-                            child: Text("Nu"),
-                            onPressed: (){
-                              Navigator.of(context).pop(false);
-                            }
-                          ),
-                        ],
-                      )
-                    ).then((value){
-                      if(value){
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: FutureBuilder(
-                              future: saveChanges(temporaryChanges!),
-                              builder: (context,complete){
-                                if(!complete.hasData)
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text("Se salveaza..."),
-                                      CircularProgressIndicator(),
-                                    ],
-                                  );
-                                else
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text("Gata!"),
-                                      FaIcon(FontAwesomeIcons.check)
-                                    ],
-                                  );
-                              }
-                            )
-                          )
-                        );
-                      }
-                    });
-                  }
-                )
+                // RaisedButton(
+                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                //   child: Text("Salveaza"),
+                //   onPressed: (){
+                //     showDialog(context: context, builder: (context) =>
+                //       AlertDialog(
+                //         title: Center(child: Text("Esti sigur?"),),
+                //         actions: <Widget>[
+                //           RaisedButton(
+                //             child: Text("Da"),
+                //             onPressed: (){
+                //               Navigator.of(context).pop(true);
+                //             }
+                //           ),
+                //           RaisedButton(
+                //             child: Text("Nu"),
+                //             onPressed: (){
+                //               Navigator.of(context).pop(false);
+                //             }
+                //           ),
+                //         ],
+                //       )
+                //     ).then((value){
+                //       if(value){
+                //         Navigator.of(context).pop();
+                //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           SnackBar(
+                //             content: FutureBuilder(
+                //               future: saveChanges(temporaryChanges!),
+                //               builder: (context,complete){
+                //                 if(!complete.hasData)
+                //                   return Row(
+                //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //                     children: <Widget>[
+                //                       Text("Se salveaza..."),
+                //                       CircularProgressIndicator(),
+                //                     ],
+                //                   );
+                //                 else
+                //                   return Row(
+                //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //                     children: <Widget>[
+                //                       Text("Gata!"),
+                //                       FaIcon(FontAwesomeIcons.check)
+                //                     ],
+                //                   );
+                //               }
+                //             )
+                //           )
+                //         );
+                //       }
+                //     });
+                //   }
+                // )
               ],
             ),
           ),
@@ -297,71 +297,71 @@ class _EditorPageState extends State<EditorPage> {
                 ),
                 subtitle: Container(
                   padding: EdgeInsets.only(right : 30),
-                  child: RaisedButton.icon(
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    icon: Icon(Icons.person, color: Theme.of(context).backgroundColor, size: 30,),
-                    label: Text(
-                      temporaryChanges!.capacity == null? "" : temporaryChanges!.capacity.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Theme.of(context).backgroundColor
-                      ),
-                    ),
-                    onPressed: ()=> showDialog(
-                      context: context, 
-                      barrierDismissible: true, 
-                      builder: (context){
-                        List<dynamic> availableCapacities = [1,2,3,4,5,6,7,8,"9+"];
-                        return SizedBox(
-                            child: Center(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.grey[300]
-                                ),
-                                alignment: Alignment.center,
-                                height: 500,
-                                width: 300,
-                                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
-                                child: Column(
-                                  children: <Widget>[
-                                    ListView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: availableCapacities.length,
-                                      itemBuilder: (context,index){
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.circular(5),
-                                          child: MaterialButton(
-                                            elevation: 20,
-                                            color: Theme.of(context).primaryColor,
-                                            height: 40,
-                                            onPressed: (){
-                                              Navigator.of(context).pop(index);
-                                            },
-                                            child: Center(
-                                              child: Text(
-                                                availableCapacities[index].toString(), 
-                                                style: TextStyle(fontSize: 20,
-                                                color: Colors.white),
-                                              ),
-                                            )
-                                          ),
-                                        );
-                                      }
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ),
-                        );
-                      }).then((value) => setState((){
-                        if(value != null)
-                          temporaryChanges!.capacity = int.tryParse(value.toString().substring(0,1))!+1;
-                        print(temporaryChanges!.capacity);
-                      })),
-                  ),
+                  // child: RaisedButton.icon(
+                  //   color: Theme.of(context).primaryColor,
+                  //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  //   icon: Icon(Icons.person, color: Theme.of(context).backgroundColor, size: 30,),
+                  //   label: Text(
+                  //     temporaryChanges!.capacity == null? "" : temporaryChanges!.capacity.toString(),
+                  //     style: TextStyle(
+                  //       fontSize: 18,
+                  //       color: Theme.of(context).backgroundColor
+                  //     ),
+                  //   ),
+                  //   onPressed: ()=> showDialog(
+                  //     context: context, 
+                  //     barrierDismissible: true, 
+                  //     builder: (context){
+                  //       List<dynamic> availableCapacities = [1,2,3,4,5,6,7,8,"9+"];
+                  //       return SizedBox(
+                  //           child: Center(
+                  //             child: Container(
+                  //               decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(20),
+                  //                 color: Colors.grey[300]
+                  //               ),
+                  //               alignment: Alignment.center,
+                  //               height: 500,
+                  //               width: 300,
+                  //               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
+                  //               child: Column(
+                  //                 children: <Widget>[
+                  //                   ListView.builder(
+                  //                     physics: NeverScrollableScrollPhysics(),
+                  //                     shrinkWrap: true,
+                  //                     itemCount: availableCapacities.length,
+                  //                     itemBuilder: (context,index){
+                  //                       return ClipRRect(
+                  //                         borderRadius: BorderRadius.circular(5),
+                  //                         child: MaterialButton(
+                  //                           elevation: 20,
+                  //                           color: Theme.of(context).primaryColor,
+                  //                           height: 40,
+                  //                           onPressed: (){
+                  //                             Navigator.of(context).pop(index);
+                  //                           },
+                  //                           child: Center(
+                  //                             child: Text(
+                  //                               availableCapacities[index].toString(), 
+                  //                               style: TextStyle(fontSize: 20,
+                  //                               color: Colors.white),
+                  //                             ),
+                  //                           )
+                  //                         ),
+                  //                       );
+                  //                     }
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //         ),
+                  //       );
+                  //     }).then((value) => setState((){
+                  //       if(value != null)
+                  //         temporaryChanges!.capacity = int.tryParse(value.toString().substring(0,1))!+1;
+                  //       print(temporaryChanges!.capacity);
+                  //     })),
+                  // ),
                 )
               ),
               ListTile(
@@ -419,28 +419,28 @@ class _EditorPageState extends State<EditorPage> {
                           child: Container(
                             width: 40,
                             height: 40,
-                            child: RaisedButton(  /// The 'Pick an Image' Button
-                              padding: EdgeInsets.zero,
-                              elevation: 1,
-                              highlightElevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)
-                              ),
-                              child: FaIcon(
-                                FontAwesomeIcons.plus,
-                                color: Theme.of(context).primaryColor
-                              ),
-                              onPressed: () async{
-                                XFile? _image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                                if(_image != null){
-                                  setState(() {
-                                    areThereChanges = true;
-                                    _unsavedProfileImage = _image;
-                                    _unsavedProfileImagePath = _image.path;
-                                  });
-                                }
-                              }
-                            ),
+                            // child: RaisedButton(  /// The 'Pick an Image' Button
+                            //   padding: EdgeInsets.zero,
+                            //   elevation: 1,
+                            //   highlightElevation: 2,
+                            //   shape: RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.circular(30)
+                            //   ),
+                            //   child: FaIcon(
+                            //     FontAwesomeIcons.plus,
+                            //     color: Theme.of(context).primaryColor
+                            //   ),
+                            //   onPressed: () async{
+                            //     XFile? _image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                            //     if(_image != null){
+                            //       setState(() {
+                            //         areThereChanges = true;
+                            //         _unsavedProfileImage = _image;
+                            //         _unsavedProfileImagePath = _image.path;
+                            //       });
+                            //     }
+                            //   }
+                            // ),
                           ),
                         ),
                       ]

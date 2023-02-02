@@ -39,7 +39,7 @@ class _OptionsDropButtonState extends State<OptionsDropButton> {
           physics: NeverScrollableScrollPhysics(), /// Doesn't allow the List to be scrollable
           itemCount: options!.length,
           itemBuilder: (BuildContext context, int index){
-            return RaisedButton(  
+            return MaterialButton(  
               padding: EdgeInsets.symmetric(vertical: 12,horizontal: 5),
               onPressed: (){
                 switch (question) {

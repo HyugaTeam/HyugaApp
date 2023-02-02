@@ -102,12 +102,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     },
                     SetOptions(merge: true)
                   );
-                  _scaffoldKey.currentState!.showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.orange[600],
-                      content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - H:mm").format(date)}")
-                    )
-                  );
+                  // _scaffoldKey.currentState!.showSnackBar(
+                  //   SnackBar(
+                  //     backgroundColor: Colors.orange[600],
+                  //     content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - H:mm").format(date)}")
+                  //   )
+                  // );
                 },
               ),
             ),
@@ -151,12 +151,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     },
                     SetOptions(merge: true)
                   );
-                  _scaffoldKey.currentState!.showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.orange[600],
-                      content: Text("Rezervare refuzata.")
-                    )
-                  );
+                  // _scaffoldKey.currentState!.showSnackBar(
+                  //   SnackBar(
+                  //     backgroundColor: Colors.orange[600],
+                  //     content: Text("Rezervare refuzata.")
+                  //   )
+                  // );
                 },
               ),
             ),
@@ -301,12 +301,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
                           },
                           SetOptions(merge: true)
                         );
-                        _scaffoldKey.currentState!.showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.orange[600],
-                            content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - HH:mm").format(date)}")
-                          )
-                        );
+                        // _scaffoldKey.currentState!.showSnackBar(
+                        //   SnackBar(
+                        //     backgroundColor: Colors.orange[600],
+                        //     content: Text("Rezervare acceptata pentru ${DateFormat("MMM dd - HH:mm").format(date)}")
+                        //   )
+                        // );
                       },
                       child: ListTile(
                         trailing: Text(
@@ -390,180 +390,180 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     shrinkWrap: true,
                     itemCount: acceptedReservations!.length,
                     itemBuilder: (context,index) => ListTile(
-                      trailing: OutlineButton(
-                        highlightedBorderColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)
-                        ),
-                        borderSide: BorderSide(
-                          color: Colors.orange[600]!
-                        ),
-                        child: Text(
-                          "Activeaza",
-                        ),
-                        onPressed: (){
-                          DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(acceptedReservations![index].data()['date_start'].millisecondsSinceEpoch);
-                          if(dateStart.difference(DateTime.now().toLocal()) < Duration(minutes: 30).abs()){
-                            GlobalKey<FormState> _formKey = GlobalKey();
-                          int? tableNumber;
-                          bool isLoading = false;
-                          showDialog(context: context, builder: (context) => Dialog(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                              height: MediaQuery.of(context).size.height*0.5,
-                              width: MediaQuery.of(context).size.height*0.8,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "Introduceti numarul mesei:",
-                                      style: TextStyle(
-                                        fontSize: 20
-                                      ),
-                                    ),
-                                    Form(
-                                      key: _formKey,
-                                      child: TextFormField(
-                                        onChanged: (input) => tableNumber = int.tryParse(input),
-                                        onFieldSubmitted: (input) => _formKey.currentState!.validate(),
-                                        cursorColor: Colors.blueGrey,
-                                        keyboardType: TextInputType.number,
-                                        validator: (String? input) => int.tryParse(input!) == null 
-                                          ? "Numarul introdus nu este corect!"
-                                          : null,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: MediaQuery.of(context).size.height*0.05,
-                                    ),
-                                    ButtonBar(
-                                      children: [
-                                        RaisedButton(
-                                          color: Colors.blueGrey,
-                                          child: Text("Continua"),
-                                          onPressed: () async{
-                                            if(_formKey.currentState!.validate()){
-                                              /// Activate the 'place' reservation  
-                                              DocumentReference placeRef = acceptedReservations![index].reference;
-                                              DocumentReference placeScanningRef = acceptedReservations![index].reference
-                                              .parent.parent
-                                              .collection('scanned_codes').doc();
-                                              placeRef.set(
-                                                {
-                                                // "table_number": tableNumber,
-                                                "claimed": true,
-                                                "scan_ref": placeScanningRef,
-                                                "date_claimed": FieldValue.serverTimestamp()
-                                                },
-                                                SetOptions(merge: true)
-                                              );
-                                              /// Activate the 'user' reservation 
-                                              DocumentReference userRef = acceptedReservations![index].data()['user_reservation_ref'];
-                                              DocumentReference userScanningRef = acceptedReservations![index].data()['user_reservation_ref']
-                                              .parent.parent
-                                              .collection('scan_history').doc();
-                                              userRef.set(
-                                                {
-                                                //"table_number": tableNumber,
-                                                "claimed": true,
-                                                "scan_ref": userScanningRef,
-                                                "date_claimed": FieldValue.serverTimestamp()
-                                                },
-                                                SetOptions(merge: true)
-                                              );
-                                            /// Adds a new scanned code ONLY if there's and offer/discount in that interval
-                                              /// Add the new scanned code to the manager's collection
+                      // trailing: OutlineButton(
+                      //   highlightedBorderColor: Colors.transparent,
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(30)
+                      //   ),
+                      //   borderSide: BorderSide(
+                      //     color: Colors.orange[600]!
+                      //   ),
+                      //   child: Text(
+                      //     "Activeaza",
+                      //   ),
+                      //   onPressed: (){
+                      //     DateTime dateStart = DateTime.fromMillisecondsSinceEpoch(acceptedReservations![index].data()['date_start'].millisecondsSinceEpoch);
+                      //     if(dateStart.difference(DateTime.now().toLocal()) < Duration(minutes: 30).abs()){
+                      //       GlobalKey<FormState> _formKey = GlobalKey();
+                      //     int? tableNumber;
+                      //     bool isLoading = false;
+                      //     showDialog(context: context, builder: (context) => Dialog(
+                      //       child: Container(
+                      //         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      //         height: MediaQuery.of(context).size.height*0.5,
+                      //         width: MediaQuery.of(context).size.height*0.8,
+                      //         child: Center(
+                      //           child: Column(
+                      //             mainAxisAlignment: MainAxisAlignment.end,
+                      //             children: [
+                      //               Text(
+                      //                 "Introduceti numarul mesei:",
+                      //                 style: TextStyle(
+                      //                   fontSize: 20
+                      //                 ),
+                      //               ),
+                      //               Form(
+                      //                 key: _formKey,
+                      //                 child: TextFormField(
+                      //                   onChanged: (input) => tableNumber = int.tryParse(input),
+                      //                   onFieldSubmitted: (input) => _formKey.currentState!.validate(),
+                      //                   cursorColor: Colors.blueGrey,
+                      //                   keyboardType: TextInputType.number,
+                      //                   validator: (String? input) => int.tryParse(input!) == null 
+                      //                     ? "Numarul introdus nu este corect!"
+                      //                     : null,
+                      //                 ),
+                      //               ),
+                      //               SizedBox(
+                      //                 height: MediaQuery.of(context).size.height*0.05,
+                      //               ),
+                      //               ButtonBar(
+                      //                 children: [
+                      //                   RaisedButton(
+                      //                     color: Colors.blueGrey,
+                      //                     child: Text("Continua"),
+                      //                     onPressed: () async{
+                      //                       if(_formKey.currentState!.validate()){
+                      //                         /// Activate the 'place' reservation  
+                      //                         DocumentReference placeRef = acceptedReservations![index].reference;
+                      //                         DocumentReference placeScanningRef = acceptedReservations![index].reference
+                      //                         .parent.parent
+                      //                         .collection('scanned_codes').doc();
+                      //                         placeRef.set(
+                      //                           {
+                      //                           // "table_number": tableNumber,
+                      //                           "claimed": true,
+                      //                           "scan_ref": placeScanningRef,
+                      //                           "date_claimed": FieldValue.serverTimestamp()
+                      //                           },
+                      //                           SetOptions(merge: true)
+                      //                         );
+                      //                         /// Activate the 'user' reservation 
+                      //                         DocumentReference userRef = acceptedReservations![index].data()['user_reservation_ref'];
+                      //                         DocumentReference userScanningRef = acceptedReservations![index].data()['user_reservation_ref']
+                      //                         .parent.parent
+                      //                         .collection('scan_history').doc();
+                      //                         userRef.set(
+                      //                           {
+                      //                           //"table_number": tableNumber,
+                      //                           "claimed": true,
+                      //                           "scan_ref": userScanningRef,
+                      //                           "date_claimed": FieldValue.serverTimestamp()
+                      //                           },
+                      //                           SetOptions(merge: true)
+                      //                         );
+                      //                       /// Adds a new scanned code ONLY if there's and offer/discount in that interval
+                      //                         /// Add the new scanned code to the manager's collection
                                               
-                                              Map<String, dynamic> placeScanData = {
-                                                "approved_by_user": null,
-                                                "date_start": acceptedReservations![index].data()['date_start'],
-                                                "date_claimed": FieldValue.serverTimestamp(),
-                                                "discount": acceptedReservations![index].data()['discount'],
-                                                'deals': acceptedReservations![index].data()['deals'],
-                                                "guest_id": acceptedReservations![index].data()['guest_id'],
-                                                "guest_name": acceptedReservations![index].data()['guest_name'],
-                                                "is_active": true,
-                                                "number_of_guests": acceptedReservations![index].data()['number_of_guests'],
-                                                "user_scan_ref": userScanningRef,
-                                                "reservation": true,
-                                                "reservation_ref": placeRef,
-                                                "table_number" : tableNumber
-                                              };
-                                              placeScanningRef.set(
-                                                placeScanData
-                                              );
-                                              /// Add the new scanned code to the user's collection
-                                              Map<String,dynamic> userScanData = {
-                                                "accepted": true,
-                                                "approved_by_user": null,
-                                                "date_claimed": FieldValue.serverTimestamp(),
-                                                "date_start": acceptedReservations![index].data()['date_start'],
-                                                "discount": acceptedReservations![index].data()['discount'],
-                                                "deals": acceptedReservations![index].data()['deals'],
-                                                "place_id": _managedLocal!.id,
-                                                "place_name": _managedLocal!.name,
-                                                "is_active": true,
-                                                "number_of_guests": acceptedReservations![index].data()['number_of_guests'],
-                                                "place_scan_ref": placeScanningRef,
-                                                "reservation": true,
-                                                "reservation_ref": userRef
-                                              };
-                                              userScanningRef.set(
-                                                userScanData
-                                              );
-                                              print("gata");
-                                              try{
-                                                AnalyticsService().analytics.logEvent(
-                                                  name: 'new_scan',
-                                                  parameters: {
-                                                    'place_name': _managedLocal!.name,
-                                                    'place_id': _managedLocal!.id,
-                                                    "date_claimed": FieldValue.serverTimestamp().toString(),
-                                                    'date_start': acceptedReservations![index].data()['date_start'],
-                                                    'number_of_guests': acceptedReservations![index].data()['number_of_guests'],
-                                                    'reservation': true,
-                                                    'discount': acceptedReservations![index].data()['discount'],
-                                                    'deals': dealsToString(acceptedReservations![index].data()['deals'])
-                                                  }
-                                                );
-                                              }
-                                              catch(err){}
-                                              Navigator.pop(context);
-                                            }
-                                          },
-                                        ),
-                                        RaisedButton(
-                                          color: Colors.white,
-                                          child: Text("Renunta"),
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    Expanded(
-                                      child:Container()
-                                    ),
-                                    isLoading == true
-                                    ? CircularProgressIndicator()
-                                    : SizedBox(height: 6,)
-                                  ],
-                                )
-                              ),
-                            ),
-                          ));
-                          }
-                          else _scaffoldKey.currentState!.showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Rezervarile pot fi activate cu cel mult 30 de minute inainte sau dupa ora acestora."
-                              ),
-                              duration: Duration(seconds: 5),
-                            )
-                          );
-                        }
-                      ),
+                      //                         Map<String, dynamic> placeScanData = {
+                      //                           "approved_by_user": null,
+                      //                           "date_start": acceptedReservations![index].data()['date_start'],
+                      //                           "date_claimed": FieldValue.serverTimestamp(),
+                      //                           "discount": acceptedReservations![index].data()['discount'],
+                      //                           'deals': acceptedReservations![index].data()['deals'],
+                      //                           "guest_id": acceptedReservations![index].data()['guest_id'],
+                      //                           "guest_name": acceptedReservations![index].data()['guest_name'],
+                      //                           "is_active": true,
+                      //                           "number_of_guests": acceptedReservations![index].data()['number_of_guests'],
+                      //                           "user_scan_ref": userScanningRef,
+                      //                           "reservation": true,
+                      //                           "reservation_ref": placeRef,
+                      //                           "table_number" : tableNumber
+                      //                         };
+                      //                         placeScanningRef.set(
+                      //                           placeScanData
+                      //                         );
+                      //                         /// Add the new scanned code to the user's collection
+                      //                         Map<String,dynamic> userScanData = {
+                      //                           "accepted": true,
+                      //                           "approved_by_user": null,
+                      //                           "date_claimed": FieldValue.serverTimestamp(),
+                      //                           "date_start": acceptedReservations![index].data()['date_start'],
+                      //                           "discount": acceptedReservations![index].data()['discount'],
+                      //                           "deals": acceptedReservations![index].data()['deals'],
+                      //                           "place_id": _managedLocal!.id,
+                      //                           "place_name": _managedLocal!.name,
+                      //                           "is_active": true,
+                      //                           "number_of_guests": acceptedReservations![index].data()['number_of_guests'],
+                      //                           "place_scan_ref": placeScanningRef,
+                      //                           "reservation": true,
+                      //                           "reservation_ref": userRef
+                      //                         };
+                      //                         userScanningRef.set(
+                      //                           userScanData
+                      //                         );
+                      //                         print("gata");
+                      //                         try{
+                      //                           AnalyticsService().analytics.logEvent(
+                      //                             name: 'new_scan',
+                      //                             parameters: {
+                      //                               'place_name': _managedLocal!.name,
+                      //                               'place_id': _managedLocal!.id,
+                      //                               "date_claimed": FieldValue.serverTimestamp().toString(),
+                      //                               'date_start': acceptedReservations![index].data()['date_start'],
+                      //                               'number_of_guests': acceptedReservations![index].data()['number_of_guests'],
+                      //                               'reservation': true,
+                      //                               'discount': acceptedReservations![index].data()['discount'],
+                      //                               'deals': dealsToString(acceptedReservations![index].data()['deals'])
+                      //                             }
+                      //                           );
+                      //                         }
+                      //                         catch(err){}
+                      //                         Navigator.pop(context);
+                      //                       }
+                      //                     },
+                      //                   ),
+                      //                   RaisedButton(
+                      //                     color: Colors.white,
+                      //                     child: Text("Renunta"),
+                      //                     onPressed: (){
+                      //                       Navigator.pop(context);
+                      //                     },
+                      //                   )
+                      //                 ],
+                      //               ),
+                      //               Expanded(
+                      //                 child:Container()
+                      //               ),
+                      //               isLoading == true
+                      //               ? CircularProgressIndicator()
+                      //               : SizedBox(height: 6,)
+                      //             ],
+                      //           )
+                      //         ),
+                      //       ),
+                      //     ));
+                      //     }
+                      //     else _scaffoldKey.currentState!.showSnackBar(
+                      //       SnackBar(
+                      //         content: Text(
+                      //           "Rezervarile pot fi activate cu cel mult 30 de minute inainte sau dupa ora acestora."
+                      //         ),
+                      //         duration: Duration(seconds: 5),
+                      //       )
+                      //     );
+                      //   }
+                      // ),
                       title: RichText(
                         text: TextSpan(
                           style: TextStyle(

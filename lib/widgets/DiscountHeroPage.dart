@@ -59,21 +59,21 @@ class DiscountHeroPage extends StatelessWidget {
                     height: 40
                   ),
                   Expanded(child: Container(),),
-                  RaisedButton(
-                    color: Colors.orange[600],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Text(
-                      "Revendica",
-                      style: TextStyle(
-                        fontSize: 15
-                      ),
-                    ),
-                    onPressed: (){
+                  // RaisedButton(
+                  //   color: Colors.orange[600],
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(10)
+                  //   ),
+                  //   child: Text(
+                  //     "Revendica",
+                  //     style: TextStyle(
+                  //       fontSize: 15
+                  //     ),
+                  //   ),
+                  //   onPressed: (){
 
-                    },
-                  ),
+                  //   },
+                  // ),
                   SizedBox(
                     height: 40,
                   )
