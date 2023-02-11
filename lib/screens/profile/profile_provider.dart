@@ -17,6 +17,15 @@ class ProfilePageProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  Future<void> deleteAccount() async{
+    _loading();
+    var uid = Authentication.auth.currentUser!.uid;
+    await Authentication.deleteAccount();
+    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+
+    _loading();
+  }
+
   _loading(){
     isLoading = !isLoading;
 

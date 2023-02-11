@@ -199,6 +199,14 @@ class Authentication{
     }
   }
 
+  static Future deleteAccount() async{
+    try{
+      await auth.currentUser!.delete();
+    }
+    catch(error){
+      return(error);
+    }
+  }
 
   Authentication._init(){
     userProfile.listen((userProfile) {
