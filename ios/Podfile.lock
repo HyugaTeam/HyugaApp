@@ -995,6 +995,8 @@ PODS:
   - Libuv-gRPC/Interface (0.0.10)
   - location (0.0.1):
     - Flutter
+  - maps_launcher (0.0.1):
+    - Flutter
   - MLImage (1.0.0-beta3)
   - MLKitBarcodeScanning (2.2.0):
     - MLKitCommon (~> 8.0)
@@ -1112,9 +1114,8 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - shared_preferences_foundation (0.0.1):
+  - shared_preferences_ios (0.0.1):
     - Flutter
-    - FlutterMacOS
   - sign_in_with_apple (0.0.1):
     - Flutter
   - SSZipArchive (2.4.3)
@@ -1172,9 +1173,10 @@ DEPENDENCIES:
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - maps_launcher (from `.symlinks/plugins/maps_launcher/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - stripe_ios (from `.symlinks/plugins/stripe_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -1314,12 +1316,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  maps_launcher:
+    :path: ".symlinks/plugins/maps_launcher/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
-  shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
   sign_in_with_apple:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   stripe_ios:
@@ -1357,7 +1361,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: a4d7910e4af663c9cbfc1071c5bef34651690949
   FirebaseStorage: 1fead543a1f441c3b434c1c9f12560dd82f8b568
   FirebaseStorageInternal: 81d8a597324ccd06c41a43c5700bc1185a2fc328
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_facebook_auth: c69f4e643b1d9cc9063ec87c9411bd9ec268108f
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   google_maps_flutter_ios: 66201f392bf62d500f07670a30488a247b9bb5b9
@@ -1393,6 +1397,7 @@ SPEC CHECKSUMS:
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  maps_launcher: 2e5b6a2d664ec6c27f82ffa81b74228d770ab203
   MLImage: 489dfec109f21da8621b28d476401aaf7a0d4ff4
   MLKitBarcodeScanning: d92fe1911001ec36870162c5a0eb206f612b7169
   MLKitCommon: f6da6c5659618c070b50a80db01248ebe2964175
@@ -1426,7 +1431,7 @@ SPEC CHECKSUMS:
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   Stripe: 59f6659e8ea413def19c97c57e23f5ec6ea48cf8
@@ -1437,6 +1442,6 @@ SPEC CHECKSUMS:
   StripeUICore: 6a5bbea0164d63bd91000f001903e7901859e1a4
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+PODFILE CHECKSUM: 1f4d932541951a65e3628310bc7e2e34feedebb7
 
 COCOAPODS: 1.11.3

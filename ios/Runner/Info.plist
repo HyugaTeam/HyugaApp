@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -57,25 +59,27 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Wine Street requires permission for your Apple Music Library</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa Apple Music Library</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Wine Street requires permission for your calendar</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa calendarul</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Wine Street requires permission for your camera in order to be able to scan codes</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa camera</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Wine Street requires permission for your contacts</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa contactele</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Wine Street requires permission for your location in order to find every place around you</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa locatia</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Wine Street requires permission for your location in order to find every place around you</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa locatia</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Wine Street requires permission for your microphone</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa microfon</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Wine Street requires permission for your phone's motion</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa miscarea telefonului</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Wine Street requires permission for your gallery in order to be able to pick images</string>
+	<string>Wine Street are nevoie de permisiune pentru a accesa galeria</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Wine Street requires permission for speech recognition</string>
+	<string>Wine Street are nevoie de permisiune pentru recunosterea discursului</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
